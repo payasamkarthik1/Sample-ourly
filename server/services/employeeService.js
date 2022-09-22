@@ -22,14 +22,9 @@ function AdminService(objectCollection) {
             return [err, respData];
         }
         else {
-            const id = util.getRandomNumericId()
             const hashPassword = await util.convertTextToHash(request.password)
-            const [err1, data1] = await rolesDepartDesigService.getRolesDepartDesignById(request, request.role_id, 1);
-            const [err2, data2] = await rolesDepartDesigService.getRolesDepartDesignById(request, request.department_id, 2);
-            const [err3, data3] = await rolesDepartDesigService.getRolesDepartDesignById(request, request.designation_id, 3);
-
             const paramsArr = new Array(
-                id,
+                util.getRandomNumericId(),
                 request.first_name,
                 request.last_name,
                 request.email,
@@ -38,11 +33,9 @@ function AdminService(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.role_id,
-                data1[0].role_name,
                 request.department_id,
-                data2[0].department_name,
                 request.designation_id,
-                data3[0].designation_name,
+
                 hashPassword,
                 util.getCurrentUTCTime()
             );
@@ -88,6 +81,60 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
+    this.removeEmployeeDelete = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id.toString()
+        );
+
+        const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    error = false
+                    responseData = [error, { message: "Employee removed Successfuly" }]
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.updateEmployeeDetails = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id,
+            request.role_id,
+            request.department_id,
+            request.designation_id,
+            request.phone_number,
+            request.email,
+        );
+
+        const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    error = false
+                    responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
 
 
 }

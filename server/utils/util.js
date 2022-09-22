@@ -13,9 +13,6 @@ function Util() {
     this.getQueryString = function (callName, paramsArr) {
         let queryString = '',
             preparedQueryString;
-        console.log('============paraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa==========')
-        console.log(paramsArr.length)
-        console.log('====================================')
         if (paramsArr.length > 0) {
             queryString = `CALL ?? (${new Array(paramsArr.length).fill('?').join(', ')});`;
             preparedQueryString = mysql.format(queryString, [String(callName)].concat(paramsArr));

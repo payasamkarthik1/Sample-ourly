@@ -48,11 +48,12 @@ function ProjectService(objectCollection) {
             request.client_id,
             util.getRandomNumericId(),
             request.project_name,
+            request.project_color_code,
             util.getCurrentUTCTime(),
         );
 
 
-        const queryString = util.getQueryString('project_add_projects_to_clint_insert', paramsArr);
+        const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)

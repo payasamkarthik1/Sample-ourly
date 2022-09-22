@@ -44,6 +44,32 @@ function EmployeeController(objectCollection) {
 
 
 
+        app.post('/' + 'employee/remove/employee/delete',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.removeEmployeeDelete(req.body);
+            if (!err) {
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+        app.post('/' + 'employee/update/employee/details',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.updateEmployeeDetails(req.body);
+            if (!err) {
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
 
 }
