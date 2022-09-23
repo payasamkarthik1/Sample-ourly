@@ -82,6 +82,30 @@ function AdminService(objectCollection) {
         }
     }
 
+    this.getEmployeeById = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id.toString()
+        );
+
+        const queryString = util.getQueryString('employee_get_employee_by_id_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
     this.removeEmployeeDelete = async function (request) {
 
         let responseData = [],
@@ -115,8 +139,9 @@ function AdminService(objectCollection) {
             request.role_id,
             request.department_id,
             request.designation_id,
-            request.phone_number,
             request.email,
+            request.phone_number,
+
         );
 
         const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
@@ -124,9 +149,32 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     error = false
                     responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getTeamLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.team_lead_emplyee_id.toString()
+        );
+
+        const queryString = util.getQueryString('get_team_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

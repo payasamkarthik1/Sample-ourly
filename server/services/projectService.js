@@ -15,14 +15,38 @@ function ProjectService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            util.getRandomNumericId(),
             request.client_name,
             util.getCurrentUTCTime(),
 
         );
+        const queryString = util.getQueryString('project_add_client_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
 
 
-        const queryString = util.getQueryString('project_create_client_insert', paramsArr);
+    }
+    this.updateClientDetails = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.client_id,
+            request.client_name
+        );
+
+
+        const queryString = util.getQueryString('project_update_client_details', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -40,7 +64,7 @@ function ProjectService(objectCollection) {
 
     }
 
-    this.addProjectsInsert = async function (request) {
+    this.addProjectsToClientInsert = async function (request) {
 
         let responseData = [],
             error = true;
@@ -70,6 +94,61 @@ function ProjectService(objectCollection) {
 
 
     }
+    this.updateProjectDetails = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.project_id,
+            request.project_name,
+            request.project_color_code
+        );
+
+
+        const queryString = util.getQueryString('project_update_project_details', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+    this.removeProjectDelete = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.project_id.toString(),
+        );
+
+
+        const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
 
     this.getAllProjectsSelect = async function (request) {
 
@@ -151,12 +230,11 @@ function ProjectService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            util.getRandomNumericId(),
             request.tag_name,
             util.getCurrentUTCTime()
         );
 
-        const queryString = util.getQueryString('project_create_tag_insert', paramsArr);
+        const queryString = util.getQueryString('project_add_tag_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -171,6 +249,54 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
+
+    this.updateTagDetails = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.tag_id,
+            request.tag_name
+        );
+
+        const queryString = util.getQueryString('project_update_tag_details', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.removeTagDelete = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.tag_id
+        );
+
+        const queryString = util.getQueryString('project_remove_tag_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
 
 
 }

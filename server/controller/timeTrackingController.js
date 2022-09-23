@@ -69,6 +69,16 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
+    app.post('/' + 'test', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.test(req.body, res);
+        if (!err) {
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("timetracking/get/task/details/by/employeeid/search/list | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
 
 }
 

@@ -71,6 +71,7 @@ function TimeTrackingService(objectCollection) {
 
 
     };
+
     this.timetrackingTaskDetailsGetByEmployeeId = async function (request) {
 
 
@@ -96,6 +97,32 @@ function TimeTrackingService(objectCollection) {
 
 
     };
+
+
+    this.test = async function () {
+
+
+        // var firstJanuary = new Date(new Date().getFullYear(), 0, 1);
+        // var dayNr = Math.ceil((new Date() - firstJanuary) / (24 * 60 * 60 * 1000));
+        // var weekNr = Math.ceil((dayNr + firstJanuary.getDay()) / 7);
+        // console.log('====================================')
+        // console.log(weekNr-1)
+        // console.log('====================================') 
+
+
+        var lastday = new Date('2022 08 11').getDate() - (new Date('2022 08 11').getDay() - 1) + 6;
+        console.log(new Date(new Date('2022 08 11').setDate(lastday)).toString())
+
+        d = new Date('2022 08 11');
+        var day = d.getDay(),
+            diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 1); // adjust when day is sunday
+        console.log("---" + new Date(d.setDate(diff)))
+
+
+
+
+    }
+
 
 
 }

@@ -9,11 +9,10 @@ function RolesDepartmentDesignationsService(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
-    this.rolesInsert = async function (request) {
+    this.roleCreateInsert = async function (request) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            util.getRandomNumericId(),
             request.role_name,
             util.getCurrentUTCTime()
 
@@ -39,13 +38,12 @@ function RolesDepartmentDesignationsService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            util.getRandomNumericId(),
             request.department_name,
             util.getCurrentUTCTime()
 
         );
 
-        const queryString = util.getQueryString('department_create_insert', paramsArr);
+        const queryString = util.getQueryString('department_add_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -66,14 +64,13 @@ function RolesDepartmentDesignationsService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            util.getRandomNumericId(),
             request.designation_name,
             util.getCurrentUTCTime()
 
         );
 
 
-        const queryString = util.getQueryString('designation_create_insert', paramsArr);
+        const queryString = util.getQueryString('designation_add_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
