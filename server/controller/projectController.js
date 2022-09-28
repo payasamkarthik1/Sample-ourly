@@ -25,7 +25,7 @@ function ProjectController(objectCollection) {
 
     //@Post project/remove/client/delete
     app.post('/' + 'project/remove/client/delete', async function (req, res) {
-        const [err, resData] = await projectService.addClientInsert(req.body, res);
+        const [err, resData] = await projectService.removeClientDelete(req.body, res);
         if (!err) {
             console.log("project/remove/client/delete | Error: ", err);
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));

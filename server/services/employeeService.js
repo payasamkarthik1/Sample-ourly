@@ -121,7 +121,7 @@ function AdminService(objectCollection) {
                 .then(async (data) => {
 
                     error = false
-                    responseData = [error, { message: "Employee removed Successfuly" }]
+                    responseData = data
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -136,11 +136,17 @@ function AdminService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             request.employee_id,
+            request.first_name,
+            request.last_name,
+            request.email,
+            request.gender,
+            request.phone_number,
+            request.blood_group,
+            request.dob,
+            request.image,
             request.role_id,
             request.department_id,
             request.designation_id,
-            request.email,
-            request.phone_number,
 
         );
 

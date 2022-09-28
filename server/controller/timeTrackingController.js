@@ -2,6 +2,7 @@ const { json } = require("body-parser");
 const AdminServices = require("../services/adminService");
 const ProjectService = require("../services/projectService");
 const TimeTrackingService = require("../services/timeTrackingService");
+const moment = require('moment')
 
 const Validations = require('../utils/validations')
 
@@ -28,54 +29,18 @@ function TimeTrackingController(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
-    app.post('/' + 'timetracking/get/all/task/details/list', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsGetAllList(req.body, res);
+
+    app.post('/' + 'timetracking/get/all/weeks/task/details/by/employeeid/list', async function (req, res) {
+
+
+
+
+        const [err, resData] = await timeTrackingService.getAllWeeksTasksByEmpId(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/get/all/task/details/list | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-    app.post('/' + 'timetracking/get/task/details/by/employeeid', async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsGetByEmployeeId(req.body, res);
-        if (!err) {
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("timetracking/get/task/details/by/employeeid | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-    app.post('/' + 'timetracking/get/task/details/by/employeeid/date/list', async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsInsert(req.body, res);
-        if (!err) {
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("timetracking/get/task/details/by/employeeid/date/list | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-    app.post('/' + 'timetracking/get/task/details/by/employeeid/search/list', async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsInsert(req.body, res);
-        if (!err) {
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("timetracking/get/task/details/by/employeeid/search/list | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-
-    app.post('/' + 'test', async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.test(req.body, res);
-        if (!err) {
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("timetracking/get/task/details/by/employeeid/search/list | Error: ", err);
+            console.log("timetracking/get/all/weeks/task/details/by/employeeid/list | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
