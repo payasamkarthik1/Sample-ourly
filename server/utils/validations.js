@@ -157,7 +157,6 @@ function Validations(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-
                     error = true
                     responseData = data
 
@@ -171,7 +170,6 @@ function Validations(objectCollection) {
     }
 
     this.userLoginChangePasswordCheck = async function (request, resData1) {
-        console.log("entered  -");
         let responseData = [],
             error = true
         emp_id = resData1.data[0].employee_id
@@ -358,9 +356,9 @@ function Validations(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(0, queryString, request)
                 .then((data) => {
-             
+
                     error = false
-                    responseData = [error,{message:"Password Changed Successfully"}]
+                    responseData = [error, { message: "Password Changed Successfully" }]
 
                 }).catch((err) => {
                     error = err;

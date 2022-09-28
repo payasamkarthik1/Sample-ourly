@@ -19,9 +19,12 @@ function EmployeeController(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
+
+    //@Post employee/create/add
     app.post('/' + 'employee/create/add', async function (req, res) {
         const [err, resData] = await employeeService.employeeCreationInsert(req.body);
         if (!err) {
+            console.log("employee/create/add | Error: ", err);
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
             console.log("employee/create/add | Error: ", err);
@@ -29,12 +32,14 @@ function EmployeeController(objectCollection) {
         }
     })
 
+    //@Get employee/create/add
     app.get('/' + 'employee/get/all/list',
 
         async function (req, res) {
 
             const [err, resData] = await employeeService.getAllEmployees(req.body);
             if (!err) {
+                console.log("employee/get/all/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
                 console.log("employee/get/all/list | Error: ", err);
@@ -42,30 +47,61 @@ function EmployeeController(objectCollection) {
             }
         })
 
+    //@Get employee/get/employee/by/id
+    app.get('/' + 'employee/get/employee/by/id',
 
+        async function (req, res) {
 
-        app.post('/' + 'employee/remove/employee/delete',
+            const [err, resData] = await employeeService.getEmployeeById(req.body);
+            if (!err) {
+                console.log("employee/get/employee/by/id | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/get/employee/by/id | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post employee/remove/employee/delete
+    app.post('/' + 'employee/remove/employee/delete',
 
         async function (req, res) {
 
             const [err, resData] = await employeeService.removeEmployeeDelete(req.body);
             if (!err) {
+                console.log("employee/remove/employee/delete | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("employee/get/all/list | Error: ", err);
+                console.log("employee/remove/employee/delete | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-        app.post('/' + 'employee/update/employee/details',
+    //@Post employee/update/employee/details
+    app.post('/' + 'employee/update/employee/details',
 
         async function (req, res) {
 
             const [err, resData] = await employeeService.updateEmployeeDetails(req.body);
             if (!err) {
+                console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("employee/get/all/list | Error: ", err);
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    app.post('/' + 'get/team/leads/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.getTeamLeads(req.body);
+            if (!err) {
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
