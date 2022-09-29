@@ -21,7 +21,7 @@ function TimeTrackingController(objectCollection) {
 
     app.post('/' + 'timetracking/add/task/details/insert', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsInsert(req.body, res);
+        const [err, resData] = await timeTrackingService.timetrackingAddTaskDetailsInsert(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
@@ -32,7 +32,7 @@ function TimeTrackingController(objectCollection) {
 
     app.post('/' + 'timetracking/update/task/details', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.timetrackingTaskDetailsUpdate(req.body, res);
+        const [err, resData] = await timeTrackingService.timetrackingUpdateTaskDetails(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
@@ -51,13 +51,13 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
-    app.post('/' + 'timetracking/get/child/task/by/id', async function (req, res) {
+    app.post('/' + 'timetracking/get/child/task', async function (req, res) {
 
         const [err, resData] = await timeTrackingService.timetrackingGetChildTaskByid(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/add/task/details/insert | Error: ", err);
+            console.log("timetracking/get/child/task/by/id | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
@@ -69,6 +69,18 @@ function TimeTrackingController(objectCollection) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
             console.log("timetracking/add/task/details/insert | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+    //timesheet status
+    app.post('/' + 'timetracking/add/status/insert', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.timesheetAddStatusinsert(req.body, res);
+        if (!err) {
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("timetracking/add/status/insert | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })

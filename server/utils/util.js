@@ -43,20 +43,16 @@ function Util() {
         return now;
     }
     this.getMonthName = function (date) {
-        console.log("date-----------" + date);
+
         var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
         day = dt.format('Do');
         month = dt.format('MMM');
-        console.log(month + " " + day)
-        return month.concat(" " + day)
+        year = dt.format('YYYY');
+        return month.concat(" " + day + "," + year)
 
     }
 
     this.SumOfMultipleTimeDuration = async function (data) {
-
-        console.log('=======multiiiiiiiiii========')
-        console.log(data)
-        console.log('====================================')
         const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
         const sum = ms.reduce((prev, cur) => prev + cur, 0);
         const hms = moment.utc(sum).format("HH:mm:ss");
@@ -206,55 +202,21 @@ function Util() {
 
     this.getFirstWeekDate = async function (dt) {
 
-
-        // var firstJanuary = new Date(new Date().getFullYear(), 0, 1);
-        // var dayNr = Math.ceil((new Date() - firstJanuary) / (24 * 60 * 60 * 1000));
-        // var weekNr = Math.ceil((dayNr + firstJanuary.getDay()) / 7);
-        // console.log('====================================')
-        // console.log(weekNr-1)
-        // console.log('====================================') 
-
         d = new Date(dt);
         var day = d.getDay(),
             diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 1); // adjust when day is sunday
         firstweekDay = new Date(d.setDate(diff))
-        console.log('====================================')
-
-        console.log(firstweekDay)
-
-        console.log('====================================')
         return firstweekDay
-
-        //     mnth = ("0" + (firstweekDay.getMonth() + 1)).slice(-2),
-        //     day = ("0" + firstweekDay.getDate()).slice(-2);
-        //   console.log([firstweekDay.getFullYear(), mnth, day].join("-"))
-
-
-
-
-
 
 
     }
 
     this.getLastWeekDate = async function (dt) {
-        //     mnth = ("0" + (firstweekDay.getMonth() + 1)).slice(-2),
-        //     day = ("0" + firstweekDay.getDate()).slice(-2);
-        //   console.log([firstweekDay.getFullYear(), mnth, day].join("-"))
-
-        // var lastday = new Date(dt).getDate() - (new Date(dt).getDay() - 1) + 6;
-        // console.log(new Date(new Date(dt).setDate(lastday)).toString());
-        // return new Date(new Date(dt).setDate(lastday)).toString();
 
         d = new Date(dt);
         var day = d.getDay(),
             diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 7); // adjust when day is sunday
         lastweekDay = new Date(d.setDate(diff))
-
-        console.log('====================================')
-        console.log(lastweekDay)
-        console.log(moment(lastweekDay).format("dddd, MMMM Do"))
-        console.log('====================================')
         return lastweekDay
 
 
