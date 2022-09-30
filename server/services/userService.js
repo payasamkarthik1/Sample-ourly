@@ -48,19 +48,19 @@ function UserService(objectCollection) {
             if (!err1) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
-                    const [err4, resData4] = await validations.userLoggedInOrNotCheck(request)
-                    if (!err4) {
-                        if (resData4 == 1) {
+                    // const [err4, resData4] = await validations.userLoggedInOrNotCheck(request)
+                    // if (!err4) {
+                        // if (resData4 == 1) {
                             const [err3, resData3] = await this.userLoginInsert(request, resData1)
                             return [err3, resData3]
-                        } else if (resData4 == 2) {
-                            const [err3, resData3] = await this.userLoginUpdateActive(request, resData1)
-                            return [err3, resData3]
-                        }
+                        // } else if (resData4 == 2) {
+                            // const [err3, resData3] = await this.userLoginUpdateActive(request, resData1)
+                            // return [err3, resData3]
+                        // }
 
-                    } else {
-                        return [err4, resData4]
-                    }
+                    // } else {
+                    //     return [err4, resData4]
+                    // }
                 } else {
                     return [err2, resData2]
                 }

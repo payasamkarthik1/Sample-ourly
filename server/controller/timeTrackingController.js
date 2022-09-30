@@ -63,6 +63,7 @@ function TimeTrackingController(objectCollection) {
     })
 
     app.post('/' + 'timetracking/remove/child/task/delete', async function (req, res) {
+        await util.getFirstWeekDate(req.body);
 
         const [err, resData] = await timeTrackingService.timetrackingRemoveChildTaskDelete(req.body, res);
         if (!err) {
@@ -73,10 +74,25 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
-    //timesheet status
+ 
+
+
+
+    //------------------timesheet status
     app.post('/' + 'timetracking/add/status/insert', async function (req, res) {
 
         const [err, resData] = await timeTrackingService.timesheetAddStatusinsert(req.body, res);
+        if (!err) {
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("timetracking/add/status/insert | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+    app.post('/' + 'timesheet/task/get/week/report', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.getTimesheetWeeklyTasks(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {

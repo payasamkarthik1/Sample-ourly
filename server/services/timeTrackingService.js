@@ -121,7 +121,7 @@ function TimeTrackingService(objectCollection) {
             request.task_created_datetime,
             await util.getFirstWeekDate(request.task_created_datetime),
             await util.getLastWeekDate(request.task_created_datetime),
-            firstMonth.concat("-" + lastMonth),
+            firstMonth.concat(" " + lastMonth),
             util.getCurrentUTCTime()
         );
 
@@ -257,19 +257,26 @@ function TimeTrackingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data1) => {
 
+                    s = data1[0].first_week_day
+                    l = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
                     const end = new Date(data1[0].last_week_day);
 
-                    const [err1, weekhour] = await this.getAllTaskWeekHour(start, end, request)
+                    const [err1, weekhour] = await this.getAllTaskWeekHour(s, l, request)
                     isApp.startDate = util.getMonthName(data1[0].first_week_day)
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
                     isApp.weekHour = weekhour[0].weekHours
                     isApp.status = "Submit"
 
+
+
+                    console.log("end----------------------------" + end);
+
                     let loop = new Date(end);
+                    console.log("loop----------------------------" + loop);
                     //looping thw days in week
                     while (loop >= start) {
-                        let date = moment.utc(loop).format("YYYY-MM-DD HH:mm:ss")
+                        let date = moment.utc(loop).format("YYYY-MM-DD")
                         const [err, data2] = await this.getAllTasksPerDay(date, request)
                         if (data2.length != 0) {
                             let hours = await util.SumOfMultipleTimeDuration(data2)
@@ -458,7 +465,36 @@ function TimeTrackingService(objectCollection) {
 
         }
 
+    };
 
+
+    this.getTimesheetWeeklyTasks = async function (request) {
+        let responseData = [],
+            error = true;
+
+
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id
+        );
+
+        const queryString = util.getQueryString('timesheet_get_all_tasks_weekly', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('==========getTimesheetWeeklyTasks=============')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
 
 
     };
