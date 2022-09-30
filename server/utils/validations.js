@@ -230,11 +230,6 @@ function Validations(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
                     if (data.length !== 0) {
-                        // if (data[0].active == 1) {
-                        //     error = true
-                        //     responseData = [error, { "message": "user already logged in " }]
-                        // }
-                        // else {
                         flag = 2
                         error = false
                         responseData = flag
