@@ -42,9 +42,7 @@ function TimeTrackingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then((data1) => {
-                        console.log('============timetrackingAddTaskDetailsInsert=============')
                         console.log(data1)
-                        console.log('====================================')
                         responseData = data1;
                         error = false
                     }).catch((err) => {
@@ -149,7 +147,6 @@ function TimeTrackingService(objectCollection) {
 
     this.timetrackingTaskDetailsGetByEmployeeId = async function (request) {
 
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -174,10 +171,8 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-
-
     this.getAllTasksPerDay = async function (date, request) {
-        console.log('==========enter getAllTasksPerDay==============')
+        console.log('==========ENTERED GET ALL TASKS IN DAY==============')
 
         let responseData = [],
             error = true;
@@ -186,7 +181,7 @@ function TimeTrackingService(objectCollection) {
             request.employee_id
         );
 
-        const queryString = util.getQueryString('timetracking_get_all_tasks_per_day_select', paramsArr);
+        const queryString = util.getQueryString('timetracking_get_all_tasks_in_day_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -207,14 +202,14 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllWeeksByEmpId = async function (request) {
-        console.log('==========enter getAllWeeksByEmpId==============')
+        console.log('========ENTERED GET ALL WEEKS==============')
         let responseData = [],
             error = true;
         const paramsArr = new Array(
             request.employee_id.toString()
         );
 
-        const queryString = util.getQueryString('timetracking_get_all_task_weeks_select', paramsArr);
+        const queryString = util.getQueryString('timetracking_get_all_weeks_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -235,7 +230,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksInThatWeeks = async function (request, data) {
-
+        console.log('========ENTERED GET ALL TASKA IN WEEK==============')
         let responseData = [],
             error = true;
 
@@ -252,7 +247,7 @@ function TimeTrackingService(objectCollection) {
             request.employee_id
         );
 
-        const queryString = util.getQueryString('timetracking_get_all_tasks_in_that_Week_select', paramsArr);
+        const queryString = util.getQueryString('timetracking_get_all_tasks_in_Week_select', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data1) => {
@@ -267,13 +262,8 @@ function TimeTrackingService(objectCollection) {
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
                     isApp.weekHour = weekhour[0].weekHours
                     isApp.status = "Submit"
-
-
-
-                    console.log("end----------------------------" + end);
-
                     let loop = new Date(end);
-                    console.log("loop----------------------------" + loop);
+
                     //looping thw days in week
                     while (loop >= start) {
                         let date = moment.utc(loop).format("YYYY-MM-DD")
@@ -292,9 +282,9 @@ function TimeTrackingService(objectCollection) {
 
                             headObj.head = arrObj
 
-                            console.log('==========arrObject(each day header and child in week)===============')
+                            console.log('==========ARRAY OF OBJECT(each day header and child in week)===============')
                             console.log(arrObj)
-                            console.log('====================================')
+                            console.log('=================================================================')
 
                         }
 
@@ -304,7 +294,7 @@ function TimeTrackingService(objectCollection) {
                     headObj.head = arrObj
 
                     eachWeek.unshift({ isApp, ...headObj })
-                    console.log('==========each week data===============')
+                    console.log('==========EACH WEEK DATA===============')
                     console.log(eachWeek)
                     console.log('====================================')
 
@@ -340,9 +330,8 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-
     this.getAllTaskWeekHour = async function (start, end, request) {
-        console.log('==========enter getAllTaskWeekHour==============')
+        console.log('==========enter GET ALL TASK WEEK HOUR==============')
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -371,8 +360,6 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-
-
     this.timetrackingGetChildTaskByid = async function (request) {
 
 
@@ -389,9 +376,7 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    console.log('==========timetrackingTaskGetChildTaskByid=============')
                     console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -420,9 +405,7 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    console.log('==========timetrackingRemoveChildTaskDelete=============')
                     console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -451,10 +434,7 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data2) => {
-
-                    console.log('==========timetrackingAddTaskDetailsInsert==========')
                     console.log(data2)
-                    console.log('====================================')
                     responseData = data2;
                     error = false
                 }).catch((err) => {
@@ -471,7 +451,7 @@ function TimeTrackingService(objectCollection) {
     this.getTimesheetWeeklyTasks = async function (request) {
         let responseData = [],
             error = true;
-
+        let obj = {}
 
         const paramsArr = new Array(
             request.first_week_day,
@@ -485,6 +465,21 @@ function TimeTrackingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     console.log('==========getTimesheetWeeklyTasks=============')
+                    // console.log(data[0])
+                    for (let i = 0; i < data.length; i++) {
+                        let key = data[i].project_id;
+                        for (let j = i + 1; j < data.length; j++) {
+                            if (data[j].project_id == key) {
+                                // {...obj1, ...obj2}
+                                Object.assign(data[i], data[j]);
+                                // data[i] = {...data[i], ...data[j]};
+                                // delete data.splice(j,1);
+                            }
+
+                        }
+                    }
+
+                    console.log('====================================')
                     console.log(data)
                     console.log('====================================')
                     responseData = data;

@@ -79,7 +79,7 @@ function TimeTrackingController(objectCollection) {
 
 
     //------------------timesheet status
-    app.post('/' + 'timetracking/add/status/insert', async function (req, res) {
+    app.post('/' + 'timesheet/add/status/insert', async function (req, res) {
 
         const [err, resData] = await timeTrackingService.timesheetAddStatusinsert(req.body, res);
         if (!err) {

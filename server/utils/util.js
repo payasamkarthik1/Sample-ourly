@@ -178,7 +178,7 @@ function Util() {
                 console.log(err);
                 error = err
             }
-            // return [error,responseData]
+
         })
 
     }
