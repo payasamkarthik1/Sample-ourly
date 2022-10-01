@@ -74,7 +74,7 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
- 
+
 
 
 
@@ -85,22 +85,23 @@ function TimeTrackingController(objectCollection) {
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/add/status/insert | Error: ", err);
+            console.log("timesheet/add/status/insert | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
 
-    app.post('/' + 'timesheet/task/get/week/report', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.getTimesheetWeeklyTasks(req.body, res);
+
+    app.post('/' + 'timesheet/get/projects/overview/each/week', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.getTimelineOverview(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/add/status/insert | Error: ", err);
+            console.log("timesheet/get/projects/overview/each/week | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
-
 }
 
 
