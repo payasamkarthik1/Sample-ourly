@@ -251,7 +251,9 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data1) => {
-
+                    console.log('=========timetracking_get_all_tasks_in_Week_select=================')
+                    console.log(data1)
+                    console.log('====================================')
                     s = data1[0].first_week_day
                     l = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
@@ -337,10 +339,11 @@ function TimeTrackingService(objectCollection) {
         const paramsArr = new Array(
             start,
             end,
-            request.employee_id
+            request.employee_id,
+            4
         );
 
-        const queryString = util.getQueryString('timetracking_get_all_tasks_total_week_hour', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -448,40 +451,82 @@ function TimeTrackingService(objectCollection) {
     };
 
 
-    this.getTimesheetWeeklyTasks = async function (request) {
+    this.getTimelineOverview = async function (request) {
         let responseData = [],
             error = true;
-        let obj = {}
 
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
-            request.employee_id
+            request.employee_id,
+            1
         );
 
-        const queryString = util.getQueryString('timesheet_get_all_tasks_weekly', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (x) => {
+                    var newArray = x.reduce(function (acc, curr) {
+                        //finding Index in the array where the NamaCategory matched
+                        var findIfNameExist = acc.findIndex(function (item) {
+                            return item.project_id === curr.project_id;
+                        })
+                        if (findIfNameExist === -1) {
+                            let obj = {
+                                'project_id': curr.project_id,
+                                "value": [curr]
+                            }
+                            acc.push(obj)
+                        } else {
+                            acc[findIfNameExist].value.push(curr)
+                        }
+                        return acc;
+                    }, []);
+                    //get total hours week wise
+                    const [err1, totalHrsWeekWise] = await this.getEachPrjTotalHrsInWeek(request)
+                    const ch = newArray.concat(totalHrsWeekWise);
+                    for (let i = 0; i < ch.length; i++) {
+                        for (let j = i + 1; j < ch.length; j++) {
+                            if (ch[i].project_id === ch[j].project_id) {
+                                ch[i].total_hrs_Prject_Wise = ch[j].total_hours
+                                ch.splice(j);
+                            }
+                        }
+                    }
+                    const [err2, totalHrsDayWise] = await this.getAllPrjsTotalHrsInDay(request)
+                    let obj = {}
+                    obj.total_hours_day_wise = totalHrsDayWise
+                    // ch.concat(totalHrsDayWise)
+                    ch[ch.length] = obj
+                    responseData = ch;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.getEachPrjTotalHrsInWeek = async function (request) {
+        console.log("-----------ENTERED GET EACH PRJ TOTAL_HRS IN WEEK--------------- ");
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id,
+            2
+        );
+
+        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('==========getTimesheetWeeklyTasks=============')
-                    // console.log(data[0])
-                    for (let i = 0; i < data.length; i++) {
-                        let key = data[i].project_id;
-                        for (let j = i + 1; j < data.length; j++) {
-                            if (data[j].project_id == key) {
-                                // {...obj1, ...obj2}
-                                Object.assign(data[i], data[j]);
-                                // data[i] = {...data[i], ...data[j]};
-                                // delete data.splice(j,1);
-                            }
-
-                        }
-                    }
-
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -494,6 +539,34 @@ function TimeTrackingService(objectCollection) {
 
     };
 
+    this.getAllPrjsTotalHrsInDay = async function (request) {
+        console.log("-----------ENTERED GET All PRJ TOTAL_HRS IN DAY--------------- ");
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id,
+            3
+        );
+
+        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
 
 }
 
