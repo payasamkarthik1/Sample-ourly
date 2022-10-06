@@ -38,43 +38,6 @@ function Util() {
         return response
     }
 
-    this.getCurrentUTCTime = function (format) {
-        let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
-        return now;
-    }
-    this.getMonthName = function (date) {
-
-        var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
-        day = dt.format('Do');
-        month = dt.format('MMM');
-        year = dt.format('YYYY');
-        return month.concat(" " + day + "," + year)
-
-    }
-
-    this.SumOfMultipleTimeDuration = async function (data) {
-        const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
-        const sum = ms.reduce((prev, cur) => prev + cur, 0);
-        const hms = moment.utc(sum).format("HH:mm:ss");
-        return hms
-    }
-    this.SumOfTotalWeekHours = async function (data) {
-        console.log("------------enterted into overall total time in week----------------------------");
-        const ms = data.map((d, i) =>
-            moment.duration(d[i].header.hours).asSeconds() * 1000)
-        const sum = ms.reduce((prev, cur) => prev + cur, 0);
-        const hms = moment.utc(sum).format("HH:mm:ss");
-        return hms
-    }
-    this.getTimeDiff = async function (request) {
-
-        var startTime = moment(request.task_start_time, "HH:mm:ss a"),
-            endTime = moment(request.task_end_time, "HH:mm:ss a");
-        var hrs = moment.utc(endTime.diff(startTime)).format("HH");
-        var min = moment.utc(endTime.diff(startTime)).format("mm");
-        var sec = moment.utc(endTime.diff(startTime)).format("ss");
-        return [hrs, min, sec].join(':')
-    }
     this.getRandomNumericId = function (format) {
         let id = Math.floor(Math.random() * 1000)
         return id;
@@ -85,6 +48,7 @@ function Util() {
         let hashPassword = await bcrypt.hash(password, salt)
         return hashPassword
     }
+    
     this.cryto = async function (req, res) {
 
         ciphertext = CryptoJS.AES.encrypt(
@@ -133,7 +97,6 @@ function Util() {
 
         return [error, responseData]
     }
-
 
     this.nodemailerSender = async function (request, res) {
         var responseData = [];
@@ -188,7 +151,6 @@ function Util() {
         return id
     }
 
-
     this.addUniqueIndexesToArrayOfObject = async function (data) {
 
         let i = 1
@@ -202,30 +164,54 @@ function Util() {
 
     this.getFirstWeekDate = async function (dt) {
 
+
         d = new Date(dt);
         var day = d.getDay(),
-            diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 1); // adjust when day is sunday
+            diff = d.getDate() - day + (d.getDay() === 0 ? -6 : 1); // adjust when day is sunday
         firstweekDay = new Date(d.setDate(diff))
-        return firstweekDay
+        return firstweekDay.toISOString().split('T')[0]
 
-
-    }
+ }
 
     this.getLastWeekDate = async function (dt) {
-
         d = new Date(dt);
         var day = d.getDay(),
-            diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 7); // adjust when day is sunday
+            diff = d.getDate() - day + (d.getDay() === 0 ? -0 : 7); // adjust when day is sunday
         lastweekDay = new Date(d.setDate(diff))
-        return lastweekDay
-
-
-
-
-
+        return lastweekDay.toISOString().split('T')[0]
 
     }
 
+    this.getTimeDiff = async function (request) {
+
+        var startTime = moment(request.task_start_time, "HH:mm:ss a"),
+            endTime = moment(request.task_end_time, "HH:mm:ss a");
+        var hrs = moment.utc(endTime.diff(startTime)).format("HH");
+        var min = moment.utc(endTime.diff(startTime)).format("mm");
+        var sec = moment.utc(endTime.diff(startTime)).format("ss");
+        return [hrs, min, sec].join(':')
+    }
+
+    this.getCurrentUTCTime = function (format) {
+        let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
+        return now;
+    }
+
+    this.getMonthName = function (date) {
+        var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
+        day = dt.format('Do');
+        month = dt.format('MMM');
+        year = dt.format('YYYY');
+        return month.concat(" " + day + "," + year)
+
+    }
+
+    this.SumOfMultipleTimeDuration = async function (data) {
+        const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
+        const sum = ms.reduce((prev, cur) => prev + cur, 0);
+        const hms = moment.utc(sum).format("HH:mm:ss");
+        return hms
+    }
 }
 
 module.exports = Util

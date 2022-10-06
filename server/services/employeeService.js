@@ -33,9 +33,9 @@ function AdminService(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.role_id,
+                request.lead_assgined_employee_id,
                 request.department_id,
                 request.designation_id,
-
                 hashPassword,
                 util.getCurrentUTCTime()
             );
@@ -45,6 +45,7 @@ function AdminService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
+    
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1;
                         error = false;
@@ -156,7 +157,9 @@ function AdminService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     error = false
-                    responseData = data
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
+                    responseData = data1
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -165,15 +168,72 @@ function AdminService(objectCollection) {
         }
     }
 
-    this.getTeamLeads = async function (request) {
+    this.addEmployeesUnderLeads = async function (request) {
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            request.team_lead_emplyee_id.toString()
+            request.role_id,
+            request.team_lead_employee_id,
+            request.employee_id,
+            util.getCurrentUTCTime()
         );
 
-        const queryString = util.getQueryString('get_team_leads', paramsArr);
+        const queryString = util.getQueryString('lead_add_employees_under_lead', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getAllLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        // if flag = 2 get all leads
+        flag = 2
+        const paramsArr = new Array(
+            0,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getEmpsUnderLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        // if flag = 1 get all employess under lead
+        flag = 1
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)

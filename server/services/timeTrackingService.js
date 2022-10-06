@@ -9,15 +9,13 @@ function TimeTrackingService(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
-
     this.timetrackingAddTaskDetailsInsert = async function (request) {
-        const [err, data] = await this.timetrackingTaskDetailsGetByEmployeeId(request)
+        const [err, data] = await this.timetrackingGetAllTaskDetailsByDate(request)
         if (data == 0) {
             const firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
             const lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
             const firstMonth = util.getMonthName(firstWeekDate)
             const lastMonth = util.getMonthName(lastWeekDate)
-
 
             let responseData = [],
                 error = true;
@@ -35,16 +33,13 @@ function TimeTrackingService(objectCollection) {
                 firstMonth.concat(" " + lastMonth),
                 util.getCurrentUTCTime()
             );
-
-
             const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
-
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
-                    .then((data1) => {
-                        console.log(data1)
-                        responseData = data1;
-                        error = false
+                    .then(async (data1) => {
+                        await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                        error = false,
+                            responseData = data1
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
@@ -52,10 +47,11 @@ function TimeTrackingService(objectCollection) {
                 return [error, responseData];
             }
         } else {
-            const firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
-            const lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
+            firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
+            lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
             const firstMonth = util.getMonthName(firstWeekDate)
             const lastMonth = util.getMonthName(lastWeekDate)
+
             let responseData = [],
                 error = true;
             const paramsArr = new Array(
@@ -78,8 +74,8 @@ function TimeTrackingService(objectCollection) {
 
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
-                    .then((data2) => {
-
+                    .then(async (data2) => {
+                        await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                         console.log('==========timetrackingAddTaskDetailsInsert==========')
                         console.log(data2)
                         console.log('====================================')
@@ -104,7 +100,7 @@ function TimeTrackingService(objectCollection) {
         const firstMonth = util.getMonthName(firstWeekDate)
         const lastMonth = util.getMonthName(lastWeekDate)
 
-
+        const [err1, data2] = await this.timetrackingGetChildTask(request)
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -128,10 +124,14 @@ function TimeTrackingService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data1) => {
-                    console.log('===========timetrackingUpdateTaskDetails==============')
-                    console.log(data1)
-                    console.log('====================================')
+                .then(async (data1) => {
+                    await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+
+                    //for update project taking details before of project before update and update in timesheet
+                    const firstMonth1 = util.getMonthName(data2[0].first_week_day)
+                    const lastMonth1 = util.getMonthName(data2[0].last_week_day)
+                    request.project_id = data2[0].project_id
+                    await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -145,7 +145,7 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.timetrackingTaskDetailsGetByEmployeeId = async function (request) {
+    this.timetrackingGetAllTaskDetailsByDate = async function (request) {
 
         let responseData = [],
             error = true;
@@ -172,8 +172,6 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksPerDay = async function (date, request) {
-        console.log('==========ENTERED GET ALL TASKS IN DAY==============')
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -186,9 +184,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('============= getAllTasksPerDay=============')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -230,7 +225,6 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksInThatWeeks = async function (request, data) {
-        console.log('========ENTERED GET ALL TASKA IN WEEK==============')
         let responseData = [],
             error = true;
 
@@ -244,28 +238,24 @@ function TimeTrackingService(objectCollection) {
         const paramsArr = new Array(
             data.firstWeekDay,
             data.lastWeekDay,
-            request.employee_id
+            request.employee_id,
+
         );
 
         const queryString = util.getQueryString('timetracking_get_all_tasks_in_Week_select', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data1) => {
-                    console.log('=========timetracking_get_all_tasks_in_Week_select=================')
-                    console.log(data1)
-                    console.log('====================================')
-                    s = data1[0].first_week_day
-                    l = data1[0].last_week_day
+                    firstWekkDay = data1[0].first_week_day
+                    lastWeekDay = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
                     const end = new Date(data1[0].last_week_day);
-
-                    const [err1, weekhour] = await this.getAllTaskWeekHour(s, l, request)
+                    const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(firstWekkDay, lastWeekDay, request)
                     isApp.startDate = util.getMonthName(data1[0].first_week_day)
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
                     isApp.weekHour = weekhour[0].weekHours
                     isApp.status = "Submit"
                     let loop = new Date(end);
-
                     //looping thw days in week
                     while (loop >= start) {
                         let date = moment.utc(loop).format("YYYY-MM-DD")
@@ -310,19 +300,24 @@ function TimeTrackingService(objectCollection) {
         };
     }
 
-    this.getAllWeeksTasksByEmpId = async function (request) {
+    this.getAllTasksOfAllWeeksByEmpId = async function (request) {
         let responseData = []
         error = true;
 
         const [err, data] = await this.getAllWeeksByEmpId(request)
         if (!err) {
-
-            for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getAllTasksInThatWeeks(request, data[i])
-                if (data1.length != 0) {
-                    error = false
-                    responseData.push(data1)
+            if (!data.length == 0) {
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getAllTasksInThatWeeks(request, data[i])
+                    if (data1.length != 0) {
+                        error = false
+                        responseData.push(data1)
+                    }
                 }
+            }
+            else {
+                error = err
+                responseData = data
             }
 
         }
@@ -332,18 +327,21 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.getAllTaskWeekHour = async function (start, end, request) {
+    this.getWorkedHoursOfAllTasksWeekly = async function (start, end, request) {
         console.log('==========enter GET ALL TASK WEEK HOUR==============')
         let responseData = [],
             error = true;
+        //flag =1 for total hours calculation for all projects for a given week 
+        flag = 4
         const paramsArr = new Array(
             start,
             end,
             request.employee_id,
-            4
+            0,
+            flag
         );
 
-        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -363,8 +361,7 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.timetrackingGetChildTaskByid = async function (request) {
-
+    this.timetrackingGetChildTask = async function (request) {
 
         let responseData = [],
             error = true;
@@ -379,7 +376,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    console.log(data)
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -394,6 +390,13 @@ function TimeTrackingService(objectCollection) {
 
     this.timetrackingRemoveChildTaskDelete = async function (request) {
 
+        const [err, data] = await this.timetrackingGetChildTask(request)
+        const firstWeekDate = await util.getFirstWeekDate(data[0].task_created_datetime)
+        const lastWeekDate = await util.getLastWeekDate(data[0].task_created_datetime)
+        const firstMonth = util.getMonthName(firstWeekDate)
+        const lastMonth = util.getMonthName(lastWeekDate)
+        request.employee_id = data[0].employee_id
+        request.project_id = data[0].project_id
 
         let responseData = [],
             error = true;
@@ -407,7 +410,8 @@ function TimeTrackingService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
+                .then(async (data) => {
+                    await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                     console.log(data)
                     responseData = data;
                     error = false
@@ -421,18 +425,16 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-
-
-    this.timesheetAddStatusinsert = async function (request) {
+    this.statusAddinsert = async function (request) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            request.timesheet_status_name,
+            request.status_name,
             util.getCurrentUTCTime()
         );
 
 
-        const queryString = util.getQueryString('timesheet_add_status_insert', paramsArr);
+        const queryString = util.getQueryString('status_add_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -450,25 +452,27 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-
-    this.getTimelineOverview = async function (request) {
+    this.getTimesheetOfAllProjectsOverview = async function (request, firstWeekDate, lastWeekDate) {
+        console.log(firstWeekDate);
+        console.log(lastWeekDate);
         let responseData = [],
             error = true;
-
+        //flag =1 for total worked hours calculation for each project for each day
+        flag = 1
         const paramsArr = new Array(
-            request.first_week_day,
-            request.last_week_day,
+            firstWeekDate,
+            lastWeekDate,
             request.employee_id,
-            1
+            request.project_id,
+            flag
         );
 
-        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (x) => {
-                    var newArray = x.reduce(function (acc, curr) {
-                        //finding Index in the array where the NamaCategory matched
+                .then(async (data) => {
+                    var newArray = data.reduce(function (acc, curr) {
                         var findIfNameExist = acc.findIndex(function (item) {
                             return item.project_id === curr.project_id;
                         })
@@ -483,50 +487,67 @@ function TimeTrackingService(objectCollection) {
                         }
                         return acc;
                     }, []);
-                    //get total hours week wise
-                    const [err1, totalHrsWeekWise] = await this.getEachPrjTotalHrsInWeek(request)
-                    const ch = newArray.concat(totalHrsWeekWise);
-                    for (let i = 0; i < ch.length; i++) {
-                        for (let j = i + 1; j < ch.length; j++) {
-                            if (ch[i].project_id === ch[j].project_id) {
-                                ch[i].total_hrs_Prject_Wise = ch[j].total_hours
-                                ch.splice(j);
+
+                    let arr1 = ["mon", 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                    for (let i = 0; i < newArray.length; i++) {
+                        arr1.map((va) => {
+                            let aaa = newArray[i]?.value.some((el) => (el.day).toLowerCase() === va)
+                            if (!aaa) {
+                                newArray[i].value.push({
+                                    hours: '00:00:00',
+                                    day: va,
+                                })
                             }
-                        }
+                        })
                     }
-                    const [err2, totalHrsDayWise] = await this.getAllPrjsTotalHrsInDay(request)
-                    let obj = {}
-                    obj.total_hours_day_wise = totalHrsDayWise
-                    // ch.concat(totalHrsDayWise)
-                    ch[ch.length] = obj
-                    responseData = ch;
+                    const sorter = {
+                        "mon": 1,
+                        "tue": 2,
+                        "wed": 3,
+                        "thu": 4,
+                        "fri": 5,
+                        "sat": 6,
+                        "sun": 7
+                    }
+                    for (let j = 0; j < newArray.length; j++) {
+                        newArray[j].value.sort(function sortByDay(a, b) {
+
+                            let day1 = a.day.toLowerCase();
+                            let day2 = b.day.toLowerCase();
+                            return sorter[day1] - sorter[day2];
+                        });
+                    }
+                    responseData = newArray;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
                 })
+
             return [error, responseData];
         }
 
 
     };
 
-    this.getEachPrjTotalHrsInWeek = async function (request) {
-        console.log("-----------ENTERED GET EACH PRJ TOTAL_HRS IN WEEK--------------- ");
+    this.getWorkedHrsOfEachPrjInWeek = async function (request) {
         let responseData = [],
             error = true;
+        //flag =2 for total hours worked for each project in a week
+        flag = 2
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
             request.employee_id,
+            0,
             2
         );
 
-        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
+                .then((data) => {
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -539,23 +560,22 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.getAllPrjsTotalHrsInDay = async function (request) {
-        console.log("-----------ENTERED GET All PRJ TOTAL_HRS IN DAY--------------- ");
-
+    this.getWorkedHrsOfAllPrjsInDay = async function (request) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
             request.employee_id,
-            3
+            0,
+            5
         );
 
-        const queryString = util.getQueryString('timetracking_timeline_hours_calculation', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
+                .then((data) => {
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -567,6 +587,174 @@ function TimeTrackingService(objectCollection) {
 
 
     };
+
+    this.getAllProjectsTimesheetWeekly = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+        );
+
+        const queryString = util.getQueryString('timesheet_get_all_projects_worked_hours_weekly', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (!data.length == 0) {
+                        const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request)
+                        const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request)
+                        data.push(data2[0])
+                        data.filter(function (o1, i) {
+                            data1.some(function (o2) {
+                                if (o1.project_id === o2.project_id) {
+                                    data[i].total_hour = o2.total_hours
+                                }
+                            });
+                        });
+
+                        console.log(data);
+                        responseData = data;
+                        error = false
+                    } else {
+                        responseData = data;
+                        error = false
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.getProjectFromTimesheet = async function (request, firstWeekDay, lastWeekDay) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id,
+            request.project_id,
+            firstWeekDay,
+            lastWeekDay
+        );
+
+        const queryString = util.getQueryString('timesheet_get_projects', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then((data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.removeProjectFromTimesheet = async function (request, firstWeekDay, lastWeekDay) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id,
+            request.project_id,
+            firstWeekDay,
+            lastWeekDay
+        );
+
+        const queryString = util.getQueryString('timesheet_remove_Project_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then((data) => {
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.timesheetAddUpdateRemoveProjects = async function (request, firstWeekDay, lastWeekDay, firstMonth, lastMonth) {
+
+        const [err, prjData] = await this.getProjectFromTimesheet(request, firstWeekDay, lastWeekDay)
+        if (prjData.length == 0) {
+            const [err, data] = await this.getTimesheetOfAllProjectsOverview(request, firstWeekDay, lastWeekDay)
+            const paramsArr = new Array(
+                request.employee_id,
+                request.project_id,
+                data[0].value[0].hours,
+                data[0].value[1].hours,
+                data[0].value[2].hours,
+                data[0].value[3].hours,
+                data[0].value[4].hours,
+                data[0].value[5].hours,
+                data[0].value[6].hours,
+                firstWeekDay,
+                lastWeekDay,
+                firstMonth.concat(" " + lastMonth),
+                util.getCurrentUTCTime()
+            );
+            const queryString = util.getQueryString('timesheet_add_projects_insert', paramsArr);
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data1) => {
+
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+
+            }
+        } else {
+            const [err, data] = await this.getTimesheetOfAllProjectsOverview(request, firstWeekDay, lastWeekDay)
+            if (data.length == 0) {
+                await this.removeProjectFromTimesheet(request, firstWeekDay, lastWeekDay);
+            }
+            else {
+
+                const paramsArr = new Array(
+                    request.employee_id,
+                    request.project_id,
+                    data[0].value[0].hours,
+                    data[0].value[1].hours,
+                    data[0].value[2].hours,
+                    data[0].value[3].hours,
+                    data[0].value[4].hours,
+                    data[0].value[5].hours,
+                    data[0].value[6].hours,
+                    firstWeekDay,
+                    lastWeekDay,
+                );
+                const queryString = util.getQueryString('timesheet_update_project', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data1) => {
+
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+
+                }
+            }
+        }
+    };
+
+
 
 }
 

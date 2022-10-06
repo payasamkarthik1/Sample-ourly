@@ -92,11 +92,30 @@ function EmployeeController(objectCollection) {
             }
         })
 
-    app.post('/' + 'get/team/leads/list',
+
+    //-------------------------leads---------------
+
+    app.get('/' + 'lead/get/all/leads/list',
 
         async function (req, res) {
 
-            const [err, resData] = await employeeService.getTeamLeads(req.body);
+            const [err, resData] = await employeeService.getAllLeads(req.body);
+            if (!err) {
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+
+
+    app.post('/' + 'lead/get/emps/assigned/under/leads/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.getEmpsUnderLeads(req.body);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
