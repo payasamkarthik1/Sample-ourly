@@ -158,6 +158,7 @@ function AdminService(objectCollection) {
             request.dob,
             request.image,
             request.role_id,
+            request.lead_assigned_employee_id,
             request.department_id,
             request.designation_id,
 
