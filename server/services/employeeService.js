@@ -33,7 +33,7 @@ function AdminService(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.role_id,
-                request.lead_assgined_employee_id,
+                request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
                 hashPassword,
