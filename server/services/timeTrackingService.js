@@ -246,11 +246,11 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data1) => {
-                    firstWekkDay = data1[0].first_week_day
-                    lastWeekDay = data1[0].last_week_day
+                    request.first_week_day = data1[0].first_week_day
+                    request.last_week_day = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
                     const end = new Date(data1[0].last_week_day);
-                    const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(firstWekkDay, lastWeekDay, request)
+                    const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(request)
                     isApp.startDate = util.getMonthName(data1[0].first_week_day)
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
                     isApp.weekHour = weekhour[0].weekHours
@@ -327,15 +327,14 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.getWorkedHoursOfAllTasksWeekly = async function (start, end, request) {
-        console.log('==========enter GET ALL TASK WEEK HOUR==============')
+    this.getWorkedHoursOfAllTasksWeekly = async function (request) {
         let responseData = [],
             error = true;
-        //flag =1 for total hours calculation for all projects for a given week 
+        //flag =4 for total hours calculation for all projects for a given week 
         flag = 4
         const paramsArr = new Array(
-            start,
-            end,
+            request.first_week_day,
+            request.last_week_day,
             request.employee_id,
             0,
             flag
@@ -346,9 +345,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('==========getAllTaskWeekHour=============')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {

@@ -80,12 +80,18 @@ function ProjectService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('=========addClientInsert=============')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data1;
-                    error = false
+                    console.log("--------------" + data);
+                    if (data[0].client_name == "CLIENT ALREADY EXIST") {
+                        //renaming object to message
+                        data[0].message = data[0].client_name
+                        delete data[0].client_name
+                        error = true
+                        responseData = data;
+                    } else {
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1;
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -193,6 +199,7 @@ function ProjectService(objectCollection) {
                 request.client_id,
                 util.getRandomNumericId(),
                 request.project_name,
+                request.project_code,
                 request.project_color_code,
                 request.tag_id,
                 util.getCurrentUTCTime(),
@@ -202,9 +209,21 @@ function ProjectService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
+                        if (data[0].project_name === "PROJECT ALREADY EXIST") {
+                            data[0].message = data[0].project_name
+                            delete data[0].project_name
+                            error = true
+                            responseData = data;
+                        } else if (data[0].project_name === "PROJECT CODE ALREADY EXIST") {
+                            data[0].message = data[0].project_name
+                            delete data[0].project_name
+                            error = true
+                            responseData = data;
+                        } else {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
@@ -432,15 +451,15 @@ function ProjectService(objectCollection) {
                         responseData = data;
                         error = false
                     } else {
-                      
-                            error = true
-                            responseData = [{ message: "Tag cannot be deleted" }]
-                        }
-                    
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+
+                        error = true
+                        responseData = [{ message: "Tag cannot be deleted" }]
+                    }
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
             return [error, responseData];
         }
     }

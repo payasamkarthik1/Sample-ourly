@@ -40,7 +40,7 @@ function TimeTrackingController(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
-    
+
     app.post('/' + 'timetracking/get/all/weeks/task/details/by/employeeid/list', async function (req, res) {
 
         const [err, resData] = await timeTrackingService.getAllTasksOfAllWeeksByEmpId(req.body, res);

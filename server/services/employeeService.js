@@ -45,10 +45,22 @@ function AdminService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
-    
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false;
+                        if (data[0].email === "EMAIL ALREADY EXIST") {
+                            data[0].message = data[0].email
+                            delete data[0].email
+                            error = true
+                            responseData = data;
+                        } else if (data[0].email === "PHONENUMBER ALREADY EXIST") {
+                            data[0].message = data[0].email
+                            delete data[0].email
+                            error = true
+                            responseData = data;
+                        } else {
+
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false;
+                        }
 
                     })
                     .catch((err) => {
