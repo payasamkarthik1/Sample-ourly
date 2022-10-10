@@ -23,6 +23,9 @@ const timeTrackingService = require('../services/timeTrackingService')
 const analyzeController = require('../controller/analyzeController')
 const analyzeServices = require('../services/analyzeServices')
 
+const adminController = require('../controller/adminController')
+const adminService = require('../services/adminService')
+
 
 function ControllInterceptor(objCollection) {
 
@@ -46,9 +49,12 @@ function ControllInterceptor(objCollection) {
     new timeTrackingController(objCollection)
     new timeTrackingService(objCollection)
 
+    new timeTrackingController(objCollection)
+    new timeTrackingService(objCollection)
+
     
-    new analyzeController(objCollection)
-    new analyzeServices(objCollection)
+    new adminController(objCollection)
+    new adminService(objCollection)
 }
 
 

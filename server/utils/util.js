@@ -9,7 +9,6 @@ const randtoken = require("rand-token");
 
 function Util() {
 
-
     this.getQueryString = function (callName, paramsArr) {
         let queryString = '',
             preparedQueryString;

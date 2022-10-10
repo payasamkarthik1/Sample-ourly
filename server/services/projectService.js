@@ -245,6 +245,7 @@ function ProjectService(objectCollection) {
             request.client_id,
             request.project_id,
             request.project_name,
+            request.project_code,
             request.project_color_code,
             request.tag_id,
         );

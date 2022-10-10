@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt')
 const Validator = require('validator')
 const isEmpty = require('is-empty');
 const { response } = require('express');
-const AdminService = require('../services/adminService');
 
 
 function Validations(objectCollection) {
