@@ -24,37 +24,17 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (!data.length == 0) {
-                        const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
-                        const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
-
-
-                        console.log('=======DATA4=======')
-                        console.log(data4)
-                        console.log('====================================')
-
+                        flag = 1
+                        const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request, flag)
+                        const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request, flag)
+                        const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
+                        const [err4, data4] = await this.getTopProjectBasedOnHrs(request, flag)
                         data4.forEach(function (object, i) {
-                            var array = object.highesh.split(":");
+                            var array = object.highest.split(":");
                             var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
                             object.num = seconds
 
                         })
-                        console.log('=======after  DATA4=======')
-                        console.log(data4)
-                        console.log('====================================')
-
-                        //highesh
-                        // var max = data4.reduce(function (prev, current) {
-                        //     if (+current.highesh > +prev.highesh) {
-                        //         return current;
-                        //     } else {
-                        //         return prev;
-                        //     }
-                        // });
-
-                        // console.log(max);
-
                         data.push(data2[0])
                         data.filter(function (o1, i) {
                             data1.some(function (o2) {
@@ -86,11 +66,10 @@ function AnalyzeServices(objectCollection) {
 
     };
 
-    this.getTopProjectBasedOnHrs = async function (request) {
+    this.getAllTasksWeeklyFilterByDescrip = async function (request) {
         let responseData = [],
             error = true;
-        //flag =4 for total hours calculation for all projects for a given week 
-        flag = 6
+        flag = 7
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
@@ -104,6 +83,9 @@ function AnalyzeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('====================================');
+                    console.log(data);
+                    console.log('====================================');
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -116,6 +98,232 @@ function AnalyzeServices(objectCollection) {
 
     };
 
+    this.getTopProjectBasedOnHrs = async function (request, flag) {
+        if (flag === 1) {
+            let responseData = [],
+                error = true;
+            //flag =6 for total hours calculation for all projects for a given week 
+            flag = 6
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                0,
+                flag
+            );
+
+            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        } else if (flag === 2) {
+            let responseData = [],
+                error = true;
+            //flag =6 for total hours calculation for all projects for a given week 
+            flag = 6
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.lead_assigned_employee_id,
+                flag
+            );
+
+            const queryString = util.getQueryString('dashboard_get_lead_myteams_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+
+        } else if (flag === 3) {
+            let responseData = [],
+                error = true;
+            //flag =6 for total hours calculation for all projects for a given week 
+            flag = 6
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                flag
+            );
+            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        }
+    };
+
+    this.getleadMyTeamDasboardOverview = async function (request) {
+        let responseData = [],
+            error = true;
+        // if flag =1 get my team dashboard overview for lead
+        flag = 1
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('dashboard_get_lead_myteams_dashboard_overview_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('====================================')
+                    console.log(data)
+                    console.log('====================================')
+                    flag = 2
+                    const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request, flag)
+                    console.log('=======firstttttttttt================')
+                    console.log(data1)
+                    console.log('====================================')
+                    const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request, flag)
+                    console.log('=======fseconnnnnnn================')
+                    console.log(data2)
+                    console.log('====================================')
+                    const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
+                    console.log('=======wekkkkkkkkkk================')
+                    console.log(data3)
+                    console.log('====================================')
+                    const [err4, data4] = await this.getTopProjectBasedOnHrs(request, flag)
+                    console.log('=======tttttttopk================')
+                    console.log(data4)
+                    console.log('====================================')
+                    data4.forEach(function (object, i) {
+                        var array = object.highest.split(":");
+                        var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
+                        object.num = seconds
+
+                    })
+                    data.push(data2[0])
+                    data.filter(function (o1, i) {
+                        data1.some(function (o2) {
+                            if (o1.project_id === o2.project_id) {
+                                data[i].total_hour = o2.total_hours
+                            }
+                        });
+                    });
+
+                    let totalTime = data3[0].weekHours
+                    let topProject = data4[0].project_name
+                    let topClient = data4[0].client_name
+
+                    data.unshift({ totalTime, topProject, topClient })
+                    console.log(data);
+                    responseData = data;
+                    error = false
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.getadminAllEmpsDasboardOverview = async function (request) {
+        let responseData = [],
+            error = true;
+        // if flag =2 get all employess dashboard overview for admin 
+        flag = 1
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            flag
+        );
+
+        const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    flag = 3
+                    const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request, flag)
+                    const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request, flag)
+                    const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
+                    const [err4, data4] = await this.getTopProjectBasedOnHrs(request, flag)
+                    data4.forEach(function (object, i) {
+                        var array = object.highest.split(":");
+                        var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
+                        object.num = seconds
+
+                    })
+                    data.push(data2[0])
+                    data.filter(function (o1, i) {
+                        data1.some(function (o2) {
+                            if (o1.project_id === o2.project_id) {
+                                data[i].total_hour = o2.total_hours
+                            }
+                        });
+                    });
+
+                    let totalTime = data3[0].weekHours
+                    let topProject = data4[0].project_name
+                    let topClient = data4[0].client_name
+
+                    data.unshift({ totalTime, topProject, topClient })
+                    console.log(data);
+                    responseData = data;
+                    error = false
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.getAdminleadTeamDasboardOverview = async function (request) {
+        let responseData = [],
+            error = true;
+        //role_id= 2 for admin
+        if (request.role_id === 2) {
+            const [err1, data1] = await this.getadminAllEmpsDasboardOverview(request)
+            error = err1
+            responseData = data1
+            //role_id= 4 for lead
+        } else if (request.role_id === 4) {
+            const [err2, data2] = await this.getleadMyTeamDasboardOverview(request)
+            error = err2
+            responseData = data2
+        }
+        return [error, responseData]
+
+    };
 
 }
 

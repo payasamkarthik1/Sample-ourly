@@ -17,7 +17,7 @@ function Analyze(objectCollection) {
     const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
-    //--------dashboard-----------
+    //--------------------------dashboard--------------------
 
     //@Post analyze/get/dashboad/overview
     app.post('/' + 'analyze/get/dashboad/overview',
@@ -34,58 +34,35 @@ function Analyze(objectCollection) {
             }
         })
 
-    //----------reports---------------
-
-    //@Post analyze/get/report/filter/by/client
-    app.post('/' + 'analyze/get/report/filter/by/client',
+    //@Post analyze/get/dashboad/all/tasks/weekly/filter/by/descrip
+    app.post('/' + 'analyze/get/dashboad/all/tasks/weekly/filter/by/descrip',
 
         async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
+            const [err, resData] = await analyzeServices.getAllTasksWeeklyFilterByDescrip(req.body);
             if (!err) {
-                console.log("analyze/get/report/filter/by/client | Error: ", err);
+                console.log("analyze/get/dashboad/all/tasks/weekly/filter/by/descrip | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("analyze/get/report/filter/by/client | Error: ", err);
+                console.log("analyze/get/dashboad/all/tasks/weekly/filter/by/descrip | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-    //@Post analyze/get/report/filter/by/project
-    app.post('/' + 'analyze/get/report/filter/by/project',
+    //@Post analyze/get/admin/lead/team/dashboad/overview
+    app.post('/' + 'analyze/get/admin/lead/team/dashboad/overview',
 
         async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
+            const [err, resData] = await analyzeServices.getAdminleadTeamDasboardOverview(req.body);
             if (!err) {
-                console.log("analyze/get/report/filter/by/project | Error: ", err);
+                console.log("analyze/get/admin/lead/team/dashboad/overview | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("analyze/get/report/filter/by/project | Error: ", err);
+                console.log("analyze/get/admin/lead/team/dashboad/overview | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-    //@Post analyze/get/report/filter/by/project/by/tag
-    app.post('/' + 'analyze/get/report/filter/by/project/by/tag',
-
-        async function (req, res) {
-
-            const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
-            if (!err) {
-                console.log("analyze/get/report/filter/by/project/by/tag | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("analyze/get/report/filter/by/project/by/tag | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-
-
-
-
-
 
 
 }

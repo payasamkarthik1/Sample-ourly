@@ -19,18 +19,17 @@ const userService = require('../services/userService')
 const timeTrackingController = require('../controller/timeTrackingController')
 const timeTrackingService = require('../services/timeTrackingService')
 
-
 const analyzeController = require('../controller/analyzeController')
 const analyzeServices = require('../services/analyzeServices')
 
 const adminController = require('../controller/adminController')
 const adminService = require('../services/adminService')
 
+const HolidayListController = require('../controller/HolidaysListController')
+const HolidaysListService = require('../services/HolidaysListService')
+
 
 function ControllInterceptor(objCollection) {
-
-    // new adminController(objCollection)
-    // new adminServices(objCollection)
 
     new validations(objCollection)
 
@@ -52,9 +51,15 @@ function ControllInterceptor(objCollection) {
     new timeTrackingController(objCollection)
     new timeTrackingService(objCollection)
 
-    
+    new analyzeController(objCollection)
+    new analyzeServices(objCollection)
+
+
     new adminController(objCollection)
     new adminService(objCollection)
+
+    new HolidayListController(objCollection)
+    new HolidaysListService(objCollection)
 }
 
 

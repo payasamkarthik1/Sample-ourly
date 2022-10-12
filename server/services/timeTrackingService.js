@@ -250,7 +250,8 @@ function TimeTrackingService(objectCollection) {
                     request.last_week_day = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
                     const end = new Date(data1[0].last_week_day);
-                    const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(request)
+                    flag=1
+                    const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(request,flag)
                     isApp.startDate = util.getMonthName(data1[0].first_week_day)
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
                     isApp.weekHour = weekhour[0].weekHours
@@ -323,36 +324,6 @@ function TimeTrackingService(objectCollection) {
         }
 
         return [error, responseData];
-
-
-    };
-
-    this.getWorkedHoursOfAllTasksWeekly = async function (request) {
-        let responseData = [],
-            error = true;
-        //flag =4 for total hours calculation for all projects for a given week 
-        flag = 4
-        const paramsArr = new Array(
-            request.first_week_day,
-            request.last_week_day,
-            request.employee_id,
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
 
 
     };
@@ -526,61 +497,247 @@ function TimeTrackingService(objectCollection) {
 
     };
 
-    this.getWorkedHrsOfEachPrjInWeek = async function (request) {
-        let responseData = [],
-            error = true;
-        //flag =2 for total hours worked for each project in a week
-        flag = 2
-        const paramsArr = new Array(
-            request.first_week_day,
-            request.last_week_day,
-            request.employee_id,
-            0,
-            2
-        );
+    this.getWorkedHrsOfEachPrjInWeek = async function (request, flag) {
+        if (flag === 1) {
+            let responseData = [],
+                error = true;
+            //flag =2 for total hours worked for each project in a week
+            flag = 2
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                0,
+                2
+            );
 
-        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        } else if (flag === 2) {
+            let responseData = [],
+                error = true;
+            //flag =2 for total hours worked for each project in a week
+            flag = 2
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.lead_assigned_employee_id,
+                flag
+            );
+
+            const queryString = util.getQueryString('dashboard_get_lead_myteams_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        } else if (flag === 3) {
+            let responseData = [],
+                error = true;
+            //flag =2 for total hours worked for each project in a week
+            flag = 2
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                flag
+            );
+
+            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
         }
-
-
     };
 
-    this.getWorkedHrsOfAllPrjsInDay = async function (request) {
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.first_week_day,
-            request.last_week_day,
-            request.employee_id,
-            0,
-            5
-        );
+    this.getWorkedHrsOfAllPrjsInDay = async function (request, flag) {
+        if (flag === 1) {
+            let responseData = [],
+                error = true;
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                0,
+                5
+            );
 
-        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        } else if (flag === 2) {
+            let responseData = [],
+                error = true;
+            flag = 5
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.lead_assigned_employee_id,
+                flag
+            );
+
+            const queryString = util.getQueryString('dashboard_get_lead_myteams_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+
+            }
+        } else if (flag === 3) {
+            let responseData = [],
+                error = true;
+            flag = 5
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                flag
+            );
+
+            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then((data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        };
+    }
+
+
+    this.getWorkedHoursOfAllTasksWeekly = async function (request, flag) {
+        if (flag === 1) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 4
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                0,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        } else if (flag === 2) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 4
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.lead_assigned_employee_id,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('dashboard_get_lead_myteams_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        } else if (flag === 3) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 4
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
         }
-
 
     };
 
@@ -599,8 +756,9 @@ function TimeTrackingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (!data.length == 0) {
-                        const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request)
+                        flag = 1
+                        const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request, flag)
+                        const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request, flag)
                         data.push(data2[0])
                         data.filter(function (o1, i) {
                             data1.some(function (o2) {
