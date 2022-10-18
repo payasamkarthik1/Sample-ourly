@@ -1279,7 +1279,7 @@ function TimeTrackingService(objectCollection) {
             error = true;
         flag = 2
         const paramsArr = new Array(
-            data.employee_id,
+            data.team_member_employee_id,
             data.first_week_day,
             data.last_week_day,
             flag
