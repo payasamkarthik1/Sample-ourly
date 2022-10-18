@@ -316,11 +316,13 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getAllTasksInWeekByEmpId = async function (request) {
+        let responseData = []
         obj = {}
         obj.firstWeekDay = (request.first_week_day)
         obj.lastWeekDay = (request.last_week_day)
         const [err, data1] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
-        return [err, data1];
+        responseData.push(data1)
+        return [err, responseData];
 
     };
 
