@@ -17,7 +17,6 @@ function Analyze(objectCollection) {
     const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
-    //--------------------------dashboard--------------------
 
     //@Post analyze/get/dashboad/overview
     app.post('/' + 'analyze/get/dashboad/overview',
@@ -49,20 +48,73 @@ function Analyze(objectCollection) {
             }
         })
 
-    //@Post analyze/get/admin/lead/team/dashboad/overview
-    app.post('/' + 'analyze/get/admin/lead/team/dashboad/overview',
+    //@Post 'analyze/get/all/tasks/weekly/by/empid/list
+    app.post('/' + 'analyze/get/all/tasks/weekly/by/empid/list',
 
         async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getAdminleadTeamDasboardOverview(req.body);
+            const [err, resData] = await analyzeServices.getAllTasksInWeekByEmpId(req.body);
             if (!err) {
-                console.log("analyze/get/admin/lead/team/dashboad/overview | Error: ", err);
+                console.log("'analyze/get/all/tasks/weekly/by/empid/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("analyze/get/admin/lead/team/dashboad/overview | Error: ", err);
+                console.log("'analyze/get/all/tasks/weekly/by/empid/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+
+
+
+
+
+
+    //--------------------------reports--------------------
+
+    //@Post analyze/get/report/summary
+    app.post('/' + 'analyze/get/report/summary',
+
+        async function (req, res) {
+
+            const [err, resData] = await analyzeServices.getReportSummary(req.body);
+            if (!err) {
+                console.log("analyze/get/report/summary | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/summary | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post analyze/get/report/detailed
+    app.post('/' + 'analyze/get/report/detailed',
+
+        async function (req, res) {
+
+            const [err, resData] = await analyzeServices.getReportDetailed(req.body);
+            if (!err) {
+                console.log("analyze/get/report/detailed | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/detailed | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post analyze/get/report/weekly
+    app.post('/' + 'analyze/get/report/weekly',
+
+        async function (req, res) {
+
+            const [err, resData] = await analyzeServices.getReportWeekly(req.body);
+            if (!err) {
+                console.log("analyze/get/report/weekly | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/weekly | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
 
 }

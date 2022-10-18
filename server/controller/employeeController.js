@@ -15,7 +15,6 @@ function EmployeeController(objectCollection) {
     const adminServices = new AdminServices(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const projectService = new ProjectService(objectCollection)
-    // const rolesDepartDesigService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
 
@@ -95,6 +94,7 @@ function EmployeeController(objectCollection) {
 
     //-------------------------leads---------------
 
+    //@Get lead/get/all/leads/list
     app.get('/' + 'lead/get/all/leads/list',
 
         async function (req, res) {
@@ -109,8 +109,7 @@ function EmployeeController(objectCollection) {
             }
         })
 
-
-
+    //@Post lead/get/emps/assigned/under/leads/list 
     app.post('/' + 'lead/get/emps/assigned/under/leads/list',
 
         async function (req, res) {

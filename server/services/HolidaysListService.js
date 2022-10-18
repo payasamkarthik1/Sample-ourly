@@ -1,12 +1,5 @@
 
 
-const multer = require('multer')
-const fs = require('fs')
-// const path = require('path')
-const readXlsxFile = require('read-excel-file/node');
-const { dirname } = require("path");
-
-
 function HolidaysListService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -16,10 +9,10 @@ function HolidaysListService(objectCollection) {
     this.addHolidaysList = async function (request) {
         let responseData = [],
             error = true;
-        await this.holidaysListRemoveDelete();
+        await this.removeHolidayListDelete(request);
         data1 = request.data
-        for (let i = 0; i < data1.length; i++) {
-            const [err, respData] = await this.addHolidaysListInsert(data1[i], request)
+        for (let i = 0; i < Object.keys(data1[0]).length; i++) {
+            const [err, respData] = await this.addHolidaysListInsert(data1[0][i], request)
             error = err
             responseData = respData
         }
@@ -28,12 +21,15 @@ function HolidaysListService(objectCollection) {
     }
 
     this.addHolidaysListInsert = async function (data, request) {
+        console.log('==========sss===========');
+        console.log(data);
+        console.log('====================================');
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
             data.holidays,
-            data.date,
+            await util.dateConvertInExcel(data.date),
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
@@ -58,19 +54,18 @@ function HolidaysListService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
-
 
         const queryString = util.getQueryString('holidays_get_list_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('====================================')
-                    console.log((data))
-                    console.log('====================================')
-                    responseData = data;
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    console.log('====================================');
+                    console.log(data1);
+                    console.log('=========================oooe=====');
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -82,7 +77,7 @@ function HolidaysListService(objectCollection) {
 
     }
 
-    this.holidaysListRemoveDelete = async function (request) {
+    this.removeHolidayListDelete = async function (request) {
 
         let responseData = [],
             error = true;

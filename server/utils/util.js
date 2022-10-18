@@ -47,7 +47,7 @@ function Util() {
         let hashPassword = await bcrypt.hash(password, salt)
         return hashPassword
     }
-    
+
     this.cryto = async function (req, res) {
 
         ciphertext = CryptoJS.AES.encrypt(
@@ -170,7 +170,7 @@ function Util() {
         firstweekDay = new Date(d.setDate(diff))
         return firstweekDay.toISOString().split('T')[0]
 
- }
+    }
 
     this.getLastWeekDate = async function (dt) {
         d = new Date(dt);
@@ -210,6 +210,15 @@ function Util() {
         const sum = ms.reduce((prev, cur) => prev + cur, 0);
         const hms = moment.utc(sum).format("HH:mm:ss");
         return hms
+    }
+
+    this.dateConvertInExcel = async function (date) {
+
+        let date1 = new Date(Math.round((date - 25569) * 864e5));
+        date1.setMinutes(date1.getMinutes() + date1.getTimezoneOffset());
+        return moment(date1).utc().format("YYYY-MM-DD");
+
+
     }
 }
 
