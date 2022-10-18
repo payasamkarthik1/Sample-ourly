@@ -72,7 +72,7 @@ function TimeTrackingService(objectCollection) {
                 await util.getFirstWeekDate(request.task_created_datetime),
                 await util.getLastWeekDate(request.task_created_datetime),
                 firstMonth.concat(" " + lastMonth),
-                3,
+                5,
                 util.getCurrentUTCTime()
             );
 
@@ -181,10 +181,7 @@ function TimeTrackingService(objectCollection) {
                 .then(async (data) => {
                     await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-                    console.log('===fdelete allllllllllllllll=====')
-                    console.log(data1.length)
-                    console.log(data1)
-                    console.log('====================================')
+
                     if (data1[0].weekHours == null) {
                         await this.removeUnsubmited(request)
                     } else {
@@ -221,7 +218,7 @@ function TimeTrackingService(objectCollection) {
                 firstWeekDay,
                 lastWeekDay,
                 firstMonth.concat(" " + lastMonth),
-                3,
+                5,
                 util.getCurrentUTCTime()
             );
             const queryString = util.getQueryString('timesheet_add_projects_insert', paramsArr);
@@ -963,9 +960,6 @@ function TimeTrackingService(objectCollection) {
             request.last_week_day = last_week_day
             request.role_id = 3
             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-            console.log('======WOORED=============')
-            console.log(data1)
-            console.log('====================================')
             const paramsArr = new Array(
                 data[0].employee_id,
                 data[0].role_id,
@@ -974,7 +968,7 @@ function TimeTrackingService(objectCollection) {
                 first_week_day,
                 last_week_day,
                 firstMonth.concat(" " + lastMonth),
-                4,
+                2,
                 1
             );
 
@@ -1009,7 +1003,7 @@ function TimeTrackingService(objectCollection) {
                 first_week_day,
                 last_week_day,
                 firstMonth.concat(" " + lastMonth),
-                4,
+                2,
                 2
             );
 
@@ -1052,7 +1046,7 @@ function TimeTrackingService(objectCollection) {
             first_week_day,
             last_week_day,
             firstMonth.concat(" " + lastMonth),
-            4,
+            2,
             3
         );
 
@@ -1089,7 +1083,7 @@ function TimeTrackingService(objectCollection) {
             request.first_week_day,
             request.last_week_day,
             request.week_name,
-            4,
+            2,
             4
         );
 
@@ -1194,7 +1188,6 @@ function TimeTrackingService(objectCollection) {
         let responseData = [],
             error = true;
         if (request.role_id === 4) {
-
             const paramsArr = new Array(
                 request.employee_id,
                 request.role_id,

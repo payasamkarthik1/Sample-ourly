@@ -67,25 +67,25 @@ function ApprovalsController(objectCollection) {
 
             const [err, resData] = await timeTrackingService.onApproved(req.body);
             if (!err) {
-                console.log("approvals/on/submit/for/approval | Error: ", err);
+                console.log("approvals/on/approved| Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("approvals/on/submit/for/approval | Error: ", err);
+                console.log("approvals/on/approved | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-    //@Post approvals/on/approved
+    //@Post approvals/on/reject
     app.post('/' + 'approvals/on/reject',
 
         async function (req, res) {
 
             const [err, resData] = await timeTrackingService.onReject(req.body);
             if (!err) {
-                console.log("approvals/on/submit/for/approval | Error: ", err);
+                console.log("approvals/on/reject | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("approvals/on/submit/for/approval | Error: ", err);
+                console.log("approvals/on/reject | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })

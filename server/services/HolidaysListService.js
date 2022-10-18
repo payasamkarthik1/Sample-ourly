@@ -12,11 +12,11 @@ function HolidaysListService(objectCollection) {
         await this.removeHolidayListDelete(request);
         data1 = request.data
         for (let i = 0; i < Object.keys(data1[0]).length; i++) {
-            const [err, respData] = await this.addHolidaysListInsert(data1[0][i], request)
-            error = err
-            responseData = respData
+            await this.addHolidaysListInsert(data1[0][i], request)
+
         }
-        return [error, responseData];
+        const [err1, respData1] = await this.getHolidayslistSelect(request)
+        return [err1, respData1];
 
     }
 
