@@ -1266,9 +1266,9 @@ function TimeTrackingService(objectCollection) {
     this.onApproved = async function (request) {
         let responseData = [],
             error = true;
-        data1 = request.data
-        for (let i = 0; i < data1.length; i++) {
-            await this.onApprovedChangeStatus(data1[i])
+        data = request
+        for (let i = 0; i < data.length; i++) {
+            await this.onApprovedChangeStatus(data[i])
         }
         error = false
         return [error, responseData];

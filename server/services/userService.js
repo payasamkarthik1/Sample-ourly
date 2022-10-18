@@ -39,7 +39,6 @@ function UserService(objectCollection) {
 
     }
 
-
     this.userLogin = async function (request) {
         let responseData = [],
             error = true;
@@ -128,7 +127,6 @@ function UserService(objectCollection) {
         }
 
     }
-
 
     this.userProfileUpdate = async function (request, req) {
         let responseData = [],
