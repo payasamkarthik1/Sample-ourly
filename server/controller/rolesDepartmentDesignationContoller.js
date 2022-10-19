@@ -48,6 +48,7 @@ function RolesDepartmentDesignation(objectCollection) {
         })
 
 
+
     //--------department-----------
 
     //@Post department/add/department/insert
@@ -97,20 +98,20 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
-    //@Get designation/get/all/designations/list
-    app.get('/' + 'designation/get/all/designations/list',
+    // //@Get designation/get/all/designations/list
+    // app.get('/' + 'designation/get/all/designations/list',
 
-        async function (req, res) {
+    //     async function (req, res) {
 
-            const [err, resData] = await rolesDepartDesignService.getAllDesignations(req.body);
-            if (!err) {
-                console.log("designation/get/all/designations/list | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("designation/get/all/designations/list | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
+    //         const [err, resData] = await rolesDepartDesignService.getAllDesignations(req.body);
+    //         if (!err) {
+    //             console.log("designation/get/all/designations/list | Error: ", err);
+    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+    //         } else {
+    //             console.log("designation/get/all/designations/list | Error: ", err);
+    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+    //         }
+    //     })
 
     //@Get get/all/roles/depart/design/list
     app.get('/' + 'get/all/roles/depart/design/list', async function (req, res) {
@@ -123,6 +124,21 @@ function RolesDepartmentDesignation(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
+
+    //@Get design/get/by/depart/id/list
+    app.get('/' + 'design/get/by/depart/id/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.getDesignByDepartId(req.body);
+            if (!err) {
+                console.log("design/get/by/depart/id/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("design/get/by/depart/id/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
 
 

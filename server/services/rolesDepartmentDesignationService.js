@@ -65,6 +65,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             request.designation_name,
+            request.department_id,
             util.getCurrentUTCTime()
 
         );
@@ -194,6 +195,27 @@ function RolesDepartmentDesignationsService(objectCollection) {
         return [false, responseData]
     }
 
+    this.getDesignByDepartId = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.department_id,toString()
+        );
+
+        const queryString = util.getQueryString('designation_get_all_by_depart_id_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then((data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
 
 }
 
