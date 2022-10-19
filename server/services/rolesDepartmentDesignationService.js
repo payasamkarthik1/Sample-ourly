@@ -46,8 +46,9 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     error = err
@@ -186,11 +187,30 @@ function RolesDepartmentDesignationsService(objectCollection) {
     }
 
 
+    this.getAllRoleDepartDesign = async function (request) {
+
+        let responseData = []
 
 
-
-
+        const [err1, data1] = await this.getAllRoles()
+        console.log(data1);
+        const [err2, data2] = await this.getAllDepartments()
+        const [err3, data3] = await this.getAllDepartments()
+        responseData.push(data1)
+        responseData.push(data2)
+        responseData.push(data3)
+        error = false
+        return [error, responseData];
+    }
 }
+
+
+
+
+
+
+
+
 
 
 

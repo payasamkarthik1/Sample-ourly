@@ -126,6 +126,22 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
+
+    //@Getrole/depart/design/get/all/list
+    app.get('/' + 'role/depart/design/get/all/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.getAllRoleDepartDesign(req.body);
+            if (!err) {
+                console.log("role/depart/design/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("role/depart/design/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 }
 
 

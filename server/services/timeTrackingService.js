@@ -1327,7 +1327,7 @@ function TimeTrackingService(objectCollection) {
 
 
     }
-    
+
 }
 
 
