@@ -111,6 +111,21 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
+    //@Get designation/get/all/list
+    app.get('/' + 'designation/get/all/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.getAllDesign(req.body);
+            if (!err) {
+                console.log("designation/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("designation/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 }
 
 
