@@ -69,7 +69,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
+                .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1;
                     error = false
@@ -94,10 +94,10 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
-    
+                .then(async (data) => {
+
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-       
+
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -126,7 +126,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
+                .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1;
                     error = false
@@ -152,7 +152,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
+                .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1;
                     error = false
@@ -174,7 +174,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
+                .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1;
                     error = false
