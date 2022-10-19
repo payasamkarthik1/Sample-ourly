@@ -59,7 +59,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     }
-    this.designationInsert = async function (request) {
+    this.addDesignByDepartId = async function (request) {
 
         let responseData = [],
             error = true;
@@ -71,7 +71,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
         );
 
 
-        const queryString = util.getQueryString('designation_add_insert', paramsArr);
+        const queryString = util.getQueryString('designation_add_by_depart_id_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -200,7 +200,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            request.department_id,toString()
+            request.department_id.toString()
         );
 
         const queryString = util.getQueryString('designation_get_all_by_depart_id_select', paramsArr);

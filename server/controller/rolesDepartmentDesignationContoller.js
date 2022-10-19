@@ -83,17 +83,17 @@ function RolesDepartmentDesignation(objectCollection) {
 
     //--------designation-----------
 
-    //@Post designation/add/designation/insert
-    app.post('/' + 'designation/add/designation/insert',
+    //@Post designation/add/design/by/depart/id/insert
+    app.post('/' + 'designation/add/design/by/depart/id/insert',
 
         async function (req, res) {
 
-            const [err, resData] = await rolesDepartDesignService.designationInsert(req.body);
+            const [err, resData] = await rolesDepartDesignService.addDesignByDepartId(req.body);
             if (!err) {
-                console.log("designation/add/designation/insert | Error: ", err);
+                console.log("designation/add/design/by/depart/id/insert | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("designation/add/designation/insert | Error: ", err);
+                console.log("designation/add/design/by/depart/id/insert | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
@@ -113,20 +113,8 @@ function RolesDepartmentDesignation(objectCollection) {
     //         }
     //     })
 
-    //@Get get/all/roles/depart/design/list
-    app.get('/' + 'get/all/roles/depart/design/list', async function (req, res) {
-        const [err, resData] = await rolesDepartDesignService.getAllRolesDepartDesign(req.body, res);
-        if (!err) {
-            console.log("get/all/rolea/depart/design| Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("get/all/rolea/depart/design| Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-
     //@Get design/get/by/depart/id/list
-    app.get('/' + 'design/get/by/depart/id/list',
+    app.post('/' + 'designation/get/by/depart/id/list',
 
         async function (req, res) {
 
