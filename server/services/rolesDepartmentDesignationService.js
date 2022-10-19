@@ -186,22 +186,47 @@ function RolesDepartmentDesignationsService(objectCollection) {
         }
     }
 
-
     this.getAllRoleDepartDesign = async function (request) {
 
         let responseData = []
 
 
         const [err1, data1] = await this.getAllRoles()
-        console.log(data1);
         const [err2, data2] = await this.getAllDepartments()
-        const [err3, data3] = await this.getAllDepartments()
+        const [err3, data3] = await this.getAllDesign()
         responseData.push(data1)
         responseData.push(data2)
         responseData.push(data3)
         error = false
         return [error, responseData];
     }
+
+    this.removeDesignationById = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.designation_id.toString()
+        );
+
+        const queryString = util.getQueryString('designation_remove_by_design_id_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+
+
+
 }
 
 

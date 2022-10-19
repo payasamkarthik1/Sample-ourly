@@ -126,6 +126,21 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
+    //@post designation/remove/by/design/id/delete
+    app.post('/' + 'designation/remove/by/design/id/delete',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.removeDesignationById(req.body);
+            if (!err) {
+                console.log("designation/remove/by/design/id/delete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("designation/remove/by/design/id/delete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
     //@Getrole/depart/design/get/all/list
     app.get('/' + 'role/depart/design/get/all/list',
@@ -141,6 +156,8 @@ function RolesDepartmentDesignation(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+
+
 
 }
 
