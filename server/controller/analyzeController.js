@@ -70,50 +70,50 @@ function Analyze(objectCollection) {
 
     //--------------------------reports--------------------
 
-    //@Post analyze/get/report/summary
-    app.post('/' + 'analyze/get/report/summary',
+    // //@Post analyze/get/report/summary
+    // app.post('/' + 'analyze/get/report/summary',
 
-        async function (req, res) {
+    //     async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getReportSummary(req.body);
-            if (!err) {
-                console.log("analyze/get/report/summary | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("analyze/get/report/summary | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
+    //         const [err, resData] = await analyzeServices.getReportSummary(req.body);
+    //         if (!err) {
+    //             console.log("analyze/get/report/summary | Error: ", err);
+    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+    //         } else {
+    //             console.log("analyze/get/report/summary | Error: ", err);
+    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+    //         }
+    //     })
 
-    //@Post analyze/get/report/detailed
-    app.post('/' + 'analyze/get/report/detailed',
+    // //@Post analyze/get/report/detailed
+    // app.post('/' + 'analyze/get/report/detailed',
 
-        async function (req, res) {
+    //     async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getReportDetailed(req.body);
-            if (!err) {
-                console.log("analyze/get/report/detailed | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("analyze/get/report/detailed | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
+    //         const [err, resData] = await analyzeServices.getReportDetailed(req.body);
+    //         if (!err) {
+    //             console.log("analyze/get/report/detailed | Error: ", err);
+    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+    //         } else {
+    //             console.log("analyze/get/report/detailed | Error: ", err);
+    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+    //         }
+    //     })
 
-    //@Post analyze/get/report/weekly
-    app.post('/' + 'analyze/get/report/weekly',
+    // //@Post analyze/get/report/weekly
+    // app.post('/' + 'analyze/get/report/weekly',
 
-        async function (req, res) {
+    //     async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getReportWeekly(req.body);
-            if (!err) {
-                console.log("analyze/get/report/weekly | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("analyze/get/report/weekly | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
+    //         const [err, resData] = await analyzeServices.getReportWeekly(req.body);
+    //         if (!err) {
+    //             console.log("analyze/get/report/weekly | Error: ", err);
+    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+    //         } else {
+    //             console.log("analyze/get/report/weekly | Error: ", err);
+    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+    //         }
+    //     })
 
 
 

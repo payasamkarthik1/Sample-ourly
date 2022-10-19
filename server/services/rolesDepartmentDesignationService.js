@@ -70,7 +70,8 @@ function RolesDepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    responseData = data;
+                    const data1 = util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -94,7 +95,8 @@ function RolesDepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    responseData = data;
+                    const data1 = util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -123,7 +125,8 @@ function RolesDepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    responseData = data;
+                    const data1 = util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -134,7 +137,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     }
-s
+
     this.getDesignByDepartId = async function (request) {
 
         let responseData = [],
@@ -148,7 +151,8 @@ s
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then((data) => {
-                    responseData = data;
+                    const data1 = util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     error = err
