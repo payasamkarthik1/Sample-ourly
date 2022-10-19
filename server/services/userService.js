@@ -8,9 +8,6 @@ function UserService(objectCollection) {
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
 
-
-
-
     this.userLoginInsertAfterRegistration = async function (data, request) {
         let responseData = [],
             error = true;
@@ -140,10 +137,7 @@ function UserService(objectCollection) {
             const paramsArr = new Array(
                 resData1.data[0].employee_id,
                 resData1.data[0].email,
-                request.first_name,
-                request.last_name,
                 request.phone_number,
-                request.image,
             );
             const queryString = util.getQueryString('user_profile_update', paramsArr);
             if (queryString !== '') {

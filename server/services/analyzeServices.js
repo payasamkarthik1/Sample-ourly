@@ -11,12 +11,12 @@ function AnalyzeServices(objectCollection) {
     this.getAllTasksWeeklyFilterByDescrip = async function (request) {
         let responseData = [],
             error = true;
-
+        flag = 1
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
             request.employee_id,
-            request.flag
+            flag
         );
 
         const queryString = util.getQueryString('dashboard_get_top_tasks_filter_select', paramsArr);

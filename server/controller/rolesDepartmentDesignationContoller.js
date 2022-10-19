@@ -47,8 +47,6 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
-
-
     //--------department-----------
 
     //@Post department/add/department/insert
@@ -73,10 +71,10 @@ function RolesDepartmentDesignation(objectCollection) {
 
             const [err, resData] = await rolesDepartDesignService.getAllDepartments(req.body);
             if (!err) {
-                console.log("departments/get/all/select | Error: ", err);
+                console.log("department/get/all/departments/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("departments/get/all/select | Error: ", err);
+                console.log("department/get/all/departments/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
@@ -98,21 +96,6 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
-    // //@Get designation/get/all/designations/list
-    // app.get('/' + 'designation/get/all/designations/list',
-
-    //     async function (req, res) {
-
-    //         const [err, resData] = await rolesDepartDesignService.getAllDesignations(req.body);
-    //         if (!err) {
-    //             console.log("designation/get/all/designations/list | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("designation/get/all/designations/list | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
-
     //@Get design/get/by/depart/id/list
     app.post('/' + 'designation/get/by/depart/id/list',
 
@@ -127,10 +110,6 @@ function RolesDepartmentDesignation(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-
-
-
 
 }
 
