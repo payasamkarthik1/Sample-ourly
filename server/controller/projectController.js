@@ -159,10 +159,6 @@ function ProjectController(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
-
-
-
-
 }
 
 

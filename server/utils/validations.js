@@ -35,14 +35,15 @@ function Validations(objectCollection) {
             responseData = [error, { message: 'email is required' }]
             return [true, responseData];
 
-        } else if (Validator.isEmpty(request.password)) {
-            error = true
-            responseData = [error, { message: 'password is required' }]
-            return [true, responseData];
         }
         else if (Validator.isEmpty(request.phone_number)) {
             error = true
             responseData = [error, { message: 'phone_number is required' }]
+            return [true, responseData];
+        }
+        else if (!(request.phone_number.length == 10)) {
+            error = true
+            responseData = [error, { message: 'invalid phone_number' }]
             return [true, responseData];
         }
         else if (Validator.isEmpty(request.gender)) {
@@ -73,6 +74,21 @@ function Validations(objectCollection) {
         else if (Validator.isEmpty(request.designation_id.toString())) {
             error = true
             responseData = [error, { message: 'designation  is required' }]
+            return [true, responseData];
+        }
+        else if (Validator.isEmpty(request.password)) {
+            error = true
+            responseData = [error, { message: 'password is required' }]
+            return [true, responseData];
+        }
+        else if (!(request.password.length >= 8)) {
+            error = true
+            responseData = [error, { message: 'password length must be minimum 8' }]
+            return [true, responseData];
+        }
+        else if (!(request.password.length <= 15)) {
+            error = true
+            responseData = [error, { message: 'password length must be maximum 15' }]
             return [true, responseData];
         }
         else {

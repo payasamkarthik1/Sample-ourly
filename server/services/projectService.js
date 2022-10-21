@@ -42,6 +42,7 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.getAllClientsSelect = async function (request) {
 
         let responseData = [],
@@ -65,6 +66,7 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.addClientInsert = async function (request) {
 
         let responseData = [],
@@ -99,6 +101,7 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.updateClientDetails = async function (request) {
 
         const [err, data] = await this.getClientByClientidSelect(request)
@@ -132,7 +135,6 @@ function ProjectService(objectCollection) {
         }
     }
 
-
     this.getProjectsByClientidSelect = async function (request) {
 
         let responseData = [],
@@ -158,6 +160,7 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.getClientByClientidSelect = async function (request) {
 
         let responseData = [],
@@ -237,6 +240,7 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.updateProjectDetails = async function (request) {
 
         let responseData = [],
@@ -268,6 +272,7 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.removeProjectDelete = async function (request) {
 
         let responseData = [],
@@ -297,6 +302,7 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.getAllProjectsSelect = async function (request) {
 
         let responseData = [],
@@ -312,9 +318,6 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('==========getAllProjectsSelect=============')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -322,12 +325,7 @@ function ProjectService(objectCollection) {
                 })
             return [error, responseData];
         }
-
-
-
-
     }
-
 
     this.getAllTagsSelect = async function (request) {
 
@@ -464,7 +462,6 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
-
 
 
 }

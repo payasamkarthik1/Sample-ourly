@@ -118,7 +118,7 @@ function Util() {
                     from: 'vengalavishal92@gmail.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Clockify Request', // Subject line
-                    html: `<a href="http://192.168.0.217:3000/forgotpass">click to change password</a>`
+                    html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
 
                     // html body
 

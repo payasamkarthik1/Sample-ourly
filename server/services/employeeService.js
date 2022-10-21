@@ -261,9 +261,7 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
-
-
-
+    
 }
 
 
