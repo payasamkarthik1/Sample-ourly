@@ -42,10 +42,17 @@ function TimeTrackingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data1) => {
-                        await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
-                        await this.addUnsubmit(request)
-                        error = false,
-                            responseData = data1
+                        if (data1[0].message === "failure") {
+                            error = true
+                            responseData = data1;
+                        } else if (data1[0].message === "success") {
+
+                            await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                            await this.addUnsubmit(request)
+                            error = false,
+                                responseData = data1
+                        }
+
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
