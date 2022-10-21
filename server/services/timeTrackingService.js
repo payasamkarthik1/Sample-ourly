@@ -50,7 +50,7 @@ function TimeTrackingService(objectCollection) {
                             await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                             await this.addUnsubmit(request)
                             error = false,
-                                responseData = data1
+                            responseData = [{message:"task added successfully"}];
                         }
 
                     }).catch((err) => {
@@ -95,8 +95,7 @@ function TimeTrackingService(objectCollection) {
                         } else if (data2[0].message === "success") {
                         await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                         await this.addUnsubmit(request)
-
-                        responseData = data2;
+                        responseData = [{message:"task added successfully"}];
                         error = false
                         }
                     }).catch((err) => {
