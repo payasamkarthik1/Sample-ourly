@@ -91,7 +91,7 @@ function TimeTrackingService(objectCollection) {
                     .then(async (data2) => {
                         if (data2[0].message === "failure") {
                             error = true
-                            responseData = data1;
+                            responseData = data2;
                         } else if (data2[0].message === "success") {
                         await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                         await this.addUnsubmit(request)
