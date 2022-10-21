@@ -89,22 +89,23 @@ function TimeTrackingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data2) => {
+                        if (data2[0].message === "failure") {
+                            error = true
+                            responseData = data1;
+                        } else if (data2[0].message === "success") {
                         await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                         await this.addUnsubmit(request)
 
                         responseData = data2;
                         error = false
+                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
                     })
                 return [error, responseData];
-
             }
-
         }
-
-
     };
 
     this.timetrackingUpdateTaskDetails = async function (request) {
