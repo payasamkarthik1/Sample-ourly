@@ -44,7 +44,7 @@ function TimeTrackingService(objectCollection) {
                     .then(async (data1) => {
                         if (data1[0].message === "failure") {
                             error = true
-                            responseData = data1;
+                            responseData = [{message:"task cannot be added"}];
                         } else if (data1[0].message === "success") {
 
                             await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
@@ -91,7 +91,7 @@ function TimeTrackingService(objectCollection) {
                     .then(async (data2) => {
                         if (data2[0].message === "failure") {
                             error = true
-                            responseData = data2;
+                            responseData = [{message:"task cannot be added"}];
                         } else if (data2[0].message === "success") {
                         await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                         await this.addUnsubmit(request)
