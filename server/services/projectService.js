@@ -22,13 +22,13 @@ function ProjectService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (data1[0].message === "data") {
+                    if (data[0].message === "data") {
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1;
                         error = false
                     } else {
                         error = false,
-                            responseData = [{ message: data1[0].message }];
+                            responseData = [{ message: data[0].message }];
                     }
 
                 }).catch((err) => {

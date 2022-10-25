@@ -51,10 +51,10 @@ function TimeTrackingService(objectCollection) {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data1) => {
 
-                            if (data1[0].message == "failure") {
+                            if (data1[0].message === "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
-                            } else if (data1[0].message == "success") {
+                            } else if (data1[0].message === "success") {
 
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
@@ -98,10 +98,10 @@ function TimeTrackingService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data2) => {
-                            if (data2[0].message == "failure") {
+                            if (data2[0].message === "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
-                            } else if (data2[0].message == "success") {
+                            } else if (data2[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
