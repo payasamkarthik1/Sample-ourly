@@ -176,11 +176,9 @@ function ProjectService(objectCollection) {
                 .then(async (data) => {
                     if (data.length == 0) {
                         error = true
-                        responseData = [{ message: "Invalid Client id" }]
+                        responseData = [{ message: "Invalid Client" }]
                     } else {
-                        console.log('============getClientByClientidSelect=================')
-                        console.log(data)
-                        console.log('====================================')
+
                         responseData = data;
                         error = false
                     }
@@ -193,82 +191,88 @@ function ProjectService(objectCollection) {
     }
 
     this.addProjectsToClientInsert = async function (request) {
+        let responseData = [],
+            error = true;
+        const [err1, respData] = await validations.projectCreationInputValidation(request);
+        if (err1) {
+            error = err1
+            responseData = respData
+        } else {
+            const [err, data] = await this.getClientByClientidSelect(request)
+            if (!err) {
+                const paramsArr = new Array(
+                    request.client_id,
+                    util.getRandomNumericId(),
+                    request.project_name,
+                    request.project_code,
+                    request.project_color_code,
+                    request.tag_id,
+                    util.getCurrentUTCTime(),
+                );
+                const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
 
-        const [err, data] = await this.getClientByClientidSelect(request)
-        if (!err) {
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data) => {
+                            if (data[0].message === "data") {
+                                let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                                responseData = data1;
+                                error = false
+                            } else {
+                                error = true
+                                responseData = [{ message: data[0].message }]
+                            }
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                }
+            } else {
+                // return [err, data];
+                error = err
+                responseData = data
+            }
+        }
+        return [error, responseData];
+    }
+
+    this.updateProjectDetails = async function (request) {
+        let responseData = [],
+            error = true;
+        const [err1, respData] = await validations.projectCreationInputValidation(request);
+        if (err1) {
+            error = err1
+            responseData = respData
+        } else {
+
             let responseData = [],
                 error = true;
             const paramsArr = new Array(
                 request.client_id,
-                util.getRandomNumericId(),
+                request.project_id,
                 request.project_name,
                 request.project_code,
                 request.project_color_code,
                 request.tag_id,
-                util.getCurrentUTCTime(),
             );
-            const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
+
+
+            const queryString = util.getQueryString('project_update_project_details', paramsArr);
 
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        if (data[0].project_name === "PROJECT ALREADY EXIST") {
-                            data[0].message = data[0].project_name
-                            delete data[0].project_name
-                            error = true
-                            responseData = data;
-                        } else if (data[0].project_name === "PROJECT CODE ALREADY EXIST") {
-                            data[0].message = data[0].project_name
-                            delete data[0].project_name
-                            error = true
-                            responseData = data;
-                        } else {
-                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                            responseData = data1;
-                            error = false
-                        }
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1;
+                        error = false
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
                     })
-                return [error, responseData];
 
             }
-        } else {
-            return [err, data];
         }
-
-
-    }
-
-    this.updateProjectDetails = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.client_id,
-            request.project_id,
-            request.project_name,
-            request.project_code,
-            request.project_color_code,
-            request.tag_id,
-        );
-
-
-        const queryString = util.getQueryString('project_update_project_details', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+        return [error, responseData];
 
 
     }
@@ -462,8 +466,6 @@ function ProjectService(objectCollection) {
             return [error, responseData];
         }
     }
-
-
 }
 
 

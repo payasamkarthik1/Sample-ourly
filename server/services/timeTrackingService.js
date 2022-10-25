@@ -14,17 +14,128 @@ function TimeTrackingService(objectCollection) {
 
 
     this.timetrackingAddTaskDetailsInsert = async function (request) {
-        const [err, data] = await this.timetrackingGetAllTaskDetailsByDate(request)
-        if (data.length == 0) {
+        let responseData = [],
+            error = true;
+        const [err, respData] = await validations.taskCreationInputValidation(request);
+        if (err) {
+            error = err
+            responseData = respData
+        }
+        else {
+            const [err, data] = await this.timetrackingGetAllTaskDetailsByDate(request)
+            if (data.length == 0) {
+                const firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
+                const lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
+                const firstMonth = util.getMonthName(firstWeekDate)
+                const lastMonth = util.getMonthName(lastWeekDate)
+
+                let responseData = [],
+                    error = true;
+                const paramsArr = new Array(
+                    util.getRandomNumericId(),
+                    request.task_description,
+                    request.project_id,
+                    request.employee_id,
+                    request.task_start_time,
+                    request.task_end_time,
+                    await util.getTimeDiff(request),
+                    request.task_created_datetime,
+                    await util.getFirstWeekDate(request.task_created_datetime),
+                    await util.getLastWeekDate(request.task_created_datetime),
+                    firstMonth.concat(" " + lastMonth),
+                    3,
+                    util.getCurrentUTCTime()
+                );
+                const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data1) => {
+                            if (data1[0].message === "failure") {
+                                error = true
+                                responseData = [{ message: "TimeEntry cannot be added" }];
+                            } else if (data1[0].message === "success") {
+
+                                await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                                await this.addUnsubmit(request)
+                                error = false,
+                                    responseData = [{ message: "TimeEntry has beed added successfully" }];
+                            }
+
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData];
+                }
+            } else {
+                firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
+                lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
+                const firstMonth = util.getMonthName(firstWeekDate)
+                const lastMonth = util.getMonthName(lastWeekDate)
+
+                let responseData = [],
+                    error = true;
+                const paramsArr = new Array(
+                    data[0].task_parent_id,
+                    request.task_description,
+                    request.project_id,
+                    request.employee_id,
+                    request.task_start_time,
+                    request.task_end_time,
+                    await util.getTimeDiff(request),
+                    data[0].task_created_datetime,
+                    await util.getFirstWeekDate(request.task_created_datetime),
+                    await util.getLastWeekDate(request.task_created_datetime),
+                    firstMonth.concat(" " + lastMonth),
+                    5,
+                    util.getCurrentUTCTime()
+                );
+
+
+                const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
+
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data2) => {
+                            if (data2[0].message === "failure") {
+                                error = true
+                                responseData = [{ message: "TimeEntry cannot be added" }];
+                            } else if (data2[0].message === "success") {
+                                await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                                await this.addUnsubmit(request)
+                                responseData = [{ message: "TimeEntry has beed added successfully" }];
+                                error = false
+                            }
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    // return [error, responseData];
+                }
+            }
+        }
+        return [error, responseData];
+    };
+
+    this.timetrackingUpdateTaskDetails = async function (request) {
+        let responseData = [],
+            error = true;
+        const [err, respData] = await validations.taskCreationInputValidation(request);
+        if (err) {
+            error = err
+            responseData = respData
+        } else {
             const firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
             const lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
             const firstMonth = util.getMonthName(firstWeekDate)
             const lastMonth = util.getMonthName(lastWeekDate)
 
+            const [err1, data2] = await this.timetrackingGetChildTask(request)
             let responseData = [],
                 error = true;
             const paramsArr = new Array(
-                util.getRandomNumericId(),
+                request.task_parent_id,
+                request.task_child_id,
                 request.task_description,
                 request.project_id,
                 request.employee_id,
@@ -35,126 +146,31 @@ function TimeTrackingService(objectCollection) {
                 await util.getFirstWeekDate(request.task_created_datetime),
                 await util.getLastWeekDate(request.task_created_datetime),
                 firstMonth.concat(" " + lastMonth),
-                3,
                 util.getCurrentUTCTime()
             );
-            const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
+
+
+            const queryString = util.getQueryString('timetracking_update_task_details', paramsArr);
+
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data1) => {
-                        if (data1[0].message === "failure") {
-                            error = true
-                            responseData = [{message:"task cannot be added"}];
-                        } else if (data1[0].message === "success") {
-
-                            await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
-                            await this.addUnsubmit(request)
-                            error = false,
-                            responseData = [{message:"task added successfully"}];
-                        }
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else {
-            firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
-            lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
-            const firstMonth = util.getMonthName(firstWeekDate)
-            const lastMonth = util.getMonthName(lastWeekDate)
-
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                data[0].task_parent_id,
-                request.task_description,
-                request.project_id,
-                request.employee_id,
-                request.task_start_time,
-                request.task_end_time,
-                await util.getTimeDiff(request),
-                data[0].task_created_datetime,
-                await util.getFirstWeekDate(request.task_created_datetime),
-                await util.getLastWeekDate(request.task_created_datetime),
-                firstMonth.concat(" " + lastMonth),
-                5,
-                util.getCurrentUTCTime()
-            );
-
-
-            const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data2) => {
-                        if (data2[0].message === "failure") {
-                            error = true
-                            responseData = [{message:"task cannot be added"}];
-                        } else if (data2[0].message === "success") {
                         await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                        //for update project taking details before of project before update and update in timesheet
+                        const firstMonth1 = util.getMonthName(data2[0].first_week_day)
+                        const lastMonth1 = util.getMonthName(data2[0].last_week_day)
+                        request.project_id = data2[0].project_id
+                        await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
                         await this.addUnsubmit(request)
-                        responseData = [{message:"task added successfully"}];
+                        responseData = [{ message: data1[0].message }];;
                         error = false
-                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
                     })
-                return [error, responseData];
             }
         }
-    };
-
-    this.timetrackingUpdateTaskDetails = async function (request) {
-        const firstWeekDate = await util.getFirstWeekDate(request.task_created_datetime)
-        const lastWeekDate = await util.getLastWeekDate(request.task_created_datetime)
-        const firstMonth = util.getMonthName(firstWeekDate)
-        const lastMonth = util.getMonthName(lastWeekDate)
-
-        const [err1, data2] = await this.timetrackingGetChildTask(request)
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.task_parent_id,
-            request.task_child_id,
-            request.task_description,
-            request.project_id,
-            request.employee_id,
-            request.task_start_time,
-            request.task_end_time,
-            await util.getTimeDiff(request),
-            request.task_created_datetime,
-            await util.getFirstWeekDate(request.task_created_datetime),
-            await util.getLastWeekDate(request.task_created_datetime),
-            firstMonth.concat(" " + lastMonth),
-            util.getCurrentUTCTime()
-        );
-
-
-        const queryString = util.getQueryString('timetracking_update_task_details', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data1) => {
-                    await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
-                    //for update project taking details before of project before update and update in timesheet
-                    const firstMonth1 = util.getMonthName(data2[0].first_week_day)
-                    const lastMonth1 = util.getMonthName(data2[0].last_week_day)
-                    request.project_id = data2[0].project_id
-                    await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
-                    await this.addUnsubmit(request)
-                    responseData = data1;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
+        return [error, responseData];
 
     };
 
@@ -186,16 +202,16 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    // Time entry has been deleted
                     await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-
                     if (data1[0].weekHours == null) {
                         await this.removeUnsubmited(request)
                     } else {
                         await this.addUnsubmit(request)
 
                     }
-                    responseData = data;
+                    responseData = [{ message: data[0].meaasge }];
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

@@ -144,41 +144,47 @@ function AdminService(objectCollection) {
     }
 
     this.updateEmployeeDetails = async function (request) {
-
         let responseData = [],
             error = true;
-        const paramsArr = new Array(
-            request.employee_id,
-            request.first_name,
-            request.last_name,
-            request.email,
-            request.gender,
-            request.phone_number,
-            request.blood_group,
-            request.dob,
-            request.image,
-            request.role_id,
-            request.lead_assigned_employee_id,
-            request.department_id,
-            request.designation_id,
+        const [err, respData] = await validations.employeeCreationInputValidations(request);
+        if (err) {
+            error = err
+            responseData = respData
+        } else {
 
-        );
+            const paramsArr = new Array(
+                request.employee_id,
+                request.first_name,
+                request.last_name,
+                request.email,
+                request.gender,
+                request.phone_number,
+                request.blood_group,
+                request.dob,
+                request.image,
+                request.role_id,
+                request.lead_assigned_employee_id,
+                request.department_id,
+                request.designation_id,
+            );
 
-        const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
+            const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        error = false
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
 
-                    responseData = data1
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            }
+
         }
+        return [error, responseData];
     }
 
     this.addEmployeesUnderLeads = async function (request) {
@@ -261,7 +267,7 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
-    
+
 }
 
 

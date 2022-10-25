@@ -47,7 +47,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Get employee/get/employee/by/id
-    app.post('/' + 'employee/get/employee/by/id',
+    app.post('/' + 'employee/get/employeef/by/id',
 
         async function (req, res) {
 
@@ -91,7 +91,6 @@ function EmployeeController(objectCollection) {
             }
         })
 
-
     //-------------------------leads---------------
 
     //@Get lead/get/all/leads/list
@@ -123,8 +122,6 @@ function EmployeeController(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-
 
 }
 

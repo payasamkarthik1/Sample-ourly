@@ -100,34 +100,87 @@ function Validations(objectCollection) {
 
     }
 
+    this.taskCreationInputValidation = async function (request) {
 
+        let responseData = []
 
-    this.userLoginCheck = async function (request, res, next) {
-        let responseData = [],
+        if (Validator.isEmpty(request.task_description)) {
             error = true
-        const paramsArr = new Array(
-            request.email,
-        );
-        const queryString = util.getQueryString('user_details_list', paramsArr);
+            responseData = [error, { message: "This entry can't be saved, please add description" }]
+            return [error, responseData];
+        } else if (request.project_id == "") {
+            error = true
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    if (data.length == 0) {
-                        error = true
-                        responseData = [error, { "message": "no user found" }]
-                    }
-                    else {
-                        error = false
-                        responseData = data
-                    }
-                }).catch((err) => {
-                    error = err;
-                })
-            return [error, responseData]
+            responseData = [error, { message: "This entry can't be saved, please add project" }]
+            return [true, responseData];
+
+        } else if (Validator.isEmpty(request.task_start_time)) {
+            error = true
+            responseData = [error, { message: "This entry can't be saved, please add start time" }]
+            return [true, responseData];
+
         }
+        else if (Validator.isEmpty(request.task_end_time)) {
+            error = true
+            responseData = [error, { message: "This entry can't be saved, please add end time" }]
+            return [true, responseData];
+        }
+
+        else if (Validator.isEmpty(request.task_created_datetime)) {
+            error = true
+            responseData = [error, { message: "This entry can't be saved, please add date" }]
+            return [true, responseData];
+        }
+
+        else {
+            error = false
+            return [false, responseData];
+
+        }
+
+
     }
 
+    this.projectCreationInputValidation = async function (request) {
+
+        let responseData = []
+
+        if (request.client_id == "") {
+            error = true
+            responseData = [{ message: "Client is required" }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.project_name)) {
+            error = true
+
+            responseData = [error, { message: "Project name is required" }]
+            return [true, responseData];
+
+        } else if (Validator.isEmpty(request.project_code)) {
+            error = true
+            responseData = [{ message: "Project code is required" }]
+            return [true, responseData];
+
+        }
+        else if (Validator.isEmpty(request.project_color_code)) {
+            error = true
+            responseData = [{ message: "Project color code is required" }]
+            return [true, responseData];
+        }
+
+        else if (request.tag_id == "") {
+            error = true
+            responseData = [{ message: "tag is required" }]
+            return [true, responseData];
+        }
+
+        else {
+            error = false
+            return [false, responseData];
+
+        }
+
+
+    }
 
     this.userDetailsList = async function (request) {
         let responseData = [],
@@ -208,8 +261,6 @@ function Validations(objectCollection) {
 
     }
 
-
-
     this.userLoginPasswordCheck = async function (request, resData1) {
         let responseData = [],
             error = true
@@ -230,36 +281,6 @@ function Validations(objectCollection) {
         return [error, responseData]
 
 
-    }
-
-    this.userLoggedInOrNotCheck = async function (request) {
-
-        let responseData = [],
-            error = true
-        const paramsArr = new Array(
-            request.email,
-        );
-        const queryString = util.getQueryString('user_get_login_details_select', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    if (data.length !== 0) {
-                        flag = 2
-                        error = false
-                        responseData = flag
-
-                        // }
-                    } else {
-                        flag = 1
-                        error = false
-                        responseData = flag
-                    }
-                }).catch((err) => {
-                    error = err;
-                })
-            return [error, responseData]
-        }
     }
 
     this.oldPasswordCheck = async function (request, req) {
@@ -379,23 +400,6 @@ function Validations(objectCollection) {
 
     }
 
-    this.createProjectValidations = async function (request) {
-        let responseData = [],
-            error = true
-        if (request.newPassword || request.confirmPassword == "") {
-            error = true
-            responseData = [error, { message: "s are required" }]
-        } else if (request.newPassword !== request.confirmPassword) {
-            error = true
-            responseData = [error, { message: "mismatch" }]
-        } else {
-            error = false
-            responseData = [error, { message: "changed" }]
-
-        }
-        return [error, responseData]
-
-    }
 
 
 }

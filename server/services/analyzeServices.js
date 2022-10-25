@@ -326,338 +326,338 @@ function AnalyzeServices(objectCollection) {
 
     };
 
-    this.getReportSummary = async function (request) {
-        if (request.role_id == 3) {
-            let responseData = [],
-                error = true;
-            flag = 1
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                flag
-            );
+    // this.getReportSummary = async function (request) {
+    //     if (request.role_id == 3) {
+    //         let responseData = [],
+    //             error = true;
+    //         flag = 1
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             flag
+    //         );
 
-            const queryString = util.getQueryString('reports_get_summary', paramsArr);
+    //         const queryString = util.getQueryString('reports_get_summary', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        const [err1, data1] = await this.getTopProjectBasedOnHrs(request)
-                        if (data1.length != 0) {
-                            const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                            let totalTime = data2[0].weekHours
-                            let topProject = data1[0].project_name
-                            let topClient = data1[0].client_name
-                            let color_code = data1[0].project_color_code
-                            let project_code = data1[0].project_code
-                            data.unshift({ totalTime, topProject, topClient, color_code, project_code })
-                            responseData = data;
-                            error = false
-                        } else {
-                            responseData = [];
-                            error = false
-                        }
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     const [err1, data1] = await this.getTopProjectBasedOnHrs(request)
+    //                     if (data1.length != 0) {
+    //                         const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                         let totalTime = data2[0].weekHours
+    //                         let topProject = data1[0].project_name
+    //                         let topClient = data1[0].client_name
+    //                         let color_code = data1[0].project_color_code
+    //                         let project_code = data1[0].project_code
+    //                         data.unshift({ totalTime, topProject, topClient, color_code, project_code })
+    //                         responseData = data;
+    //                         error = false
+    //                     } else {
+    //                         responseData = [];
+    //                         error = false
+    //                     }
 
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else if (request.role_id == 4) {
-            let responseData = [],
-                error = true;
-            flag = 2
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                flag
-            );
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
+    //     } else if (request.role_id == 4) {
+    //         let responseData = [],
+    //             error = true;
+    //         flag = 2
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             flag
+    //         );
 
-            const queryString = util.getQueryString('reports_get_summary', paramsArr);
+    //         const queryString = util.getQueryString('reports_get_summary', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        console.log('=======startung===========')
-                        console.log(data)
-                        console.log('====================================')
-                        const [err1, data1] = await this.getTopProjectBasedOnHrs(request)
-                        const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        let totalTime = data2[0].weekHours
-                        let topProject = data1[0].project_name
-                        let topClient = data1[0].client_name
-                        let color_code = data1[0].project_color_code
-                        let project_code = data1[0].project_code
-                        data.unshift({ totalTime, topProject, topClient, color_code, project_code })
-                        responseData = data;
-                        error = false
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     console.log('=======startung===========')
+    //                     console.log(data)
+    //                     console.log('====================================')
+    //                     const [err1, data1] = await this.getTopProjectBasedOnHrs(request)
+    //                     const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     let totalTime = data2[0].weekHours
+    //                     let topProject = data1[0].project_name
+    //                     let topClient = data1[0].client_name
+    //                     let color_code = data1[0].project_color_code
+    //                     let project_code = data1[0].project_code
+    //                     data.unshift({ totalTime, topProject, topClient, color_code, project_code })
+    //                     responseData = data;
+    //                     error = false
 
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-
-
-        } else if (request.role_id == 2) {
-            let responseData = [],
-                error = true;
-            flag = 3
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                flag
-            );
-
-            const queryString = util.getQueryString('reports_get_summary', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        //flag =1 for individual user
-                        flag = 3
-                        const [err1, data1] = await this.getTopProjectBasedOnHrs(request, flag)
-                        const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
-                        let totalTime = data2[0].weekHours
-                        let topProject = data1[0].project_name
-                        let topClient = data1[0].client_name
-                        let color_code = data1[0].project_color_code
-                        let project_code = data1[0].project_code
-                        data.unshift({ totalTime, topProject, topClient, color_code, project_code })
-                        responseData = data;
-                        error = false
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
 
 
-        }
+    //     } else if (request.role_id == 2) {
+    //         let responseData = [],
+    //             error = true;
+    //         flag = 3
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             flag
+    //         );
 
-    }
+    //         const queryString = util.getQueryString('reports_get_summary', paramsArr);
 
-    this.getReportDetailed = async function (request) {
-        if (request.role_id == 3) {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                1
-            );
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     //flag =1 for individual user
+    //                     flag = 3
+    //                     const [err1, data1] = await this.getTopProjectBasedOnHrs(request, flag)
+    //                     const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
+    //                     let totalTime = data2[0].weekHours
+    //                     let topProject = data1[0].project_name
+    //                     let topClient = data1[0].client_name
+    //                     let color_code = data1[0].project_color_code
+    //                     let project_code = data1[0].project_code
+    //                     data.unshift({ totalTime, topProject, topClient, color_code, project_code })
+    //                     responseData = data;
+    //                     error = false
 
-            const queryString = util.getQueryString('reports_get_detailed', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        console.log('====================================')
-                        console.log(data)
-                        console.log('====================================')
-                        flag = 1
-                        const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
-                        let totalTime = data1[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else if (request.role_id == 4) {
-
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                2
-            );
-
-            const queryString = util.getQueryString('reports_get_detailed', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        console.log('=======lead===============');
-                        console.log(data);
-                        console.log('====================================');
-
-                        const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        let totalTime = data1[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
 
 
-        } else if (request.role_id == 2) {
+    //     }
+
+    // }
+
+    // this.getReportDetailed = async function (request) {
+    //     if (request.role_id == 3) {
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             1
+    //         );
+
+    //         const queryString = util.getQueryString('reports_get_detailed', paramsArr);
+
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     console.log('====================================')
+    //                     console.log(data)
+    //                     console.log('====================================')
+    //                     flag = 1
+    //                     const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request, flag)
+    //                     let totalTime = data1[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
+
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
+    //     } else if (request.role_id == 4) {
+
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             2
+    //         );
+
+    //         const queryString = util.getQueryString('reports_get_detailed', paramsArr);
+
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     console.log('=======lead===============');
+    //                     console.log(data);
+    //                     console.log('====================================');
+
+    //                     const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     let totalTime = data1[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
+
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
 
 
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                3
-            );
-
-            const queryString = util.getQueryString('reports_get_detailed', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        console.log('==========LENGTH====')
-                        console.log(data.length)
-                        console.log('====================================')
-                        const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        let totalTime = data1[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
+    //     } else if (request.role_id == 2) {
 
 
-        }
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             3
+    //         );
+
+    //         const queryString = util.getQueryString('reports_get_detailed', paramsArr);
+
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     console.log('==========LENGTH====')
+    //                     console.log(data.length)
+    //                     console.log('====================================')
+    //                     const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     let totalTime = data1[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
+
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
 
 
-    };
+    //     }
 
-    this.getReportWeekly = async function (request) {
-        if (request.role_id == 3) {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                1
-            );
 
-            const queryString = util.getQueryString('reports_get_weekly', paramsArr);
+    // };
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        data.filter(function (o1, i) {
-                            data1.some(function (o2) {
-                                if (o1.project_id === o2.project_id) {
-                                    data[i].total_hour = o2.total_hours
-                                }
-                            });
-                        });
-                        let totalTime = data2[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
+    // this.getReportWeekly = async function (request) {
+    //     if (request.role_id == 3) {
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             1
+    //         );
 
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else if (request.role_id == 4) {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                2
-            );
+    //         const queryString = util.getQueryString('reports_get_weekly', paramsArr);
 
-            const queryString = util.getQueryString('reports_get_weekly', paramsArr);
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
+    //                     const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     data.filter(function (o1, i) {
+    //                         data1.some(function (o2) {
+    //                             if (o1.project_id === o2.project_id) {
+    //                                 data[i].total_hour = o2.total_hours
+    //                             }
+    //                         });
+    //                     });
+    //                     let totalTime = data2[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        data.filter(function (o1, i) {
-                            data1.some(function (o2) {
-                                if (o1.project_id === o2.project_id) {
-                                    data[i].total_hour = o2.total_hours
-                                }
-                            });
-                        });
-                        let totalTime = data2[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
+    //     } else if (request.role_id == 4) {
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             2
+    //         );
 
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else if (request.role_id == 2) {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                3
-            );
+    //         const queryString = util.getQueryString('reports_get_weekly', paramsArr);
 
-            const queryString = util.getQueryString('reports_get_weekly', paramsArr);
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
+    //                     const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     data.filter(function (o1, i) {
+    //                         data1.some(function (o2) {
+    //                             if (o1.project_id === o2.project_id) {
+    //                                 data[i].total_hour = o2.total_hours
+    //                             }
+    //                         });
+    //                     });
+    //                     let totalTime = data2[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        data.filter(function (o1, i) {
-                            data1.some(function (o2) {
-                                if (o1.project_id === o2.project_id) {
-                                    data[i].total_hour = o2.total_hours
-                                }
-                            });
-                        });
-                        let totalTime = data2[0].weekHours
-                        data.unshift({ totalTime })
-                        responseData = data;
-                        error = false
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
+    //     } else if (request.role_id == 2) {
+    //         let responseData = [],
+    //             error = true;
+    //         const paramsArr = new Array(
+    //             request.first_week_day,
+    //             request.last_week_day,
+    //             request.employee_id,
+    //             3
+    //         );
 
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        }
+    //         const queryString = util.getQueryString('reports_get_weekly', paramsArr);
 
-    };
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     const [err2, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
+    //                     const [err1, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+    //                     data.filter(function (o1, i) {
+    //                         data1.some(function (o2) {
+    //                             if (o1.project_id === o2.project_id) {
+    //                                 data[i].total_hour = o2.total_hours
+    //                             }
+    //                         });
+    //                     });
+    //                     let totalTime = data2[0].weekHours
+    //                     data.unshift({ totalTime })
+    //                     responseData = data;
+    //                     error = false
+
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //             return [error, responseData];
+    //         }
+    //     }
+
+    // };
 }
 
 
