@@ -14,32 +14,29 @@ function ProjectService(objectCollection) {
 
         let responseData = [],
             error = true;
-        const [err, data] = await this.getProjectsByClientidSelect(request)
-        if (data.length == 0) {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.client_id.toString()
-            );
-            const queryString = util.getQueryString('project_remove_client_delete', paramsArr);
+        const paramsArr = new Array(
+            request.client_id.toString()
+        );
+        const queryString = util.getQueryString('project_remove_client_delete', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data1[0].message === "data") {
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1;
                         error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-        } else {
-            responseData = [error, { "message": "Client cannot be deleted" }]
+                    } else {
+                        error = false,
+                            responseData = [{ message: data1[0].message }];
+                    }
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
             return [error, responseData];
         }
-
 
     }
 

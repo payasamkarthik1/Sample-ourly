@@ -108,7 +108,7 @@ function Validations(objectCollection) {
             error = true
             responseData = [error, { message: "This entry can't be saved, please add description" }]
             return [error, responseData];
-        } else if (request.project_id == "") {
+        } else if (Validator.isEmpty(request.project_id.toString())) {
             error = true
 
             responseData = [error, { message: "This entry can't be saved, please add project" }]
@@ -145,7 +145,7 @@ function Validations(objectCollection) {
 
         let responseData = []
 
-        if (request.client_id == "") {
+        if (Validator.isEmpty(request.client_id.toString())) {
             error = true
             responseData = [{ message: "Client is required" }]
             return [error, responseData];
@@ -167,7 +167,7 @@ function Validations(objectCollection) {
             return [true, responseData];
         }
 
-        else if (request.tag_id == "") {
+        else if(Validator.isEmpty(request.tag_id.toString())){
             error = true
             responseData = [{ message: "tag is required" }]
             return [true, responseData];
@@ -328,18 +328,19 @@ function Validations(objectCollection) {
             error = true
         if (request.new_password == " " || request.confirm_password == " " || request.new_password == "" || request.confirm_password == "") {
             error = true
-            responseData = [error, { message: "All Fields are required" }]
+            responseData = [{ message: "All Fields are required" }]
         } else
             if (request.new_password !== request.confirm_password) {
                 error = true
-                responseData = [error, { message: "New password and Confirm password should be same" }]
+                responseData = [{ message: "New password and Confirm password should be same" }]
             } else {
                 error = false
                 const [err, data] = await this.userDetailsList(request)
                 if (!err) {
                     const hashNewPassword = await util.convertTextToHash(request.new_password)
                     await this.forgetPasswordChange(request, data, hashNewPassword)
-                    responseData = [false, { message: "Password Changed Successfully" }]
+                    error = false
+                    responseData = [{ message: "Password Changed Successfully" }]
                 } else {
                     error = true
                     responseData = data

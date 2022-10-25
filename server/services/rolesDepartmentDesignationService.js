@@ -84,6 +84,37 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
     }
 
+    this.departmentRemoveDelete = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.department_id.toString()
+
+        );
+
+        const queryString = util.getQueryString('department_remove_depart_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data[0].message === "data") {
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = true,
+                      responseData = [{ message: data[0].message }];
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
     this.getAllDepartments = async function (request) {
         let responseData = [],
             error = true;

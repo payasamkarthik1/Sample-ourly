@@ -63,6 +63,20 @@ function RolesDepartmentDesignation(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+         //@Post department/remove/department/delete
+    app.post('/' + 'department/remove/department/delete',
+
+    async function (req, res) {
+
+        const [err, resData] = await rolesDepartDesignService.departmentRemoveDelete(req.body);
+        if (!err) {
+            console.log("department/remove/department/delete | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("department/remove/department/delete | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
 
     //@Get department/get/all/departments/list
     app.get('/' + 'department/get/all/departments/list',
