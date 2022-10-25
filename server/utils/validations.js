@@ -296,13 +296,24 @@ function Validations(objectCollection) {
                 if (err1) {
                     error = true
                     responseData = data1
-                } else if (request.new_password !== request.confirm_password) {
+                }
+                else if (!(request.new_password.length >= 8)) {
+                    error = true
+                    responseData = [{ message: 'password length must be minimum 8' }]
+                    return [error, responseData];
+                }
+                else if (!(request.new_password.length <= 15)) {
+                    error = true
+                    responseData = [{ message: 'password length must be maximum 15' }]
+                    return [error, responseData];
+                }
+                else if (request.new_password !== request.confirm_password) {
                     error = true
                     responseData = [{ message: "New password and Confirm password should be same" }]
-                } else {
+                }
+                else {
                     error = false
                     const hashNewPassword = await util.convertTextToHash(request.new_password)
-
                     const [err2, data2] = await this.changePasswordWithOldPasswordInsert(request, data, hashNewPassword)
                     if (!err2) {
                         error = false
@@ -313,6 +324,7 @@ function Validations(objectCollection) {
                     }
 
                 }
+                return [error, responseData]
             }
         }
         return [error, responseData]
@@ -325,24 +337,35 @@ function Validations(objectCollection) {
         if (request.new_password == " " || request.confirm_password == " " || request.new_password == "" || request.confirm_password == "") {
             error = true
             responseData = [{ message: "All Fields are required" }]
-        } else
-            if (request.new_password !== request.confirm_password) {
-                error = true
-                responseData = [{ message: "New password and Confirm password should be same" }]
-            } else {
-                error = false
-                const [err, data] = await this.userDetailsList(request)
-                if (!err) {
-                    const hashNewPassword = await util.convertTextToHash(request.new_password)
-                    await this.forgetPasswordChange(request, data, hashNewPassword)
-                    error = false
-                    responseData = [{ message: "Password Changed Successfully" }]
-                } else {
-                    error = true
-                    responseData = data
-                }
 
+        }
+        else if (!(request.new_password.length >= 8)) {
+            error = true
+            responseData = [{ message: 'password length must be minimum 8' }]
+            return [error, responseData];
+        }
+        else if (!(request.new_password.length <= 15)) {
+            error = true
+            responseData = [{ message: 'password length must be maximum 15' }]
+            return [error, responseData];
+        }
+        else if (request.new_password !== request.confirm_password) {
+            error = true
+            responseData = [{ message: "New password and Confirm password should be same" }]
+        } else {
+            error = false
+            const [err, data] = await this.userDetailsList(request)
+            if (!err) {
+                const hashNewPassword = await util.convertTextToHash(request.new_password)
+                await this.forgetPasswordChange(request, data, hashNewPassword)
+                error = false
+                responseData = [{ message: "Password Changed Successfully" }]
+            } else {
+                error = true
+                responseData = data
             }
+
+        }
         return [error, responseData]
 
     }
