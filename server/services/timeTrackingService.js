@@ -155,15 +155,20 @@ function TimeTrackingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data1) => {
-                        await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
-                        //for update project taking details before of project before update and update in timesheet
-                        const firstMonth1 = util.getMonthName(data2[0].first_week_day)
-                        const lastMonth1 = util.getMonthName(data2[0].last_week_day)
-                        request.project_id = data2[0].project_id
-                        await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
-                        await this.addUnsubmit(request)
-                        responseData = [{ message: data1[0].message }];;
-                        error = false
+                        if (data1[0].message === "failure") {
+                            error = true
+                            responseData = [{ message: "TimeEntry cannot be updated" }];
+                        } else if (data1[0].message === "success") {
+                            await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
+                            //for update project taking details before of project before update and update in timesheet
+                            const firstMonth1 = util.getMonthName(data2[0].first_week_day)
+                            const lastMonth1 = util.getMonthName(data2[0].last_week_day)
+                            request.project_id = data2[0].project_id
+                            await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
+                            await this.addUnsubmit(request)
+                            error = false,
+                            responseData = [{ message: "TimeEntry has beed updated successfully" }];
+                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err

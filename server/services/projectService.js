@@ -228,7 +228,6 @@ function ProjectService(objectCollection) {
                         })
                 }
             } else {
-                // return [err, data];
                 error = err
                 responseData = data
             }
@@ -262,9 +261,14 @@ function ProjectService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            error = true
+                            responseData = [{ message: data[0].message }]
+                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
@@ -292,9 +296,6 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('=========removeProjectDelete===========')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
