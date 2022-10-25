@@ -49,7 +49,7 @@ function TimeTrackingService(objectCollection) {
                         .then(async (data1) => {
                             if (data1[0].message === "failure") {
                                 error = true
-                                responseData = [{ message: "TimeEntry cannot be added,after Approve" }];
+                                responseData = [{ message: "TimeEntry cannot be added,after Approval" }];
                             } else if (data1[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
@@ -94,7 +94,7 @@ function TimeTrackingService(objectCollection) {
                         .then(async (data2) => {
                             if (data2[0].message === "failure") {
                                 error = true
-                                responseData = [{ message: "TimeEntry cannot be added" }];
+                                responseData = [{ message: "TimeEntry cannot be added,after Approval" }];
                             } else if (data2[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
@@ -162,7 +162,7 @@ function TimeTrackingService(objectCollection) {
                             await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
                             await this.addUnsubmit(request)
                             error = false,
-                            responseData = [{ message: "TimeEntry has beed updated successfully" }];
+                                responseData = [{ message: "TimeEntry has beed updated successfully" }];
                         }
                     }).catch((err) => {
                         console.log("err-------" + err);
