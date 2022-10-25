@@ -3,7 +3,6 @@
 // //bcrypt
 const bcrypt = require('bcrypt')
 
-
 // var CryptoJS = require('crypto-js')
 const Validator = require('validator')
 const isEmpty = require('is-empty');

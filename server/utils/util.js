@@ -82,7 +82,7 @@ function Util() {
             const data = await jwt.verify(token, global.config.sceret_key)
             if (data) {
                 error = false,
-                responseData = data
+                    responseData = data
             }
             else {
                 error = true
@@ -117,7 +117,7 @@ function Util() {
                 let mailOptions = {
                     from: 'vengalavishal92@gmail.com', // sender address
                     to: `${request.email}`, // list of receivers
-                    subject: 'Clockify Request', // Subject line
+                    subject: 'Prontify Request to change the password', // Subject line
                     html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
 
                     // html body
