@@ -135,7 +135,7 @@ function TimeTrackingService(objectCollection) {
                 request.task_parent_id,
                 request.task_child_id,
                 request.task_description,
-                request.project_name,
+                request.project_id,
                 request.employee_id,
                 request.task_start_time,
                 request.task_end_time,
