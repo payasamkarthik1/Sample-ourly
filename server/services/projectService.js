@@ -223,10 +223,12 @@ function ProjectService(objectCollection) {
                             console.log("err-------" + err);
                             error = err
                         })
+                    return [error, responseData];
                 }
             } else {
                 error = err
                 responseData = data
+                return [error, responseData];
             }
         }
         return [error, responseData];
@@ -240,9 +242,6 @@ function ProjectService(objectCollection) {
             error = err1
             responseData = respData
         } else {
-
-            let responseData = [],
-                error = true;
             const paramsArr = new Array(
                 request.client_id,
                 request.project_id,
@@ -270,6 +269,7 @@ function ProjectService(objectCollection) {
                         console.log("err-------" + err);
                         error = err
                     })
+                return [error, responseData];
 
             }
         }

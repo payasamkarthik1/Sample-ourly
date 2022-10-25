@@ -50,30 +50,22 @@ function TimeTrackingService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data1) => {
-                            console.log('=======logggggggggggggggggggggggggggggg==========')
-                            console.log(data1)
-                            console.log('====================================')
+
                             if (data1[0].message == "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
                             } else if (data1[0].message == "success") {
-                                console.log('====================================')
-                                console.log("entered")
-                                console.log('====================================')
+
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
                                 error = false,
-                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
+                                    responseData = [{ message: "TimeEntry has beed added successfully" }];
                             }
 
                         }).catch((err) => {
                             console.log("err-------" + err);
                             error = err
                         })
-      console.log('====================================')
-        console.log(error)
-        console.log(responseData)
-        console.log('====================================')
                     return [error, responseData];
                 }
             } else {
@@ -106,16 +98,10 @@ function TimeTrackingService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data2) => {
- console.log('=======logggggggggggggggggggggggggggggg==========')
-                            console.log(data2)
-                            console.log('====================================')
                             if (data2[0].message == "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
                             } else if (data2[0].message == "success") {
-        console.log('====================================')
-                                console.log("entered")
-                                console.log('====================================')
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
@@ -125,14 +111,10 @@ function TimeTrackingService(objectCollection) {
                             console.log("err-------" + err);
                             error = err
                         })
-                    // return [error, responseData];
+                    return [error, responseData];
                 }
             }
         }
-      console.log('====================================')
-        console.log(error)
-        console.log(responseData)
-        console.log('====================================')
         return [error, responseData];
     };
 
@@ -192,6 +174,7 @@ function TimeTrackingService(objectCollection) {
                         console.log("err-------" + err);
                         error = err
                     })
+                    return [error, responseData];
             }
         }
         return [error, responseData];
@@ -199,6 +182,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timetrackingRemoveChildTaskDelete = async function (request) {
+        let responseData = [],
+        error = true;
 
         const [err, data] = await this.timetrackingGetChildTask(request)
         const firstWeekDate = await util.getFirstWeekDate(data[0].task_created_datetime)
@@ -213,8 +198,7 @@ function TimeTrackingService(objectCollection) {
         request.role_id = 3;
         request.task_created_datetime = data[0].task_created_datetime;
 
-        let responseData = [],
-            error = true;
+       
         const paramsArr = new Array(
             request.task_parent_id,
             request.task_child_id,
