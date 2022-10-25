@@ -133,7 +133,7 @@ function UserService(objectCollection) {
                 await db.executeQuery(0, queryString, request)
                     .then((data) => {
                         error = false
-                        responseData = [error, { message: "Profile updated" }];
+                        responseData = [{ message: "Profile updated" }];
 
                     }).catch((err) => {
                         error = err;
@@ -189,7 +189,7 @@ function UserService(objectCollection) {
             if (!err1) {
                 await util.nodemailerSender(request, resData1).then((data) => {
                     error = false
-                    responseData = [error, { message: "sended success" }]
+                    responseData = [{ message: "sended success" }]
 
                 }).catch((err) => {
                     error = err
@@ -202,8 +202,7 @@ function UserService(objectCollection) {
         } catch (err) {
             error = err
         }
-        return [error,
-            responseData]
+        return [error, responseData]
     }
 
 }

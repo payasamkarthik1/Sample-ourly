@@ -76,22 +76,22 @@ function Util() {
         const token = req.headers["authorization"]
         if (!token) {
             error = true
-            responseData = [error, { message: "token is required" }]
+            responseData = [{ message: "token is required" }]
         }
         try {
             const data = await jwt.verify(token, global.config.sceret_key)
             if (data) {
                 error = false,
-                    responseData = data
+                responseData = data
             }
             else {
                 error = true
-                responseData = [error, { message: "token is invalid" }]
+                responseData = [{ message: "token is invalid" }]
             }
 
         } catch (e) {
             error = true
-            responseData = [error, { message: "token is invalid" }]
+            responseData = [{ message: "token is invalid" }]
         }
 
         return [error, responseData]

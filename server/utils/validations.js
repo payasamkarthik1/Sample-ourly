@@ -193,13 +193,11 @@ function Validations(objectCollection) {
                 .then((data) => {
                     if (data.length == 0) {
                         error = true
-                        responseData = [error, { "message": "Invalid credentials" }]
+                        responseData = [{ "message": "Invalid credentials" }]
                     }
                     else {
-
                         error = false
                         responseData = data
-
                     }
                 }).catch((err) => {
                     error = err;
@@ -244,12 +242,12 @@ function Validations(objectCollection) {
             .compare(request.old_password, data[0].password)
             .then(async (isMatch) => {
                 if (isMatch) {
-
                     responseData = resData1
                     error = false
                 }
                 else {
-                    responseData = [error, { message: "Incorrect password" }]
+                    error = true
+                    responseData = [{ message: "Incorrect password" }]
                 }
             }).catch((err) => {
                 error = err
@@ -287,7 +285,7 @@ function Validations(objectCollection) {
 
         if (request.newPassword == " " || request.confirmPassword == " " || request.oldPassword == " ") {
             error = true
-            responseData = [error, { message: "All fields are required" }]
+            responseData = [{ message: "All fields are required" }]
         } else {
             const [err, data] = await util.verifyJwtToken(request, req);
             if (err) {
@@ -300,7 +298,7 @@ function Validations(objectCollection) {
                     responseData = data1
                 } else if (request.new_password !== request.confirm_password) {
                     error = true
-                    responseData = [error, { message: "New password and Confirm password should be same" }]
+                    responseData = [{ message: "New password and Confirm password should be same" }]
                 } else {
                     error = false
                     const hashNewPassword = await util.convertTextToHash(request.new_password)
@@ -363,7 +361,6 @@ function Validations(objectCollection) {
                 .then((data) => {
                     responseData = data;
                     error = false
-
                 }).catch((err) => {
                     error = err;
                 })
@@ -386,9 +383,8 @@ function Validations(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(0, queryString, request)
                 .then((data) => {
-
                     error = false
-                    responseData = [error, { message: "Password Changed Successfully" }]
+                    responseData = [{ message: "Password Changed Successfully" }]
 
                 }).catch((err) => {
                     error = err;
