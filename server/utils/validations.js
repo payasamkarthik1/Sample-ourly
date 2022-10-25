@@ -110,7 +110,6 @@ function Validations(objectCollection) {
             return [error, responseData];
         } else if (Validator.isEmpty(request.project_id.toString())) {
             error = true
-
             responseData = [error, { message: "This entry can't be saved, please add project" }]
             return [true, responseData];
 

@@ -50,21 +50,30 @@ function TimeTrackingService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data1) => {
-                            if (data1[0].message === "failure") {
+                            console.log('=======logggggggggggggggggggggggggggggg==========')
+                            console.log(data1)
+                            console.log('====================================')
+                            if (data1[0].message == "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
-                            } else if (data1[0].message === "success") {
-
+                            } else if (data1[0].message == "success") {
+                                console.log('====================================')
+                                console.log("entered")
+                                console.log('====================================')
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
                                 error = false,
-                                    responseData = [{ message: "TimeEntry has beed added successfully" }];
+                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
                             }
 
                         }).catch((err) => {
                             console.log("err-------" + err);
                             error = err
                         })
+      console.log('====================================')
+        console.log(error)
+        console.log(responseData)
+        console.log('====================================')
                     return [error, responseData];
                 }
             } else {
@@ -97,10 +106,16 @@ function TimeTrackingService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data2) => {
-                            if (data2[0].message === "failure") {
+ console.log('=======logggggggggggggggggggggggggggggg==========')
+                            console.log(data2)
+                            console.log('====================================')
+                            if (data2[0].message == "failure") {
                                 error = true
                                 responseData = [{ message: "TimeEntry cannot be added" }];
-                            } else if (data2[0].message === "success") {
+                            } else if (data2[0].message == "success") {
+        console.log('====================================')
+                                console.log("entered")
+                                console.log('====================================')
                                 await this.timesheetAddUpdateRemoveProjects(request, firstWeekDate, lastWeekDate, firstMonth, lastMonth)
                                 await this.addUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
@@ -114,6 +129,10 @@ function TimeTrackingService(objectCollection) {
                 }
             }
         }
+      console.log('====================================')
+        console.log(error)
+        console.log(responseData)
+        console.log('====================================')
         return [error, responseData];
     };
 
