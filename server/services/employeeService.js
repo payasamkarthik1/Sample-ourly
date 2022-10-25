@@ -230,7 +230,6 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     responseData = data;
                     error = false
                 }).catch((err) => {

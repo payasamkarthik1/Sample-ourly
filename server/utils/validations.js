@@ -22,78 +22,77 @@ function Validations(objectCollection) {
 
         if (Validator.isEmpty(request.first_name)) {
             error = true
-            responseData = [error, { message: 'first_name  is required' }]
+            responseData = [{ message: 'first_name  is required' }]
             return [error, responseData];
         } else if (Validator.isEmpty(request.last_name)) {
             error = true
-
-            responseData = [error, { message: 'last_name is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'last_name is required' }]
+            return [error, responseData];
 
         } else if (Validator.isEmpty(request.email)) {
             error = true
-            responseData = [error, { message: 'email is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'email is required' }]
+            return [error, responseData];
 
         }
         else if (Validator.isEmpty(request.phone_number)) {
             error = true
-            responseData = [error, { message: 'phone_number is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'phone_number is required' }]
+            return [error, responseData];
         }
         else if (!(request.phone_number.length == 10)) {
             error = true
-            responseData = [error, { message: 'invalid phone_number' }]
-            return [true, responseData];
+            responseData = [{ message: 'invalid phone_number' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.gender)) {
             error = true
-            responseData = [error, { message: 'gender  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'gender  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.blood_group)) {
             error = true
-            responseData = [error, { message: 'blood_group  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'blood_group  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.dob)) {
             error = true
-            responseData = [error, { message: 'dob  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'dob  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.role_id.toString())) {
             error = true
-            responseData = [error, { message: 'role  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'role  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.department_id.toString())) {
             error = true
-            responseData = [error, { message: 'department  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'department  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.designation_id.toString())) {
             error = true
-            responseData = [error, { message: 'designation  is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'designation  is required' }]
+            return [error, responseData];
         }
         else if (Validator.isEmpty(request.password)) {
             error = true
-            responseData = [error, { message: 'password is required' }]
-            return [true, responseData];
+            responseData = [{ message: 'password is required' }]
+            return [error, responseData];
         }
         else if (!(request.password.length >= 8)) {
             error = true
-            responseData = [error, { message: 'password length must be minimum 8' }]
-            return [true, responseData];
+            responseData = [{ message: 'password length must be minimum 8' }]
+            return [error, responseData];
         }
         else if (!(request.password.length <= 15)) {
             error = true
-            responseData = [error, { message: 'password length must be maximum 15' }]
-            return [true, responseData];
+            responseData = [{ message: 'password length must be maximum 15' }]
+            return [error, responseData];
         }
         else {
             error = false
-            return [false, responseData];
+            return [error, responseData];
 
         }
 
@@ -106,28 +105,28 @@ function Validations(objectCollection) {
 
         if (Validator.isEmpty(request.task_description)) {
             error = true
-            responseData = [error, { message: "This entry can't be saved, please add description" }]
+            responseData = [{ message: "This entry can't be saved, please add description" }]
             return [error, responseData];
         } else if (Validator.isEmpty(request.project_id.toString())) {
             error = true
-            responseData = [error, { message: "This entry can't be saved, please add project" }]
+            responseData = [{ message: "This entry can't be saved, please add project" }]
             return [true, responseData];
 
         } else if (Validator.isEmpty(request.task_start_time)) {
             error = true
-            responseData = [error, { message: "This entry can't be saved, please add start time" }]
+            responseData = [{ message: "This entry can't be saved, please add start time" }]
             return [true, responseData];
 
         }
         else if (Validator.isEmpty(request.task_end_time)) {
             error = true
-            responseData = [error, { message: "This entry can't be saved, please add end time" }]
+            responseData = [{ message: "This entry can't be saved, please add end time" }]
             return [true, responseData];
         }
 
         else if (Validator.isEmpty(request.task_created_datetime)) {
             error = true
-            responseData = [error, { message: "This entry can't be saved, please add date" }]
+            responseData = [{ message: "This entry can't be saved, please add date" }]
             return [true, responseData];
         }
 
@@ -166,7 +165,7 @@ function Validations(objectCollection) {
             return [true, responseData];
         }
 
-        else if(Validator.isEmpty(request.tag_id.toString())){
+        else if (Validator.isEmpty(request.tag_id.toString())) {
             error = true
             responseData = [{ message: "tag is required" }]
             return [true, responseData];
@@ -399,8 +398,6 @@ function Validations(objectCollection) {
         }
 
     }
-
-
 
 }
 module.exports = Validations
