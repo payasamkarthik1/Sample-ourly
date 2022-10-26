@@ -75,7 +75,6 @@ function AdminService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
 
         const queryString = util.getQueryString('employee_get_all_select', paramsArr);

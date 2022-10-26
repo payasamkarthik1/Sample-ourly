@@ -47,7 +47,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Get employee/get/employee/by/id
-    app.post('/' + 'employee/get/employeef/by/id',
+    app.post('/' + 'employee/get/employee/by/id',
 
         async function (req, res) {
 
