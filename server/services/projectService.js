@@ -270,23 +270,17 @@ function ProjectService(objectCollection) {
                         error = err
                     })
                 return [error, responseData];
-
             }
         }
         return [error, responseData];
-
-
     }
 
     this.removeProjectDelete = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
             request.project_id.toString(),
         );
-
-
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
 
         if (queryString !== '') {

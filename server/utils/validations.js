@@ -97,6 +97,79 @@ function Validations(objectCollection) {
 
 
     }
+    this.employeeUpdateCreationInputValidations = async function (request) {
+
+        let responseData = []
+
+        if (Validator.isEmpty(request.first_name)) {
+            error = true
+            responseData = [{ message: 'first_name  is required' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.last_name)) {
+            error = true
+            responseData = [{ message: 'last_name is required' }]
+            return [error, responseData];
+
+        } else if (Validator.isEmpty(request.email)) {
+            error = true
+            responseData = [{ message: 'email is required' }]
+            return [error, responseData];
+
+        }
+        else if (Validator.isEmpty(request.phone_number)) {
+            error = true
+            responseData = [{ message: 'phone_number is required' }]
+            return [error, responseData];
+        }
+        else if (!(request.phone_number.length == 10)) {
+            error = true
+            responseData = [{ message: 'invalid phone_number' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.gender)) {
+            error = true
+            responseData = [{ message: 'gender  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.blood_group)) {
+            error = true
+            responseData = [{ message: 'blood_group  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.dob)) {
+            error = true
+            responseData = [{ message: 'dob  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.role_id.toString())) {
+            error = true
+            responseData = [{ message: 'role  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.department_id.toString())) {
+            error = true
+            responseData = [{ message: 'department  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.designation_id.toString())) {
+            error = true
+            responseData = [{ message: 'designation  is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.lead_assigned_employee_id.toString())) {
+            error = true
+            responseData = [{ message: 'lead_assigned_employee_id  is required' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
 
     this.taskCreationInputValidation = async function (request) {
 

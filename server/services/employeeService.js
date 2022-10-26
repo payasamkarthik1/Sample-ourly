@@ -56,7 +56,6 @@ function AdminService(objectCollection) {
                             error = true
                             responseData = data;
                         } else {
-
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                             responseData = data1;
                             error = false;
@@ -146,7 +145,7 @@ function AdminService(objectCollection) {
     this.updateEmployeeDetails = async function (request) {
         let responseData = [],
             error = true;
-        const [err, respData] = await validations.employeeCreationInputValidations(request);
+        const [err, respData] = await validations.employeeUpdateCreationInputValidations(request);
         if (err) {
             error = err
             responseData = respData
