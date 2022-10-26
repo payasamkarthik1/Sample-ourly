@@ -130,9 +130,9 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
                     error = false
-                    responseData = data
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

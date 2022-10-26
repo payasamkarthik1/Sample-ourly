@@ -160,6 +160,7 @@ function TimeTrackingService(objectCollection) {
                             const lastMonth1 = util.getMonthName(data2[0].last_week_day)
                             request.project_id = data2[0].project_id
                             await this.timesheetAddUpdateRemoveProjects(request, data2[0].first_week_day, data2[0].last_week_day, firstMonth1, lastMonth1)
+
                             await this.addUnsubmit(request)
                             error = false,
                                 responseData = [{ message: "TimeEntry has beed updated successfully" }];
@@ -974,7 +975,6 @@ function TimeTrackingService(objectCollection) {
         let responseData = [],
             error = true;
         const [err2, data2] = await this.getUnsubmited(request)
-
         if (data2.length == 0) {
             const [err, data] = await this.getEmployeeLead(request)
             const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
@@ -1074,9 +1074,7 @@ function TimeTrackingService(objectCollection) {
             2,
             3
         );
-
         const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
-
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
