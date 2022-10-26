@@ -471,9 +471,8 @@ function TimeTrackingService(objectCollection) {
                 error = err
                 responseData = data
             }
-
+            return [error, responseData];
         }
-
         return [error, responseData];
 
 
