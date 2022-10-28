@@ -97,6 +97,7 @@ function Validations(objectCollection) {
 
 
     }
+
     this.employeeUpdateCreationInputValidations = async function (request) {
 
         let responseData = []
@@ -161,6 +162,29 @@ function Validations(objectCollection) {
             responseData = [{ message: 'lead_assigned_employee_id  is required' }]
             return [error, responseData];
         }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
+    this.userProfileValidation = async function (request) {
+
+        let responseData = []
+        if (Validator.isEmpty(request.phone_number)) {
+            error = true
+            responseData = [{ message: 'phone_number is required' }]
+            return [error, responseData];
+        }
+        else if (!(request.phone_number.length == 10)) {
+            error = true
+            responseData = [{ message: 'invalid phone_number' }]
+            return [error, responseData];
+        }
+
         else {
             error = false
             return [error, responseData];
@@ -319,7 +343,7 @@ function Validations(objectCollection) {
                 }
                 else {
                     error = true
-                    responseData = [{ message: "Incorrect password" }]
+                    responseData = [{ message: "Old Password is Incorrect" }]
                 }
             }).catch((err) => {
                 error = err

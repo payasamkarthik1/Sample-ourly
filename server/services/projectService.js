@@ -27,7 +27,7 @@ function ProjectService(objectCollection) {
                         responseData = data1;
                         error = false
                     } else {
-                        error = false,
+                        error = true,
                             responseData = [{ message: data[0].message }];
                     }
 
