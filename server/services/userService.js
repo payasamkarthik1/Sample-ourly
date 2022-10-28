@@ -134,9 +134,13 @@ function UserService(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(0, queryString, request)
                         .then((data) => {
-                            error = false
-                            responseData = [{ message: "Profile updated" }];
-
+                            if (data[0].message === "data") {
+                                error = false
+                                responseData = [{ message: "User Profile updated" }];                       
+                            } else {
+                                error = true,
+                                responseData = [{ message: data[0].message }];
+                            }
                         }).catch((err) => {
                             error = err;
                         })

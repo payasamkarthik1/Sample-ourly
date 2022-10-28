@@ -111,12 +111,14 @@ function ProjectService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        console.log('=========updateClientDetails===========')
-                        console.log(data1)
-                        console.log('====================================')
-                        responseData = data1;
-                        error = false
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            error = true
+                            responseData = [{ message: data[0].message }];
+                        }
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
