@@ -69,7 +69,7 @@ function ProjectService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            request.client_name,
+            request.client_name.trim(),
             util.getCurrentUTCTime(),
 
         );

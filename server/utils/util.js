@@ -144,6 +144,61 @@ function Util() {
         })
 
     }
+    this.nodemailerSenderOnReject = async function (request, res) {
+        var responseData = [];
+        error = false;
+
+        return new Promise((resolve, reject) => {
+            try {
+                let transporter = nodemailer.createTransport({
+
+                    service: 'gmail',
+                    auth: {
+                        user: 'pronteff',
+                        pass: 'iufhppuqnqmsqocv',
+                    }
+
+                });
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'vishal@pronteff.com', // sender address
+                    to: `${request.employee_email}`, // list of receivers
+                    subject: `
+                     employee_name : ${request.employee_name},
+                    week_name :${request.week_name},
+                    reject_by:${request.rejected_by},
+                    reject_on:${request.rejected_datetime},
+                    note : ${request.note},
+                              
+                    
+                    `, // Subject line
+                    //  html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
+
+                    // html body
+
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
 
     this.generateRandtoken = async function (req) {
         const id = randtoken.generate(4, "0123456789");
@@ -162,8 +217,6 @@ function Util() {
     }
 
     this.getFirstWeekDate = async function (dt) {
-
-
         d = new Date(dt);
         var day = d.getDay(),
             diff = d.getDate() - day + (d.getDay() === 0 ? -6 : 1); // adjust when day is sunday
@@ -217,9 +270,27 @@ function Util() {
         let date1 = new Date(Math.round((date - 25569) * 864e5));
         date1.setMinutes(date1.getMinutes() + date1.getTimezoneOffset());
         return moment(date1).utc().format("YYYY-MM-DD");
-
-
     }
+
+    this.getWeekName =async function (request) {
+       date1= await this.getFirstWeekDate(request.task_created_datetime)
+       date2= await this.getLastWeekDate(request.task_created_datetime)
+
+        var dt1 = moment(date1, "YYYY-MM-DD HH:mm:ss")
+        day1 = dt1.format('Do');
+        month1 = dt1.format('MMM');
+        year1 = dt1.format('YYYY');
+        firstMonth = month1.concat(" " + day1 + "," + year1)
+
+        var dt2 = moment(date2, "YYYY-MM-DD HH:mm:ss")
+        day2 = dt2.format('Do');
+        month2 = dt2.format('MMM');
+        year2 = dt2.format('YYYY');
+        lastMonth = month2.concat(" " + day2 + "," + year2)
+
+        return firstMonth.concat(" " + lastMonth)
+    }
+
 }
 
 module.exports = Util
