@@ -93,7 +93,7 @@ function ApprovalsController(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await timeTrackingService.onReject(req.body);
+            const [err, resData] = await timeTrackingService.onWithdraw(req.body);
             if (!err) {
                 console.log("approvals/on/reject | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));

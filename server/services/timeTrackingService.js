@@ -1493,7 +1493,7 @@ function TimeTrackingService(objectCollection) {
             request.last_week_day,
             request.week_name,
             data1[0].submited_for_approval_datetime,
-            request.lead_id, 
+            request.lead_id,
             request.role_id,
             util.getCurrentUTCTime(),
             null,
@@ -1576,7 +1576,7 @@ function TimeTrackingService(objectCollection) {
             null,
             null,
             null,
-            request.lead_id, 
+            request.lead_id,
             request.role_id,
             util.getCurrentUTCTime(),
             request.note,
@@ -1606,15 +1606,15 @@ function TimeTrackingService(objectCollection) {
     this.onRejectSendMail = async function (request) {
         let responseData = [],
             error = true;
-    
+
         request.rejected_datetime = await util.getCurrentUTCTime()
         const [err1, data1] = await employeeService.getEmployeeById(request)
-            request.employee_email = data1[0].email,
+        request.employee_email = data1[0].email,
             request.employee_name = data1[0].full_name
 
-            request.employee_id = request.lead_id
-            const [err2, data2] = await employeeService.getEmployeeById(request)
-            request.rejected_by = data2[0].full_name
+        request.employee_id = request.lead_id
+        const [err2, data2] = await employeeService.getEmployeeById(request)
+        request.rejected_by = data2[0].full_name
         await util.nodemailerSenderOnReject(request).then((data) => {
             error = false
             responseData = [{ message: "rejected successfully and mail have been sended to employee" }]
@@ -1642,15 +1642,55 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (data[0].message == "success") {
+                    const [err1, data1] = await this.onWithdrawnEntry(request)
+                    responseData = data1;
+                    error = false
 
-                        responseData = [{ message: "Timesheet has been withdrawn successfully" }];
-                        error = false
-                    } else {
-                        error = true
-                        responseData = [{ message: "Timesheet cannot be withdrawn after approval" }];
-                    }
 
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+    this.onWithdrawnEntry = async function (request) {
+        let responseData = [],
+            error = true;
+        const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request)
+
+        flag = 2
+        request.task_created_datetime = request.first_week_day
+        request.week_name = await util.getWeekName(request)
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.week_name,
+            data1[0].submited_for_approval_datetime,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            util.getCurrentUTCTime(),
+            util.getCurrentUTCTime(),
+            data1[0].sno,
+            flag
+
+        );
+        const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = [{ message: "Timesheet has been withdrawn successfully by employee" }];
+                    error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
