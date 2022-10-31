@@ -77,6 +77,19 @@ function ApprovalsController(objectCollection) {
 
     //@Post approvals/on/reject
     app.post('/' + 'approvals/on/reject',
+        async function (req, res) {
+            const [err, resData] = await timeTrackingService.onReject(req.body);
+            if (!err) {
+                console.log("approvals/on/reject | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("approvals/on/reject | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post approvals/on/reject
+    app.post('/' + 'timesheet/on/withdraw',
 
         async function (req, res) {
 
@@ -89,21 +102,6 @@ function ApprovalsController(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-         //@Post approvals/on/reject
-    app.post('/' + 'timeshhet/approvals/on/reject',
-
-    async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.onReject(req.body);
-        if (!err) {
-            console.log("approvals/on/reject | Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("approvals/on/reject | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
 
 
 

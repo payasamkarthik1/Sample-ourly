@@ -144,37 +144,83 @@ function Util() {
         })
 
     }
-    this.nodemailerSenderOnReject = async function (request, res) {
-        var responseData = [];
-        error = false;
+    this.nodemailerSenderOnReject = async function (request) {
 
         return new Promise((resolve, reject) => {
             try {
                 let transporter = nodemailer.createTransport({
-
                     service: 'gmail',
                     auth: {
-                        user: 'pronteff',
+                        user: 'vengalavishal92@gmail.com',
                         pass: 'iufhppuqnqmsqocv',
                     }
-
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vishal@pronteff.com', // sender address
+                    from: 'vengalavishal92@gmail.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
-                    subject: `
-                     employee_name : ${request.employee_name},
-                    week_name :${request.week_name},
-                    reject_by:${request.rejected_by},
-                    reject_on:${request.rejected_datetime},
-                    note : ${request.note},
-                              
-                    
-                    `, // Subject line
-                    //  html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
+                    subject: `Timesheet rejected
+                   
+                  
+                  `,// Subject line
+                    html: `
+                    <h1>Timesheet rejected</h1>
+                    <h3>Pronteff IT Solutions</h3>
+                    <h1>${request.week_name}</h1>
+                    <h2>${request.employee_name}</h2>
+                    <p>Rejected by:${request.rejected_by}</p>
+                    <p>Note: ${request.note}</p>
+                     `
+                    // html body
 
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
+    this.nodemailerSenderOnApprove = async function (request) {
+
+        return new Promise((resolve, reject) => {
+            try {
+                let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'vengalavishal92@gmail.com',
+                        pass: 'iufhppuqnqmsqocv',
+                    }
+                });
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'vengalavishal92@gmail.com', // sender address
+                    to: `${request.employee_email}`, // list of receivers
+                    subject: `<h1>Timesheet Aprroved</h1>
+                    <p>Pronteff IT Solutions</p>
+                  
+                  `,// Subject line
+                    html: `
+                    <h1>${request.week_name}</h1>
+                    <h2>${request.employee_name}</h2>
+                    <p>Approved by:${request.approved_by}</p>
+                     `
                     // html body
 
                 };
@@ -272,9 +318,9 @@ function Util() {
         return moment(date1).utc().format("YYYY-MM-DD");
     }
 
-    this.getWeekName =async function (request) {
-       date1= await this.getFirstWeekDate(request.task_created_datetime)
-       date2= await this.getLastWeekDate(request.task_created_datetime)
+    this.getWeekName = async function (request) {
+        date1 = await this.getFirstWeekDate(request.task_created_datetime)
+        date2 = await this.getLastWeekDate(request.task_created_datetime)
 
         var dt1 = moment(date1, "YYYY-MM-DD HH:mm:ss")
         day1 = dt1.format('Do');

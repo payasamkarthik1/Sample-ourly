@@ -1245,9 +1245,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -1366,44 +1363,6 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    this.onSubmitForApproval = async function (request) {
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-            request.employee_id,
-            request.first_week_day,
-            request.last_week_day,
-            flag
-        );
-        const queryString = util.getQueryString('approvals_change_status', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    }
-
-    this.onApproved = async function (request) {
-        let responseData = [],
-            error = true;
-        data = request
-        for (let i = 0; i < data.length; i++) {
-            await this.onApprovedChangeStatus(data[i])
-        }
-        error = false
-        return [error, responseData];
-    }
-
     this.onApprovedChangeStatus = async function (data, request) {
         let responseData = [],
             error = true;
@@ -1419,6 +1378,7 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    await this.onApprovedEntry(request)
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -1430,6 +1390,141 @@ function TimeTrackingService(objectCollection) {
 
 
     }
+
+
+    this.onSubmitForApproval = async function (request) {
+        let responseData = [],
+            error = true;
+        flag = 1
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            flag
+        );
+        const queryString = util.getQueryString('approvals_change_status', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data[0].message == "success") {
+                        const [err1, data1] = await this.onSubmitForApprovalEntry(request)
+                        responseData = data1;
+                        error = err1
+                    } else {
+                        error = true
+                        responseData = [{ message: "Timesheet has been already submited for approval" }];
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+    this.onSubmitForApprovalEntry = async function (request) {
+        let responseData = [],
+            error = true;
+        flag = 1
+        request.task_created_datetime = request.first_week_day
+        request.week_name = await util.getWeekName(request)
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.week_name,
+            util.getCurrentUTCTime(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            util.getCurrentUTCTime(),
+            null,
+            flag
+
+        );
+        const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = [{ message: "Timesheet has been submited successfully for approval" }];
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
+
+
+    this.onApproved = async function (request) {
+        let responseData = [],
+            error = true;
+        data = request
+        for (let i = 0; i < data.length; i++) {
+            await this.onApprovedChangeStatus(data[i])
+        }
+        error = false
+        return [error, responseData];
+    }
+    this.onApprovedEntry = async function (request) {
+        let responseData = [],
+            error = true;
+        flag = 1
+        //getting row where to update
+        const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request)
+
+        request.task_created_datetime = request.first_week_day
+        request.week_name = await util.getWeekName(request)
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.week_name,
+            data1[0].submited_for_approval_datetime,
+            request.lead_id, 
+            request.role_id,
+            util.getCurrentUTCTime(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            util.getCurrentUTCTime(),
+            data1[0].sno,
+            flag
+
+        );
+        const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
+
+
 
     this.onReject = async function (request) {
         let responseData = [],
@@ -1446,17 +1541,58 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const firstMonth = util.getMonthName(request.first_week_day)
-                    const lastMonth = util.getMonthName(request.last_week_day)
-                    request.week_name = firstMonth.concat(" " + lastMonth)
-                    const [err1, data1] = await this.getEmployeeLead(request)
-                    request.rejected_by = data1[0].full_name
-                    request.rejected_datetime = await util.getCurrentUTCTime()
-                    const [err2, data2] = await employeeService.getEmployeeById(request)
-                    request.employee_email = data2[0].email, request.employee_name = data2[0].full_name
-                    request.note = "testing"
-                    await util.nodemailerSenderOnReject(request)
-                    responseData = request;
+                    if (data[0].message == "success") {
+                        const [err1, data1] = await this.onRejectEntry(request)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = true
+                        responseData = [{ message: "Timesheet cannot be rejected without submit for approval" }];
+                    }
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+    this.onRejectEntry = async function (request) {
+        let responseData = [],
+            error = true;
+        const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request)
+
+        flag = 2
+        request.task_created_datetime = request.first_week_day
+        request.week_name = await util.getWeekName(request)
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.week_name,
+            data1[0].submited_for_approval_datetime,
+            null,
+            null,
+            null,
+            request.lead_id, 
+            request.role_id,
+            util.getCurrentUTCTime(),
+            request.note,
+            null,
+            util.getCurrentUTCTime(),
+            data1[0].sno,
+            flag
+
+        );
+        const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    const [err1, data1] = await this.onRejectSendMail(request)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -1465,6 +1601,106 @@ function TimeTrackingService(objectCollection) {
             return [error, responseData];
         }
 
+
+    }
+    this.onRejectSendMail = async function (request) {
+        let responseData = [],
+            error = true;
+    
+        request.rejected_datetime = await util.getCurrentUTCTime()
+        const [err1, data1] = await employeeService.getEmployeeById(request)
+            request.employee_email = data1[0].email,
+            request.employee_name = data1[0].full_name
+
+            request.employee_id = request.lead_id
+            const [err2, data2] = await employeeService.getEmployeeById(request)
+            request.rejected_by = data2[0].full_name
+        await util.nodemailerSenderOnReject(request).then((data) => {
+            error = false
+            responseData = [{ message: "rejected successfully and mail have been sended to employee" }]
+        }).catch((err) => {
+            console.log("err-------" + err);
+            error = err
+        })
+        return [error, responseData];
+
+    }
+
+
+    this.onWithdraw = async function (request) {
+        let responseData = [],
+            error = true;
+        flag = 3
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            flag
+        );
+        const queryString = util.getQueryString('approvals_change_status', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data[0].message == "success") {
+
+                        responseData = [{ message: "Timesheet has been withdrawn successfully" }];
+                        error = false
+                    } else {
+                        error = true
+                        responseData = [{ message: "Timesheet cannot be withdrawn after approval" }];
+                    }
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
+
+
+
+    this.getApproveRejectSubmitEntriesByEmpId = async function (request) {
+        let responseData = [],
+            error = true;
+        request.task_created_datetime = request.first_week_day
+        request.week_name = await util.getWeekName(request)
+        flag = 3
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.week_name,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            flag
+        );
+        const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
 
     }
     // this.updateUnsubmit = async function (request) {
