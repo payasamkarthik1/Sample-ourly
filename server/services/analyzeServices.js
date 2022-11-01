@@ -174,6 +174,7 @@ function AnalyzeServices(objectCollection) {
                             responseData = data;
                             error = false
                         }
+                        return [error, responseData];
                     } else {
                         error = false
                     }
