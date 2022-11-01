@@ -321,6 +321,57 @@ function Validations(objectCollection) {
 
 
     }
+    this.updateProjectToClientValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.project_name
+        l = str.trimLeft()
+        r = str.trimRight()
+        if (Validator.isEmpty(request.client_id.toString())) {
+            error = true
+            responseData = [{ message: 'Client  is required' }]
+            return [error, responseData];
+        } 
+        else if (Validator.isEmpty(request.project_id.toString())) {
+            error = true
+            responseData = [{ message: 'Project id is required' }]
+            return [error, responseData];
+        }
+
+        else if (Validator.isEmpty(request.project_name)) {
+            error = true
+            responseData = [{ message: 'Project name is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.project_code)) {
+            error = true
+            responseData = [{ message: 'Project code is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.project_color_code)) {
+            error = true
+            responseData = [{ message: 'Project color code is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.tag_id.toString())) {
+            error = true
+            responseData = [{ message: "tag is required" }]
+            return [true, responseData];
+        }
+        else if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'Project name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
 
     this.addOnRejectValidation= async function (request) {
 
