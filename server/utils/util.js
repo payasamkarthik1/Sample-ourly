@@ -165,13 +165,23 @@ function Util() {
                   
                   `,// Subject line
                     html: `
-                    <h1>Timesheet rejected</h1>
-                    <h3>Pronteff IT Solutions</h3>
-                    <h1>${request.week_name}</h1>
-                    <h2>${request.employee_name}</h2>
-                    <p>Rejected by:${request.rejected_by}</p>
-                    <p>Note: ${request.note}</p>
-                     `
+                    <table>
+                    <tr>
+                    <td><h2>Timesheet rejected</h2>
+                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
+                    </tr>                 
+                    <hr>                  
+                    <tr>
+                    <td><br><h2>${request.week_name}</h2>
+                    <p style="font-size:22px">${request.employee_name}</p></td>
+                    </tr>
+                    <tr>
+                    <td><br>Rejected by:<b>${request.rejected_by}</b><br>
+                    <span>Note:<b>${request.note}</b></span>
+                    
+                    </td>
+                    </tr>
+                    </table>`
                     // html body
 
                 };
@@ -212,15 +222,27 @@ function Util() {
                 let mailOptions = {
                     from: 'vengalavishal92@gmail.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
-                    subject: `<h1>Timesheet Aprroved</h1>
-                    <p>Pronteff IT Solutions</p>
+                    subject: `Timesheet aprroved
+                  
                   
                   `,// Subject line
                     html: `
-                    <h1>${request.week_name}</h1>
-                    <h2>${request.employee_name}</h2>
-                    <p>Approved by:${request.approved_by}</p>
-                     `
+                    <table>
+                    <tr>
+                    <td><h2>Timesheet approved</h2>
+                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
+                    </tr>                 
+                    <hr>                  
+                    <tr>
+                    <td><br><h2>${request.week_name}</h2>
+                    <p style="font-size:22px">${request.employee_name}</p></td>
+                    </tr>
+                    <tr>
+                    <td><br>Approved by:<b>${request.approved_by}</b></td>
+                    </tr>
+                    </table>`
+
+
                     // html body
 
                 };
@@ -291,8 +313,17 @@ function Util() {
     }
 
     this.getCurrentUTCTime = function (format) {
-        let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
-        return now;
+        // let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
+        date = new Date()
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        
+        current_datetime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
+        return  current_datetime
     }
 
     this.getMonthName = function (date) {

@@ -122,10 +122,13 @@ function AnalyzeServices(objectCollection) {
     this.getEmployeeDasboardOverview = async function (request) {
         let responseData = [],
             error = true;
+        //flag=2 is for  display the data in dashboard only after submit for approval
+        flag = 2
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
+            flag
         );
 
         const queryString = util.getQueryString('timesheet_get_all_projects_worked_hours_weekly', paramsArr);
@@ -133,38 +136,48 @@ function AnalyzeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (!data.length == 0) {
-                        const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                        const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
-                        const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                        const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
-                        data4.forEach(function (object, i) {
-                            var array = object.highest.split(":");
-                            var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
-                            object.num = seconds
+                    if (data[0].message == "success") {
+                        if (!data.length == 0) {
+                            const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
+                            const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
+                            const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+                            const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
+                            const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request)
+                            data4.forEach(function (object, i) {
+                                var array = object.highest.split(":");
+                                var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
+                                object.num = seconds
 
-                        })
-                        data.push(data2[0])
-                        data.filter(function (o1, i) {
-                            data1.some(function (o2) {
-                                if (o1.project_id === o2.project_id) {
-                                    data[i].total_hour = o2.total_hours
-                                }
+                            })
+                            data.push(data2[0])
+                            data.filter(function (o1, i) {
+                                data1.some(function (o2) {
+                                    if (o1.project_id === o2.project_id) {
+                                        data[i].total_hour = o2.total_hours
+                                    }
+                                });
                             });
-                        });
 
-                        let totalTime = data3[0].weekHours
-                        let topProject = data4[0].project_name
-                        let topClient = data4[0].client_name
 
-                        data.unshift({ totalTime, topProject, topClient })
-                        console.log(data);
-                        responseData = data;
-                        error = false
+                            let week_name = data5[0].full_name.concat("," + data5[0].week_name)
+                            let submited_by = data5[0].full_name.concat("(" + data5[0].submited_for_approval_datetime + ")")
+
+                            let totalTime = data3[0].weekHours
+                            let topProject = data4[0].project_name
+                            let topClient = data4[0].client_name
+
+                            data.unshift( { week_name, submited_by },{ totalTime, topProject, topClient })
+                            console.log(data);
+                            responseData = data;
+                            error = false
+                        } else {
+                            responseData = data;
+                            error = false
+                        }
                     } else {
-                        responseData = data;
                         error = false
                     }
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

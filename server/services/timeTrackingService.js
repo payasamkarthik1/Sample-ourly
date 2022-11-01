@@ -49,7 +49,7 @@ function TimeTrackingService(objectCollection) {
                                 responseData = [{ message: "TimeEntry cannot be added,after submition for approval to lead and once approved from lead" }];
                             } else if (data1[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request)
-                                await this.addUnsubmit(request)
+                                await this.addUpdateRemoveUnsubmit(request)
                                 error = false,
                                     responseData = [{ message: "TimeEntry has beed added successfully" }];
                             }
@@ -84,7 +84,7 @@ function TimeTrackingService(objectCollection) {
                                 responseData = [{ message: "TimeEntry cannot be added,after submition for approval to lead and once approved from lead" }];
                             } else if (data2[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request)
-                                await this.addUnsubmit(request)
+                                await this.addUpdateRemoveUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
                                 error = false
                             }
@@ -153,14 +153,14 @@ function TimeTrackingService(objectCollection) {
 
                             if (data1[0].weekHours == null) {
                                 await this.removeUnsubmited(request1)
-                                await this.addUnsubmit(request)
+                                await this.addUpdateRemoveUnsubmit(request)
                             } else {
-                                await this.addUnsubmit(request)
-                                request.previous_task_created_datetime = data2[0].task_created_datetime
-                                await this.addUnsubmit1(request)
+                                await this.addUpdateRemoveUnsubmit(request)
+                                request.task_created_datetime = data2[0].task_created_datetime
+                                await this.addUpdateRemoveUnsubmit(request)
                             }
                             error = false,
-                                responseData = [{ message: "TimeEntry has beed updated successfully" }];
+                             responseData = [{ message: "TimeEntry has beed updated successfully" }];
                         }
                     }).catch((err) => {
                         console.log("err-------" + err);
@@ -208,7 +208,7 @@ function TimeTrackingService(objectCollection) {
                         if (data2[0].weekHours == null) {
                             await this.removeUnsubmited(request)
                         } else {
-                            await this.addUnsubmit(request)
+                            await this.addUpdateRemoveUnsubmit(request)
                         }
                         error = false
                         responseData = [{ message: "TimeEntry has been deleted" }];
@@ -861,10 +861,12 @@ function TimeTrackingService(objectCollection) {
     this.getAllProjectsTimesheetWeekly = async function (request) {
         let responseData = [],
             error = true;
+            flag=1
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
+            flag
         );
 
         const queryString = util.getQueryString('timesheet_get_all_projects_worked_hours_weekly', paramsArr);
@@ -968,7 +970,7 @@ function TimeTrackingService(objectCollection) {
     //-----------------AAPROVAls-------------------------
 
 
-    this.addUnsubmit = async function (request) {
+    this.addUpdateRemoveUnsubmit = async function (request) {
         let responseData = [],
             error = true;
         const [err2, data2] = await this.getUnsubmited(request)
@@ -994,7 +996,7 @@ function TimeTrackingService(objectCollection) {
                 1
             );
 
-            const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+            const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
@@ -1029,7 +1031,7 @@ function TimeTrackingService(objectCollection) {
                 2
             );
 
-            const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+            const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
@@ -1047,84 +1049,84 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    this.addUnsubmit1 = async function (request) {
-        let responseData = [],
-            error = true;
-        const [err2, data2] = await this.getUnsubmited1(request)
-        if (data2.length == 0) {
-            const [err, data] = await this.getEmployeeLead(request)
-            const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-            const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-            const firstMonth = await util.getMonthName(first_week_day)
-            const lastMonth = await util.getMonthName(last_week_day)
-            request.first_week_day = first_week_day
-            request.last_week_day = last_week_day
-            request.role_id = 3
-            const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-            const paramsArr = new Array(
-                data[0].employee_id,
-                data[0].role_id,
-                request.employee_id,
-                data1[0].weekHours,
-                first_week_day,
-                last_week_day,
-                firstMonth.concat(" " + lastMonth),
-                2,
-                1
-            );
+    // this.addUpdateRemoveUnsubmit1 = async function (request) {
+    //     let responseData = [],
+    //         error = true;
+    //     const [err2, data2] = await this.getUnsubmited1(request)
+    //     if (data2.length == 0) {
+    //         const [err, data] = await this.getEmployeeLead(request)
+    //         const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
+    //         const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
+    //         const firstMonth = await util.getMonthName(first_week_day)
+    //         const lastMonth = await util.getMonthName(last_week_day)
+    //         request.first_week_day = first_week_day
+    //         request.last_week_day = last_week_day
+    //         request.role_id = 3
+    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
+    //         const paramsArr = new Array(
+    //             data[0].employee_id,
+    //             data[0].role_id,
+    //             request.employee_id,
+    //             data1[0].weekHours,
+    //             first_week_day,
+    //             last_week_day,
+    //             firstMonth.concat(" " + lastMonth),
+    //             2,
+    //             1
+    //         );
 
-            const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-            }
-            return [error, responseData];
-        } else {
-            const [err, data] = await this.getEmployeeLead(request)
-            const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-            const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-            const firstMonth = await util.getMonthName(first_week_day)
-            const lastMonth = await util.getMonthName(last_week_day)
-            request.first_week_day = first_week_day
-            request.last_week_day = last_week_day
-            request.role_id = 3
-            const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-            const paramsArr = new Array(
-                data[0].employee_id,
-                data[0].role_id,
-                request.employee_id,
-                data1[0].weekHours,
-                first_week_day,
-                last_week_day,
-                firstMonth.concat(" " + lastMonth),
-                2,
-                2
-            );
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     responseData = data;
+    //                     error = false
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //         }
+    //         return [error, responseData];
+    //     } else {
+    //         const [err, data] = await this.getEmployeeLead(request)
+    //         const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
+    //         const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
+    //         const firstMonth = await util.getMonthName(first_week_day)
+    //         const lastMonth = await util.getMonthName(last_week_day)
+    //         request.first_week_day = first_week_day
+    //         request.last_week_day = last_week_day
+    //         request.role_id = 3
+    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
+    //         const paramsArr = new Array(
+    //             data[0].employee_id,
+    //             data[0].role_id,
+    //             request.employee_id,
+    //             data1[0].weekHours,
+    //             first_week_day,
+    //             last_week_day,
+    //             firstMonth.concat(" " + lastMonth),
+    //             2,
+    //             2
+    //         );
 
-            const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-            }
-            return [error, responseData];
+    //         if (queryString !== '') {
+    //             await db.executeQuery(1, queryString, request)
+    //                 .then(async (data) => {
+    //                     responseData = data;
+    //                     error = false
+    //                 }).catch((err) => {
+    //                     console.log("err-------" + err);
+    //                     error = err
+    //                 })
+    //         }
+    //         return [error, responseData];
 
-        }
+    //     }
 
-    }
+    // }
 
     this.getUnsubmited = async function (request) {
         let responseData = [],
@@ -1147,7 +1149,7 @@ function TimeTrackingService(objectCollection) {
             2,
             3
         );
-        const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+        const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
@@ -1163,42 +1165,42 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    this.getUnsubmited1 = async function (request) {
-        let responseData = [],
-            error = true;
+    // this.getUnsubmited1 = async function (request) {
+    //     let responseData = [],
+    //         error = true;
 
-        const [err, data] = await this.getEmployeeLead(request)
-        const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-        const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-        const firstMonth = util.getMonthName(first_week_day)
-        const lastMonth = util.getMonthName(last_week_day)
+    //     const [err, data] = await this.getEmployeeLead(request)
+    //     const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
+    //     const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
+    //     const firstMonth = util.getMonthName(first_week_day)
+    //     const lastMonth = util.getMonthName(last_week_day)
 
-        const paramsArr = new Array(
-            data[0].employee_id,
-            data[0].role_id,
-            request.employee_id,
-            0,
-            first_week_day,
-            last_week_day,
-            firstMonth.concat(" " + lastMonth),
-            2,
-            3
-        );
-        const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+    //     const paramsArr = new Array(
+    //         data[0].employee_id,
+    //         data[0].role_id,
+    //         request.employee_id,
+    //         0,
+    //         first_week_day,
+    //         last_week_day,
+    //         firstMonth.concat(" " + lastMonth),
+    //         2,
+    //         3
+    //     );
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 responseData = data;
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
 
 
-    }
+    // }
 
     this.removeUnsubmited = async function (request) {
 
@@ -1217,7 +1219,7 @@ function TimeTrackingService(objectCollection) {
             4
         );
 
-        const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+        const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -1363,14 +1365,43 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    this.onApprovedChangeStatus = async function (data, request) {
+    this.getTimesheetSubmitedDate = async function (request) {
+
         let responseData = [],
             error = true;
+            const paramsArr = new Array(
+                request.employee_id,
+                request.first_week_day,
+                request.last_week_day,
+
+            );
+            const queryString = util.getQueryString('approvals_get_timesheet_submited_date', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+
+        return [error, responseData];
+    }
+}
+
+    this.onApprovedChangeStatus = async function (request) {
+        let responseData = [],
+            error = true;
+        console.log('====================================')
+        console.log(request)
+        console.log('====================================')
         flag = 2
         const paramsArr = new Array(
-            data.team_member_employee_id,
-            data.first_week_day,
-            data.last_week_day,
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
             flag
         );
         const queryString = util.getQueryString('approvals_change_status', paramsArr);
@@ -1378,9 +1409,9 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    await this.onApprovedEntry(request)
-                    responseData = data;
-                    error = false
+                    const [err1, data1] = await this.onApprovedEntry(request)
+                    responseData = data1;
+                    error = err1
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -1471,9 +1502,12 @@ function TimeTrackingService(objectCollection) {
     this.onApproved = async function (request) {
         let responseData = [],
             error = true;
-        data = request
-        for (let i = 0; i < data.length; i++) {
-            await this.onApprovedChangeStatus(data[i])
+        // data = request
+        console.log('====================================')
+        console.log(request)
+        console.log('====================================')
+        for (let i = 0; i < request.length; i++) {
+            await this.onApprovedChangeStatus(request[i])
         }
         error = false
         return [error, responseData];
@@ -1481,10 +1515,10 @@ function TimeTrackingService(objectCollection) {
     this.onApprovedEntry = async function (request) {
         let responseData = [],
             error = true;
-        flag = 1
+
         //getting row where to update
         const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request)
-
+        flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
         const paramsArr = new Array(
@@ -1504,15 +1538,15 @@ function TimeTrackingService(objectCollection) {
             util.getCurrentUTCTime(),
             data1[0].sno,
             flag
-
         );
         const queryString = util.getQueryString('approvals_approve_reject_submit_withdrawn_entries_insert', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    responseData = data;
-                    error = false
+                    const [err1, data1] = await this.onApprovedSendMail(request)
+                    responseData = data1;
+                    error = err1
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -1520,6 +1554,26 @@ function TimeTrackingService(objectCollection) {
             return [error, responseData];
         }
 
+
+    }
+    this.onApprovedSendMail = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const [err1, data1] = await employeeService.getEmployeeById(request)
+        request.employee_email = data1[0].email,
+            request.employee_name = data1[0].full_name
+        request.employee_id = request.lead_id
+        const [err2, data2] = await employeeService.getEmployeeById(request)
+        request.approved_by = data2[0].full_name
+        await util.nodemailerSenderOnApprove(request).then((data) => {
+            error = false
+            responseData = [{ message: "Approved successfully and mail have been sended to employee" }]
+        }).catch((err) => {
+            console.log("err-------" + err);
+            error = err
+        })
+        return [error, responseData];
 
     }
 
@@ -1593,7 +1647,7 @@ function TimeTrackingService(objectCollection) {
                 .then(async (data) => {
                     const [err1, data1] = await this.onRejectSendMail(request)
                     responseData = data1;
-                    error = false
+                    error = err1
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -1769,7 +1823,7 @@ function TimeTrackingService(objectCollection) {
     //             2
     //         );
 
-    //         const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //         if (queryString !== '') {
     //             await db.executeQuery(1, queryString, request)
@@ -1803,7 +1857,7 @@ function TimeTrackingService(objectCollection) {
     //             2,
     //             1
     //         );
-    //         const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
     //         if (queryString !== '') {
     //             await db.executeQuery(1, queryString, request)
     //                 .then(async (data) => {
@@ -1840,7 +1894,7 @@ function TimeTrackingService(objectCollection) {
     //         4
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
@@ -1874,7 +1928,7 @@ function TimeTrackingService(objectCollection) {
     //         4
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
@@ -2011,7 +2065,7 @@ function TimeTrackingService(objectCollection) {
     //         2
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
@@ -2055,7 +2109,7 @@ function TimeTrackingService(objectCollection) {
     //         2
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
@@ -2103,7 +2157,7 @@ function TimeTrackingService(objectCollection) {
     //         2
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
@@ -2151,7 +2205,7 @@ function TimeTrackingService(objectCollection) {
     //         2
     //     );
 
-    //     const queryString = util.getQueryString('approvals_add_unsubmit', paramsArr);
+    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
 
     //     if (queryString !== '') {
     //         await db.executeQuery(1, queryString, request)
