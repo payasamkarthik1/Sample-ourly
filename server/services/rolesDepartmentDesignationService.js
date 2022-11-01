@@ -188,7 +188,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
                 return [error, responseData];
             }
         }
-        rfeturn [error, responseData];
+        return [error, responseData];
     }
 
     this.getDesignByDepartId = async function (request) {
