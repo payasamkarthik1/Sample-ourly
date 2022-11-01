@@ -1800,6 +1800,39 @@ function TimeTrackingService(objectCollection) {
         }
 
     }
+    this.getEmpsSubmittedListByLeadId = async function (request) {
+        let responseData = [],
+            error = true;
+        if (request.role_id == 4) {
+            flag = 4
+        } else if (request.role_id == 2) {
+            flag = 5
+        }
+
+        const paramsArr = new Array(
+            request.employee_id,
+            null,
+            null,
+            flag
+        );
+        const queryString = util.getQueryString('approvals_get_entries_date', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    data.push({ total_count : data.length});
+                    responseData = data
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+
     // this.updateUnsubmit = async function (request) {
     //     let responseData = [],
     //         error = true;

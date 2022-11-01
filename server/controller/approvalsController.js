@@ -104,6 +104,19 @@ function ApprovalsController(objectCollection) {
         })
 
 
+    //@Post approvals/get/all/submitted/list/by/lead/id
+    app.post('/' + 'approvals/get/all/submitted/list/by/id',
+        async function (req, res) {
+            const [err, resData] = await timeTrackingService.getEmpsSubmittedListByLeadId(req.body);
+            if (!err) {
+                console.log("approvals/get/all/submitted/list/by/id | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("approvals/get/all/submitted/list/by/id | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
 
 
