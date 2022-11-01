@@ -193,6 +193,28 @@ function Validations(objectCollection) {
 
 
     }
+    this.addClientValidation = async function (request) {
+
+        let responseData = []
+        if (Validator.isEmpty(request.client_name)) {
+            error = true
+            responseData = [{ message: 'Client name is required' }]
+            return [error, responseData];
+        }
+        else if (request.client_name.indexOf(' ') >= 0) {
+            error = true
+            responseData = [{ message: 'Client name contains white spaces' }]
+            return [error, responseData];
+        }
+
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
 
 
     this.taskCreationInputValidation = async function (request) {
@@ -513,6 +535,12 @@ function Validations(objectCollection) {
         }
 
     }
+
+
+    this.hasWhiteSpace = async function (str) {
+        return str.indexOf(' ') >= 0;
+    }
+    
 
 }
 module.exports = Validations

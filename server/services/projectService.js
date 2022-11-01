@@ -65,34 +65,40 @@ function ProjectService(objectCollection) {
     }
 
     this.addClientInsert = async function (request) {
+        const [err, data] = await validations.addClientValidation(request)
+        if (err) {
+            error = true
+            responseData = data
+        } else {
+            let responseData = [],
+                error = true;
+            const paramsArr = new Array(
+                request.client_name,
+                util.getCurrentUTCTime(),
 
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.client_name.trim(),
-            util.getCurrentUTCTime(),
+            );
 
-        );
+            const queryString = util.getQueryString('project_add_client_insert', paramsArr);
 
-        const queryString = util.getQueryString('project_add_client_insert', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data[0].message === "data") {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
-                    } else {
-                        error = true
-                        responseData = [{ message: data[0].message }];
-                    }
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            error = true
+                            responseData = [{ message: data[0].message }];
+                        }
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
         }
+        return [error, responseData];
     }
 
     this.updateClientDetails = async function (request) {
