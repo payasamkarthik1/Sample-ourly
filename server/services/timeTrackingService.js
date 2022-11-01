@@ -1365,7 +1365,7 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    this.getTimesheetSubmitedDate = async function (request, flag) {
+    this.getSubmittedApproveEntries = async function (request, flag) {
 
         let responseData = [],
             error = true;
@@ -1379,7 +1379,7 @@ function TimeTrackingService(objectCollection) {
             flag
 
         );
-        const queryString = util.getQueryString('approvals_get_timesheet_submited_date', paramsArr);
+        const queryString = util.getQueryString('approvals_get_entries_date', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)

@@ -167,21 +167,18 @@ function AnalyzeServices(objectCollection) {
 
 
                             //adding submited and approved in object based on flag
-                            const [err6, data6] = await timeTrackingService.getTimesheetSubmitedDate(request, 3)
-                            console.log('====================================')
-                            console.log(data6)
-                            console.log('====================================')
+                            const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
                             if (data6[0].approved_on_datetime != null) {
-                                const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request, 1)
+                                const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
                                 week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
                                 submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
-                                const [err6, data6] = await timeTrackingService.getTimesheetSubmitedDate(request, 2)
+                                const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 2)
                     
                                 approved_by = data6[0].approved_by.concat("(" + data6[0].approved_on_datetime + ")")
                                 data.unshift({ week_name, submited_by, approved_by, totalTime, topProject, topClient })
 
                             } else {
-                                const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request, 1)
+                                const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
                                 week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
                                 submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
                                 data.unshift({ week_name, submited_by, totalTime, topProject, topClient })
