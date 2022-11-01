@@ -142,7 +142,8 @@ function AnalyzeServices(objectCollection) {
                             const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
                             const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
                             const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
-                            const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request)
+
+
                             data4.forEach(function (object, i) {
                                 var array = object.highest.split(":");
                                 var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
@@ -159,14 +160,33 @@ function AnalyzeServices(objectCollection) {
                             });
 
 
-                            let week_name = data5[0].full_name.concat("," + data5[0].week_name)
-                            let submited_by = data5[0].full_name.concat("(" + data5[0].submited_for_approval_datetime + ")")
 
                             let totalTime = data3[0].weekHours
                             let topProject = data4[0].project_name
                             let topClient = data4[0].client_name
 
-                            data.unshift( { week_name, submited_by,totalTime, topProject, topClient })
+
+                            //adding submited and approved in object based on flag
+                            const [err6, data6] = await timeTrackingService.getTimesheetSubmitedDate(request, 3)
+                            console.log('====================================')
+                            console.log(data6)
+                            console.log('====================================')
+                            if (data6[0].approved_on_datetime != null) {
+                                const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request, 1)
+                                week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
+                                submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
+                                const [err6, data6] = await timeTrackingService.getTimesheetSubmitedDate(request, 2)
+                    
+                                approved_by = data6[0].approved_by.concat("(" + data6[0].approved_on_datetime + ")")
+                                data.unshift({ week_name, submited_by, approved_by, totalTime, topProject, topClient })
+
+                            } else {
+                                const [err5, data5] = await timeTrackingService.getTimesheetSubmitedDate(request, 1)
+                                week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
+                                submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
+                                data.unshift({ week_name, submited_by, totalTime, topProject, topClient })
+                            }
+
                             console.log(data);
                             responseData = data;
                             error = false

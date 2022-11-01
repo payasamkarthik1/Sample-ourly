@@ -160,7 +160,7 @@ function TimeTrackingService(objectCollection) {
                                 await this.addUpdateRemoveUnsubmit(request)
                             }
                             error = false,
-                             responseData = [{ message: "TimeEntry has beed updated successfully" }];
+                                responseData = [{ message: "TimeEntry has beed updated successfully" }];
                         }
                     }).catch((err) => {
                         console.log("err-------" + err);
@@ -861,7 +861,7 @@ function TimeTrackingService(objectCollection) {
     this.getAllProjectsTimesheetWeekly = async function (request) {
         let responseData = [],
             error = true;
-            flag=1
+        flag = 1
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1365,31 +1365,35 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    this.getTimesheetSubmitedDate = async function (request) {
+    this.getTimesheetSubmitedDate = async function (request, flag) {
 
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id,
-                request.first_week_day,
-                request.last_week_day,
+        //if flag =1get submitted for approval weekname and submitted date
+        //if flag =2 get approved by and date
 
-            );
-            const queryString = util.getQueryString('approvals_get_timesheet_submited_date', paramsArr);
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            flag
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+        );
+        const queryString = util.getQueryString('approvals_get_timesheet_submited_date', paramsArr);
 
-        return [error, responseData];
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+
+            return [error, responseData];
+        }
     }
-}
 
     this.onApprovedChangeStatus = async function (request) {
         let responseData = [],
