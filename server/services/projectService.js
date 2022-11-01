@@ -279,6 +279,7 @@ function ProjectService(objectCollection) {
         return [error, responseData];
     }
 
+
     this.removeProjectDelete = async function (request) {
         let responseData = [],
             error = true;
@@ -304,7 +305,6 @@ function ProjectService(objectCollection) {
 
 
     }
-
     this.deleteProjectComplete = async function (request) {
         let responseData = [],
             error = true;
@@ -318,7 +318,8 @@ function ProjectService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    responseData = [{message:data[0].message}]
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -329,6 +330,34 @@ function ProjectService(objectCollection) {
 
 
     }
+    this.inactiveProjToActive = async function (request) {
+        let responseData = [],
+            error = true;
+            flag=3
+        const paramsArr = new Array(
+            request.project_id,
+            flag
+        );
+        const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
+
+
     this.getAllProjectsSelect = async function (request) {
 
         let responseData = [],

@@ -157,7 +157,34 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    responseData = [{message:data[0].message}]
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+    this.inactiveEmpToActive = async function (request) {
+
+        let responseData = [],
+            error = true;
+            flag=3
+        const paramsArr = new Array(
+            request.employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
+                    error = false
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

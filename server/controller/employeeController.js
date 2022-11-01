@@ -91,6 +91,21 @@ function EmployeeController(objectCollection) {
             }
         })
 
+    //@Post employee/inactive/to/active
+    app.post('/' + 'employee/inactive/to/active',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.inactiveEmpToActive(req.body);
+            if (!err) {
+                console.log("employee/inactive/to/active | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/inactive/to/active | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
     //@Post employee/update/employee/details
     app.post('/' + 'employee/update/employee/details',
