@@ -1461,7 +1461,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onReject = async function (request) {
-        const [err, data] = await this.addOnRejectValidation(request)
+        const [err, data] = await validations.addOnRejectValidation(request)
         if (err) {
             responseData = data;
             error = err
