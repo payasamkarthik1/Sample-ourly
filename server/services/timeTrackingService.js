@@ -1617,7 +1617,6 @@ function TimeTrackingService(objectCollection) {
         let responseData = [],
             error = true;
         const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request)
-
         flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)

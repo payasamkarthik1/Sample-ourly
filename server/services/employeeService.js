@@ -121,8 +121,10 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
+            flag=1
         const paramsArr = new Array(
-            request.employee_id.toString()
+            request.employee_id.toString(),
+            flag
         );
 
         const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
@@ -132,6 +134,30 @@ function AdminService(objectCollection) {
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+    this.removeEmployeeComplete = async function (request) {
+
+        let responseData = [],
+            error = true;
+            flag=2
+        const paramsArr = new Array(
+            request.employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = [{message:data[0].message}]
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

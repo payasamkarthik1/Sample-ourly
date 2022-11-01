@@ -282,8 +282,10 @@ function ProjectService(objectCollection) {
     this.removeProjectDelete = async function (request) {
         let responseData = [],
             error = true;
+            flag=1
         const paramsArr = new Array(
             request.project_id.toString(),
+            flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
 
@@ -303,6 +305,30 @@ function ProjectService(objectCollection) {
 
     }
 
+    this.deleteProjectComplete = async function (request) {
+        let responseData = [],
+            error = true;
+            flag=2
+        const paramsArr = new Array(
+            request.project_id,
+            flag
+        );
+        const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = [{message:data[0].message}]
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
     this.getAllProjectsSelect = async function (request) {
 
         let responseData = [],

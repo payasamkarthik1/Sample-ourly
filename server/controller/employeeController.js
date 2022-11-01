@@ -76,6 +76,22 @@ function EmployeeController(objectCollection) {
             }
         })
 
+    //@Postemployee/remove/complete
+    app.post('/' + 'employee/remove/complete',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.removeEmployeeComplete(req.body);
+            if (!err) {
+                console.log("employee/remove/complete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/remove/complete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+
     //@Post employee/update/employee/details
     app.post('/' + 'employee/update/employee/details',
 
