@@ -209,6 +209,7 @@ function Validations(objectCollection) {
         else if (l != str || r != str) {
             error = true
             responseData = [{ message: 'Client name contains white spaces' }]
+            return [error, responseData];
         }
         else {
             error = false
