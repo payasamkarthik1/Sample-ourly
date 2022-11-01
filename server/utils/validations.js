@@ -197,10 +197,10 @@ function Validations(objectCollection) {
 
         let responseData = []
 
-        str =   request.client_name
+        str = request.client_name
         l = str.trimLeft()
         r = str.trimRight()
-        
+
         if (Validator.isEmpty(request.client_name)) {
             error = true
             responseData = [{ message: 'Client name is required' }]
@@ -220,6 +220,107 @@ function Validations(objectCollection) {
 
     }
 
+    this.addDepartmentValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.client_name
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (Validator.isEmpty(request.client_name)) {
+            error = true
+            responseData = [{ message: 'Department_name is required' }]
+            return [error, responseData];
+        }
+        else if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'Department name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
+    this.addDesignationValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.designation_name
+        l = str.trimLeft()
+        r = str.trimRight()
+        if (Validator.isEmpty(request.department_id.toString())) {
+            error = true
+            responseData = [{ message: 'Department is required' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.designation_name)) {
+            error = true
+            responseData = [{ message: 'Designation name is required' }]
+            return [error, responseData];
+        }
+        else if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'Designation name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
+    this.addProjectToClientValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.project_name
+        l = str.trimLeft()
+        r = str.trimRight()
+        if (Validator.isEmpty(request.client_id.toString())) {
+            error = true
+            responseData = [{ message: 'Client  is required' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.project_name)) {
+            error = true
+            responseData = [{ message: 'Project name is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.project_code)) {
+            error = true
+            responseData = [{ message: 'Project code is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.project_color_code)) {
+            error = true
+            responseData = [{ message: 'Project color code is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.tag_id.toString())) {
+            error = true
+            responseData = [{ message: "tag is required" }]
+            return [true, responseData];
+        }
+        else if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'Project name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
 
     this.taskCreationInputValidation = async function (request) {
 
@@ -261,46 +362,6 @@ function Validations(objectCollection) {
 
     }
 
-    this.projectCreationInputValidation = async function (request) {
-
-        let responseData = []
-
-        if (Validator.isEmpty(request.client_id.toString())) {
-            error = true
-            responseData = [{ message: "Client is required" }]
-            return [error, responseData];
-        } else if (Validator.isEmpty(request.project_name)) {
-            error = true
-
-            responseData = [error, { message: "Project name is required" }]
-            return [true, responseData];
-
-        } else if (Validator.isEmpty(request.project_code)) {
-            error = true
-            responseData = [{ message: "Project code is required" }]
-            return [true, responseData];
-
-        }
-        else if (Validator.isEmpty(request.project_color_code)) {
-            error = true
-            responseData = [{ message: "Project color code is required" }]
-            return [true, responseData];
-        }
-
-        else if (Validator.isEmpty(request.tag_id.toString())) {
-            error = true
-            responseData = [{ message: "tag is required" }]
-            return [true, responseData];
-        }
-
-        else {
-            error = false
-            return [false, responseData];
-
-        }
-
-
-    }
 
     this.userDetailsList = async function (request) {
         let responseData = [],

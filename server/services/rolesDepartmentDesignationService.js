@@ -58,36 +58,43 @@ function RolesDepartmentDesignationsService(objectCollection) {
     }
 
     this.departmentInsert = async function (request) {
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.department_name,
-            util.getCurrentUTCTime()
+        const [err, data] = await this.addDepartmentValidation(request)
+        if (err) {
+            responseData = data
+            error = true
+        } else {
+            let responseData = [],
+                error = true;
+            const paramsArr = new Array(
+                request.department_name,
+                util.getCurrentUTCTime()
 
-        );
+            );
 
-        const queryString = util.getQueryString('department_add_insert', paramsArr);
+            const queryString = util.getQueryString('department_add_insert', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data[0].message === "data") {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
-                    } else {
-                        responseData = [{ message: data[0].message }]
-                        error = true
-                    }
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
         }
-
-
+        return [error, responseData];
     }
+
+
 
     this.departmentRemoveDelete = async function (request) {
         let responseData = [],
@@ -151,35 +158,37 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         let responseData = [],
             error = true;
-        const paramsArr = new Array(
-            request.designation_name,
-            request.department_id,
-            util.getCurrentUTCTime()
+        const [err, data] = await validations.addDesignationValidation(request)
+        if (err) {
+            responseData = data
+            error = err
+        } else {
+            const paramsArr = new Array(
+                request.designation_name,
+                request.department_id,
+                util.getCurrentUTCTime()
+            );
+            const queryString = util.getQueryString('designation_add_by_depart_id_insert', paramsArr);
 
-        );
-
-
-        const queryString = util.getQueryString('designation_add_by_depart_id_insert', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data[0].message === "data") {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
-                    } else {
-                        responseData = [{ message: data[0].message }]
-                        error = true
-                    }
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
         }
-
-
+        rfeturn [error, responseData];
     }
 
     this.getDesignByDepartId = async function (request) {

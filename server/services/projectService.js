@@ -194,7 +194,7 @@ function ProjectService(objectCollection) {
     this.addProjectsToClientInsert = async function (request) {
         let responseData = [],
             error = true;
-        const [err1, respData] = await validations.projectCreationInputValidation(request);
+        const [err1, respData] = await validations.addProjectToClientValidation(request);
         if (err1) {
             error = err1
             responseData = respData
