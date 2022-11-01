@@ -166,7 +166,7 @@ function AnalyzeServices(objectCollection) {
                             let topProject = data4[0].project_name
                             let topClient = data4[0].client_name
 
-                            data.unshift( { week_name, submited_by },{ totalTime, topProject, topClient })
+                            data.unshift( { week_name, submited_by,totalTime, topProject, topClient })
                             console.log(data);
                             responseData = data;
                             error = false
