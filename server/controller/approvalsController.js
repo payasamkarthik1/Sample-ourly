@@ -88,7 +88,7 @@ function ApprovalsController(objectCollection) {
             }
         })
 
-    //@Post approvals/on/reject
+    //@Post timesheet/on/withdraw
     app.post('/' + 'timesheet/on/withdraw',
 
         async function (req, res) {
@@ -102,7 +102,6 @@ function ApprovalsController(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
 
     //@Post approvals/get/all/submitted/list/by/lead/id
     app.post('/' + 'approvals/get/all/submitted/list/by/id',

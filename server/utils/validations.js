@@ -322,6 +322,23 @@ function Validations(objectCollection) {
 
     }
 
+    this.addOnRejectValidation= async function (request) {
+
+        let responseData = []
+        if (Validator.isEmpty(request.note)) {
+            error = true
+            responseData = [{ message: 'Note  is required' }]
+            return [error, responseData];
+        } 
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
     this.taskCreationInputValidation = async function (request) {
 
         let responseData = []
