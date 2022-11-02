@@ -473,40 +473,38 @@ function AnalyzeServices(objectCollection) {
     // }
 
     this.getReportSummary = async function (request) {
+        console.log('====================================')
+        console.log(request)
+        console.log('====================================')
         if (request.role_id == 3) {
             let responseData = [],
                 error = true;
             flag = 1
             const paramsArr = new Array(
+                request.employee_id,
                 request.start_date,
                 request.end_date,
-                request.employee_id,
+                request.client_id,
+                request.project_id,
+                request.tag_id,
+                request.status_id,
                 flag
             );
 
-            const queryString = util.getQueryString('reports_get_summary', paramsArr);
+            const queryString = util.getQueryString('v1_timetracking_timeline_worked_hours_calculation', paramsArr);
 
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        // const [err1, data1] = await this.getTopProjectBasedOnHrs(request)
-                        // if (data1.length != 0) {
-                            const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                            // let totalTime = data2[0].weekHours
-                            // let topProject = data1[0].project_name
-                            // let topClient = data1[0].client_name
-                            // let color_code = data1[0].project_color_code
-                            // let project_code = data1[0].project_code
-                            // data.unshift({ totalTime, topProject, topClient, color_code, project_code })
+                        console.log('====================================')
+                        console.log()
+                        console.log('====================================')
+                      const[err1,data1] = await this.getFilterReportSummary(data)
+                      console.log('====================================')
+                      console.log(data1)
+                      console.log('====================================')
                             responseData = data;
                             error = false
-                        // } else {
-                        //     responseData = [];
-                        //     error = false
-                        // }
-
-
-
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
@@ -806,6 +804,14 @@ function AnalyzeServices(objectCollection) {
         }
 
     };
+
+
+
+    //filter
+    this.getFilterReportSummary = async function (request) {
+     
+
+    }
 }
 
 

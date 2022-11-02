@@ -58,7 +58,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
     }
 
     this.departmentInsert = async function (request) {
-        const [err, data] = await this.addDepartmentValidation(request)
+        const [err, data] = await validations.addDepartmentValidation(request)
         if (err) {
             responseData = data
             error = true

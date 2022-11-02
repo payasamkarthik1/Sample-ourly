@@ -102,38 +102,46 @@ function ProjectService(objectCollection) {
     }
 
     this.updateClientDetails = async function (request) {
-
+        let responseData = [],
+            error = true;
         const [err, data] = await this.getClientByClientidSelect(request)
         if (!err) {
+            const [err1, data1] = await validations.addClientValidation(request)
+            if (err1) {
+                error = err1
+                responseData = data1
+            } else {
 
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.client_id,
-                request.client_name
-            );
+                const paramsArr = new Array(
+                    request.client_id,
+                    request.client_name
+                );
 
-            const queryString = util.getQueryString('project_update_client_details', paramsArr);
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        if (data[0].message === "data") {
-                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                            responseData = data1;
-                            error = false
-                        } else {
-                            error = true
-                            responseData = [{ message: data[0].message }];
-                        }
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+                const queryString = util.getQueryString('project_update_client_details', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data) => {
+                            if (data[0].message === "data") {
+                                let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                                responseData = data1;
+                                error = false
+                            } else {
+                                error = true
+                                responseData = [{ message: data[0].message }];
+                            }
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                }
                 return [error, responseData];
             }
+            return [error, responseData];
         } else {
-            return [err, data];
+            error = err
+            responseData = data
         }
+        return [error, responseData];
     }
 
     this.getProjectsByClientidSelect = async function (request) {
@@ -283,7 +291,7 @@ function ProjectService(objectCollection) {
     this.removeProjectDelete = async function (request) {
         let responseData = [],
             error = true;
-            flag=1
+        flag = 1
         const paramsArr = new Array(
             request.project_id.toString(),
             flag
@@ -308,7 +316,7 @@ function ProjectService(objectCollection) {
     this.deleteProjectComplete = async function (request) {
         let responseData = [],
             error = true;
-            flag=2
+        flag = 2
         const paramsArr = new Array(
             request.project_id,
             flag
@@ -333,7 +341,7 @@ function ProjectService(objectCollection) {
     this.inactiveProjToActive = async function (request) {
         let responseData = [],
             error = true;
-            flag=3
+        flag = 3
         const paramsArr = new Array(
             request.project_id,
             flag

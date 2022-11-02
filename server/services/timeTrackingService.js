@@ -855,6 +855,98 @@ function TimeTrackingService(objectCollection) {
         }
 
     };
+    this.getWorkedHoursOfAllTasksWeekly1 = async function (request) {
+        if (request.role_id == 3) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 1
+            const paramsArr = new Array(
+                request.employee_id,
+                request.start_date,
+                request.end_date,
+                request.client_id,
+                request.project_id,
+                request.tag_id,
+                request.status_id,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('v1_timetracking_timeline_worked_hours_calculation', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        console.log('====================================')
+                        console.log(data)
+                        console.log('====================================')
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        } else if (request.role_id == 4) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 4
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('dashboard_get_lead_my_teams_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        } else if (request.role_id == 2) {
+            let responseData = [],
+                error = true;
+            //flag =4 for total hours calculation for all projects for a given week 
+            flag = 4
+            const paramsArr = new Array(
+                request.first_week_day,
+                request.last_week_day,
+                request.employee_id,
+                flag
+            );
+
+
+            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+
+            }
+        }
+
+    };
 
     this.getAllProjectsTimesheetWeekly = async function (request) {
         let responseData = [],
@@ -989,7 +1081,7 @@ function TimeTrackingService(objectCollection) {
                 data1[0].weekHours,
                 first_week_day,
                 last_week_day,
-                firstMonth.concat(" " + lastMonth),
+                firstMonth.concat("-" + lastMonth),
                 2,
                 1
             );
@@ -1024,7 +1116,7 @@ function TimeTrackingService(objectCollection) {
                 data1[0].weekHours,
                 first_week_day,
                 last_week_day,
-                firstMonth.concat(" " + lastMonth),
+                firstMonth.concat("-" + lastMonth),
                 2,
                 2
             );
@@ -1066,7 +1158,7 @@ function TimeTrackingService(objectCollection) {
             data1[0].weekHours,
             first_week_day,
             last_week_day,
-            firstMonth.concat(" " + lastMonth),
+            firstMonth.concat("-" + lastMonth),
             0,
             1
         );
@@ -1106,7 +1198,7 @@ function TimeTrackingService(objectCollection) {
             0,
             first_week_day,
             last_week_day,
-            firstMonth.concat(" " + lastMonth),
+            firstMonth.concat("-" + lastMonth),
             2,
             3
         );
@@ -1848,7 +1940,7 @@ function TimeTrackingService(objectCollection) {
     //         0,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //         2,
     //         3
     //     );
@@ -1890,7 +1982,7 @@ function TimeTrackingService(objectCollection) {
     //             data1[0].weekHours,
     //             first_week_day,
     //             last_week_day,
-    //             firstMonth.concat(" " + lastMonth),
+    //             firstMonth.concat("-" + lastMonth),,
     //             2,
     //             1
     //         );
@@ -1925,7 +2017,7 @@ function TimeTrackingService(objectCollection) {
     //             data1[0].weekHours,
     //             first_week_day,
     //             last_week_day,
-    //             firstMonth.concat(" " + lastMonth),
+    //             firstMonth.concat("-" + lastMonth),,
     //             2,
     //             2
     //         );
@@ -2005,7 +2097,7 @@ function TimeTrackingService(objectCollection) {
     //             data1[0].weekHours,
     //             first_week_day,
     //             last_week_day,
-    //             firstMonth.concat(" " + lastMonth),
+    //             firstMonth.concat("-" + lastMonth),,
     //             2,
     //             1
     //         );
@@ -2212,7 +2304,7 @@ function TimeTrackingService(objectCollection) {
     //         data1[0].weekHours,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //         1,
     //         2
     //     );
@@ -2256,7 +2348,7 @@ function TimeTrackingService(objectCollection) {
     //         data1[0].weekHours,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //         1,
     //         2
     //     );
@@ -2304,7 +2396,7 @@ function TimeTrackingService(objectCollection) {
     //         data1[0].weekHours,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //         1,
     //         2
     //     );
@@ -2352,7 +2444,7 @@ function TimeTrackingService(objectCollection) {
     //         data1[0].weekHours,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //         1,
     //         2
     //     );
@@ -2414,7 +2506,7 @@ function TimeTrackingService(objectCollection) {
     //         request.employee_id,
     //         first_week_day,
     //         last_week_day,
-    //         firstMonth.concat(" " + lastMonth),
+    //         firstMonth.concat("-" + lastMonth),,
     //     );
     //     const queryString = util.getQueryString('get_week_status', paramsArr);
 
