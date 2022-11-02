@@ -33,9 +33,9 @@ function AdminService(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.role_id,
+                request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
-
                 hashPassword,
                 util.getCurrentUTCTime()
             );
@@ -45,9 +45,21 @@ function AdminService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false;
+                        if (data[0].email === "EMAIL ALREADY EXIST") {
+                            data[0].message = data[0].email
+                            delete data[0].email
+                            error = true
+                            responseData = data;
+                        } else if (data[0].email === "PHONENUMBER ALREADY EXIST") {
+                            data[0].message = data[0].email
+                            delete data[0].email
+                            error = true
+                            responseData = data;
+                        } else {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false;
+                        }
 
                     })
                     .catch((err) => {
@@ -63,7 +75,6 @@ function AdminService(objectCollection) {
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
 
         const queryString = util.getQueryString('employee_get_all_select', paramsArr);
@@ -110,8 +121,10 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
+            flag=1
         const paramsArr = new Array(
-            request.employee_id.toString()
+            request.employee_id.toString(),
+            flag
         );
 
         const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
@@ -119,9 +132,60 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
                     error = false
-                    responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+    this.removeEmployeeComplete = async function (request) {
+
+        let responseData = [],
+            error = true;
+            flag=2
+        const paramsArr = new Array(
+            request.employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+    this.inactiveEmpToActive = async function (request) {
+
+        let responseData = [],
+            error = true;
+            flag=3
+        const paramsArr = new Array(
+            request.employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('employee_remove_employee_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1
+                    error = false
+                    error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -131,49 +195,61 @@ function AdminService(objectCollection) {
     }
 
     this.updateEmployeeDetails = async function (request) {
-
         let responseData = [],
             error = true;
-        const paramsArr = new Array(
-            request.employee_id,
-            request.first_name,
-            request.last_name,
-            request.email,
-            request.gender,
-            request.phone_number,
-            request.blood_group,
-            request.dob,
-            request.image,
-            request.role_id,
-            request.department_id,
-            request.designation_id,
+        const [err, respData] = await validations.employeeUpdateCreationInputValidations(request);
+        if (err) {
+            error = err
+            responseData = respData
+        } else {
 
-        );
+            const paramsArr = new Array(
+                request.employee_id,
+                request.first_name,
+                request.last_name,
+                request.email,
+                request.gender,
+                request.phone_number,
+                request.blood_group,
+                request.dob,
+                request.image,
+                request.role_id,
+                request.lead_assigned_employee_id,
+                request.department_id,
+                request.designation_id,
+            );
 
-        const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
+            const queryString = util.getQueryString('employee_update_employee_details', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        error = false
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+
+            }
+
         }
+        return [error, responseData];
     }
 
-    this.getTeamLeads = async function (request) {
+    this.addEmployeesUnderLeads = async function (request) {
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            request.team_lead_emplyee_id.toString()
+            request.role_id,
+            request.team_lead_employee_id,
+            request.employee_id,
+            util.getCurrentUTCTime()
         );
 
-        const queryString = util.getQueryString('get_team_leads', paramsArr);
+        const queryString = util.getQueryString('lead_add_employees_under_lead', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -189,7 +265,58 @@ function AdminService(objectCollection) {
         }
     }
 
+    this.getAllLeads = async function (request) {
 
+        let responseData = [],
+            error = true;
+        // if flag = 2 get all leads
+        flag = 2
+        const paramsArr = new Array(
+            0,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getEmpsUnderLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        // if flag = 1 get all employess under lead
+        flag = 1
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
 
 }
 

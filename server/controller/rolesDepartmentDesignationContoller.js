@@ -47,7 +47,6 @@ function RolesDepartmentDesignation(objectCollection) {
             }
         })
 
-
     //--------department-----------
 
     //@Post department/add/department/insert
@@ -64,6 +63,20 @@ function RolesDepartmentDesignation(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+    //@Post department/remove/department/delete
+    app.post('/' + 'department/remove/department/delete',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.departmentRemoveDelete(req.body);
+            if (!err) {
+                console.log("department/remove/department/delete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("department/remove/department/delete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
     //@Get department/get/all/departments/list
     app.get('/' + 'department/get/all/departments/list',
@@ -72,59 +85,91 @@ function RolesDepartmentDesignation(objectCollection) {
 
             const [err, resData] = await rolesDepartDesignService.getAllDepartments(req.body);
             if (!err) {
-                console.log("departments/get/all/select | Error: ", err);
+                console.log("department/get/all/departments/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("departments/get/all/select | Error: ", err);
+                console.log("department/get/all/departments/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
     //--------designation-----------
 
-    //@Post designation/add/designation/insert
-    app.post('/' + 'designation/add/designation/insert',
+    //@Post designation/add/design/by/depart/id/insert
+    app.post('/' + 'designation/add/design/by/depart/id/insert',
 
         async function (req, res) {
 
-            const [err, resData] = await rolesDepartDesignService.designationInsert(req.body);
+            const [err, resData] = await rolesDepartDesignService.addDesignByDepartId(req.body);
             if (!err) {
-                console.log("designation/add/designation/insert | Error: ", err);
+                console.log("designation/add/design/by/depart/id/insert | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("designation/add/designation/insert | Error: ", err);
+                console.log("designation/add/design/by/depart/id/insert | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-    //@Get designation/get/all/designations/list
-    app.get('/' + 'designation/get/all/designations/list',
+    //@Get design/get/by/depart/id/list
+    app.post('/' + 'designation/get/by/depart/id/list',
 
         async function (req, res) {
 
-            const [err, resData] = await rolesDepartDesignService.getAllDesignations(req.body);
+            const [err, resData] = await rolesDepartDesignService.getDesignByDepartId(req.body);
             if (!err) {
-                console.log("designation/get/all/designations/list | Error: ", err);
+                console.log("design/get/by/depart/id/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("designation/get/all/designations/list | Error: ", err);
+                console.log("design/get/by/depart/id/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-    //@Get get/all/roles/depart/design/list
-    app.get('/' + 'get/all/roles/depart/design/list', async function (req, res) {
-        const [err, resData] = await rolesDepartDesignService.getAllRolesDepartDesign(req.body, res);
-        if (!err) {
-            console.log("get/all/rolea/depart/design| Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("get/all/rolea/depart/design| Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
+    //@Get designation/get/all/list
+    app.get('/' + 'designation/get/all/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.getAllDesign(req.body);
+            if (!err) {
+                console.log("designation/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("designation/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@post designation/remove/by/design/id/delete
+    app.post('/' + 'designation/remove/by/design/id/delete',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.removeDesignationById(req.body);
+            if (!err) {
+                console.log("designation/remove/by/design/id/delete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("designation/remove/by/design/id/delete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
 
+    //@Getrole/depart/design/get/all/list
+    app.get('/' + 'role/depart/design/get/all/list',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.getAllRoleDepartDesign(req.body);
+            if (!err) {
+                console.log("role/depart/design/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("role/depart/design/get/all/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
 
 

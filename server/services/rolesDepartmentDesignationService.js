@@ -34,58 +34,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     }
-    this.departmentInsert = async function (request) {
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.department_name,
-            util.getCurrentUTCTime()
 
-        );
-
-        const queryString = util.getQueryString('department_add_insert', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    }
-    this.designationInsert = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.designation_name,
-            util.getCurrentUTCTime()
-
-        );
-
-
-        const queryString = util.getQueryString('designation_add_insert', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    }
     this.getAllRoles = async function (request) {
 
         let responseData = [],
@@ -97,8 +46,9 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     error = err
@@ -106,6 +56,77 @@ function RolesDepartmentDesignationsService(objectCollection) {
             return [error, responseData];
         }
     }
+
+    this.departmentInsert = async function (request) {
+        const [err, data] = await this.addDepartmentValidation(request)
+        if (err) {
+            responseData = data
+            error = true
+        } else {
+            let responseData = [],
+                error = true;
+            const paramsArr = new Array(
+                request.department_name,
+                util.getCurrentUTCTime()
+
+            );
+
+            const queryString = util.getQueryString('department_add_insert', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        }
+        return [error, responseData];
+    }
+
+
+
+    this.departmentRemoveDelete = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.department_id.toString()
+
+        );
+
+        const queryString = util.getQueryString('department_remove_depart_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data[0].message === "data") {
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = true,
+                            responseData = [{ message: data[0].message }];
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
     this.getAllDepartments = async function (request) {
         let responseData = [],
             error = true;
@@ -117,8 +138,11 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
+                .then(async (data) => {
+
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -129,73 +153,139 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     }
-    this.getAllDesignations = async function (request) {
+
+    this.addDesignByDepartId = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const [err, data] = await validations.addDesignationValidation(request)
+        if (err) {
+            responseData = data
+            error = err
+        } else {
+            const paramsArr = new Array(
+                request.designation_name,
+                request.department_id,
+                util.getCurrentUTCTime()
+            );
+            const queryString = util.getQueryString('designation_add_by_depart_id_insert', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData];
+            }
+        }
+        return [error, responseData];
+    }
+
+    this.getDesignByDepartId = async function (request) {
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
+            request.department_id.toString()
+        );
 
+        const queryString = util.getQueryString('designation_get_all_by_depart_id_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getAllDesign = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
         );
 
         const queryString = util.getQueryString('designation_get_all_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
-                    console.log("err-------" + err);
                     error = err
                 })
             return [error, responseData];
         }
-
-
     }
-    this.getRolesDepartDesignById = async function (request, id, flag) {
+
+    this.getAllRoleDepartDesign = async function (request) {
+
+        let responseData = []
+
+
+        const [err1, data1] = await this.getAllRoles()
+        const [err2, data2] = await this.getAllDepartments()
+        const [err3, data3] = await this.getAllDesign()
+        responseData.push(data1)
+        responseData.push(data2)
+        responseData.push(data3)
+        error = false
+        return [error, responseData];
+    }
+
+    this.removeDesignationById = async function (request) {
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            id,
-            flag
+            request.designation_id.toString()
         );
 
-        const queryString = util.getQueryString('role_depart_designa_get_by_id_select', paramsArr);
+        const queryString = util.getQueryString('designation_remove_by_design_id_delete', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
-                    console.log("err-------" + err);
                     error = err
                 })
             return [error, responseData];
         }
     }
-    this.getAllRolesDepartDesign = async function (request) {
 
-        let responseData = [];
-        error = false
-        const [err1, resData1] = await this.getAllRoles()
-        const [err2, resData2] = await this.getAllDepartments()
-        const [err3, resData3] = await this.getAllDesignations()
 
-        responseData.push(resData1)
-        responseData.push(resData2)
-        responseData.push(resData3)
-        console.log('====================================')
-        console.log(responseData)
-        console.log('====================================')
-
-        return [false, responseData]
-    }
 
 
 }
+
+
+
+
+
+
+
+
 
 
 

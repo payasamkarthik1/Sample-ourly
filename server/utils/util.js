@@ -9,7 +9,6 @@ const randtoken = require("rand-token");
 
 function Util() {
 
-
     this.getQueryString = function (callName, paramsArr) {
         let queryString = '',
             preparedQueryString;
@@ -38,43 +37,6 @@ function Util() {
         return response
     }
 
-    this.getCurrentUTCTime = function (format) {
-        let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
-        return now;
-    }
-    this.getMonthName = function (date) {
-
-        var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
-        day = dt.format('Do');
-        month = dt.format('MMM');
-        year = dt.format('YYYY');
-        return month.concat(" " + day + "," + year)
-
-    }
-
-    this.SumOfMultipleTimeDuration = async function (data) {
-        const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
-        const sum = ms.reduce((prev, cur) => prev + cur, 0);
-        const hms = moment.utc(sum).format("HH:mm:ss");
-        return hms
-    }
-    this.SumOfTotalWeekHours = async function (data) {
-        console.log("------------enterted into overall total time in week----------------------------");
-        const ms = data.map((d, i) =>
-            moment.duration(d[i].header.hours).asSeconds() * 1000)
-        const sum = ms.reduce((prev, cur) => prev + cur, 0);
-        const hms = moment.utc(sum).format("HH:mm:ss");
-        return hms
-    }
-    this.getTimeDiff = async function (request) {
-
-        var startTime = moment(request.task_start_time, "HH:mm:ss a"),
-            endTime = moment(request.task_end_time, "HH:mm:ss a");
-        var hrs = moment.utc(endTime.diff(startTime)).format("HH");
-        var min = moment.utc(endTime.diff(startTime)).format("mm");
-        var sec = moment.utc(endTime.diff(startTime)).format("ss");
-        return [hrs, min, sec].join(':')
-    }
     this.getRandomNumericId = function (format) {
         let id = Math.floor(Math.random() * 1000)
         return id;
@@ -85,6 +47,7 @@ function Util() {
         let hashPassword = await bcrypt.hash(password, salt)
         return hashPassword
     }
+
     this.cryto = async function (req, res) {
 
         ciphertext = CryptoJS.AES.encrypt(
@@ -113,7 +76,7 @@ function Util() {
         const token = req.headers["authorization"]
         if (!token) {
             error = true
-            responseData = [error, { message: "token is required" }]
+            responseData = [{ message: "token is required" }]
         }
         try {
             const data = await jwt.verify(token, global.config.sceret_key)
@@ -123,17 +86,16 @@ function Util() {
             }
             else {
                 error = true
-                responseData = [error, { message: "token is invalid" }]
+                responseData = [{ message: "token is invalid" }]
             }
 
         } catch (e) {
             error = true
-            responseData = [error, { message: "token is invalid" }]
+            responseData = [{ message: "token is invalid" }]
         }
 
         return [error, responseData]
     }
-
 
     this.nodemailerSender = async function (request, res) {
         var responseData = [];
@@ -155,8 +117,131 @@ function Util() {
                 let mailOptions = {
                     from: 'vengalavishal92@gmail.com', // sender address
                     to: `${request.email}`, // list of receivers
-                    subject: 'Clockify Request', // Subject line
-                    html: `<a href="http://192.168.0.217:3000/forgotpass">click to change password</a>`
+                    subject: 'Prontify Request to change the password', // Subject line
+                    html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
+
+                    // html body
+
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
+    this.nodemailerSenderOnReject = async function (request) {
+
+        return new Promise((resolve, reject) => {
+            try {
+                let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'vengalavishal92@gmail.com',
+                        pass: 'iufhppuqnqmsqocv',
+                    }
+                });
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'vengalavishal92@gmail.com', // sender address
+                    to: `${request.employee_email}`, // list of receivers
+                    subject: `Timesheet rejected
+                   
+                  
+                  `,// Subject line
+                    html: `
+                    <table>
+                    <tr>
+                    <td><h2>Timesheet rejected</h2>
+                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
+                    </tr>                 
+                    <hr>                  
+                    <tr>
+                    <td><br><h2>${request.week_name}</h2>
+                    <p style="font-size:22px">${request.employee_name}</p></td>
+                    </tr>
+                    <tr>
+                    <td><br>Rejected by:<b>${request.rejected_by}</b><br>
+                    <span>Note:<b>${request.note}</b></span>
+                    
+                    </td>
+                    </tr>
+                    </table>`
+                    // html body
+
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
+    this.nodemailerSenderOnApprove = async function (request) {
+
+        return new Promise((resolve, reject) => {
+            try {
+                let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'vengalavishal92@gmail.com',
+                        pass: 'iufhppuqnqmsqocv',
+                    }
+                });
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'vengalavishal92@gmail.com', // sender address
+                    to: `${request.employee_email}`, // list of receivers
+                    subject: `Timesheet aprroved
+                  
+                  
+                  `,// Subject line
+                    html: `
+                    <table>
+                    <tr>
+                    <td><h2>Timesheet approved</h2>
+                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
+                    </tr>                 
+                    <hr>                  
+                    <tr>
+                    <td><br><h2>${request.week_name}</h2>
+                    <p style="font-size:22px">${request.employee_name}</p></td>
+                    </tr>
+                    <tr>
+                    <td><br>Approved by:<b>${request.approved_by}</b></td>
+                    </tr>
+                    </table>`
+
 
                     // html body
 
@@ -188,7 +273,6 @@ function Util() {
         return id
     }
 
-
     this.addUniqueIndexesToArrayOfObject = async function (data) {
 
         let i = 1
@@ -201,29 +285,87 @@ function Util() {
     }
 
     this.getFirstWeekDate = async function (dt) {
-
         d = new Date(dt);
         var day = d.getDay(),
-            diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 1); // adjust when day is sunday
+            diff = d.getDate() - day + (d.getDay() === 0 ? -6 : 1); // adjust when day is sunday
         firstweekDay = new Date(d.setDate(diff))
-        return firstweekDay
-
+        return firstweekDay.toISOString().split('T')[0]
 
     }
 
     this.getLastWeekDate = async function (dt) {
-
         d = new Date(dt);
         var day = d.getDay(),
-            diff = d.getDate() - day + (d.getDay() === 0 ? -1 : 7); // adjust when day is sunday
+            diff = d.getDate() - day + (d.getDay() === 0 ? -0 : 7); // adjust when day is sunday
         lastweekDay = new Date(d.setDate(diff))
-        return lastweekDay
+        return lastweekDay.toISOString().split('T')[0]
 
+    }
 
+    this.getTimeDiff = async function (request) {
 
+        var startTime = moment(request.task_start_time, "HH:mm:ss a"),
+            endTime = moment(request.task_end_time, "HH:mm:ss a");
+        var hrs = moment.utc(endTime.diff(startTime)).format("HH");
+        var min = moment.utc(endTime.diff(startTime)).format("mm");
+        var sec = moment.utc(endTime.diff(startTime)).format("ss");
+        return [hrs, min, sec].join(':')
+    }
 
+    this.getCurrentUTCTime = function (format) {
+        // let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
+        date = new Date()
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        
+        current_datetime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
+        return  current_datetime
+    }
 
+    this.getMonthName = function (date) {
+        var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
+        day = dt.format('Do');
+        month = dt.format('MMM');
+        year = dt.format('YYYY');
+        return month.concat(" " + day + "," + year)
 
+    }
+
+    this.SumOfMultipleTimeDuration = async function (data) {
+        const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
+        const sum = ms.reduce((prev, cur) => prev + cur, 0);
+        const hms = moment.utc(sum).format("HH:mm:ss");
+        return hms
+    }
+
+    this.dateConvertInExcel = async function (date) {
+
+        let date1 = new Date(Math.round((date - 25569) * 864e5));
+        date1.setMinutes(date1.getMinutes() + date1.getTimezoneOffset());
+        return moment(date1).utc().format("YYYY-MM-DD");
+    }
+
+    this.getWeekName = async function (request) {
+        date1 = await this.getFirstWeekDate(request.task_created_datetime)
+        date2 = await this.getLastWeekDate(request.task_created_datetime)
+
+        var dt1 = moment(date1, "YYYY-MM-DD HH:mm:ss")
+        day1 = dt1.format('Do');
+        month1 = dt1.format('MMM');
+        year1 = dt1.format('YYYY');
+        firstMonth = month1.concat(" " + day1 + "," + year1)
+
+        var dt2 = moment(date2, "YYYY-MM-DD HH:mm:ss")
+        day2 = dt2.format('Do');
+        month2 = dt2.format('MMM');
+        year2 = dt2.format('YYYY');
+        lastMonth = month2.concat(" " + day2 + "," + year2)
+
+        return firstMonth.concat(" " + lastMonth)
     }
 
 }

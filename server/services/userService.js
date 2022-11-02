@@ -8,9 +8,6 @@ function UserService(objectCollection) {
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
 
-
-
-
     this.userLoginInsertAfterRegistration = async function (data, request) {
         let responseData = [],
             error = true;
@@ -39,7 +36,6 @@ function UserService(objectCollection) {
 
     }
 
-
     this.userLogin = async function (request) {
         let responseData = [],
             error = true;
@@ -48,19 +44,8 @@ function UserService(objectCollection) {
             if (!err1) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
-                    // const [err4, resData4] = await validations.userLoggedInOrNotCheck(request)
-                    // if (!err4) {
-                        // if (resData4 == 1) {
-                            const [err3, resData3] = await this.userLoginInsert(request, resData1)
-                            return [err3, resData3]
-                        // } else if (resData4 == 2) {
-                            // const [err3, resData3] = await this.userLoginUpdateActive(request, resData1)
-                            // return [err3, resData3]
-                        // }
-
-                    // } else {
-                    //     return [err4, resData4]
-                    // }
+                    const [err3, resData3] = await this.userLoginInsert(request, resData1)
+                    return [err3, resData3]
                 } else {
                     return [err2, resData2]
                 }
@@ -129,7 +114,6 @@ function UserService(objectCollection) {
 
     }
 
-
     this.userProfileUpdate = async function (request, req) {
         let responseData = [],
             error = true;
@@ -139,25 +123,33 @@ function UserService(objectCollection) {
             error = err1
             responseData = resData1
         } else {
-            const paramsArr = new Array(
-                resData1.data[0].employee_id,
-                resData1.data[0].email,
-                request.first_name,
-                request.last_name,
-                request.phone_number,
-                request.image,
-            );
-            const queryString = util.getQueryString('user_profile_update', paramsArr);
-            if (queryString !== '') {
-                await db.executeQuery(0, queryString, request)
-                    .then((data) => {
-                        error = false
-                        responseData = [error, { message: "Profile updated" }];
-
-                    }).catch((err) => {
-                        error = err;
-                    })
+            const [err, data] = await validations.userProfileValidation(request)
+            if (!err) {
+                const paramsArr = new Array(
+                    resData1.data[0].employee_id,
+                    resData1.data[0].email,
+                    request.phone_number,
+                );
+                const queryString = util.getQueryString('user_profile_update', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(0, queryString, request)
+                        .then((data) => {
+                            if (data[0].message === "data") {
+                                error = false
+                                responseData = [{ message: "User Profile updated" }];                       
+                            } else {
+                                error = true,
+                                responseData = [{ message: data[0].message }];
+                            }
+                        }).catch((err) => {
+                            error = err;
+                        })
+                }
+            } else {
+                     error = err,
+                    responseData = data
             }
+            return [error, responseData];
         }
         return [error, responseData];
 
@@ -208,8 +200,7 @@ function UserService(objectCollection) {
             if (!err1) {
                 await util.nodemailerSender(request, resData1).then((data) => {
                     error = false
-                    responseData = [error, { message: "sended success" }]
-
+                    responseData = [{ message: "sended success" }]
                 }).catch((err) => {
                     error = err
                 })
@@ -221,8 +212,7 @@ function UserService(objectCollection) {
         } catch (err) {
             error = err
         }
-        return [error,
-            responseData]
+        return [error, responseData]
     }
 
 }

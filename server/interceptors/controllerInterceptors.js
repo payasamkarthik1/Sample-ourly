@@ -19,10 +19,21 @@ const userService = require('../services/userService')
 const timeTrackingController = require('../controller/timeTrackingController')
 const timeTrackingService = require('../services/timeTrackingService')
 
-function ControllInterceptor(objCollection) {
+const analyzeController = require('../controller/analyzeController')
+const analyzeServices = require('../services/analyzeServices')
 
-    // new adminController(objCollection)
-    // new adminServices(objCollection)
+const adminController = require('../controller/adminController')
+const adminService = require('../services/adminService')
+
+const holidayListController = require('../controller/HolidaysListController')
+const holidaysListService = require('../services/HolidaysListService')
+
+
+const approvalsController = require('../controller/approvalsController')
+const approvalsService = require('../services/approvalsService')
+
+
+function ControllInterceptor(objCollection) {
 
     new validations(objCollection)
 
@@ -40,6 +51,21 @@ function ControllInterceptor(objCollection) {
 
     new timeTrackingController(objCollection)
     new timeTrackingService(objCollection)
+
+    new timeTrackingController(objCollection)
+    new timeTrackingService(objCollection)
+
+    new analyzeController(objCollection)
+    new analyzeServices(objCollection)
+
+    new adminController(objCollection)
+    new adminService(objCollection)
+
+    new holidayListController(objCollection)
+    new holidaysListService(objCollection)
+
+    new approvalsController(objCollection)
+    new approvalsService(objCollection)
 }
 
 

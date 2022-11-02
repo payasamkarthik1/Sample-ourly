@@ -15,7 +15,6 @@ function EmployeeController(objectCollection) {
     const adminServices = new AdminServices(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const projectService = new ProjectService(objectCollection)
-    // const rolesDepartDesigService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
 
@@ -48,7 +47,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Get employee/get/employee/by/id
-    app.get('/' + 'employee/get/employee/by/id',
+    app.post('/' + 'employee/get/employee/by/id',
 
         async function (req, res) {
 
@@ -77,6 +76,37 @@ function EmployeeController(objectCollection) {
             }
         })
 
+    //@Postemployee/remove/complete
+    app.post('/' + 'employee/remove/complete',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.removeEmployeeComplete(req.body);
+            if (!err) {
+                console.log("employee/remove/complete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/remove/complete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post employee/inactive/to/active
+    app.post('/' + 'employee/inactive/to/active',
+
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.inactiveEmpToActive(req.body);
+            if (!err) {
+                console.log("employee/inactive/to/active | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/inactive/to/active | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+
     //@Post employee/update/employee/details
     app.post('/' + 'employee/update/employee/details',
 
@@ -92,11 +122,14 @@ function EmployeeController(objectCollection) {
             }
         })
 
-    app.post('/' + 'get/team/leads/list',
+    //-------------------------leads---------------
+
+    //@Get lead/get/all/leads/list
+    app.get('/' + 'lead/get/all/leads/list',
 
         async function (req, res) {
 
-            const [err, resData] = await employeeService.getTeamLeads(req.body);
+            const [err, resData] = await employeeService.getAllLeads(req.body);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
@@ -106,7 +139,20 @@ function EmployeeController(objectCollection) {
             }
         })
 
+    //@Post lead/get/emps/assigned/under/leads/list 
+    app.post('/' + 'lead/get/emps/assigned/under/leads/list',
 
+        async function (req, res) {
+
+            const [err, resData] = await employeeService.getEmpsUnderLeads(req.body);
+            if (!err) {
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("employee/update/employee/details | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
 }
 

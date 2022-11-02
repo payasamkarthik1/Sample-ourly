@@ -15,8 +15,6 @@ function Dbinitiate() {
     }
 
     this.executeQuery = function (flag, queryString, request) {
-
-
         return new Promise((resolve, reject) => {
             let conPool;
             switch (0) {

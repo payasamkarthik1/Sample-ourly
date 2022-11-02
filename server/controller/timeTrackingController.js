@@ -36,13 +36,14 @@ function TimeTrackingController(objectCollection) {
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/add/task/details/insert | Error: ", err);
+            console.log("ttimetracking/update/task/details | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
+
     app.post('/' + 'timetracking/get/all/weeks/task/details/by/employeeid/list', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.getAllWeeksTasksByEmpId(req.body, res);
+        const [err, resData] = await timeTrackingService.getAllTasksOfAllWeeksByEmpId(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
@@ -53,17 +54,16 @@ function TimeTrackingController(objectCollection) {
 
     app.post('/' + 'timetracking/get/child/task', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.timetrackingGetChildTaskByid(req.body, res);
+        const [err, resData] = await timeTrackingService.timetrackingGetChildTask(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timetracking/get/child/task/by/id | Error: ", err);
+            console.log("timetracking/get/child/task | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
 
     app.post('/' + 'timetracking/remove/child/task/delete', async function (req, res) {
-        await util.getFirstWeekDate(req.body);
 
         const [err, resData] = await timeTrackingService.timetrackingRemoveChildTaskDelete(req.body, res);
         if (!err) {
@@ -74,27 +74,22 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
+    //------------------timesheet--------------------------
+    
+    app.post('/' + 'status/add/insert', async function (req, res) {
 
-
-
-
-    //------------------timesheet status
-    app.post('/' + 'timesheet/add/status/insert', async function (req, res) {
-
-        const [err, resData] = await timeTrackingService.timesheetAddStatusinsert(req.body, res);
+        const [err, resData] = await timeTrackingService.statusAddinsert(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
-            console.log("timesheet/add/status/insert | Error: ", err);
+            console.log("status/add/insert | Error: ", err);
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
 
-
-
     app.post('/' + 'timesheet/get/projects/overview/each/week', async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.getTimelineOverview(req.body, res);
+        const [err, resData] = await timeTrackingService.getAllProjectsTimesheetWeekly(req.body, res);
         if (!err) {
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
         } else {
@@ -102,6 +97,8 @@ function TimeTrackingController(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
+
+
 }
 
 
