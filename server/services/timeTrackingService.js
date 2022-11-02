@@ -1288,6 +1288,58 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
+    this.getOnApproveOnRejectList = async function (request) {
+
+        let responseData = [],
+            error = true;
+        if (request.role_id === 4) {
+            const paramsArr = new Array(
+                request.employee_id,
+                request.role_id,
+                0,
+                request.first_week_day,
+                request.last_week_day,
+                5
+            );
+            const queryString = util.getQueryString('approvals_get_list', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+
+            }
+        } else if (request.role_id === 2) {
+
+            const paramsArr = new Array(
+                request.employee_id,
+                request.role_id,
+                0,
+                request.first_week_day,
+                request.last_week_day,
+                6
+            );
+            const queryString = util.getQueryString('approvals_get_list', paramsArr);
+
+            if (queryString !== '') {
+                await db.executeQuery(1, queryString, request)
+                    .then(async (data) => {
+                        responseData = data;
+                        error = false
+                    }).catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+
+            }
+        }
+        return [error, responseData];
+    }
 
     this.getSubmittedApproveEntries = async function (request, flag) {
 
