@@ -92,7 +92,7 @@ function AnalyzeServices(objectCollection) {
                 return [error, responseData];
             }
 
-        } else if (request.role_id == 2) {
+        } else if (request.role_id == 2 || request.role_id == 5) {
             let responseData = [],
                 error = true;
             //flag =6 for total hours calculation for all projects for a given week 
@@ -329,7 +329,7 @@ function AnalyzeServices(objectCollection) {
             responseData = data1
         }
         //role_id = 2 for admin , get admin (all employess) dashboard
-        else if (request.role_id === 2) {
+        else if (request.role_id === 2 || request.role_id === 5) {
             const [err1, data1] = await this.getadminAllEmpsDasboardOverview(request)
             error = err1
             responseData = data1

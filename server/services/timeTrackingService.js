@@ -276,8 +276,7 @@ function TimeTrackingService(objectCollection) {
                     data[0].value[5].hours,
                     data[0].value[6].hours,
                     request.first_Week_Day,
-                    request.last_Week_Day,
-
+                    request.last_Week_Day
                 );
                 const queryString = util.getQueryString('timesheet_update_project', paramsArr);
                 if (queryString !== '') {
@@ -661,7 +660,7 @@ function TimeTrackingService(objectCollection) {
                     })
                 return [error, responseData];
             }
-        } else if (request.role_id === 2) {
+        } else if (request.role_id === 2 || request.role_id === 5) {
             let responseData = [],
                 error = true;
             //flag =2 for total hours worked for each project in a week
@@ -740,7 +739,7 @@ function TimeTrackingService(objectCollection) {
 
 
             }
-        } else if (request.role_id == 2) {
+        } else if (request.role_id == 2 || request.role_id == 5) {
             let responseData = [],
                 error = true;
             flag = 5
@@ -825,7 +824,7 @@ function TimeTrackingService(objectCollection) {
                 return [error, responseData];
 
             }
-        } else if (request.role_id == 2) {
+        } else if (request.role_id == 2 || request.role_id == 5) {
             let responseData = [],
                 error = true;
             //flag =4 for total hours calculation for all projects for a given week 
@@ -1301,7 +1300,7 @@ function TimeTrackingService(objectCollection) {
                     })
 
             }
-        } else if (request.role_id === 2) {
+        } else if (request.role_id === 2 || request.role_id === 5) {
 
             const paramsArr = new Array(
                 request.employee_id,
@@ -1354,7 +1353,7 @@ function TimeTrackingService(objectCollection) {
                     })
 
             }
-        } else if (request.role_id === 2) {
+        } else if (request.role_id === 2 || request.role_id === 5) {
 
             const paramsArr = new Array(
                 request.employee_id,
@@ -1406,7 +1405,7 @@ function TimeTrackingService(objectCollection) {
                     })
 
             }
-        } else if (request.role_id === 2) {
+        } else if (request.role_id === 2 || request.role_id === 5) {
 
             const paramsArr = new Array(
                 request.employee_id,
@@ -1470,6 +1469,8 @@ function TimeTrackingService(objectCollection) {
         console.log(request)
         console.log('====================================')
         flag = 2
+        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
+        request.employee_id=id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1498,6 +1499,8 @@ function TimeTrackingService(objectCollection) {
         let responseData = [],
             error = true;
         flag = 1
+        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
+        request.employee_id=id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1537,6 +1540,8 @@ function TimeTrackingService(objectCollection) {
         flag = 1
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
+        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
+        request.employee_id=id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1595,6 +1600,8 @@ function TimeTrackingService(objectCollection) {
         flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
+        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
+        request.employee_id=id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1868,7 +1875,8 @@ function TimeTrackingService(objectCollection) {
             error = true;
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
-
+        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
+        request.employee_id=id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1896,7 +1904,7 @@ function TimeTrackingService(objectCollection) {
             error = true;
         if (request.role_id == 4) {
             flag = 4
-        } else if (request.role_id == 2) {
+        } else if (request.role_id == 2 || request.role_id === 5) {
             flag = 5
         }
 
