@@ -224,11 +224,11 @@ function Validations(objectCollection) {
 
         let responseData = []
 
-        str = request.client_name
+        str = request.department_name
         l = str.trimLeft()
         r = str.trimRight()
 
-        if (Validator.isEmpty(request.client_name)) {
+        if (Validator.isEmpty(request.department_name)) {
             error = true
             responseData = [{ message: 'Department_name is required' }]
             return [error, responseData];
@@ -332,7 +332,7 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'Client  is required' }]
             return [error, responseData];
-        } 
+        }
         else if (Validator.isEmpty(request.project_id.toString())) {
             error = true
             responseData = [{ message: 'Project id is required' }]
@@ -373,14 +373,14 @@ function Validations(objectCollection) {
 
     }
 
-    this.addOnRejectValidation= async function (request) {
+    this.addOnRejectValidation = async function (request) {
 
         let responseData = []
         if (Validator.isEmpty(request.note)) {
             error = true
             responseData = [{ message: 'Note  is required' }]
             return [error, responseData];
-        } 
+        }
         else {
             error = false
             return [error, responseData];

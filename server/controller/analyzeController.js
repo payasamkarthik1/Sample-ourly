@@ -61,7 +61,7 @@ function Analyze(objectCollection) {
                 console.log("'analyze/get/all/tasks/weekly/by/empid/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
-        })
+        })  
 
 
 
@@ -70,20 +70,20 @@ function Analyze(objectCollection) {
 
     //--------------------------reports--------------------
 
-    // //@Post analyze/get/report/summary
-    // app.post('/' + 'analyze/get/report/summary',
+    //@Post analyze/get/report/summary
+    app.post('/' + 'analyze/get/report/summary',
 
-    //     async function (req, res) {
+        async function (req, res) {
 
-    //         const [err, resData] = await analyzeServices.getReportSummary(req.body);
-    //         if (!err) {
-    //             console.log("analyze/get/report/summary | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("analyze/get/report/summary | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
+            const [err, resData] = await analyzeServices.getReportSummary(req.body);
+            if (!err) {
+                console.log("analyze/get/report/summary | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/summary | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
     // //@Post analyze/get/report/detailed
     // app.post('/' + 'analyze/get/report/detailed',

@@ -321,9 +321,9 @@ function Util() {
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var seconds = date.getSeconds();
-        
+
         current_datetime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
-        return  current_datetime
+        return current_datetime
     }
 
     this.getMonthName = function (date) {
@@ -365,7 +365,7 @@ function Util() {
         year2 = dt2.format('YYYY');
         lastMonth = month2.concat(" " + day2 + "," + year2)
 
-        return firstMonth.concat(" " + lastMonth)
+        return firstMonth.concat("-" + lastMonth)
     }
 
 }

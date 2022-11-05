@@ -58,7 +58,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
     }
 
     this.departmentInsert = async function (request) {
-        const [err, data] = await this.addDepartmentValidation(request)
+        const [err, data] = await validations.addDepartmentValidation(request)
         if (err) {
             responseData = data
             error = true
@@ -109,6 +109,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    if(data.length > 0){
                     if (data[0].message === "data") {
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1;
@@ -117,6 +118,10 @@ function RolesDepartmentDesignationsService(objectCollection) {
                         error = true,
                             responseData = [{ message: data[0].message }];
                     }
+                }else{
+                    error = false,
+                    responseData = [];
+                }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
