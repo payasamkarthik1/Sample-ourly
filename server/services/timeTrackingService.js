@@ -1800,7 +1800,7 @@ function TimeTrackingService(objectCollection) {
     this.onWithdraw = async function (request) {
         let responseData = [],
             error = true;
-        flag = 3
+        flag = 4
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1812,9 +1812,16 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const [err1, data1] = await this.onWithdrawnEntry(request)
-                    responseData = data1;
-                    error = false
+
+                    if (data[0].message == "success") {
+                        const [err1, data1] = await this.onWithdrawnEntry(request)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = true
+                        responseData = [{ message: data[0].message }];
+                    }
+
 
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -1908,7 +1915,7 @@ function TimeTrackingService(objectCollection) {
             flag = 4
         } else if (request.role_id == 2 || request.role_id == 5) {
             flag = 5
-        }else if (request.role_id == 3) {
+        } else if (request.role_id == 3) {
             flag = 7
         }
 
