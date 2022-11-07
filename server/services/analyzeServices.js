@@ -140,7 +140,7 @@ function AnalyzeServices(objectCollection) {
                     console.log('=====timesheet_get_all_projects_worked_hours_weekly==========')
                     console.log(data)
                     console.log('====================================')
-                    if (!data.length == 0) {
+                    if (!(data.length == 0)) {
                         const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
                         const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
                         const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
@@ -173,6 +173,7 @@ function AnalyzeServices(objectCollection) {
                         const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
                         console.log('==========Data6=============')
                         console.log(data6)
+                        console.log(data6 === [])
                         console.log('====================================')
 
                         if (data6 === []) {
@@ -197,9 +198,6 @@ function AnalyzeServices(objectCollection) {
                                 data.unshift({ week_name, submited_by, totalTime, topProject, topClient })
                             }
                         }
-
-
-
                         console.log(data);
                         responseData = data;
                         error = false

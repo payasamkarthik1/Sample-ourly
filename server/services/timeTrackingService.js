@@ -1450,6 +1450,9 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('=========approvals_get_entries_date===========')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
