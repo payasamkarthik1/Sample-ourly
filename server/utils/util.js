@@ -105,9 +105,9 @@ function Util() {
             try {
                 let transporter = nodemailer.createTransport({
 
-                    service: 'gmail',
+                    service: 'pronteff',
                     auth: {
-                        user: 'vengalavishal92@gmail.com',
+                        user: 'vishal@pronteff.com',
                         pass: 'iufhppuqnqmsqocv',
                     }
 
@@ -115,7 +115,7 @@ function Util() {
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vengalavishal92@gmail.com', // sender address
+                    from: 'vishal@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Prontify Request to change the password', // Subject line
                     html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
@@ -149,16 +149,16 @@ function Util() {
         return new Promise((resolve, reject) => {
             try {
                 let transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    service: 'pronteff',
                     auth: {
-                        user: 'vengalavishal92@gmail.com',
+                        user: 'vishal92@pronteff.com',
                         pass: 'iufhppuqnqmsqocv',
                     }
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vengalavishal92@gmail.com', // sender address
+                    from: 'vishal@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
                     subject: `Timesheet rejected
                    
@@ -211,16 +211,16 @@ function Util() {
         return new Promise((resolve, reject) => {
             try {
                 let transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    service: 'pronteff',
                     auth: {
-                        user: 'vengalavishal92@gmail.com',
+                        user: 'vishal@pronteff.com',
                         pass: 'iufhppuqnqmsqocv',
                     }
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vengalavishal92@gmail.com', // sender address
+                    from: 'vishal@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
                     subject: `Timesheet aprroved
                   
