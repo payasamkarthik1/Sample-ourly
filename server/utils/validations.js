@@ -242,10 +242,7 @@ function Validations(objectCollection) {
         else {
             error = false
             return [error, responseData];
-
         }
-
-
     }
 
     this.userLoginValidation = async function (request) {

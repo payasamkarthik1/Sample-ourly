@@ -174,9 +174,6 @@ function AnalyzeServices(objectCollection) {
    
 
                         if (data6.length == 0) {
-                            console.log('====================================')
-                            console.log("enter in submit state")
-                            console.log('====================================')
                             data.unshift({ totalTime, topProject, topClient })
                         } else {
                             if (data6[0].approved_on_datetime != null) {
