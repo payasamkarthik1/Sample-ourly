@@ -171,12 +171,9 @@ function AnalyzeServices(objectCollection) {
 
                         //adding submited and approved in object based on flag
                         const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
-                        console.log('==========Data6=============')
-                        console.log(data6)
-                        console.log(data6 === [])
-                        console.log('====================================')
+   
 
-                        if (data6 === []) {
+                        if (data6.length == 0) {
                             console.log('====================================')
                             console.log("enter in submit state")
                             console.log('====================================')
@@ -331,8 +328,6 @@ function AnalyzeServices(objectCollection) {
                 })
             return [error, responseData];
         }
-
-
     };
 
     this.getDasboardOverview = async function (request) {
