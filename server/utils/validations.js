@@ -193,6 +193,7 @@ function Validations(objectCollection) {
 
 
     }
+
     this.addClientValidation = async function (request) {
 
         let responseData = []
@@ -236,6 +237,38 @@ function Validations(objectCollection) {
         else if (l != str || r != str) {
             error = true
             responseData = [{ message: 'Department name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
+
+    this.userLoginValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.email
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (Validator.isEmpty(request.email)) {
+            error = true
+            responseData = [{ message: 'Email is required' }]
+            return [error, responseData];
+        }
+        else if (Validator.isEmpty(request.password)) {
+            error = true
+            responseData = [{ message: 'Password is required' }]
+            return [error, responseData];
+        }
+        else if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'Email contains white spaces' }]
             return [error, responseData];
         }
         else {
@@ -429,7 +462,6 @@ function Validations(objectCollection) {
 
 
     }
-
 
     this.userDetailsList = async function (request) {
         let responseData = [],
@@ -668,12 +700,6 @@ function Validations(objectCollection) {
         }
 
     }
-
-
-    this.hasWhiteSpace = async function (str) {
-        return str.indexOf(' ') >= 0;
-    }
-
 
 }
 module.exports = Validations

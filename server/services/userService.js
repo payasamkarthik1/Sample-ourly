@@ -39,7 +39,13 @@ function UserService(objectCollection) {
     this.userLogin = async function (request) {
         let responseData = [],
             error = true;
-        try {
+
+        const [err, data] = await validations.userLoginValidation(request)
+        if (err) {
+            error = err,
+                responseData = data
+        }
+        else {
             const [err1, resData1] = await validations.userDetailsList(request)
             if (!err1) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
@@ -52,10 +58,10 @@ function UserService(objectCollection) {
             } else {
                 return [err1, resData1]
             }
-        } catch (err) {
-            error = err
-            return [error, responseData]
+
         }
+        return [error, responseData]
+
     }
 
     this.userLoginInsert = async function (request, resData1) {
@@ -136,17 +142,17 @@ function UserService(objectCollection) {
                         .then((data) => {
                             if (data[0].message === "data") {
                                 error = false
-                                responseData = [{ message: "User Profile updated" }];                       
+                                responseData = [{ message: "User Profile updated" }];
                             } else {
                                 error = true,
-                                responseData = [{ message: data[0].message }];
+                                    responseData = [{ message: data[0].message }];
                             }
                         }).catch((err) => {
                             error = err;
                         })
                 }
             } else {
-                     error = err,
+                error = err,
                     responseData = data
             }
             return [error, responseData];

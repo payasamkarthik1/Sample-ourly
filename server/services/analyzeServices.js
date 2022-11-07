@@ -1,12 +1,15 @@
 
 
 const TimeTrackingService = require('../services/timeTrackingService')
+const moment = require('moment');
+const { request } = require('express');
 
 function AnalyzeServices(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
     const timeTrackingService = new TimeTrackingService(objectCollection)
+
 
     this.getAllTasksWeeklyFilterByDescrip = async function (request) {
         let responseData = [],
@@ -122,13 +125,11 @@ function AnalyzeServices(objectCollection) {
     this.getEmployeeDasboardOverview = async function (request) {
         let responseData = [],
             error = true;
-        //flag=2 is for  display the data in dashboard only after submit for approval
-        flag = 2
+
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
-            flag
         );
 
         const queryString = util.getQueryString('timesheet_get_all_projects_worked_hours_weekly', paramsArr);
@@ -136,43 +137,47 @@ function AnalyzeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                        if (!data.length == 0) {
-                            const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
-                            const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
-                            const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-                            const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
+                    console.log('=====timesheet_get_all_projects_worked_hours_weekly==========')
+                    console.log(data)
+                    console.log('====================================')
+                    if (!data.length == 0) {
+                        const [err1, data1] = await timeTrackingService.getWorkedHrsOfEachPrjInWeek(request)
+                        const [err2, data2] = await timeTrackingService.getWorkedHrsOfAllPrjsInDay(request)
+                        const [err3, data3] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+                        const [err4, data4] = await this.getTopProjectBasedOnHrs(request)
 
 
-                            data4.forEach(function (object, i) {
-                                var array = object.highest.split(":");
-                                var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
-                                object.num = seconds
+                        data4.forEach(function (object, i) {
+                            var array = object.highest.split(":");
+                            var seconds = (parseInt(array[0], 10) * 60 * 60) + (parseInt(array[1], 10) * 60) + parseInt(array[2], 10)
+                            object.num = seconds
 
-                            })
-                            data.push(data2[0])
-                            data.filter(function (o1, i) {
-                                data1.some(function (o2) {
-                                    if (o1.project_id === o2.project_id) {
-                                        data[i].total_hour = o2.total_hours
-                                    }
-                                });
+                        })
+                        data.push(data2[0])
+                        data.filter(function (o1, i) {
+                            data1.some(function (o2) {
+                                if (o1.project_id === o2.project_id) {
+                                    data[i].total_hour = o2.total_hours
+                                }
                             });
+                        });
 
 
 
-                            let totalTime = data3[0].weekHours
-                            let topProject = data4[0].project_name
-                            let topClient = data4[0].client_name
+                        let totalTime = data3[0].weekHours
+                        let topProject = data4[0].project_name
+                        let topClient = data4[0].client_name
 
 
-                            //adding submited and approved in object based on flag
-                            const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
+                        //adding submited and approved in object based on flag
+                        const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
+                        if (!(data6 != [])) {
                             if (data6[0].approved_on_datetime != null) {
                                 const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
                                 week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
                                 submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
                                 const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 2)
-                    
+
                                 approved_by = data6[0].approved_by.concat("(" + data6[0].approved_on_datetime + ")")
                                 data.unshift({ week_name, submited_by, approved_by, totalTime, topProject, topClient })
 
@@ -182,16 +187,21 @@ function AnalyzeServices(objectCollection) {
                                 submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
                                 data.unshift({ week_name, submited_by, totalTime, topProject, topClient })
                             }
-
-                            console.log(data);
-                            responseData = data;
-                            error = false
                         } else {
-                            responseData = data;
-                            error = false
+                            data.unshift({ totalTime, topProject, topClient })
+
                         }
-                        return [error, responseData];
-                  
+
+
+                        console.log(data);
+                        responseData = data;
+                        error = false
+                    } else {
+                        responseData = data;
+                        error = false
+                    }
+                    return [error, responseData];
+
 
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -473,22 +483,15 @@ function AnalyzeServices(objectCollection) {
     // }
 
     this.getReportSummary = async function (request) {
-        console.log('====================================')
-        console.log(request)
-        console.log('====================================')
         if (request.role_id == 3) {
             let responseData = [],
                 error = true;
-            flag = 1
+
             const paramsArr = new Array(
                 request.employee_id,
                 request.start_date,
                 request.end_date,
-                request.client_id,
-                request.project_id,
-                request.tag_id,
-                request.status_id,
-                flag
+
             );
 
             const queryString = util.getQueryString('v1_timetracking_timeline_worked_hours_calculation', paramsArr);
@@ -496,15 +499,10 @@ function AnalyzeServices(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        console.log('====================================')
-                        console.log()
-                        console.log('====================================')
-                      const[err1,data1] = await this.getFilterReportSummary(data)
-                      console.log('====================================')
-                      console.log(data1)
-                      console.log('====================================')
-                            responseData = data;
-                            error = false
+                        const [err1, data1] = await this.getFilterReportSummary(request, data)
+
+                        responseData = data1;
+                        error = err1
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
@@ -808,10 +806,136 @@ function AnalyzeServices(objectCollection) {
 
 
     //filter
-    this.getFilterReportSummary = async function (request) {
-     
+    this.getFilterReportSummary = async function (request, data) {
+
+        console.log('====================================')
+        console.log(data)
+        console.log('====================================')
+
+        filterClients1 = []
+        filterProjects1 = []
+        filterTags1 = []
+        filterStatus1 = []
+        client_id = request.client_ids
+        project_id = request.project_id
+        tag_id = request.tag_id
+        status_id = request.status_id
+
+
+        if (client_id == [] && project_id == [] && tag_id == [] && status_id == []) {
+            console.log('====================================')
+            console.log("entered all empty")
+            console.log('====================================')
+            // data = data
+            return [false, data]
+
+        } else if (client_id != [] && project_id != [] && tag_id != [] && status_id != []) {
+            console.log('====================================')
+            console.log("entered all not empty")
+            console.log('====================================')
+            if (client_id != []) {
+                for (let i = 0; i < client_id.length; i++) {
+                    data.filter(function (data) {
+                        if (data.client_id == client_id[i]) {
+                            filterClients1.push(data)
+                        }
+                    })
+                }
+
+            }
+            else if (project_id != []) {
+                for (let i = 0; i < project_id.length; i++) {
+                    filterClient1.filter(function (data) {
+                        if (data.project_id == project_id[i]) {
+                            filterProjects1.push(data)
+                        }
+                    })
+                }
+            }
+            else if (tag_id != []) {
+                for (let i = 0; i < tag_id.length; i++) {
+                    filterProjects1.filter(function (data) {
+                        if (data.tag_id == tag_id[i]) {
+                            filterTags1.push(data)
+                        }
+                    })
+                }
+            }
+            else if (status_id != []) {
+                for (let i = 0; i < status_id.length; i++) {
+                    filterTags1.filter(function (data) {
+                        if (data.status_id == status_id[i]) {
+                            filterStatus1.push(data)
+
+                        }
+                    })
+                }
+                console.log('=====jfnkf=============')
+                console.log(filterStatus)
+                console.log('====================================')
+            }
+            return [false, filterStatus1]
+        } else {
+            console.log('====================================')
+            console.log("entered any empty")
+            console.log('====================================')
+
+            if (client_id == []) {
+                filterClient1 = data
+            } else if (client_id != []) {
+                for (let i = 0; i < client_id.length; i++) {
+                    data.filter(function (data) {
+                        if (data.client_id == client_id[i]) {
+                            filterClients1.push(data)
+                        }
+                    })
+                }
+            } else if (project_id == []) {
+                filterProject1 = filterClient1
+            } else if (project_id != []) {
+                for (let i = 0; i < project_id.length; i++) {
+                    filterClient1.filter(function (data) {
+                        if (data.project_id == project_id[i]) {
+                            filterProject1.push(data)
+                        }
+                    })
+                }
+            } else if (tag_id == []) {
+                filterTag1 = filterProject1
+            } else if (tag_id != []) {
+                for (let i = 0; i < tag_id.length; i++) {
+                    filterProject1.filter(function (data) {
+                        if (data.tag_id == tag_id[i]) {
+                            filterTags1.push(data)
+                        }
+                    })
+                }
+            } else if (status_id == []) {
+                filterStatus1 = filterTags1
+            } else if (status_id != []) {
+                for (let i = 0; i < status_id.length; i++) {
+                    filterTags1.filter(function (data) {
+                        if (data.status_id == status_id[i]) {
+                            filterStatus1.push(data)
+                        }
+                    })
+                }
+            }
+            data = filterStatus1
+            return [false, data]
+
+        }
+
+
+
 
     }
+
+
+
+
+
+
 }
 
 

@@ -21,15 +21,12 @@ function HolidaysListService(objectCollection) {
     }
 
     this.addHolidaysListInsert = async function (data, request) {
-        console.log('==========sss===========');
-        console.log(data);
-        console.log('====================================');
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            data.holidays,
-            await util.dateConvertInExcel(data.date),
+            data.Holiday,
+            await util.dateConvertInExcel(data.Date),
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
