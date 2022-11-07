@@ -171,7 +171,16 @@ function AnalyzeServices(objectCollection) {
 
                         //adding submited and approved in object based on flag
                         const [err6, data6] = await timeTrackingService.getSubmittedApproveEntries(request, 3)
-                        if (!(data6 != [])) {
+                        console.log('==========Data6=============')
+                        console.log(data6)
+                        console.log('====================================')
+
+                        if (data6 === []) {
+                            console.log('====================================')
+                            console.log("enter in submit state")
+                            console.log('====================================')
+                            data.unshift({ totalTime, topProject, topClient })
+                        } else {
                             if (data6[0].approved_on_datetime != null) {
                                 const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
                                 week_name = data5[0].submitted_by.concat("," + data5[0].week_name)
@@ -187,15 +196,14 @@ function AnalyzeServices(objectCollection) {
                                 submited_by = data5[0].submitted_by.concat("(" + data5[0].submited_for_approval_datetime + ")")
                                 data.unshift({ week_name, submited_by, totalTime, topProject, topClient })
                             }
-                        } else {
-                            data.unshift({ totalTime, topProject, topClient })
-
                         }
+
 
 
                         console.log(data);
                         responseData = data;
                         error = false
+
                     } else {
                         responseData = data;
                         error = false
