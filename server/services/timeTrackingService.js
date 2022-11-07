@@ -1908,6 +1908,8 @@ function TimeTrackingService(objectCollection) {
             flag = 4
         } else if (request.role_id == 2 || request.role_id == 5) {
             flag = 5
+        }else if (request.role_id == 3) {
+            flag = 7
         }
 
         const paramsArr = new Array(
