@@ -51,7 +51,7 @@ function TimeTrackingService(objectCollection) {
                                 await this.timesheetAddUpdateRemoveProjects(request)
                                 await this.addUpdateRemoveUnsubmit(request)
                                 error = false,
-                                    responseData = [{ message: "TimeEntry has beed added successfully" }];
+                                responseData = [{ message: "TimeEntry has beed added successfully" }];
                             }
                         }).catch((err) => {
                             console.log("err-------" + err);
@@ -1812,7 +1812,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     if (data[0].message == "success") {
                         const [err1, data1] = await this.onWithdrawnEntry(request)
                         responseData = data1;

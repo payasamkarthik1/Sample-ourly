@@ -11,8 +11,8 @@ function HolidaysListService(objectCollection) {
             error = true;
         await this.removeHolidayListDelete(request);
         data1 = request.data
-        for (let i = 0; i < Object.keys(data1[0]).length; i++) {
-            await this.addHolidaysListInsert(data1[0][i], request)
+        for (let i = 0; i < data1.length; i++) {
+            await this.addHolidaysListInsert(data1[i], request)
 
         }
         const [err1, respData1] = await this.getHolidayslistSelect(request)
