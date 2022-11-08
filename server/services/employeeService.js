@@ -389,7 +389,7 @@ function AdminService(objectCollection) {
                         console.log('=====alllllllllllllllllllllllllllllllllllll===========')
                         console.log(obj1)
                         console.log('====================================')
-                        responseData = obj1;
+                        data = obj1;
                         error = false
                     }
                     responseData = data
