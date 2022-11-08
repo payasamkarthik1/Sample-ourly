@@ -1379,13 +1379,12 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-
     this.getApprovalsList1 = async function (request) {
         let responseData = []
         let obj1 = []
         error = true;
         if (request.role_id == 4) {
-            request.lead_assigned_employee_id = employee_id
+            request.lead_assigned_employee_id = request.employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
             for (let i = 0; i < data.length; i++) {
                 const [err, data1] = await this.getList(request,data[i], 7)
@@ -1415,7 +1414,6 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
-
 
     this.getList = async function (request,data,flag) {
 
