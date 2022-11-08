@@ -26,7 +26,7 @@ function HolidaysListService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             data.Holiday,
-            await util.dateConvertInExcel(data.Date),
+            data.Date,
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
