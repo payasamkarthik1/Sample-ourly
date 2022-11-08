@@ -366,7 +366,7 @@ function AdminService(objectCollection) {
                             console.log('====================================')
                             let arr1 = []
                             for (let i = 0; i < obj2.length; i++) {
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id)
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id,request)
                                 console.log('========data1 from         funcitonnn=================')
                                 console.log(data1)
                                 console.log('====================================')
@@ -395,7 +395,7 @@ function AdminService(objectCollection) {
 
 
 
-    this.getEmpsUnderEmeragingLead = async function (id) {
+    this.getEmpsUnderEmeragingLead = async function (id,request) {
 
         let responseData = [],
             error = true;
