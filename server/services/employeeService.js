@@ -329,7 +329,7 @@ function AdminService(objectCollection) {
         } else if (request.role_id == 4) {
             flag = 4
         } else if (request.role_id == 6) {
-            flag = 5
+            flag = 4
         }
 
         const paramsArr = new Array(
@@ -342,11 +342,6 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
-                    console.log('=====got data from db======')
-                    console.log(data)
-                    console.log(data.length)
-                    console.log('====================================')
                     if (request.role_id == 4) {
                         obj1 = []
                         obj2 = []
@@ -385,6 +380,8 @@ function AdminService(objectCollection) {
                         responseData = obj1;
                         error = false
                     }
+                    responseData = data
+                    error =false
 
                 }).catch((err) => {
                     console.log("err-------" + err);
