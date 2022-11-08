@@ -343,32 +343,61 @@ function AdminService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
 
-
                     console.log('=====got data from db======')
                     console.log(data)
+                    console.log(data.length)
                     console.log('====================================')
                     if (request.role_id == 4) {
-                        let obj1 = [], obj2 = []
-                        console.log('====================================')
-                        console.log(data)
-                        console.log('====================================')
+                        let obj1 = []
+                        let obj2 = []
 
+                        data.filter(function (data1) {
+                            if (data1.role_id == 3) {
+                                obj1.push(data1)
+                            } else if (data1.role_id == 6) {
+                                obj2.push(data1)
+                            }
+                        })
 
-                        for (let i = 0; i < data.length; i++) {
-                            data.filter(function (data) {
-                                if (data.role_id == 3) {
-                                    obj1.push(data)
-                                } else if (data.role_id == 6) {
-                                    obj2.push(data)
-                                }
-                            })
+                        if (obj2.length != 0) {
+                            let arr1 = []
+                            for (let i = 0; i < obj2.length; i++) {
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id)
+                                Array.prototype.push.apply(arr1, data1);
+                            }
+                            Array.prototype.push.apply(arr1, obj2);
                         }
-                        console.log('====================================')
-                        console.log(obj1)
-                        console.log(obj1)
-                        console.log('====================================')
+                        Array.prototype.push.apply(obj1, obj2);
 
                     }
+                    responseData = obj1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+
+
+    this.getEmpsUnderEmeragingLead = async function (request) {
+
+        let responseData = [],
+            error = true;
+        // if flag = 1 get all employess under lead
+        flag = 4
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -378,6 +407,7 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
 
 }
 
