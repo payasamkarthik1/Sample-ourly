@@ -380,7 +380,7 @@ function AdminService(objectCollection) {
                             console.log(arr1)
                             console.log('====================================')
                         }
-                        Array.prototype.push.apply(obj1, obj2);
+                        Array.prototype.push.apply(obj1, arr1);
                         responseData = obj1;
                         error = false
                     }
