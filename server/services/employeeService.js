@@ -348,8 +348,8 @@ function AdminService(objectCollection) {
                     console.log(data.length)
                     console.log('====================================')
                     if (request.role_id == 4) {
-                        let obj1 = []
-                        let obj2 = []
+                        obj1 = []
+                        obj2 = []
 
                         data.filter(function (data1) {
                             if (data1.role_id == 3) {
@@ -360,18 +360,31 @@ function AdminService(objectCollection) {
                         })
 
                         if (obj2.length != 0) {
+                            console.log('==========entered obje222222222222============')
+                            console.log(obj2)
+                            console.log(obj2.length)
+                            console.log('====================================')
                             let arr1 = []
                             for (let i = 0; i < obj2.length; i++) {
                                 const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id)
+                                console.log('========data1 from         funcitonnn=================')
+                                console.log(data1)
+                                console.log('====================================')
                                 Array.prototype.push.apply(arr1, data1);
                             }
+                            console.log('==========arr1=====')
+                            console.log(arr1)
+                            console.log('====================================')
                             Array.prototype.push.apply(arr1, obj2);
+                            console.log('==========arr1=   obj2222====')
+                            console.log(arr1)
+                            console.log('====================================')
                         }
                         Array.prototype.push.apply(obj1, obj2);
-
+                        responseData = obj1;
+                        error = false
                     }
-                    responseData = obj1;
-                    error = false
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -398,6 +411,9 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('===========get employes suner emargaing===============')
+                    console.log()
+                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
