@@ -1388,7 +1388,7 @@ function TimeTrackingService(objectCollection) {
             request.lead_assigned_employee_id = employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
             for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getList(data[i], 7)
+                const [err, data1] = await this.getList(request,data[i], 7)
                 Array.prototype.push.apply(obj1, data1);
             }
             responseData = obj1
@@ -1399,7 +1399,7 @@ function TimeTrackingService(objectCollection) {
             request.lead_assigned_employee_id = employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
             for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getList(data[i], 7)
+                const [err, data1] = await this.getList(request,data[i], 7)
                 Array.prototype.push.apply(obj1, data1);
             }
             responseData = obj1
@@ -1409,7 +1409,7 @@ function TimeTrackingService(objectCollection) {
         else if (request.role_id === 2 || request.role_id === 5) {
             data={}
             data.employee_id = request.employee_id
-            const [err, data1] = await this.getList(data, 8)
+            const [err, data1] = await this.getList(request,data, 8)
             responseData = data1
             error = false
         }
@@ -1417,7 +1417,7 @@ function TimeTrackingService(objectCollection) {
     }
 
 
-    this.getList = async function (data, flag) {
+    this.getList = async function (request,data,flag) {
 
         let responseData = [],
             error = true;
