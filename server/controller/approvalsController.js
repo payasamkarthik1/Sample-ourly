@@ -31,20 +31,20 @@ function ApprovalsController(objectCollection) {
         })
 
 
-          //@Post approvals/get/list
-    app.post('/' + 'approvals/get/list/v1',
+    //       //@Post approvals/get/list
+    // app.post('/' + 'approvals/get/list/v1',
 
-    async function (req, res) {
+    // async function (req, res) {
 
-        const [err, resData] = await timeTrackingService.getApprovalsList1(req.body);
-        if (!err) {
-            console.log("approvals/get/list | Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("approvals/get/list | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
+    //     const [err, resData] = await timeTrackingService.getApprovalsList1(req.body);
+    //     if (!err) {
+    //         console.log("approvals/get/list | Error: ", err);
+    //         res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+    //     } else {
+    //         console.log("approvals/get/list | Error: ", err);
+    //         res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+    //     }
+    // })
 
     //@Post approvals/get/on/approve/on/reject/list
     app.post('/' + 'approvals/get/on/approve/on/reject/list',
