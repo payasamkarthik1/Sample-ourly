@@ -350,6 +350,7 @@ function AdminService(objectCollection) {
                     if (request.role_id == 4) {
                         obj1 = []
                         obj2 = []
+                        let arr1 = []
 
                         data.filter(function (data1) {
                             if (data1.role_id == 3) {
@@ -364,7 +365,7 @@ function AdminService(objectCollection) {
                             console.log(obj2)
                             console.log(obj2.length)
                             console.log('====================================')
-                            let arr1 = []
+                        
                             for (let i = 0; i < obj2.length; i++) {
                                 const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id,request)
                                 console.log('========data1 from         funcitonnn=================')
