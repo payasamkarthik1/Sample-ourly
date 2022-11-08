@@ -1386,6 +1386,9 @@ function TimeTrackingService(objectCollection) {
         let obj1 = []
         error = true;
         if (request.role_id == 4) {
+            console.log('====================================')
+            console.log("entered")
+            console.log('====================================')
             request.lead_assigned_employee_id = request.employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
             console.log('==========all employess under ead==-------------------------------=======')
