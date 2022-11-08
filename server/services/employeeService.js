@@ -395,14 +395,14 @@ function AdminService(objectCollection) {
 
 
 
-    this.getEmpsUnderEmeragingLead = async function (request) {
+    this.getEmpsUnderEmeragingLead = async function (id) {
 
         let responseData = [],
             error = true;
         // if flag = 1 get all employess under lead
         flag = 4
         const paramsArr = new Array(
-            request.lead_assigned_employee_id,
+            id,
             flag
         );
 
