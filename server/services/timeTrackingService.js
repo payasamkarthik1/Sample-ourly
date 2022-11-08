@@ -51,7 +51,7 @@ function TimeTrackingService(objectCollection) {
                                 await this.timesheetAddUpdateRemoveProjects(request)
                                 await this.addUpdateRemoveUnsubmit(request)
                                 error = false,
-                                responseData = [{ message: "TimeEntry has beed added successfully" }];
+                                    responseData = [{ message: "TimeEntry has beed added successfully" }];
                             }
                         }).catch((err) => {
                             console.log("err-------" + err);
@@ -1378,6 +1378,76 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
+
+
+    this.getApprovalsList1 = async function (request) {
+        let responseData = []
+        let obj1 = []
+        error = true;
+        if (request.role_id == 4) {
+            request.lead_assigned_employee_id = employee_id
+            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+            for (let i = 0; i < data.length; i++) {
+                const [err, data1] = await this.getList(data[i], 7)
+                Array.prototype.push.apply(obj1, data1);
+            }
+            responseData = obj1
+            error = false
+
+        }
+        else if (request.role_id == 6) {
+            request.lead_assigned_employee_id = employee_id
+            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+            for (let i = 0; i < data.length; i++) {
+                const [err, data1] = await this.getList(data[i], 7)
+                Array.prototype.push.apply(obj1, data1);
+            }
+            responseData = obj1
+            error = false
+
+        }
+        else if (request.role_id === 2 || request.role_id === 5) {
+            data.employee_id = request.employee_id
+            const [err, data1] = await this.getList(data, 8)
+            responseData = data1
+            error = false
+        }
+        return [error, responseData];
+    }
+
+    
+    this.getList = async function (data, flag) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            data.employee_id,
+            0,
+            0,
+            request.first_week_day,
+            request.last_week_day,
+            flag
+        )
+
+        const queryString = util.getQueryString('approvals_get_list', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+
+        }
+        return [error, responseData];
+    }
+
+
+
+
     this.getOnApproveOnRejectList = async function (request) {
 
         let responseData = [],
