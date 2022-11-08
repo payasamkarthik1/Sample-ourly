@@ -121,7 +121,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-            flag=1
+        flag = 1
         const paramsArr = new Array(
             request.employee_id.toString(),
             flag
@@ -146,7 +146,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-            flag=2
+        flag = 2
         const paramsArr = new Array(
             request.employee_id,
             flag
@@ -171,7 +171,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-            flag=3
+        flag = 3
         const paramsArr = new Array(
             request.employee_id,
             flag
@@ -308,6 +308,67 @@ function AdminService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
 
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+    this.getEmpsAssignUnderLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        // if flag = 1 get all employess under lead
+
+        if (request.role_id == 2 || request.role_id == 5) {
+            flag = 3
+        } else if (request.role_id == 4) {
+            flag = 4
+        } else if (request.role_id == 6) {
+            flag = 5
+        }
+
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+
+                    console.log('=====got data from db======')
+                    console.log(data)
+                    console.log('====================================')
+                    if (request.role_id == 4) {
+                        let obj1 = [], obj2 = []
+                        console.log('====================================')
+                        console.log(data)
+                        console.log('====================================')
+
+
+                        for (let i = 0; i < data.length; i++) {
+                            data.filter(function (data) {
+                                if (data.role_id == 3) {
+                                    obj1.push(data)
+                                } else if (data.role_id == 6) {
+                                    obj2.push(data)
+                                }
+                            })
+                        }
+                        console.log('====================================')
+                        console.log(obj1)
+                        console.log(obj1)
+                        console.log('====================================')
+
+                    }
                     responseData = data;
                     error = false
                 }).catch((err) => {

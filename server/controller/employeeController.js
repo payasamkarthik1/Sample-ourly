@@ -154,6 +154,21 @@ function EmployeeController(objectCollection) {
             }
         })
 
+            //@Post lead/get/emps/assigned/under/leads/list 
+    app.post('/' + 'lead/get/emps/assigned/under/leads/list/v1',
+
+    async function (req, res) {
+
+        const [err, resData] = await employeeService.getEmpsAssignUnderLeads(req.body);
+        if (!err) {
+            console.log("employee/update/employee/details | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("employee/update/employee/details | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 }
 
 
