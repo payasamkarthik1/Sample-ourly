@@ -360,9 +360,9 @@ function AdminService(objectCollection) {
                             console.log(obj2)
                             console.log(obj2.length)
                             console.log('====================================')
-                        
+
                             for (let i = 0; i < obj2.length; i++) {
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id,request)
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id, request)
                                 console.log('========data1 from         funcitonnn=================')
                                 console.log(data1)
                                 console.log('====================================')
@@ -381,7 +381,7 @@ function AdminService(objectCollection) {
                         error = false
                     }
                     responseData = data
-                    error =false
+                    error = false
 
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -393,7 +393,7 @@ function AdminService(objectCollection) {
 
 
 
-    this.getEmpsUnderEmeragingLead = async function (id,request) {
+    this.getEmpsUnderEmeragingLead = async function (id, request) {
 
         let responseData = [],
             error = true;
