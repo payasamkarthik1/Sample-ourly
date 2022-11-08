@@ -385,6 +385,10 @@ function AdminService(objectCollection) {
                         console.log(arr1)
                         console.log('====================================')
                         Array.prototype.push.apply(obj1, arr1);
+
+                        console.log('=====alllllllllllllllllllllllllllllllllllll===========')
+                        console.log(obj1)
+                        console.log('====================================')
                         responseData = obj1;
                         error = false
                     }
