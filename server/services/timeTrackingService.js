@@ -1396,7 +1396,7 @@ function TimeTrackingService(objectCollection) {
 
         }
         else if (request.role_id == 6) {
-            request.lead_assigned_employee_id = employee_id
+            request.lead_assigned_employee_id = request.employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
             for (let i = 0; i < data.length; i++) {
                 const [err, data1] = await this.getList(request,data[i], 7)
