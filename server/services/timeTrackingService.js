@@ -1407,6 +1407,7 @@ function TimeTrackingService(objectCollection) {
 
         }
         else if (request.role_id === 2 || request.role_id === 5) {
+            data={}
             data.employee_id = request.employee_id
             const [err, data1] = await this.getList(data, 8)
             responseData = data1
@@ -1415,7 +1416,7 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    
+
     this.getList = async function (data, flag) {
 
         let responseData = [],
