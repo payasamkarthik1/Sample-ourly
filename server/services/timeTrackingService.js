@@ -1055,7 +1055,7 @@ function TimeTrackingService(objectCollection) {
 
 
 
-    //-----------------AAPROVAls-------------------------
+    //-----------------APPROVAls-------------------------
 
 
     this.addUpdateRemoveUnsubmit = async function (request) {
@@ -1175,9 +1175,6 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
-
-
-
 
     this.getUnsubmited = async function (request) {
         let responseData = [],
@@ -1383,21 +1380,44 @@ function TimeTrackingService(objectCollection) {
 
     this.getApprovalsList = async function (request) {
         let responseData = []
-        let obj1 = []
         error = true;
+
+        let obj1 = []
+        let filterData = []
+
         if (request.role_id == 4) {
-            console.log('====================================')
-            console.log("entered")
-            console.log('====================================')
+
             request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            console.log('==========all employess under ead==-------------------------------=======')
-            console.log(data)
-            console.log('====================================')
-            for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getList(request, data[i], 7)
-                Array.prototype.push.apply(obj1, data1);
+
+            if (request.employees.length != 0 && request.flag == 1) {
+                const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                for (let i = 0; i < data.length; i++) {
+                    request.employees.filter(function (data1) {
+                        if (data1.employee_id == data[i].employee_id) {
+                            filterData.push(data1)
+                        }
+                    })
+                }
+                obj1 = filterData
+            } else if (request.employees.length != 0 && request.flag == 2) {
+                request.role_id = 6
+                const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                for (let i = 0; i < data.length; i++) {
+                    request.employees.filter(function (data1) {
+                        if (data1.employee_id == data[i].employee_id) {
+                            filterData.push(data1)
+                        }
+                    })
+                }
+                obj1 = filterData
             }
+            // else {
+            //     for (let i = 0; i < data.length; i++) {
+            //         const [err, data1] = await this.getList(request, data[i], 7)
+            //         Array.prototype.push.apply(obj1, data1);
+            //     }
+
+            // }
             responseData = obj1
             error = false
 
@@ -1414,6 +1434,21 @@ function TimeTrackingService(objectCollection) {
 
         }
         else if (request.role_id === 2 || request.role_id === 5) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
             data = {}
             data.employee_id = request.employee_id
             const [err, data1] = await this.getList(request, data, 8)

@@ -269,7 +269,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-        // if flag = 2 get all leads
+        // if flag = 2 get all leads at create employee form
         flag = 2
         const paramsArr = new Array(
             0,
@@ -291,38 +291,39 @@ function AdminService(objectCollection) {
         }
     }
 
-    this.getEmpsUnderLeads = async function (request) {
+    // this.getEmpsUnderLeads = async function (request) {
 
-        let responseData = [],
-            error = true;
-        // if flag = 1 get all employess under lead
-        flag = 1
-        const paramsArr = new Array(
-            request.lead_assigned_employee_id,
-            flag
-        );
+    //     let responseData = [],
+    //         error = true;
+    //     // if flag = 1 get all employess under lead
+    //     flag = 1
+    //     const paramsArr = new Array(
+    //         request.lead_assigned_employee_id,
+    //         flag
+    //     );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+    //     const queryString = util.getQueryString('get_leads', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
 
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
+    //                 responseData = data;
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
+    // }
 
     this.getEmpsAssignUnderLeads = async function (request) {
 
         let responseData = [],
             error = true;
-        // if flag = 1 get all employess under lead
+        // if flag = 3 get all employess under admin and superlead
+        // if flag = 4 get all employess under lead and emerging lead
 
         if (request.role_id == 2 || request.role_id == 5) {
             flag = 3
@@ -356,39 +357,14 @@ function AdminService(objectCollection) {
                         })
 
                         if (obj2.length != 0) {
-                            console.log('==========entered obje222222222222============')
-                            console.log(obj2)
-                            console.log(obj2.length)
-                            console.log('====================================')
-
                             for (let i = 0; i < obj2.length; i++) {
+                                request.employee_id = obj2[i].employee_id
                                 const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id, request)
-                                console.log('========data1 from         funcitonnn=================')
-                                console.log(data1)
-                                console.log('====================================')
                                 Array.prototype.push.apply(arr1, data1);
                             }
-                            console.log('==========arr1=====')
-                            console.log(arr1)
-                            console.log('====================================')
                             Array.prototype.push.apply(arr1, obj2);
-                            console.log('==========arr1=   obj2222====')
-                            console.log(arr1)
-                            console.log('====================================')
                         }
-
-                        console.log('=====oneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee===========')
-                        console.log(obj1)
-                        console.log('====================================')
-
-                        console.log('=====arrrrrrrrrrrrrrrrr1e===========')
-                        console.log(arr1)
-                        console.log('====================================')
                         Array.prototype.push.apply(obj1, arr1);
-
-                        console.log('=====alllllllllllllllllllllllllllllllllllll===========')
-                        console.log(obj1)
-                        console.log('====================================')
                         data = obj1;
                         error = false
                     }
@@ -403,15 +379,13 @@ function AdminService(objectCollection) {
         }
     }
 
-
-    this.getEmpsUnderEmeragingLead = async function (id, request) {
+    this.getEmpsUnderEmeragingLead = async function (request) {
 
         let responseData = [],
             error = true;
-        // if flag = 1 get all employess under lead
         flag = 4
         const paramsArr = new Array(
-            id,
+            request.employee_id,
             flag
         );
 
@@ -420,9 +394,6 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('===========get employes suner emargaing===============')
-                    console.log()
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -432,6 +403,32 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
+    this.getGroupsUnderLeads = async function (request) {
+
+        let responseData = [],
+            error = true;
+        flag = 5
+        const paramsArr = new Array(
+            request.employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
 
 
 }
