@@ -322,6 +322,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
+        groups = []
         // if flag = 3 get all employess under admin and superlead
         // if flag = 4 get all employess under lead and emerging lead
 
@@ -343,7 +344,17 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (request.role_id == 4) {
+
+
+                    if (request.role_id == 2 || request.role_id == 5) {
+                        //get grpups for admin and superlead
+                        const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
+                        if (data1.length != 0) {
+                            groups = data1
+                            data.push({ groups })
+                        }
+                    }
+                    else if (request.role_id == 4) {
                         obj1 = []
                         obj2 = []
                         let arr1 = []
@@ -367,7 +378,15 @@ function AdminService(objectCollection) {
                         Array.prototype.push.apply(obj1, arr1);
                         data = obj1;
                         error = false
+
+                        const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
+                        if (data1.length != 0) {
+                            groups = data1
+                            data.push({ groups })
+                        }
                     }
+
+
                     responseData = data
                     error = false
 
@@ -378,7 +397,6 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
-
     this.getEmpsUnderEmeragingLead = async function (request) {
 
         let responseData = [],
@@ -408,9 +426,10 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-        flag = 5
+        // get groups fro admina andd lead
+
         const paramsArr = new Array(
-            request.employee_id,
+            request.lead_assigned_employee_id,
             flag
         );
 
@@ -419,6 +438,9 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('==========GROUPS========')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {

@@ -1435,20 +1435,6 @@ function TimeTrackingService(objectCollection) {
         }
         else if (request.role_id === 2 || request.role_id === 5) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
             data = {}
             data.employee_id = request.employee_id
             const [err, data1] = await this.getList(request, data, 8)
@@ -1457,6 +1443,7 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
+
 
     this.getList = async function (request, data, flag) {
 
@@ -1480,7 +1467,8 @@ function TimeTrackingService(objectCollection) {
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
-                    error = err
+                    error = err  
+                     
                 })
 
         }

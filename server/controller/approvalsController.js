@@ -28,7 +28,7 @@ function ApprovalsController(objectCollection) {
                 console.log("approvals/get/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
-        })
+        })   
 
 
     //       //@Post approvals/get/list
