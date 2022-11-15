@@ -56,7 +56,7 @@ function AnalyzeServices(objectCollection) {
         console.log('====================================')
         if (data1.length != 0) {
             for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
+                const [err2, data2] = await this.getleadMyTeamData(data1[i],request)
                 Array.prototype.push.apply(empsData, data2);
             }
             let data = []
@@ -137,7 +137,7 @@ function AnalyzeServices(objectCollection) {
         let responseData = [],
             error = true;
         // if flag =2 get my team dashboard overview for lead
-        flag = 2
+        flag = 4
         const paramsArr = new Array(
             data.employee_id,
             request.start_date,
