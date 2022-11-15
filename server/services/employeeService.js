@@ -139,6 +139,7 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.removeEmployeeComplete = async function (request) {
 
         let responseData = [],
@@ -164,6 +165,7 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.inactiveEmpToActive = async function (request) {
 
         let responseData = [],
@@ -288,32 +290,6 @@ function AdminService(objectCollection) {
         }
     }
 
-    // this.getEmpsUnderLeads = async function (request) {
-
-    //     let responseData = [],
-    //         error = true;
-    //     // if flag = 1 get all employess under lead
-    //     flag = 1
-    //     const paramsArr = new Array(
-    //         request.lead_assigned_employee_id,
-    //         flag
-    //     );
-
-    //     const queryString = util.getQueryString('get_leads', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-    // }
 
     this.getEmpsAssignUnderLeads = async function (request) {
 
@@ -364,12 +340,12 @@ function AdminService(objectCollection) {
                         if (obj2.length != 0) {
                             for (let i = 0; i < obj2.length; i++) {
                                 request.employee_id = obj2[i].employee_id
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
+                                const [err1, data1] = await this.getEmpsUnderEmergingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
                             }
                             Array.prototype.push.apply(obj1, arr1);
                             Array.prototype.push.apply(obj1, obj2);
-                            console.log('=========getEmpsUnderEmeragingLead================')
+                            console.log('=========getEmpsUnderEmergingLead================')
                             console.log(obj1)
                             console.log('====================================')
 
@@ -448,10 +424,10 @@ function AdminService(objectCollection) {
                                 request.employee_id = obj2[i].employee_id
                                 console.log("merging" + obj2[i].employee_id);
                                 request.employee_id = obj2[i].employee_id
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
+                                const [err1, data1] = await this.getEmpsUnderEmergingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
                             }
-                            console.log('=========getEmpsUnderEmeragingLead================')
+                            console.log('=========getEmpsUnderEmergingLead================')
                             console.log(arr1)
                             console.log('====================================')
 
@@ -479,7 +455,7 @@ function AdminService(objectCollection) {
         }
     }
 
-    this.getEmpsUnderEmeragingLead = async function (request) {
+    this.getEmpsUnderEmergingLead = async function (request) {
 
         let responseData = [],
             error = true;
@@ -508,8 +484,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-        // get groups fro admina andd lead
-
+        // get groups for admina(flag=5) and lead(flag=6)
         const paramsArr = new Array(
             request.lead_assigned_employee_id,
             flag
