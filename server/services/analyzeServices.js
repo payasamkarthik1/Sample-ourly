@@ -59,6 +59,9 @@ function AnalyzeServices(objectCollection) {
                 const [err2, data2] = await this.getleadMyTeamData(data1[i],request)
                 Array.prototype.push.apply(empsData, data2);
             }
+            console.log('=======DATA=======');
+            console.log(empsData);
+            console.log('====================================');
             let data = []
             data = empsData
             if (data.length != 0) {
