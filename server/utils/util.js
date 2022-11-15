@@ -414,16 +414,16 @@ function Util() {
 
 
     var start_time = "00:00:00";
-    for (let i = 0; i < data.length; i++) {
+    for (let k = 0; k < data.length; k++) {
 
     var times = [ 0, 0, 0 ]
   var max = times.length
 
   var a = (start_time || '').split(':')
-  var b = (data[i].task_total_time || '').split(':')
+  var b = (data[k].task_total_time || '').split(':')
 
   // normalize time values
-  for (var i = 0; i < max; i++) {
+  for (let i = 0; i < max; i++) {
     a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i])
     b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i])
   }
