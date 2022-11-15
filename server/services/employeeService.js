@@ -364,7 +364,7 @@ function AdminService(objectCollection) {
                         if (obj2.length != 0) {
                             for (let i = 0; i < obj2.length; i++) {
                                 request.employee_id = obj2[i].employee_id
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id, request)
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
                             }
                             Array.prototype.push.apply(arr1, obj2);
@@ -431,17 +431,27 @@ function AdminService(objectCollection) {
                                 obj2.push(data1)
                             }
                         })
+                        console.log('====object1=====================')
+                        console.log(obj1)
+                        console.log('====================================')
+
+                        console.log('====object2=====================')
+                        console.log(obj2)
+                        console.log('====================================')
+
 
                         if (obj2.length != 0) {
                             for (let i = 0; i < obj2.length; i++) {
                                 request.employee_id = obj2[i].employee_id
-                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id, request)
+                                console.log("merging"+ obj2[i].employee_id);
+                                request.employee_id = obj2[i].employee_id
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
                             }
                             console.log('=========getEmpsUnderEmeragingLead================')
                             console.log(arr1)
                             console.log('====================================')
-                            
+
                             Array.prototype.push.apply(obj1, arr1);
 
                         }
