@@ -1494,7 +1494,7 @@ function AnalyzeServices(objectCollection) {
     //                     const [err2, data2] = await this.dashboardDataCalculation(request, id, flag)
     //                     dayWiseData = data2
 
-                     
+
     //                     //get total projects total hours 
     //                     flag = 3
     //                     const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)

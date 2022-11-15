@@ -368,8 +368,9 @@ function AdminService(objectCollection) {
                                 Array.prototype.push.apply(arr1, data1);
                             }
                             Array.prototype.push.apply(arr1, obj2);
+                            Array.prototype.push.apply(obj1, arr1);
+
                         }
-                        Array.prototype.push.apply(obj1, arr1);
                         data = obj1;
                         error = false
 
@@ -438,13 +439,17 @@ function AdminService(objectCollection) {
                                 Array.prototype.push.apply(arr1, data1);
                             }
                             Array.prototype.push.apply(arr1, obj2);
+                            Array.prototype.push.apply(obj1, arr1);
+
                         }
-                        Array.prototype.push.apply(obj1, arr1);
                         data = obj1;
                         error = false
 
 
                     }
+                    console.log('=====66666666666666666666666666666666666666666666666666666666666===')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data
                     error = false
 
