@@ -121,8 +121,8 @@ function AnalyzeServices(objectCollection) {
 
 
                 // delete data
-                flag = 5
-                await this.dashboardDataCalculation(request, id, flag)
+    
+                await this.dashboardDataCalculation(request, id, 5)
 
 
                 responseData.push({ total_time: totalTime, top_project: topProject })
@@ -239,8 +239,8 @@ function AnalyzeServices(objectCollection) {
 
 
                         // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
+                    
+                        await this.dashboardDataCalculation(request, id, 5)
 
                         responseData.push({ total_time: totalTime, top_project: topProject })
                         responseData.push(newArray)
@@ -331,8 +331,7 @@ function AnalyzeServices(objectCollection) {
 
 
                         // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
+                        await this.dashboardDataCalculation(request, id, 5)
 
                     }
 
@@ -428,8 +427,8 @@ function AnalyzeServices(objectCollection) {
                         topProject = data4[0]
 
                         // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
+
+                        await this.dashboardDataCalculation(request, id, 5)
 
                         responseData.push({ total_time: totalTime, top_project: topProject })
                         responseData.push(newArray)
