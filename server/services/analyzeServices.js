@@ -136,7 +136,7 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-    this.getleadMyTeamData = async function (request, data) {
+    this.getleadMyTeamData = async function (data,request) {
         let responseData = [],
             error = true;
         // if flag =2 get my team dashboard overview for lead
