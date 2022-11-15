@@ -448,13 +448,15 @@ function Util() {
     hours += h
     minutes -= 60 * h
   }
-}
 
-finaladd = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
-start_time = finaladd
+  finaladd = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
+  start_time = finaladd
 }
-
 return finaladd
+
+}
+
+
 
 
 }
