@@ -369,6 +369,9 @@ function AdminService(objectCollection) {
                             }
                             Array.prototype.push.apply(obj1, arr1);
                             Array.prototype.push.apply(obj1, obj2);
+                            console.log('=========getEmpsUnderEmeragingLead================')
+                            console.log(obj1)
+                            console.log('====================================')
 
                         }
                         data = obj1;
@@ -443,7 +446,7 @@ function AdminService(objectCollection) {
                         if (obj2.length != 0) {
                             for (let i = 0; i < obj2.length; i++) {
                                 request.employee_id = obj2[i].employee_id
-                                console.log("merging"+ obj2[i].employee_id);
+                                console.log("merging" + obj2[i].employee_id);
                                 request.employee_id = obj2[i].employee_id
                                 const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
@@ -475,7 +478,6 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
-
 
     this.getEmpsUnderEmeragingLead = async function (request) {
 
