@@ -367,8 +367,8 @@ function AdminService(objectCollection) {
                                 const [err1, data1] = await this.getEmpsUnderEmeragingLead(request)
                                 Array.prototype.push.apply(arr1, data1);
                             }
-                            Array.prototype.push.apply(arr1, obj2);
                             Array.prototype.push.apply(obj1, arr1);
+                            Array.prototype.push.apply(obj1, obj2);
 
                         }
                         data = obj1;
