@@ -368,6 +368,50 @@ function Util() {
         return firstMonth.concat("-" + lastMonth)
     }
 
+
+
+
+    this.calculateWorkedHours = async function (data) {
+        console.log('====================================')
+        console.log(data)
+        console.log('====================================')
+
+        var prodhrd = "00:00:00";
+        for (let i = 0; i < data.length; i++) {
+
+            var conprodArr = data[i].task_total_time;
+            prodhrdArr = prodhrd.split(":");
+            conprodArr = conprodArr.split(":");
+            var hh1 = parseInt(prodhrdArr[0]) + parseInt(conprodArr[0]);
+            var mm1 = parseInt(prodhrdArr[1]) + parseInt(conprodArr[1]);
+            var ss1 = parseInt(prodhrdArr[2]) + parseInt(conprodArr[2]);
+
+            if (ss1 > 59) {
+                var ss2 = ss1 % 60;
+                var ssx = ss1 / 60;
+                var ss3 = parseInt(ssx);//add into min
+                var mm1 = parseInt(mm1) + parseInt(ss3);
+                var ss1 = ss2;
+            }
+            if (mm1 > 59) {
+                var mm2 = mm1 % 60;
+                var mmx = mm1 / 60;
+                var mm3 = parseInt(mmx);//add into hour
+                var hh1 = parseInt(hh1) + parseInt(mm3);
+                var mm1 = mm2;
+            }
+            var finaladd = hh1 + ':' + mm1 + ':' + ss1;
+            prodhrd = finaladd
+
+        }
+
+        console.log('=========finaladd================')
+        console.log(finaladd)
+        console.log('====================================')
+        return finaladd
+
+    }
+
 }
 
 module.exports = Util

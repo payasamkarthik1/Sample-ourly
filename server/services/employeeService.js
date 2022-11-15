@@ -45,17 +45,13 @@ function AdminService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
-                        if (data[0].email === "EMAIL ALREADY EXIST") {
-                            data[0].message = data[0].email
-                            delete data[0].email
+                        if (data[0].message === "EMAIL ALREADY EXIST") {
                             error = true
-                            responseData = data;
-                        } else if (data[0].email === "PHONENUMBER ALREADY EXIST") {
-                            data[0].message = data[0].email
-                            delete data[0].email
+                            responseData = [{ message: data[0].message }];
+                        } else if (data[0].message === "PHONENUMBER ALREADY EXIST") {
                             error = true
-                            responseData = data;
-                        } else {
+                            responseData = [{ message: data[0].message }];
+                        } else if (data[0].message === "data") {
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                             responseData = data1;
                             error = false;
@@ -65,6 +61,7 @@ function AdminService(objectCollection) {
                     .catch((err) => {
                         error = err;
                     })
+                return [error, responseData];
             }
         }
         return [error, responseData];
@@ -344,8 +341,6 @@ function AdminService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
-
                     if (request.role_id == 2 || request.role_id == 5) {
                         //get grpups for admin and superlead
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
@@ -358,7 +353,6 @@ function AdminService(objectCollection) {
                         obj1 = []
                         obj2 = []
                         let arr1 = []
-
                         data.filter(function (data1) {
                             if (data1.role_id == 3) {
                                 obj1.push(data1)
@@ -397,6 +391,72 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
+    this.getEmpsAssignUnderLeadsWithoutGroups = async function (request) {
+
+        let responseData = [],
+            error = true;
+        groups = []
+        // if flag = 3 get all employess under admin and superlead
+        // if flag = 4 get all employess under lead and emerging lead
+
+        if (request.role_id == 2 || request.role_id == 5) {
+            flag = 3
+        } else if (request.role_id == 4) {
+            flag = 4
+        } else if (request.role_id == 6) {
+            flag = 4
+        }
+
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
+
+        const queryString = util.getQueryString('get_leads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    if (request.role_id == 4) {
+                        obj1 = []
+                        obj2 = []
+                        let arr1 = []
+                        data.filter(function (data1) {
+                            if (data1.role_id == 3) {
+                                obj1.push(data1)
+                            } else if (data1.role_id == 6) {
+                                obj2.push(data1)
+                            }
+                        })
+
+                        if (obj2.length != 0) {
+                            for (let i = 0; i < obj2.length; i++) {
+                                request.employee_id = obj2[i].employee_id
+                                const [err1, data1] = await this.getEmpsUnderEmeragingLead(obj2[i].employee_id, request)
+                                Array.prototype.push.apply(arr1, data1);
+                            }
+                            Array.prototype.push.apply(arr1, obj2);
+                        }
+                        Array.prototype.push.apply(obj1, arr1);
+                        data = obj1;
+                        error = false
+
+
+                    }
+                    responseData = data
+                    error = false
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+
     this.getEmpsUnderEmeragingLead = async function (request) {
 
         let responseData = [],
@@ -422,7 +482,7 @@ function AdminService(objectCollection) {
         }
     }
 
-    this.getGroupsUnderLeads = async function (request) {
+    this.getGroupsUnderLeads = async function (request, flag) {
 
         let responseData = [],
             error = true;
