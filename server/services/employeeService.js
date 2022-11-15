@@ -453,6 +453,8 @@ function AdminService(objectCollection) {
                             console.log('====================================')
 
                             Array.prototype.push.apply(obj1, arr1);
+                            Array.prototype.push.apply(obj1, obj2);
+
 
                         }
                         data = obj1;
