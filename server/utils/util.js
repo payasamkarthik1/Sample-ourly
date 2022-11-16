@@ -107,15 +107,15 @@ function Util() {
 
                     service: 'pronteff',
                     auth: {
-                        user: 'vishal@pronteff.com',
-                        pass: 'iufhppuqnqmsqocv',
+                        user: 'no-reply@pronteff.com',
+                        pass: 'Welcome@1234',
                     }
 
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vishal@pronteff.com', // sender address
+                    from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Prontify Request to change the password', // Subject line
                     html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
@@ -151,14 +151,14 @@ function Util() {
                 let transporter = nodemailer.createTransport({
                     service: 'pronteff',
                     auth: {
-                        user: 'vishal92@pronteff.com',
-                        pass: 'iufhppuqnqmsqocv',
+                        user: 'no-reply@pronteff.com',
+                        pass: 'Welcome@1234',
                     }
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vishal@pronteff.com', // sender address
+                    from: 'no-reply@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
                     subject: `Timesheet rejected
                    
@@ -213,14 +213,14 @@ function Util() {
                 let transporter = nodemailer.createTransport({
                     service: 'pronteff',
                     auth: {
-                        user: 'vishal@pronteff.com',
-                        pass: 'iufhppuqnqmsqocv',
+                        user: 'no-reply@pronteff.com',
+                        pass: 'Welcome@1234',
                     }
                 });
 
                 // setup email data with unicode symbols
                 let mailOptions = {
-                    from: 'vishal@pronteff.com', // sender address
+                    from: 'no-reply@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
                     subject: `Timesheet aprroved
                   
@@ -372,89 +372,89 @@ function Util() {
 
 
     this.calculateWorkedHours = async function (data) {
-    //     console.log('====================================')
-    //     console.log(data)
-    //     console.log('====================================')
+        //     console.log('====================================')
+        //     console.log(data)
+        //     console.log('====================================')
 
-    //     var prodhrd = "00:00:00";
-    //     for (let i = 0; i < data.length; i++) {
+        //     var prodhrd = "00:00:00";
+        //     for (let i = 0; i < data.length; i++) {
 
-    //         var conprodArr = data[i].task_total_time;
-    //         prodhrdArr = prodhrd.split(":");
-    //         conprodArr = conprodArr.split(":");
-    //         var hh1 = parseInt(prodhrdArr[0]) + parseInt(conprodArr[0]);
-    //         var mm1 = parseInt(prodhrdArr[1]) + parseInt(conprodArr[1]);
-    //         var ss1 = parseInt(prodhrdArr[2]) + parseInt(conprodArr[2]);
+        //         var conprodArr = data[i].task_total_time;
+        //         prodhrdArr = prodhrd.split(":");
+        //         conprodArr = conprodArr.split(":");
+        //         var hh1 = parseInt(prodhrdArr[0]) + parseInt(conprodArr[0]);
+        //         var mm1 = parseInt(prodhrdArr[1]) + parseInt(conprodArr[1]);
+        //         var ss1 = parseInt(prodhrdArr[2]) + parseInt(conprodArr[2]);
 
-    //         if (ss1 > 59) {
-    //             var ss2 = ss1 % 60;
-    //             var ssx = ss1 / 60;
-    //             var ss3 = parseInt(ssx);//add into min
-    //             var mm1 = parseInt(mm1) + parseInt(ss3);
-    //             var ss1 = ss2;
-    //         }
-    //         if (mm1 > 59) {
-    //             var mm2 = mm1 % 60;
-    //             var mmx = mm1 / 60;
-    //             var mm3 = parseInt(mmx);//add into hour
-    //             var hh1 = parseInt(hh1) + parseInt(mm3);
-    //             var mm1 = mm2;
-    //         }
-    //         var finaladd = hh1 + ':' + mm1 + ':' + ss1;
-    //         prodhrd = finaladd
+        //         if (ss1 > 59) {
+        //             var ss2 = ss1 % 60;
+        //             var ssx = ss1 / 60;
+        //             var ss3 = parseInt(ssx);//add into min
+        //             var mm1 = parseInt(mm1) + parseInt(ss3);
+        //             var ss1 = ss2;
+        //         }
+        //         if (mm1 > 59) {
+        //             var mm2 = mm1 % 60;
+        //             var mmx = mm1 / 60;
+        //             var mm3 = parseInt(mmx);//add into hour
+        //             var hh1 = parseInt(hh1) + parseInt(mm3);
+        //             var mm1 = mm2;
+        //         }
+        //         var finaladd = hh1 + ':' + mm1 + ':' + ss1;
+        //         prodhrd = finaladd
 
-    //     }
+        //     }
 
-    //     console.log('=========finaladd================')
-    //     console.log(finaladd)
-    //     console.log('====================================')
-    //     return finaladd
+        //     console.log('=========finaladd================')
+        //     console.log(finaladd)
+        //     console.log('====================================')
+        //     return finaladd
 
-    // }
+        // }
 
 
-    var start_time = "00:00:00";
-    for (let k = 0; k < data.length; k++) {
+        var start_time = "00:00:00";
+        for (let k = 0; k < data.length; k++) {
 
-    var times = [ 0, 0, 0 ]
-  var max = times.length
+            var times = [0, 0, 0]
+            var max = times.length
 
-  var a = (start_time || '').split(':')
-  var b = (data[k].task_total_time || '').split(':')
+            var a = (start_time || '').split(':')
+            var b = (data[k].task_total_time || '').split(':')
 
-  // normalize time values
-  for (let i = 0; i < max; i++) {
-    a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i])
-    b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i])
-  }
+            // normalize time values
+            for (let i = 0; i < max; i++) {
+                a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i])
+                b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i])
+            }
 
-  // store time values
-  for (var i = 0; i < max; i++) {
-    times[i] = a[i] + b[i]
-  }
+            // store time values
+            for (var i = 0; i < max; i++) {
+                times[i] = a[i] + b[i]
+            }
 
-  var hours = times[0]
-  var minutes = times[1]
-  var seconds = times[2]
+            var hours = times[0]
+            var minutes = times[1]
+            var seconds = times[2]
 
-  if (seconds >= 60) {
-    var m = (seconds / 60) << 0
-    minutes += m
-    seconds -= 60 * m
-  }
+            if (seconds >= 60) {
+                var m = (seconds / 60) << 0
+                minutes += m
+                seconds -= 60 * m
+            }
 
-  if (minutes >= 60) {
-    var h = (minutes / 60) << 0
-    hours += h
-    minutes -= 60 * h
-  }
+            if (minutes >= 60) {
+                var h = (minutes / 60) << 0
+                hours += h
+                minutes -= 60 * h
+            }
 
-  finaladd = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
-  start_time = finaladd
-}
-return finaladd
+            finaladd = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
+            start_time = finaladd
+        }
+        return finaladd
 
-}
+    }
 
 
 

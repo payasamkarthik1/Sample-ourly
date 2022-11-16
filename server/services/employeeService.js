@@ -275,7 +275,7 @@ function AdminService(objectCollection) {
             flag
         );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+        const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -312,7 +312,7 @@ function AdminService(objectCollection) {
             flag
         );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+        const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -393,7 +393,7 @@ function AdminService(objectCollection) {
             flag
         );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+        const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -465,7 +465,7 @@ function AdminService(objectCollection) {
             flag
         );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+        const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -490,7 +490,7 @@ function AdminService(objectCollection) {
             flag
         );
 
-        const queryString = util.getQueryString('get_leads', paramsArr);
+        const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
