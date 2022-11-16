@@ -122,7 +122,7 @@ function Util() {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Prontify Request to change the password', // Subject line
-                    html: `<a href="http://183.82.113.110:4179/forgotpass">Click to Change Password</a>`
+                    html: `<a href="http://192.168.0.251:4179/forgotpass">Click to Change Password</a>`
 
                     // html body
 
