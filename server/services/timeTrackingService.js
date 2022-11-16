@@ -1332,7 +1332,7 @@ function TimeTrackingService(objectCollection) {
             console.log('==============entered EL=============')
             console.log("enterrr")
             console.log('====================================')
-            if (request.employee_id.length != 0) {
+            if (request.employees.length != 0) {
                 data = request.employee_id
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
