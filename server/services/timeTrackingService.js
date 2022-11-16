@@ -1294,10 +1294,8 @@ function TimeTrackingService(objectCollection) {
         let filterData = []
 
         if (request.role_id == 4) {
-
             request.lead_assigned_employee_id = request.employee_id
-
-            if (request.employees.length != 0 && request.flag == 1) {
+            if (request.employee_id.length != 0 && request.flag == 1) {
                 // const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 // for (let i = 0; i < data.length; i++) {
                 //     request.employees.filter(function (data1) {
@@ -1308,14 +1306,14 @@ function TimeTrackingService(objectCollection) {
                 // }
                 // data = filterData
 
-                data = request.employees
+                data = request.employee_id
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
 
                 }
 
-            } else if (request.employees.length != 0 && request.flag == 2) {
+            } else if (request.employee_id.length != 0 && request.flag == 2) {
                 request.role_id = 6
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 for (let i = 0; i < data.length; i++) {
@@ -1340,8 +1338,8 @@ function TimeTrackingService(objectCollection) {
 
         }
         else if (request.role_id == 6) {
-            if (request.employees.length != 0) {
-                data = request.employees
+            if (request.employee_id.length != 0) {
+                data = request.employee_id
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
@@ -1360,8 +1358,7 @@ function TimeTrackingService(objectCollection) {
             error = false
         }
         else if (request.role_id === 2 || request.role_id === 5) {
-
-            if (request.employees.length != 0 && request.flag == 1) {
+            if (request.employee_id.length != 0 && request.flag == 1) {
             
             
                 if (request.employees.length != 0) {
@@ -1390,7 +1387,6 @@ function TimeTrackingService(objectCollection) {
 
                     }
 
-
                 } else {
                     request.lead_assigned_employee_id = request.employee_id
                     const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
@@ -1403,18 +1399,24 @@ function TimeTrackingService(objectCollection) {
                 }
                 error = false
                 responseData = obj1
-            }else if(request.employees.length != 0 && request.flag == 2){
-
+            }else if(request.employee_id.length != 0 && request.flag == 2){
             }else{
-                
+                request.lead_assigned_employee_id = request.employee_id
+                const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getList(request, data[i], 7)
+                    Array.prototype.push.apply(obj1, data1);
+                }
+
             }
-
-
-            data = {}
-            data.employee_id = request.employee_id
-            const [err, data1] = await this.getList(request, data, 8)
-            responseData = data1
+            responseData = obj1
             error = false
+
+            // data = {}
+            // data.employee_id = request.employee_id
+            // const [err, data1] = await this.getList(request, data, 8)
+            // responseData = data1
+            // error = false
         }
         return [error, responseData];
     }
