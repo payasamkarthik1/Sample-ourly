@@ -220,8 +220,6 @@ function AnalyzeServices(objectCollection) {
 
                         }, []);
 
-
-
                         //get total projects total hours 
                         flag = 3
                         const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
@@ -237,9 +235,7 @@ function AnalyzeServices(objectCollection) {
                         const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
                         topProject = data4[0]
 
-
                         // delete data
-                    
                         await this.dashboardDataCalculation(request, id, 5)
 
                         responseData.push({ total_time: totalTime, top_project: topProject })

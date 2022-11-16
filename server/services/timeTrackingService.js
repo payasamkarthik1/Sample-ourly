@@ -854,8 +854,8 @@ function TimeTrackingService(objectCollection) {
         }
 
     };
- 
-   this.getAllProjectsTimesheetWeekly = async function (request) {
+
+    this.getAllProjectsTimesheetWeekly = async function (request) {
         let responseData = [],
             error = true;
 
@@ -1358,12 +1358,9 @@ function TimeTrackingService(objectCollection) {
             error = false
         }
         else if (request.role_id === 2 || request.role_id === 5) {
-            if (request.employee_id.length != 0 && request.flag == 1) {
-            
-            
-                if (request.employees.length != 0) {
+            if (request.employee_id.length != 0 && request.flag == 2) {
+                if (request.employee_id.length != 0) {
                     //know lead or emerging lead
-
                     const [err, data] = await this.employeeService.getEmployeeById(request.employees[0])
                     if (data[0].role_id = 4) {
                         request.lead_assigned_employee_id = request.employee_id
@@ -1371,22 +1368,18 @@ function TimeTrackingService(objectCollection) {
                         const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                         for (let i = 0; i < data.length; i++) {
                             const [err, data1] = await this.getList(request, data[i], 7)
-                            Array.prototype.push.apply(obj1, data1);
+                            Array.prototype.push.apply(filterData, data1);
                         }
-
                     } else if (data[0].role_id = 6) {
                         request.role_id = 6
                         const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                         for (let i = 0; i < data.length; i++) {
-
                             const [err, data1] = await this.getList(request, data[i], 7)
                             Array.prototype.push.apply(filterData, data1);
-
                         }
                         obj1 = filterData
 
                     }
-
                 } else {
                     request.lead_assigned_employee_id = request.employee_id
                     const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
@@ -1399,15 +1392,21 @@ function TimeTrackingService(objectCollection) {
                 }
                 error = false
                 responseData = obj1
-            }else if(request.employee_id.length != 0 && request.flag == 2){
-            }else{
+            } else if (request.employee_id.length != 0 && request.flag == 1) {
+                data = request.employee_id
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getList(request, data[i], 7)
+                    Array.prototype.push.apply(obj1, data1);
+
+                }
+
+            } else {
                 request.lead_assigned_employee_id = request.employee_id
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
-
             }
             responseData = obj1
             error = false
