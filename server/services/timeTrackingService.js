@@ -1329,6 +1329,9 @@ function TimeTrackingService(objectCollection) {
 
         }
         else if (request.role_id == 6) {
+            console.log('==============entered EL=============')
+            console.log("enterrr")
+            console.log('====================================')
             if (request.employee_id.length != 0) {
                 data = request.employee_id
                 for (let i = 0; i < data.length; i++) {
@@ -1337,6 +1340,9 @@ function TimeTrackingService(objectCollection) {
 
                 }
             } else {
+                console.log('==============entered EL=============')
+                console.log("default all")
+                console.log('====================================')
                 request.lead_assigned_employee_id = request.employee_id
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 console.log('=====emp under emerging lead===========')
