@@ -1339,6 +1339,9 @@ function TimeTrackingService(objectCollection) {
             } else {
                 request.lead_assigned_employee_id = request.employee_id
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                console.log('=====emp under emerging lead===========')
+                console.log(data)
+                console.log('====================================')
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
