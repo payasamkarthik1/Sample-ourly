@@ -333,12 +333,14 @@ function AnalyzeServices(objectCollection) {
                         // delete data
                         await this.dashboardDataCalculation(request, id, 5)
 
+                        responseData.push({ total_time: totalTime, top_project: topProject })
+                        responseData.push(newArray)
+                        responseData.push(overallTotalTime)
+                        responseData.push(overallProjects)
+
                     }
 
-                    responseData.push({ total_time: totalTime, top_project: topProject })
-                    responseData.push(newArray)
-                    responseData.push(overallTotalTime)
-                    responseData.push(overallProjects)
+                 
                     error = false
                     // responseData = data
                     return [error, responseData];
