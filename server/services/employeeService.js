@@ -359,7 +359,9 @@ function AdminService(objectCollection) {
                             data.push({ groups })
                         }
                     }
-
+                    console.log('========ovvvvvvvvvvvvvvvvvvv==========')
+                    console.log(data)
+                    console.log('====================================')
 
                     responseData = data
                     error = false
