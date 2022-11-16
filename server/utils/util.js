@@ -122,7 +122,7 @@ function Util() {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Prontify Request to change the password', // Subject line
-                    html: `<a href="http://192.168.0.217:3000/forgotpass">Click to Change Password</a>`
+                    html: `<a href="http://183.82.113.110:4179/forgotpass">Click to Change Password</a>`
 
                     // html body
 
@@ -152,13 +152,17 @@ function Util() {
 
         return new Promise((resolve, reject) => {
             try {
-                let transporter = nodemailer.createTransport({
-                    service: 'pronteff',
+                var smtpConfig = {
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true, // use SSL
                     auth: {
                         user: 'no-reply@pronteff.com',
-                        pass: 'Welcome@1234',
+                        pass: 'Welcome@1234'
                     }
-                });
+                };
+
+                let transporter = nodemailer.createTransport(smtpConfig);
 
                 // setup email data with unicode symbols
                 let mailOptions = {
@@ -214,13 +218,16 @@ function Util() {
 
         return new Promise((resolve, reject) => {
             try {
-                let transporter = nodemailer.createTransport({
-                    service: 'pronteff',
+                var smtpConfig = {
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true, // use SSL
                     auth: {
                         user: 'no-reply@pronteff.com',
-                        pass: 'Welcome@1234',
+                        pass: 'Welcome@1234'
                     }
-                });
+                };
+                let transporter = nodemailer.createTransport(smtpConfig);
 
                 // setup email data with unicode symbols
                 let mailOptions = {
