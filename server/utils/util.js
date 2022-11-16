@@ -103,15 +103,19 @@ function Util() {
 
         return new Promise((resolve, reject) => {
             try {
-                let transporter = nodemailer.createTransport({
 
-                    service: 'pronteff',
+
+                var smtpConfig = {
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true, // use SSL
                     auth: {
                         user: 'no-reply@pronteff.com',
-                        pass: 'Welcome@1234',
+                        pass: 'Welcome@1234'
                     }
+                };
 
-                });
+                let transporter = nodemailer.createTransport(smtpConfig);
 
                 // setup email data with unicode symbols
                 let mailOptions = {

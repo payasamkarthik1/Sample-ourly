@@ -1296,16 +1296,6 @@ function TimeTrackingService(objectCollection) {
         if (request.role_id == 4) {
             request.lead_assigned_employee_id = request.employee_id
             if (request.employee_id.length != 0 && request.flag == 1) {
-                // const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-                // for (let i = 0; i < data.length; i++) {
-                //     request.employees.filter(function (data1) {
-                //         if (data1.employee_id == data[i].employee_id) {
-                //             filterData.push(data1)
-                //         }
-                //     })
-                // }
-                // data = filterData
-
                 data = request.employee_id
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
@@ -1313,7 +1303,8 @@ function TimeTrackingService(objectCollection) {
 
                 }
 
-            } else if (request.employee_id.length != 0 && request.flag == 2) {
+            }
+            else if (request.employee_id.length != 0 && request.flag == 2) {
                 request.role_id = 6
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 for (let i = 0; i < data.length; i++) {
@@ -1450,9 +1441,6 @@ function TimeTrackingService(objectCollection) {
         }
         return [error, responseData];
     }
-
-
-
 
     this.getOnApproveOnRejectList = async function (request) {
 
