@@ -58,7 +58,7 @@ function AnalyzeServices(objectCollection) {
         if (data1.length != 0) {
             console.log("entttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt looop");
             for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request,data1[i])
+                const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
             }
             console.log('====================EMPSSS DATAAAAAAAAAAAAAAAAA=============');
@@ -141,7 +141,7 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-    this.getleadMyTeamData = async function (request,data) {
+    this.getleadMyTeamData = async function (request, data) {
         let responseData = [],
             error = true;
         // if flag =2 get my team dashboard overview for lead
@@ -1322,40 +1322,42 @@ function AnalyzeServices(objectCollection) {
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
-                if (empsData.length != 0) {
-                    const [err1, data] = await this.getFilterReportSummary(request, empsData)
-
-                    // total time
-                    idGenerate = await util.getRandomNumericId()
-                    id = idGenerate
-                    totalTime = await util.calculateWorkedHours(data)
-
-                    //insert data into table for calce
-
-                    for (i = 0; i < data.length; i++) {
-                        flag = 1
-                        const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                    }
-                    //get total projects total hours 
-                    flag = 3
-                    const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                    overallProjects = data3
-
-                    //over all total_time daywise
-                    flag = 6
-                    const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                    overallTotalTime = data5
-
-                    // delete data
-                    flag = 5
-                    await this.dashboardDataCalculation(request, id, flag)
-
-                    responseData.push({ total_time: totalTime })
-                    responseData.push(overallTotalTime)
-                    responseData.push(overallProjects)
-
-                }
             }
+
+            if (empsData.length != 0) {
+                const [err1, data] = await this.getFilterReportSummary(request, empsData)
+
+                // total time
+                idGenerate = await util.getRandomNumericId()
+                id = idGenerate
+                totalTime = await util.calculateWorkedHours(data)
+
+                //insert data into table for calce
+
+                for (i = 0; i < data.length; i++) {
+                    flag = 1
+                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
+                }
+                //get total projects total hours 
+                flag = 3
+                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+                overallProjects = data3
+
+                //over all total_time daywise
+                flag = 6
+                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
+                overallTotalTime = data5
+
+                // delete data
+                flag = 5
+                await this.dashboardDataCalculation(request, id, flag)
+
+                responseData.push({ total_time: totalTime })
+                responseData.push(overallTotalTime)
+                responseData.push(overallProjects)
+
+            }
+
 
 
             error = false
