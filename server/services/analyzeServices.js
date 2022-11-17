@@ -693,6 +693,9 @@ function AnalyzeServices(objectCollection) {
                 filterClients1 = data
 
             } if (client_id.length != 0) {
+                console.log('======entered clint= 5=================')
+                console.log("entered")
+                console.log('====================================')
                 for (let i = 0; i < client_id.length; i++) {
                     data.filter(function (data) {
                         if (data.client_id == client_id[i]) {
@@ -700,6 +703,9 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
+                console.log('========filterClients1============')
+                console.log(filterClients1)
+                console.log('====================================')
             } if (project_id.length == 0) {
                 console.log("enter project 0");
                 filterProjects1 = filterClient1
@@ -745,10 +751,6 @@ function AnalyzeServices(objectCollection) {
             return [false, data]
 
         }
-
-
-
-
     }
 
     this.getReportSummary = async function (request) {
