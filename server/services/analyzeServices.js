@@ -1378,6 +1378,9 @@ function AnalyzeServices(objectCollection) {
                 flag = 3
                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                 overallProjects = data3
+                console.log('========overallProjects==========')
+                console.log(overallProjects)
+                console.log('====================================')
 
                 //over all total_time daywise
                 flag = 6
@@ -1388,7 +1391,7 @@ function AnalyzeServices(objectCollection) {
                 flag = 5
                 await this.dashboardDataCalculation(request, id, flag)
 
-                responseData.push({ total_time: totalTime })
+                responseData.push({total_time: totalTime })
                 responseData.push(overallTotalTime)
                 responseData.push(overallProjects)
 
@@ -1398,6 +1401,10 @@ function AnalyzeServices(objectCollection) {
 
             error = false
             // responseData = data
+            console.log('======LASTTTT==============');
+            console.log(responseData);
+            console.log('====================================');
+
             return [error, responseData];
 
 
