@@ -319,16 +319,20 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (request.role_id == 2 || request.role_id == 5) {
-                        data.map((dat) => {
-                            dat.isChecked = false
-                        })
+                        data.forEach(object => {
+                            object.isChecked = false;
+                          });
+
                         //get grpups for admin and superlead
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
 
                         if (data1.length != 0) {
-                            data1.map((da) => {
-                                da.isChecked = false
-                            })
+
+                            data1.forEach(object => {
+                                object.isChecked = false;
+                              });
+
+
                             groups = data1
                             data.push({ groups })
                         }
@@ -358,9 +362,9 @@ function EmployeeServices(objectCollection) {
                             console.log('====================================')
 
 
-                            obj1.map((dat) => {
-                                dat.isChecked = false
-                            })
+                            obj1.forEach(object => {
+                                object.isChecked = false;
+                              });
 
                         }
                         data = obj1;
@@ -368,9 +372,10 @@ function EmployeeServices(objectCollection) {
 
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
                         if (data1.length != 0) {
-                            data1.map((da) => {
-                                da.isChecked = false
-                            })
+                        
+                            data1.forEach(object => {
+                                object.isChecked = false;
+                              });
                             groups = data1
                             data.push({ groups })
                         }
