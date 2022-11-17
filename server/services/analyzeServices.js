@@ -52,20 +52,24 @@ function AnalyzeServices(objectCollection) {
 
         request.lead_assigned_employee_id = request.employee_id
         const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
-        console.log('=======get emp=================')
+        console.log('======ojsjswsjws=get emp=================')
         console.log(data1)
         console.log('====================================')
         if (data1.length != 0) {
+            console.log("entttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt looop");
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(data1[i], request)
                 Array.prototype.push.apply(empsData, data2);
             }
-            console.log('=======DATA=======');
+            console.log('====================EMPSSS DATAAAAAAAAAAAAAAAAA=============');
             console.log(empsData);
             console.log('====================================');
             let data = []
             data = empsData
             if (data.length != 0) {
+                console.log('============ENTEREDD=======')
+                console.log(data)
+                console.log('====================================')
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate
