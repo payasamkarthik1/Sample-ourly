@@ -752,7 +752,7 @@ function AnalyzeServices(objectCollection) {
 
         //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
         if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getadminSuperLeadMyTeamReportSummary(request)
+            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummary(request)
             error = err1
             responseData = data1
             //role_id = 4 for lead , get lead (my team) dashboard
