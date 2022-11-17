@@ -11,7 +11,6 @@ function EmployeeController(objectCollection) {
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
-    const adminServices = new AdminServices(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const projectService = new ProjectService(objectCollection)
     const validations = new Validations(objectCollection)

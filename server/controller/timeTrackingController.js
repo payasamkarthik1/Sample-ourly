@@ -12,7 +12,6 @@ function TimeTrackingController(objectCollection) {
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
-    const adminServices = new AdminServices(objectCollection)
     const projectService = new ProjectService(objectCollection)
     const timeTrackingService = new TimeTrackingService(objectCollection)
     const validations = new Validations(objectCollection)
