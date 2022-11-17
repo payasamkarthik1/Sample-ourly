@@ -3,8 +3,8 @@ let mysql = require('mysql');
 
 
 function Dbinitiate() {
-    if (mode === 'local') {
-        let i = 0
+    if (mode === 'staging') {
+        let i = 1
         var connLocal = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -22,12 +22,21 @@ function Dbinitiate() {
             database: global.config.database,
         });
     }
+    else if (mode === 'local') {
+        let i = 0
+        var connLocal = mysql.createPool({
+            multipleStatements: global.config.multipleStatements,
+            host: global.config.host,
+            user: global.config.user,
+            password: global.config.password,
+            database: global.config.database,
+        });
+    }
 
     this.executeQuery = function (flag, queryString, request) {
         return new Promise((resolve, reject) => {
             let conPool;
             switch (0) {
-
                 case 0:
                     conPool = connLocal;
                     break;
