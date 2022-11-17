@@ -38,7 +38,7 @@ function Util() {
     }
 
     this.getRandomNumericId = function (format) {
-        let id = Math.floor(Math.random() * 1000)
+        let id = Math.floor(Math.random() * 10000)
         return id;
     }
 
