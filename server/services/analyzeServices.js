@@ -1322,11 +1322,8 @@ function AnalyzeServices(objectCollection) {
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
-
-                let data = []
-                data = empsData
-                if (data.length != 0) {
-                    const [err1, data] = await this.getFilterReportSummary(request, data)
+                if (empsData.length != 0) {
+                    const [err1, data] = await this.getFilterReportSummary(request, empsData)
 
                     // total time
                     idGenerate = await util.getRandomNumericId()
