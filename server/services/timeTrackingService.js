@@ -1233,59 +1233,6 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    // this.getApprovalsList = async function (request) {
-
-    //     let responseData = [],
-    //         error = true;
-    //     if (request.role_id === 4) {
-    //         const paramsArr = new Array(
-    //             request.employee_id,
-    //             request.role_id,
-    //             0,
-    //             request.first_week_day,
-    //             request.last_week_day,
-    //             3
-    //         );
-    //         const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-
-    //         }
-    //     } else if (request.role_id === 2 || request.role_id === 5) {
-
-    //         const paramsArr = new Array(
-    //             request.employee_id,
-    //             request.role_id,
-    //             0,
-    //             request.first_week_day,
-    //             request.last_week_day,
-    //             4
-    //         );
-    //         const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-
-    //         }
-    //     }
-    //     return [error, responseData];
-    // }
-
     this.getApprovalsList = async function (request) {
         let responseData = []
         error = true;
@@ -1298,7 +1245,7 @@ function TimeTrackingService(objectCollection) {
             if (request.employees.length != 0 && request.flag == 1) {
                 data = request.employees
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
             }
@@ -1308,9 +1255,9 @@ function TimeTrackingService(objectCollection) {
                 emergLeads = request.employees
                 for (let j = 0; j < emergLeads.length; j++) {
                     request.lead_assigned_employee_id = emergLeads[j]
-                    const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                    const [err, data] = await employeeService.getEmpsUnderEmergingLead(request)
                     for (let i = 0; i < data.length; i++) {
-                        const [err, data1] = await this.getList(request, data[i], 7)
+                        const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                         Array.prototype.push.apply(filterData, data1);
                     }
                 }
@@ -1320,7 +1267,7 @@ function TimeTrackingService(objectCollection) {
                 request.lead_assigned_employee_id = request.employee_id
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
 
@@ -1336,9 +1283,8 @@ function TimeTrackingService(objectCollection) {
             if (request.employees.length != 0) {
                 data = request.employees
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
-
                 }
             } else {
                 console.log('==============entered EL=============')
@@ -1350,7 +1296,7 @@ function TimeTrackingService(objectCollection) {
                 console.log(data)
                 console.log('====================================')
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
 
@@ -1362,7 +1308,7 @@ function TimeTrackingService(objectCollection) {
             if (request.employees.length != 0 && request.flag == 1) {
                 data = request.employees
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
             } else if (request.employees.length != 0 && request.flag == 2) {
@@ -1395,11 +1341,10 @@ function TimeTrackingService(objectCollection) {
                     }
                     return false;
                 });
-                console.log(uniqueEmps);
 
                 //get approve list 
                 for (let i = 0; i < uniqueEmps.length; i++) {
-                    const [err, data1] = await this.getList(request, uniqueEmps[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
 
@@ -1407,7 +1352,7 @@ function TimeTrackingService(objectCollection) {
                 request.lead_assigned_employee_id = request.employee_id
                 const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
                 for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getList(request, data[i], 7)
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
                 }
             }
@@ -1416,14 +1361,11 @@ function TimeTrackingService(objectCollection) {
             error = false
 
         }
-
         return [error, responseData];
 
     }
 
-
-
-    this.getList = async function (request, data, flag) {
+    this.getListFromApprovals = async function (request, data, flag) {
 
         let responseData = [],
             error = true;

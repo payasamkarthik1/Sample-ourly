@@ -46,7 +46,7 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getleadMyTeamDasboardOverview = async function (request) {
-        ``
+
         let responseData = []
         let empsData = [],
             error = true;
@@ -124,9 +124,8 @@ function AnalyzeServices(objectCollection) {
                 const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
                 topProject = data4[0]
 
-
                 // delete data
-
+                flag = 5
                 await this.dashboardDataCalculation(request, id, 5)
 
 
@@ -1392,11 +1391,11 @@ function AnalyzeServices(objectCollection) {
                 flag = 5
                 await this.dashboardDataCalculation(request, id, flag)
 
-                responseData.push({total_time: totalTime })
+                responseData.push({ total_time: totalTime })
                 responseData.push(overallTotalTime)
                 responseData.push(overallProjects)
 
-                
+
             }
 
 

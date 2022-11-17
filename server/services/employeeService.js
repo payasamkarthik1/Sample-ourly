@@ -291,6 +291,7 @@ function EmployeeServices(objectCollection) {
     }
 
 
+    //get all emps assign under lead,emerging lead, admin, superlead based on role
     this.getEmpsAssignUnderLeads = async function (request) {
 
         let responseData = [],
@@ -318,9 +319,16 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (request.role_id == 2 || request.role_id == 5) {
+                        data.map((dat) => {
+                            dat.isChecked = false
+                        })
                         //get grpups for admin and superlead
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
+
                         if (data1.length != 0) {
+                            data1.map((da) => {
+                                da.isChecked = false
+                            })
                             groups = data1
                             data.push({ groups })
                         }
@@ -349,12 +357,20 @@ function EmployeeServices(objectCollection) {
                             console.log(obj1)
                             console.log('====================================')
 
+
+                            obj1.map((dat) => {
+                                dat.isChecked = false
+                            })
+
                         }
                         data = obj1;
                         error = false
 
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
                         if (data1.length != 0) {
+                            data1.map((da) => {
+                                da.isChecked = false
+                            })
                             groups = data1
                             data.push({ groups })
                         }
@@ -374,6 +390,7 @@ function EmployeeServices(objectCollection) {
         }
     }
 
+    //get all emps assign under lead,emerging lead, admin, superlead based on role without groups
     this.getEmpsAssignUnderLeadsWithoutGroups = async function (request) {
 
         let responseData = [],
@@ -400,7 +417,6 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     if (request.role_id == 4) {
                         obj1 = []
                         obj2 = []
@@ -457,6 +473,7 @@ function EmployeeServices(objectCollection) {
         }
     }
 
+    //get emps under emerging lead
     this.getEmpsUnderEmergingLead = async function (request) {
 
         let responseData = [],
@@ -482,6 +499,7 @@ function EmployeeServices(objectCollection) {
         }
     }
 
+    //get group under lead,admin,superlead
     this.getGroupsUnderLeads = async function (request, flag) {
 
         let responseData = [],
