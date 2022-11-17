@@ -1388,8 +1388,8 @@ function AnalyzeServices(objectCollection) {
                 overallTotalTime = data5
 
                 // delete data
-                flag = 5
-                await this.dashboardDataCalculation(request, id, flag)
+                // flag = 5
+                // await this.dashboardDataCalculation(request, id, flag)
 
                 responseData.push({total_time: totalTime })
                 responseData.push(overallTotalTime)
