@@ -121,7 +121,7 @@ function AnalyzeServices(objectCollection) {
 
 
                 // delete data
-    
+
                 await this.dashboardDataCalculation(request, id, 5)
 
 
@@ -336,7 +336,7 @@ function AnalyzeServices(objectCollection) {
 
                     }
 
-                 
+
                     error = false
                     // responseData = data
                     return [error, responseData];
@@ -615,8 +615,10 @@ function AnalyzeServices(objectCollection) {
     //-------------------------reports---------------------
 
     this.getFilterReportSummary = async function (request, data) {
+        let responseData = []
+        error = true
 
-        console.log('====================================')
+        console.log('======DATA CAME FOR FILTER==============')
         console.log(data)
         console.log('====================================')
 
@@ -630,16 +632,12 @@ function AnalyzeServices(objectCollection) {
         status_id = request.status_ids
 
         if (client_id.length == 0 && project_id.length == 0 && tag_id.length == 0 && status_id.length == 0) {
+            console.log('===========ENTERED ALL FILTERES NOT SELECTED DAFAULT==============')
+            console.log('==========DATA==============')
+            console.log(data)
             console.log('====================================')
-            console.log("entered all empty")
-            console.log('====================================')
-            // data = data
-            return [false, data]
-
         } else if (client_id.length != 0 && project_id.length != 0 && tag_id.length != 0 && status_id.length != 0) {
-            console.log('====================================')
-            console.log("entered all not empty")
-            console.log('====================================')
+            console.log('=========ENTERED ALL FILTERES SELECTED=============')
             if (client_id != []) {
                 for (let i = 0; i < client_id.length; i++) {
                     data.filter(function (data) {
@@ -681,21 +679,17 @@ function AnalyzeServices(objectCollection) {
                 console.log(filterStatus)
                 console.log('====================================')
             }
-            return [false, filterStatus1]
-        } else {
-            console.log('====================================')
-            console.log("entered any empty")
-            console.log(project_id.length != 0)
+            data = filterStatus1;
+            console.log('=========FILTERED DATA==============')
+            console.log(data)
             console.log('====================================')
 
+        } else {
+            console.log('===========ENTERED ANY ONE FILTER SELECTED=============')
             if (client_id.length == 0) {
-                console.log("enter client 0");
                 filterClients1 = data
 
             } if (client_id.length != 0) {
-                console.log('======entered clint= 5=================')
-                console.log("entered")
-                console.log('====================================')
                 for (let i = 0; i < client_id.length; i++) {
                     data.filter(function (data) {
                         if (data.client_id == client_id[i]) {
@@ -703,11 +697,7 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
-                console.log('========filterClients1============')
-                console.log(filterClients1)
-                console.log('====================================')
             } if (project_id.length == 0) {
-                console.log("enter project 0");
                 filterProjects1 = filterClients1
             } if (project_id.length != 0) {
 
@@ -720,7 +710,6 @@ function AnalyzeServices(objectCollection) {
                 }
 
             } if (tag_id.length == 0) {
-                console.log("enter tag 0");
                 filterTags1 = filterProjects1
             } if (tag_id.length != 0) {
                 for (let i = 0; i < tag_id.length; i++) {
@@ -731,7 +720,6 @@ function AnalyzeServices(objectCollection) {
                     })
                 }
             } if (status_id.length == 0) {
-                console.log("------------------enter status 0");
                 filterStatus1 = filterTags1
             } if (status_id.length != 0) {
                 for (let i = 0; i < status_id.length; i++) {
@@ -742,15 +730,16 @@ function AnalyzeServices(objectCollection) {
                     })
                 }
             }
+
             data = filterStatus1
-
-
-            console.log('=====filter======')
+            console.log('=====FILTER DATA==============')
             console.log(data)
             console.log('====================================')
-            return [false, data]
 
         }
+        responseData = data
+        error = false
+        return [error, responseData]
     }
 
     this.getReportSummary = async function (request) {
@@ -1314,6 +1303,7 @@ function AnalyzeServices(objectCollection) {
     this.getLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
+        let empsData = []
         let responseData = [],
             error = true;
         request.lead_assigned_employee_id = request.employee_id
