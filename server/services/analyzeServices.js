@@ -46,6 +46,7 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getleadMyTeamDasboardOverview = async function (request) {
+        ``
         let responseData = []
         let empsData = [],
             error = true;
@@ -1307,26 +1308,61 @@ function AnalyzeServices(objectCollection) {
     this.getLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
-        let empsData = []
-        let responseData = [],
+        emergEmps = []
+        empsData = []
+        responseData = [],
             error = true;
+
+
+
+        // request.lead_assigned_employee_id = request.employee_id
+        // const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+
+
+        // request.lead_assigned_employee_id = request.employee_id
+        // if (request.employees.length != 0 && request.flag == 1) {
+        //     data1 = request.employees
+        // }
+        // else if (request.employees.length != 0 && request.flag == 2) {
+        //     request.role_id = 6
+        //     let emergLeads = []
+        //     emergLeads = request.employees
+        //     for (let j = 0; j < emergLeads.length; j++) {
+        //         request.lead_assigned_employee_id = emergLeads[j]
+        //         const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+        //         Array.prototype.push.apply(emergEmps, data);
+        //     }
+        //     data1 = emergEmps
+        // }
+        // else {
+        //     request.lead_assigned_employee_id = request.employee_id
+        //     const [err, data] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+        //     data1 = data
+
+        // }
+
+
         request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
-        console.log('=======get emp=================')
-        console.log(data1)
+        const [err, data] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+        console.log('======EMPPPPPPsss========')
+        console.log(data)
         console.log('====================================')
+        data1 = data
         if (data1.length != 0) {
-            console.log('=======EEEEEEEEEEEEEEEEEE=======');
-            console.log(data1);
-            console.log('====================================');
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
             }
 
             if (empsData.length != 0) {
+                console.log('=======EMMPPPPPPPPPPPPPPP DATA========')
+                console.log(empsData)
+                console.log('====================================')
                 const [err1, data] = await this.getFilterReportSummary(request, empsData)
 
+                console.log('=======FILTERRRRRR DATA========')
+                console.log(data)
+                console.log('====================================')
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate

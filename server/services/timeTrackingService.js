@@ -1293,7 +1293,6 @@ function TimeTrackingService(objectCollection) {
         let obj1 = []
         let filterData = []
         let emps = []
-
         if (request.role_id == 4) {
             request.lead_assigned_employee_id = request.employee_id
             if (request.employees.length != 0 && request.flag == 1) {
@@ -1301,9 +1300,7 @@ function TimeTrackingService(objectCollection) {
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getList(request, data[i], 7)
                     Array.prototype.push.apply(obj1, data1);
-
                 }
-
             }
             else if (request.employees.length != 0 && request.flag == 2) {
                 request.role_id = 6
