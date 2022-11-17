@@ -58,7 +58,7 @@ function AnalyzeServices(objectCollection) {
         if (data1.length != 0) {
             console.log("entttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt looop");
             for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(data1[i], request)
+                const [err2, data2] = await this.getleadMyTeamData(request,data1[i])
                 Array.prototype.push.apply(empsData, data2);
             }
             console.log('====================EMPSSS DATAAAAAAAAAAAAAAAAA=============');
@@ -141,7 +141,7 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-    this.getleadMyTeamData = async function (data, request) {
+    this.getleadMyTeamData = async function (request,data) {
         let responseData = [],
             error = true;
         // if flag =2 get my team dashboard overview for lead
@@ -1316,6 +1316,9 @@ function AnalyzeServices(objectCollection) {
         console.log(data1)
         console.log('====================================')
         if (data1.length != 0) {
+            console.log('=======EEEEEEEEEEEEEEEEEE=======');
+            console.log(data1);
+            console.log('====================================');
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
@@ -1372,6 +1375,7 @@ function AnalyzeServices(objectCollection) {
     this.getLeadMyTeamReportDetailed = async function (request) {
         total_time = {}
         detailedData = []
+        let empsData = []
         let responseData = [],
             error = true;
         request.lead_assigned_employee_id = request.employee_id
@@ -1436,6 +1440,7 @@ function AnalyzeServices(objectCollection) {
     this.getLeadMyTeamReportWeekly = async function (request) {
         total_time = {}
         detailedData = []
+        let empsData = []
         let responseData = [],
             error = true;
         request.lead_assigned_employee_id = request.employee_id
