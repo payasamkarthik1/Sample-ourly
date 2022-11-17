@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
 
 
-function AdminService(objectCollection) {
+function EmployeeServices(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -516,4 +516,4 @@ function AdminService(objectCollection) {
 
 
 
-module.exports = AdminService;
+module.exports = EmployeeServices;
