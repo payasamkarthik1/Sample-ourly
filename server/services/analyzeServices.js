@@ -708,7 +708,7 @@ function AnalyzeServices(objectCollection) {
                 console.log('====================================')
             } if (project_id.length == 0) {
                 console.log("enter project 0");
-                filterProjects1 = filterClient1
+                filterProjects1 = filterClients1
             } if (project_id.length != 0) {
 
                 for (let i = 0; i < project_id.length; i++) {
