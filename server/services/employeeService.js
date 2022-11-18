@@ -293,7 +293,6 @@ function EmployeeServices(objectCollection) {
 
     //get all emps assign under lead,emerging lead, admin, superlead based on role
     this.getEmpsAssignUnderLeads = async function (request) {
-
         let responseData = [],
             error = true;
         groups = []
