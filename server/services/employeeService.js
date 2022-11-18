@@ -297,7 +297,7 @@ function EmployeeServices(objectCollection) {
             error = true;
         groups = []
         users = []
-        responseData1 = []
+        // responseData1 = []
         // if flag = 3 get all employess under admin and superlead
         // if flag = 4 get all employess under lead and emerging lead
 
@@ -308,7 +308,7 @@ function EmployeeServices(objectCollection) {
         } else if (request.role_id == 6) {
             flag = 4
         }
-        
+
         const paramsArr = new Array(
             request.lead_assigned_employee_id,
             flag
@@ -321,14 +321,13 @@ function EmployeeServices(objectCollection) {
                 .then(async (data) => {
                     if (request.role_id == 2 || request.role_id == 5) {
                         users = data
-                        responseData1.push({ users })
                         //get grpups for admin and superlead
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
-
                         if (data1.length != 0) {
                             groups = data1
-                            responseData1.push({ groups })
+
                         }
+                        responseData.push({ users, groups })
                     }
                     else if (request.role_id == 4) {
                         obj1 = []
@@ -357,26 +356,25 @@ function EmployeeServices(objectCollection) {
                         }
                         data = obj1;
                         error = false
-
                         users = data
-                        responseData1.push({ users })
-
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
                         if (data1.length != 0) {
                             groups = data1
-                            responseData1.push({ groups })
                         }
+
+                        responseData.push({ users, groups })
+
                     }
                     else if (request.role_id == 6) {
 
                         users = data
-                        responseData1.push({ users })
+                        responseData.push({ users })
                     }
                     console.log('========ovvvvvvvvvvvvvvvvvvv==========')
-                    console.log(responseData1)
+                    console.log(responseData)
                     console.log('====================================')
 
-                    responseData = responseData1
+                   
                     error = false
 
                 }).catch((err) => {
