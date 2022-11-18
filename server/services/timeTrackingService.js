@@ -1389,8 +1389,8 @@ function TimeTrackingService(objectCollection) {
             console.log('=====emp under emerging lead===========')
             console.log(data)
             console.log('====================================')
-            for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+            for (let i = 0; i < data[0].users.length; i++) {
+                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
                 Array.prototype.push.apply(obj1, data1);
             }
 
