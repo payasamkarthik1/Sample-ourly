@@ -296,6 +296,8 @@ function EmployeeServices(objectCollection) {
         let responseData = [],
             error = true;
         groups = []
+        users = []
+        responseData1 = []
         // if flag = 3 get all employess under admin and superlead
         // if flag = 4 get all employess under lead and emerging lead
 
@@ -318,22 +320,14 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (request.role_id == 2 || request.role_id == 5) {
-                        data.forEach(object => {
-                            object.isChecked = false;
-                          });
-
+                        users = data
+                        responseData1.push({ users })
                         //get grpups for admin and superlead
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 5)
 
                         if (data1.length != 0) {
-
-                            data1.forEach(object => {
-                                object.isChecked = false;
-                              });
-
-
                             groups = data1
-                            data.push({ groups })
+                            responseData1.push({ groups })
                         }
                     }
                     else if (request.role_id == 4) {
@@ -360,30 +354,24 @@ function EmployeeServices(objectCollection) {
                             console.log(obj1)
                             console.log('====================================')
 
-
-                            obj1.forEach(object => {
-                                object.isChecked = false;
-                              });
-
                         }
                         data = obj1;
                         error = false
 
+                        users = data
+                        responseData1.push({ users })
+
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
                         if (data1.length != 0) {
-                        
-                            data1.forEach(object => {
-                                object.isChecked = false;
-                              });
                             groups = data1
-                            data.push({ groups })
+                            responseData1.push({ groups })
                         }
                     }
                     console.log('========ovvvvvvvvvvvvvvvvvvv==========')
-                    console.log(data)
+                    console.log(responseData1)
                     console.log('====================================')
 
-                    responseData = data
+                    responseData = responseData1
                     error = false
 
                 }).catch((err) => {

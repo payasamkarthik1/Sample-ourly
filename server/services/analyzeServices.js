@@ -371,6 +371,8 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data.length != 0) {
+
+                        
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
@@ -427,6 +429,10 @@ function AnalyzeServices(objectCollection) {
                         // delete data
 
                         await this.dashboardDataCalculation(request, id, 5)
+
+
+
+
 
                         responseData.push({ total_time: totalTime, top_project: topProject })
                         responseData.push(newArray)
