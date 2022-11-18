@@ -1375,8 +1375,8 @@ function TimeTrackingService(objectCollection) {
 
             request.lead_assigned_employee_id = request.employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+            for (let i = 0; i < data[0].users.length; i++) {
+                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
                 Array.prototype.push.apply(obj1, data1);
             }
             responseData = obj1
@@ -1401,10 +1401,10 @@ function TimeTrackingService(objectCollection) {
         else if (request.role_id === 2 || request.role_id === 5) {
             request.lead_assigned_employee_id = request.employee_id
             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            for (let i = 0; i < data.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+            for (let i = 0; i < data[0].users.length; i++) {
+                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
                 Array.prototype.push.apply(obj1, data1);
-            }
+            } 
 
             responseData = obj1
             error = false

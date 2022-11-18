@@ -309,11 +309,6 @@ function EmployeeServices(objectCollection) {
             flag = 4
         }
 
-        const paramsArr = new Array(
-            request.lead_assigned_employee_id,
-            flag
-        );
-
         const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
         if (queryString !== '') {
@@ -366,6 +361,11 @@ function EmployeeServices(objectCollection) {
                             groups = data1
                             responseData1.push({ groups })
                         }
+                    }
+                    else if (request.role_id == 6) {
+
+                        users = data
+                        responseData1.push({ users })
                     }
                     console.log('========ovvvvvvvvvvvvvvvvvvv==========')
                     console.log(responseData1)
