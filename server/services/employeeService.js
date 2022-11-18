@@ -308,6 +308,11 @@ function EmployeeServices(objectCollection) {
         } else if (request.role_id == 6) {
             flag = 4
         }
+        
+        const paramsArr = new Array(
+            request.lead_assigned_employee_id,
+            flag
+        );
 
         const queryString = util.getQueryString('lead_get_leads_emps_under_lead_select', paramsArr);
 
