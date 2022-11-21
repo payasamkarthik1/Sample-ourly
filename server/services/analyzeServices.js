@@ -1346,7 +1346,7 @@ function AnalyzeServices(objectCollection) {
             let emergLeads = []
             emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
-                request.lead_assigned_employee_id = emergLeads[j]
+                request.lead_assigned_employee_id = emergLeads[j].employee_id
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
                     Array.prototype.push.apply(emps, data);
                 
@@ -1396,7 +1396,7 @@ function AnalyzeServices(objectCollection) {
             let emergLeads = []
             emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
-                request.lead_assigned_employee_id = emergLeads[j]
+                request.lead_assigned_employee_id = emergLeads[j].employee_id
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
                 for (let i = 0; i < data.length; i++) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
