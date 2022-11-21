@@ -1562,6 +1562,7 @@ function AnalyzeServices(objectCollection) {
     this.getAdminSuperLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
+        emps = []
         filteredEmps = []
         let responseData = [],
             error = true;
