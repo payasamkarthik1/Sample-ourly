@@ -738,6 +738,11 @@ function AnalyzeServices(objectCollection) {
             console.log('====================================')
 
         }
+
+
+        console.log('========hkfdhkfdfdhvfd========')
+        console.log(data)
+        console.log('====================================')
         responseData = data
         error = false
         return [error, responseData]
@@ -1423,6 +1428,11 @@ function AnalyzeServices(objectCollection) {
 
         if (empsData.length != 0) {
             const [err1, data] = await this.getFilterReportSummary(request, empsData)
+
+
+            console.log('========getFilterReportSummary===========')
+            console.log(data)
+            console.log('====================================')
             // total time
             idGenerate = await util.getRandomNumericId()
             id = idGenerate
