@@ -835,7 +835,6 @@ function AnalyzeServices(objectCollection) {
     };
 
 
-
     this.getEmployeeMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
@@ -1546,8 +1545,6 @@ function AnalyzeServices(objectCollection) {
             error = false
             // responseData = data
             return [error, responseData];
-
-            return [error, responseData];
         }
 
 
@@ -1617,7 +1614,7 @@ function AnalyzeServices(objectCollection) {
 
                                 //filter data by selected employees
                                 for (let i = 0; i < uniqueEmps.length; i++) {
-                                    data.filter(function (data) {
+                                    dat.filter(function (data) {
                                         if (data.employee_id == uniqueEmps[i].employee_id) {
                                             filterDataByEmp.push(data)
                                             // Array.prototype.push.apply(finalData, data1);
@@ -1664,7 +1661,7 @@ function AnalyzeServices(objectCollection) {
 
                                 //filter data by selected employees
                                 for (let i = 0; i < uniqueEmps.length; i++) {
-                                    data.filter(function (data) {
+                                    dat.filter(function (data) {
                                         if (data.employee_id == uniqueEmps[i].employee_id) {
                                             filterDataByEmp.push(data)
                                             // Array.prototype.push.apply(finalData, data1);
@@ -1684,7 +1681,7 @@ function AnalyzeServices(objectCollection) {
 
                             //filter data by selected employees
                             for (let i = 0; i < emps.length; i++) {
-                                data.filter(function (data) {
+                                dat.filter(function (data) {
                                     if (data.employee_id == uniqueEmps[i].employee_id) {
                                         filterDataByEmp.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
@@ -1694,10 +1691,8 @@ function AnalyzeServices(objectCollection) {
                         
                         } else {
                             const [err, emps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                            
-
                             for (let i = 0; i < emps.length; i++) {
-                                data.filter(function (data) {
+                                dat.filter(function (data) {
                                     if (data.employee_id == emps[i].employee_id) {
                                         filterDataByEmp.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
