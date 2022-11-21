@@ -1420,9 +1420,7 @@ function AnalyzeServices(objectCollection) {
             idGenerate = await util.getRandomNumericId()
             id = idGenerate
             totalTime = await util.calculateWorkedHours(data)
-
             //insert data into table for calce
-
             for (i = 0; i < data.length; i++) {
                 flag = 1
                 const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
@@ -1431,16 +1429,10 @@ function AnalyzeServices(objectCollection) {
             flag = 3
             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
             overallProjects = data3
-            console.log('========overallProjects==========')
-            console.log(overallProjects)
-            console.log('====================================')
-
             //over all total_time daywise
             flag = 6
             const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
             overallTotalTime = data5
-
-
             delete data
             flag = 5
             await this.dashboardDataCalculation(request, id, flag)
