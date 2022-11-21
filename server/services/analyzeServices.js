@@ -2,6 +2,8 @@
 
 const TimeTrackingService = require('../services/timeTrackingService')
 const EmployeeService = require('../services/employeeService')
+const LeadService = require('./leadService')
+
 
 const moment = require('moment');
 const { request } = require('express');
@@ -12,6 +14,8 @@ function AnalyzeServices(objectCollection) {
     const db = objectCollection.db;
     const timeTrackingService = new TimeTrackingService(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
+    const leadService = new LeadService(objectCollection)
+
 
     //----------------------dashboards----------------
     this.getDasboardOverview = async function (request) {
@@ -52,32 +56,23 @@ function AnalyzeServices(objectCollection) {
             error = true;
 
         request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
-        console.log('======ojsjswsjws=get emp=================')
-        console.log(data1)
-        console.log('====================================')
+        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+       
         if (data1.length != 0) {
-            console.log("entttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt looop");
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
                 Array.prototype.push.apply(empsData, data2);
             }
-            console.log('====================EMPSSS DATAAAAAAAAAAAAAAAAA=============');
-            console.log(empsData);
-            console.log('====================================');
+
             let data = []
             data = empsData
             if (data.length != 0) {
-                console.log('============ENTEREDD=======')
-                console.log(data)
-                console.log('====================================')
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate
                 totalTime = await util.calculateWorkedHours(data)
 
                 //insert data into table for calce
-
                 for (i = 0; i < data.length; i++) {
                     flag = 1
                     const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
@@ -860,8 +855,8 @@ function AnalyzeServices(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
+                .then(async (dataa) => {
+                    if (dataa.length != 0) {
                         const [err1, data] = await this.getFilterReportSummary(request, dat)
                         if (data.length != 0) {
                             // total time
@@ -895,10 +890,7 @@ function AnalyzeServices(objectCollection) {
 
                         }
                     }
-
-
                     error = false
-                    // responseData = data
                     return [error, responseData];
 
 
@@ -1347,7 +1339,7 @@ function AnalyzeServices(objectCollection) {
 
 
         request.lead_assigned_employee_id = request.employee_id
-        const [err, data] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
         console.log('======EMPPPPPPsss========')
         console.log(data)
         console.log('====================================')
@@ -1415,7 +1407,7 @@ function AnalyzeServices(objectCollection) {
         let responseData = [],
             error = true;
         request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
         console.log('=======get emp=================')
         console.log(data1)
         console.log('====================================')
@@ -1480,7 +1472,7 @@ function AnalyzeServices(objectCollection) {
         let responseData = [],
             error = true;
         request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await employeeService.getEmpsAssignUnderLeadsWithoutGroups(request)
+        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
         console.log('=======get emp=================')
         console.log(data1)
         console.log('====================================')

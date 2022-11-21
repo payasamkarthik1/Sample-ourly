@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const moment = require('moment')
 const ApprovalsService = require('./approvalsService')
 const EmployeeService = require('./employeeService')
+const LeadService = require('./leadService')
+
 
 function TimeTrackingService(objectCollection) {
 
@@ -11,6 +13,10 @@ function TimeTrackingService(objectCollection) {
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
+    const leadService = new LeadService(objectCollection)
+    const approvalsService = new ApprovalsService(objectCollection)
+
+
 
     this.timetrackingAddTaskDetailsInsert = async function (request) {
         let responseData = [],
@@ -84,7 +90,7 @@ function TimeTrackingService(objectCollection) {
                                 responseData = [{ message: "TimeEntry cannot be added,after submition for approval to lead and once approved from lead" }];
                             } else if (data2[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request)
-                                await this.addUpdateRemoveUnsubmit(request)
+                                await approvalsService.addUpdateRemoveUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
                                 error = false
                             }
@@ -808,10 +814,7 @@ function TimeTrackingService(objectCollection) {
                 request.employee_id,
                 flag
             );
-
-
             const queryString = util.getQueryString('dashboard_get_lead_my_teams_dashboard_overview_select', paramsArr);
-
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
@@ -962,9 +965,7 @@ function TimeTrackingService(objectCollection) {
 
 
 
-
-    //-----------------APPROVAls-------------------------
-
+    //----------------------approvals services------------------
 
     this.addUpdateRemoveUnsubmit = async function (request) {
         let responseData = [],
@@ -1179,61 +1180,221 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    this.getApprovalsListByStatusId = async function (request) {
 
-        let responseData = [],
-            error = true;
-        if (request.role_id === 4) {
+    this.getApprovalsList = async function (request) {
+        let responseData = []
+        error = true;
+        let data = []
+        let finalData = []
+        let emps = []
+        if (request.role_id == 4) {
+            if (request.employees.length != 0 && groups.length != 0) {
 
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                request.status_id,
-                request.first_week_day,
-                request.last_week_day,
-                1
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
+                //----single users
+                users = request.employees
+                Array.prototype.push.apply(emps, users);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+                //-----groups
+                groups = request.groups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = request.employee_id
+                        request.role_id = 4
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+
+                    } else if (data[0].role_id == 6) {
+                        request.role_id = 6
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+                    }
+                }
+
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+
+            } else if (request.employees.length != 0 && groups.length == 0) {
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+
+            } else if (request.employees.length == 0 && groups.length != 0) {
+                request.role_id = 6
+                let emergLeads = []
+                emergLeads = request.lead_assigned_employee_id
+                for (let j = 0; j < emergLeads.length; j++) {
+                    request.lead_assigned_employee_id = emergLeads[j]
+                    const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                    if (data.length != 0) {
+                        for (let i = 0; i < data.length; i++) {
+                            const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                            Array.prototype.push.apply(finalData, data1);
+                        }
+                    }
+                }
+
+            } else {
+                request.lead_assigned_employee_id = request.employee_id
+                const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
 
             }
-        } else if (request.role_id === 2 || request.role_id === 5) {
+            responseData = finalData
+            error = false
 
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                request.status_id,
-                request.first_week_day,
-                request.last_week_day,
-                2
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+        }
+        else if (request.role_id == 6) {
+            if (request.employees.length != 0) {
+                data = request.employees
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+            } else {
+                request.lead_assigned_employee_id = request.employee_id
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
 
             }
+            responseData = finalData
+            error = false
+        }
+        else if (request.role_id === 2 || request.role_id === 5) {
+            if (request.employees.length != 0 && groups.length != 0) {
+
+                //----single users
+                users = request.employees
+                Array.prototype.push.apply(emps, users);
+
+                groups = request.groups
+                //gathering all selected lead,emerging lead employees in gorups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 4
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+
+                    } else if (data[0].role_id == 6) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 6
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+                    }
+                }
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+
+                responseData = finalData
+                error = false
+
+            } else if (request.employees.length != 0 && groups.length == 0) {
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+
+            } else if (request.employees.length == 0 && groups.length != 0) {
+                groups = request.groups
+                //gathering all selected lead,emerging lead employees in gorups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 4
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+
+                    } else if (data[0].role_id == 6) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 6
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+                    }
+                }
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+               
+            } else {
+                const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+            }
+            responseData = finalData
+            error = false
         }
         return [error, responseData];
+
     }
 
-    // this.getApprovalsList = async function (request) {
+    // this.getApprovalsList1 = async function (request) {
     //     let responseData = []
     //     error = true;
     //     let data = []
@@ -1241,24 +1402,26 @@ function TimeTrackingService(objectCollection) {
     //     let filterData = []
     //     let emps = []
     //     if (request.role_id == 4) {
-    //         request.lead_assigned_employee_id = request.employee_id
-    //         if (request.employees.length != 0 && request.flag == 1) {
-    //             data = request.employees
+    //         keys = Object.keys(request);
+    //         if (request.employee_id.length != 0) {
+    //             data = request.employee_id
     //             for (let i = 0; i < data.length; i++) {
     //                 const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
     //                 Array.prototype.push.apply(obj1, data1);
     //             }
     //         }
-    //         else if (request.employees.length != 0 && request.flag == 2) {
+    //         else if (request.employees.length != 0 && keys[keys.length - 1] == "lead_assigned_employee_id") {
     //             request.role_id = 6
     //             let emergLeads = []
-    //             emergLeads = request.employees
+    //             emergLeads = request.lead_assigned_employee_id
     //             for (let j = 0; j < emergLeads.length; j++) {
     //                 request.lead_assigned_employee_id = emergLeads[j]
     //                 const [err, data] = await employeeService.getEmpsUnderEmergingLead(request)
-    //                 for (let i = 0; i < data.length; i++) {
-    //                     const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
-    //                     Array.prototype.push.apply(filterData, data1);
+    //                 if (data.length != 0) {
+    //                     for (let i = 0; i < data.length; i++) {
+    //                         const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+    //                         Array.prototype.push.apply(filterData, data1);
+    //                     }
     //                 }
     //             }
     //             obj1 = filterData
@@ -1277,24 +1440,15 @@ function TimeTrackingService(objectCollection) {
 
     //     }
     //     else if (request.role_id == 6) {
-    //         console.log('==============entered EL=============')
-    //         console.log("enterrr")
-    //         console.log('====================================')
-    //         if (request.employees.length != 0) {
-    //             data = request.employees
+    //         if (request.employee_id.length != 0) {
+    //             data = request.employee_id
     //             for (let i = 0; i < data.length; i++) {
     //                 const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
     //                 Array.prototype.push.apply(obj1, data1);
     //             }
     //         } else {
-    //             console.log('==============entered EL=============')
-    //             console.log("default all")
-    //             console.log('====================================')
     //             request.lead_assigned_employee_id = request.employee_id
     //             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-    //             console.log('=====emp under emerging lead===========')
-    //             console.log(data)
-    //             console.log('====================================')
     //             for (let i = 0; i < data.length; i++) {
     //                 const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
     //                 Array.prototype.push.apply(obj1, data1);
@@ -1305,15 +1459,16 @@ function TimeTrackingService(objectCollection) {
     //         error = false
     //     }
     //     else if (request.role_id === 2 || request.role_id === 5) {
-    //         if (request.employees.length != 0 && request.flag == 1) {
-    //             data = request.employees
+    //         if (request.employee_id.length != 0 && keys[keys.length - 1] == "employee_id") {
+    //             data = request.employee_id
     //             for (let i = 0; i < data.length; i++) {
     //                 const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
     //                 Array.prototype.push.apply(obj1, data1);
     //             }
-    //         } else if (request.employees.length != 0 && request.flag == 2) {
+    //         } else if (request.employee_id.length != 0 && keys[keys.length - 1] == "lead_assigned_employee_id") {
     //             let groups = []
-    //             groups = request.employees
+    //             groups = request.lead_assigned_employee_id
+    //             //gathering all selected lead,emerging lead employees in gorups
     //             for (let j = 0; j < groups.length; j++) {
     //                 request.employee_id = groups[j]
     //                 const [err, data] = await employeeService.getEmployeeById(request)
@@ -1321,36 +1476,35 @@ function TimeTrackingService(objectCollection) {
     //                 if (data[0].role_id == 4) {
     //                     request.lead_assigned_employee_id = request.employee_id
     //                     request.role_id = 4
-    //                     const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+    //                     const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
     //                     Array.prototype.push.apply(emps, data);
 
     //                 } else if (data[0].role_id == 6) {
     //                     request.role_id = 6
-    //                     const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-    //                     Array.prototype.push.apply(emps, data);                
+    //                     const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+    //                     Array.prototype.push.apply(emps, data);
     //                 }
     //             }
-
     //             //removeing duplicates employees 
-    //             const uniqueids = [];
-    //             const uniqueEmps = emps.filter(element => {
-    //                 const isDuplicate = uniqueids.includes(element.employee_id);
-    //                 if (!isDuplicate) {
-    //                     uniqueids.push(element.employee_id);
-    //                     return true;
+    //             if (emps.length != 0) {
+    //                 const uniqueids = [];
+    //                 const uniqueEmps = emps.filter(element => {
+    //                     const isDuplicate = uniqueids.includes(element.lead_assigned_employee_id);
+    //                     if (!isDuplicate) {
+    //                         uniqueids.push(element.lead_assigned_employee_id);
+    //                         return true;
+    //                     }
+    //                     return false;
+    //                 });
+    //                 //get approve list 
+    //                 for (let i = 0; i < uniqueEmps.length; i++) {
+    //                     const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+    //                     Array.prototype.push.apply(obj1, data1);
     //                 }
-    //                 return false;
-    //             });
-
-    //             //get approve list 
-    //             for (let i = 0; i < uniqueEmps.length; i++) {
-    //                 const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
-    //                 Array.prototype.push.apply(obj1, data1);
     //             }
-
     //         } else {
     //             request.lead_assigned_employee_id = request.employee_id
-    //             const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
+    //             const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
     //             for (let i = 0; i < data.length; i++) {
     //                 const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
     //                 Array.prototype.push.apply(obj1, data1);
@@ -1364,54 +1518,59 @@ function TimeTrackingService(objectCollection) {
     //     return [error, responseData];
 
     // }
-    this.getApprovalsList = async function (request) {
-        let responseData = []
-        error = true;
-        let data = []
-        let obj1 = []
-        let filterData = []
-        let emps = []
-        if (request.role_id == 4) {
 
-            request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            for (let i = 0; i < data[0].users.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
-                Array.prototype.push.apply(obj1, data1);
-            }
-            responseData = obj1
-            error = false
+    // this.getApprovalsList1 = async function (request) {
+    //     let responseData = []
+    //     error = true;
+    //     let data = []
+    //     let obj1 = []
+    //     let filterData = []
+    //     let emps = []
+    //     if (request.role_id == 4) {
 
-        }
-        else if (request.role_id == 6) {
-            request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            console.log('=====emp under emerging lead===========')
-            console.log(data)
-            console.log('====================================')
-            for (let i = 0; i < data[0].users.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
-                Array.prototype.push.apply(obj1, data1);
-            }
+    //         if (request.employee_id) {
+
+    //         }
+
+    //         request.lead_assigned_employee_id = request.employee_id
+    //         const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+    //         for (let i = 0; i < data[0].users.length; i++) {
+    //             const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
+    //             Array.prototype.push.apply(obj1, data1);
+    //         }
+    //         responseData = obj1
+    //         error = false
+
+    //     }
+    //     else if (request.role_id == 6) {
+    //         request.lead_assigned_employee_id = request.employee_id
+    //         const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+    //         console.log('=====emp under emerging lead===========')
+    //         console.log(data)
+    //         console.log('====================================')
+    //         for (let i = 0; i < data[0].users.length; i++) {
+    //             const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
+    //             Array.prototype.push.apply(obj1, data1);
+    //         }
 
 
-            responseData = obj1
-            error = false
-        }
-        else if (request.role_id === 2 || request.role_id === 5) {
-            request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await employeeService.getEmpsAssignUnderLeads(request)
-            for (let i = 0; i < data[0].users.length; i++) {
-                const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
-                Array.prototype.push.apply(obj1, data1);
-            } 
+    //         responseData = obj1
+    //         error = false
+    //     }
+    //     else if (request.role_id === 2 || request.role_id === 5) {
+    //         request.lead_assigned_employee_id = request.employee_id
+    //         const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+    //         for (let i = 0; i < data[0].users.length; i++) {
+    //             const [err, data1] = await this.getListFromApprovals(request, data[0].users[i], 7)
+    //             Array.prototype.push.apply(obj1, data1);
+    //         }
 
-            responseData = obj1
-            error = false
+    //         responseData = obj1
+    //         error = false
 
-        }
-        return [error, responseData];
-    }
+    //     }
+    //     return [error, responseData];
+    // }
 
     this.getListFromApprovals = async function (request, data, flag) {
 
@@ -2004,6 +2163,10 @@ function TimeTrackingService(objectCollection) {
         }
 
     }
+
+
+
+
 
 
 

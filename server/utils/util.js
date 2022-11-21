@@ -324,6 +324,7 @@ function Util() {
     }
 
     this.getCurrentUTCTime = function (format) {
+        
         // let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
         date = new Date()
         var year = date.getFullYear();

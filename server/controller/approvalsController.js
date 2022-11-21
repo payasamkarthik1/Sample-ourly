@@ -2,8 +2,7 @@ const { json } = require("body-parser");
 const Validations = require('../utils/validations')
 
 const TimeTrackingService = require('../services/timeTrackingService')
-
-
+const ApprovalsService = require('../services/approvalsService')
 
 function ApprovalsController(objectCollection) {
 
@@ -11,8 +10,8 @@ function ApprovalsController(objectCollection) {
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const timeTrackingService = new TimeTrackingService(objectCollection)
-    // const validations = new Validations(objectCollection)
-    //@Post analyze/get/dashboad/overview
+    const approvalsService = new ApprovalsService(objectCollection)
+
 
     //@Post approvals/get/list
     app.post('/' + 'approvals/get/list',
@@ -27,7 +26,7 @@ function ApprovalsController(objectCollection) {
                 console.log("approvals/get/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
-        })   
+        })
 
 
     //@Post approvals/get/on/approve/on/reject/list
@@ -39,21 +38,6 @@ function ApprovalsController(objectCollection) {
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
                 console.log("approvals/get/on/approve/on/reject/list | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-    //@Post approvals/get/by/status/id/list
-    app.post('/' + 'approvals/get/by/status/id/list',
-
-        async function (req, res) {
-
-            const [err, resData] = await timeTrackingService.getApprovalsListByStatusId(req.body);
-            if (!err) {
-                console.log("approvals/get/list | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("approvals/get/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
