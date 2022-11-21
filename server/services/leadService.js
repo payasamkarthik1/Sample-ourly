@@ -99,17 +99,11 @@ function LeadService(objectCollection) {
                         const [err1, data1] = await this.getGroupsUnderLeads(request, 6)
                         if (data1.length != 0) {
                             groups = data1
-
-                        } else {
-                            groups = []
-                        }
-
+                        } 
                         error = false
                         responseData.push({ users, groups })
-
                     }
                     else if (request.role_id == 6) {
-
                         users = data
                         error = false
                         responseData.push({ users })
