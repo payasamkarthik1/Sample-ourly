@@ -1183,7 +1183,6 @@ function TimeTrackingService(objectCollection) {
     this.getApprovalsList = async function (request) {
         let responseData = []
         error = true;
-        // let data = []
         let finalData = []
         let emps = []
         if (request.role_id == 4) {
@@ -1268,7 +1267,7 @@ function TimeTrackingService(objectCollection) {
 
             } else {
                 request.lead_assigned_employee_id = request.employee_id
-                const [err, data] = await leadService.getEmpsAssignUnderLeads(request)
+                const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
                 for (let i = 0; i < data.length; i++) {
                     const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
                     Array.prototype.push.apply(finalData, data1);

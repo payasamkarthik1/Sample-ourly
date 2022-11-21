@@ -1575,6 +1575,7 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (dat) => {
                     if (dat.length != 0) {
+  
                         const [err1, data] = await this.getFilterReportSummary(request, dat)
 
                         if (data.length != 0) {
