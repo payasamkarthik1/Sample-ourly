@@ -1302,9 +1302,9 @@ function TimeTrackingService(objectCollection) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 4
                         const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                       console.log('====================================')
-                       console.log(data1)
-                       console.log('====================================')
+                        console.log('====================================')
+                        console.log(data1)
+                        console.log('====================================')
                         Array.prototype.push.apply(emps, data1);
 
                     } else if (data[0].role_id == 6) {
@@ -1338,6 +1338,9 @@ function TimeTrackingService(objectCollection) {
 
             } else if (request.employees.length != 0 && request.groups.length == 0) {
                 users = request.employees
+                console.log('====users=============')
+                console.log(users)
+                console.log('====================================')
                 for (let i = 0; i < users.length; i++) {
                     const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
                     Array.prototype.push.apply(finalData, data1);
@@ -1384,7 +1387,7 @@ function TimeTrackingService(objectCollection) {
                         Array.prototype.push.apply(finalData, data1);
                     }
                 }
-               
+
             } else {
                 const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
                 for (let i = 0; i < data.length; i++) {
