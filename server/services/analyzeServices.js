@@ -1554,7 +1554,7 @@ function AnalyzeServices(objectCollection) {
     this.getAdminSuperLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
-        filterDataByEmp = []
+        filteredEmps = []
         let responseData = [],
             error = true;
         flag = 1
@@ -1573,6 +1573,7 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (dat) => {
                     if (dat.length != 0) {
+                        //filtering employees based on selection
                         if (request.employees.length != 0 && request.groups.length != 0) {
                             groups = request.groups
                             //gathering all selected lead,emerging lead employees in gorups
@@ -1616,7 +1617,7 @@ function AnalyzeServices(objectCollection) {
                                 for (let i = 0; i < uniqueEmps.length; i++) {
                                     dat.filter(function (data) {
                                         if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filterDataByEmp.push(data)
+                                            filteredEmps.push(data)
                                             // Array.prototype.push.apply(finalData, data1);
                                         }
                                     })
@@ -1663,7 +1664,7 @@ function AnalyzeServices(objectCollection) {
                                 for (let i = 0; i < uniqueEmps.length; i++) {
                                     dat.filter(function (data) {
                                         if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filterDataByEmp.push(data)
+                                            filteredEmps.push(data)
                                             // Array.prototype.push.apply(finalData, data1);
                                         }
                                     })
@@ -1683,7 +1684,7 @@ function AnalyzeServices(objectCollection) {
                             for (let i = 0; i < emps.length; i++) {
                                 dat.filter(function (data) {
                                     if (data.employee_id == uniqueEmps[i].employee_id) {
-                                        filterDataByEmp.push(data)
+                                        filteredEmps.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
                                     }
                                 })
@@ -1694,15 +1695,14 @@ function AnalyzeServices(objectCollection) {
                             for (let i = 0; i < emps.length; i++) {
                                 dat.filter(function (data) {
                                     if (data.employee_id == emps[i].employee_id) {
-                                        filterDataByEmp.push(data)
+                                        filteredEmps.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
                                     }
                                 })
                             } 
                         }
-
-                        const [err1, data] = await this.getFilterReportSummary(request, filterDataByEmp)
-
+                        //filtered data based on emps
+                        const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
                         if (data.length != 0) {
                             // total time
                             idGenerate = await util.getRandomNumericId()
@@ -1728,19 +1728,12 @@ function AnalyzeServices(objectCollection) {
                             // delete data
                             flag = 5
                             await this.dashboardDataCalculation(request, id, flag)
-
+                            error = false
                             responseData.push({ total_time: totalTime })
                             responseData.push(overallTotalTime)
                             responseData.push(overallProjects)
-
                         }
-                    }
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
+                    }                
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
