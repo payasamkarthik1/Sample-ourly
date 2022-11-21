@@ -1393,11 +1393,13 @@ function AnalyzeServices(objectCollection) {
 
         } else if (request.employees.length == 0 && request.groups.length != 0) {
             request.role_id = 6
-            let emergLeads = []
             emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
                 request.employee_id = emergLeads[j]
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                console.log('=========getEmpsUnderEmergingLead===============')
+                console.log(data)
+                console.log('====================================')
                 for (let i = 0; i < data.length; i++) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
                     Array.prototype.push.apply(empsData, data2);
