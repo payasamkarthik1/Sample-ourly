@@ -1183,7 +1183,7 @@ function TimeTrackingService(objectCollection) {
     this.getApprovalsList = async function (request) {
         let responseData = []
         error = true;
-        let data = []
+        // let data = []
         let finalData = []
         let emps = []
         if (request.role_id == 4) {
@@ -1301,14 +1301,17 @@ function TimeTrackingService(objectCollection) {
                     if (data[0].role_id == 4) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 4
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                       console.log('====================================')
+                       console.log(data1)
+                       console.log('====================================')
+                        Array.prototype.push.apply(emps, data1);
 
                     } else if (data[0].role_id == 6) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 6
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
                     }
                 }
                 //removeing duplicates employees 
@@ -1346,18 +1349,21 @@ function TimeTrackingService(objectCollection) {
                 for (let j = 0; j < groups.length; j++) {
                     request.employee_id = groups[j]
                     const [err, data] = await employeeService.getEmployeeById(request)
+                    console.log('====================================')
+                    console.log(data)
+                    console.log('====================================')
                     // on group selecton if emp is lead or emerging lead geting emps under them 
                     if (data[0].role_id == 4) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 4
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
 
                     } else if (data[0].role_id == 6) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 6
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
                     }
                 }
                 //removeing duplicates employees 
