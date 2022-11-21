@@ -1280,7 +1280,6 @@ function TimeTrackingService(objectCollection) {
         }
         else if (request.role_id == 6) {
             if (request.employees.length != 0) {
-
                 //----single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {

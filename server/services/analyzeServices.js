@@ -1069,6 +1069,7 @@ function AnalyzeServices(objectCollection) {
     this.getEmergingLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
+        filteredEmps = []
         let responseData = [],
             error = true;
         flag = 3
@@ -1086,8 +1087,23 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (dat) => {
                     if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
+                        if (request.employees.length != 0) {
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(filteredEmps, usr);
+                            }
 
+                        } else {
+                            request.lead_assigned_employee_id = request.employee_id
+                            const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                            Array.prototype.push.apply(filteredEmps, data);
+                        }
+
+                        if(filteredEmps.length!=0){
+                        const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
                         if (data.length != 0) {
                             // total time
                             idGenerate = await util.getRandomNumericId()
@@ -1119,14 +1135,9 @@ function AnalyzeServices(objectCollection) {
                             responseData.push(overallProjects)
 
                         }
-
                     }
-
+                    }
                     error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -1396,9 +1407,6 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-
-
-
     this.getLeadMyTeamReportDetailed = async function (request) {
         total_time = {}
         detailedData = []
@@ -1701,6 +1709,8 @@ function AnalyzeServices(objectCollection) {
                                 })
                             } 
                         }
+
+                        if(filteredEmps.length!=0){
                         //filtered data based on emps
                         const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
                         if (data.length != 0) {
@@ -1728,12 +1738,14 @@ function AnalyzeServices(objectCollection) {
                             // delete data
                             flag = 5
                             await this.dashboardDataCalculation(request, id, flag)
-                            error = false
                             responseData.push({ total_time: totalTime })
                             responseData.push(overallTotalTime)
                             responseData.push(overallProjects)
                         }
-                    }                
+                    }
+
+                    }  
+                    error = false              
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
