@@ -1405,6 +1405,10 @@ function AnalyzeServices(objectCollection) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
                     Array.prototype.push.apply(empsData, data2);
                 }
+
+                console.log('=========getEmpsUnderEmergingLead==0000000009=============')
+                console.log(empsData)
+                console.log('====================================')
             }
 
         } else {
