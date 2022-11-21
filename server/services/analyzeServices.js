@@ -1098,8 +1098,15 @@ function AnalyzeServices(objectCollection) {
 
                         } else {
                             request.lead_assigned_employee_id = request.employee_id
-                            const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                            Array.prototype.push.apply(filteredEmps, data);
+                            const [err, emps] = await leadService.getEmpsUnderEmergingLead(request)
+                            for (let i = 0; i < emps.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == emps[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            } 
                         }
 
                         if(filteredEmps.length!=0){
