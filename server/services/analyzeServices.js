@@ -1069,6 +1069,7 @@ function AnalyzeServices(objectCollection) {
     this.getEmergingLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
+        emps =[]
         filteredEmps = []
         let responseData = [],
             error = true;
@@ -1093,15 +1094,26 @@ function AnalyzeServices(objectCollection) {
                             for (let i = 0; i < users.length; i++) {
                                 request.employee_id = users[i]
                                 const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(filteredEmps, usr);
+                                Array.prototype.push.apply(emps, usr);
                             }
 
-                        } else {
-                            request.lead_assigned_employee_id = request.employee_id
-                            const [err, emps] = await leadService.getEmpsUnderEmergingLead(request)
+                            
+                            //filter data by selected employees
                             for (let i = 0; i < emps.length; i++) {
                                 dat.filter(function (data) {
                                     if (data.employee_id == emps[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }          
+
+                        } else {
+                            request.lead_assigned_employee_id = request.employee_id
+                            const [err, data1] = await leadService.getEmpsUnderEmergingLead(request)
+                            for (let i = 0; i < data1.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == data1[i].employee_id) {
                                         filteredEmps.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
                                     }
