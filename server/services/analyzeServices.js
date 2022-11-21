@@ -1344,7 +1344,7 @@ function AnalyzeServices(objectCollection) {
         if (request.employees.length != 0 && request.groups.length != 0) {
             request.role_id = 6
             let emergLeads = []
-            emergLeads = request.lead_assigned_employee_id
+            emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
                 request.lead_assigned_employee_id = emergLeads[j]
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
@@ -1394,7 +1394,7 @@ function AnalyzeServices(objectCollection) {
         } else if (request.employees.length == 0 && request.groups.length != 0) {
             request.role_id = 6
             let emergLeads = []
-            emergLeads = request.lead_assigned_employee_id
+            emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
                 request.lead_assigned_employee_id = emergLeads[j]
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
