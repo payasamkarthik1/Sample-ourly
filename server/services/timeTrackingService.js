@@ -90,7 +90,7 @@ function TimeTrackingService(objectCollection) {
                                 responseData = [{ message: "TimeEntry cannot be added,after submition for approval to lead and once approved from lead" }];
                             } else if (data2[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request)
-                                await approvalsService.addUpdateRemoveUnsubmit(request)
+                                await this.addUpdateRemoveUnsubmit(request)
                                 responseData = [{ message: "TimeEntry has beed added successfully" }];
                                 error = false
                             }
