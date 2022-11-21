@@ -1188,11 +1188,6 @@ function TimeTrackingService(objectCollection) {
         let emps = []
         if (request.role_id == 4) {
             if (request.employees.length != 0 && request.groups.length != 0) {
-
-                //----single users
-                users = request.employees
-                Array.prototype.push.apply(emps, users);
-
                 //-----groups
                 groups = request.groups
                 for (let j = 0; j < groups.length; j++) {
@@ -1211,6 +1206,16 @@ function TimeTrackingService(objectCollection) {
                         Array.prototype.push.apply(emps, data);
                     }
                 }
+
+
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
 
                 //removeing duplicates employees 
                 if (emps.length != 0) {
@@ -1232,9 +1237,17 @@ function TimeTrackingService(objectCollection) {
                 }
 
             } else if (request.employees.length != 0 && request.groups.length == 0) {
+              
+                //----single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
-                    const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
                     Array.prototype.push.apply(finalData, data1);
                 }
 
@@ -1268,9 +1281,17 @@ function TimeTrackingService(objectCollection) {
         }
         else if (request.role_id == 6) {
             if (request.employees.length != 0) {
-                data = request.employees
-                for (let i = 0; i < data.length; i++) {
-                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
                     Array.prototype.push.apply(finalData, data1);
                 }
             } else {
@@ -1288,10 +1309,6 @@ function TimeTrackingService(objectCollection) {
         else if (request.role_id === 2 || request.role_id === 5) {
             if (request.employees.length != 0 && request.groups.length != 0) {
 
-                //----single users
-                users = request.employees
-                Array.prototype.push.apply(emps, users);
-
                 groups = request.groups
                 //gathering all selected lead,emerging lead employees in gorups
                 for (let j = 0; j < groups.length; j++) {
@@ -1302,9 +1319,6 @@ function TimeTrackingService(objectCollection) {
                         request.lead_assigned_employee_id = data[0].employee_id
                         request.role_id = 4
                         const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        console.log('====================================')
-                        console.log(data1)
-                        console.log('====================================')
                         Array.prototype.push.apply(emps, data1);
 
                     } else if (data[0].role_id == 6) {
@@ -1314,6 +1328,16 @@ function TimeTrackingService(objectCollection) {
                         Array.prototype.push.apply(emps, data1);
                     }
                 }
+
+
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
                 //removeing duplicates employees 
                 if (emps.length != 0) {
                     const uniqueids = [];
@@ -1336,12 +1360,19 @@ function TimeTrackingService(objectCollection) {
                 responseData = finalData
                 error = false
 
-            } else if (request.employees.length != 0 && request.groups.length == 0) {
+
+                //----single users
                 users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
                 console.log('====users=============')
                 console.log(users)
                 console.log('====================================')
                 for (let i = 0; i < users.length; i++) {
+                    data.employee_id = users[i]
                     const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
                     Array.prototype.push.apply(finalData, data1);
                 }
@@ -1388,6 +1419,19 @@ function TimeTrackingService(objectCollection) {
                     }
                 }
 
+            } else if (request.employees.length != 0 && request.groups.length == 0) {
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
             } else {
                 const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
                 for (let i = 0; i < data.length; i++) {
