@@ -1397,9 +1397,10 @@ function AnalyzeServices(objectCollection) {
             for (let j = 0; j < emergLeads.length; j++) {
                 request.employee_id = emergLeads[j]
                 const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                console.log('=========getEmpsUnderEmergingLead===============')
+                console.log('=========getEmpsUnderEmergingLead==9999999999999999999999999999999999999999999=============')
                 console.log(data)
                 console.log('====================================')
+                
                 for (let i = 0; i < data.length; i++) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
                     Array.prototype.push.apply(empsData, data2);
