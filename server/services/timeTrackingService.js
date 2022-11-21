@@ -1237,7 +1237,7 @@ function TimeTrackingService(objectCollection) {
                 }
 
             } else if (request.employees.length != 0 && request.groups.length == 0) {
-              
+
                 //----single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
@@ -1329,7 +1329,6 @@ function TimeTrackingService(objectCollection) {
                     }
                 }
 
-
                 //----single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
@@ -1360,22 +1359,6 @@ function TimeTrackingService(objectCollection) {
                 responseData = finalData
                 error = false
 
-
-                //----single users
-                users = request.employees
-                for (let i = 0; i < users.length; i++) {
-                    request.employee_id = users[i]
-                    const [err, usr] = await employeeService.getEmployeeById(request)
-                    Array.prototype.push.apply(emps, usr);
-                }
-                console.log('====users=============')
-                console.log(users)
-                console.log('====================================')
-                for (let i = 0; i < users.length; i++) {
-                    data.employee_id = users[i]
-                    const [err, data1] = await this.getListFromApprovals(request, users[i], 7)
-                    Array.prototype.push.apply(finalData, data1);
-                }
 
             } else if (request.employees.length == 0 && request.groups.length != 0) {
                 groups = request.groups
