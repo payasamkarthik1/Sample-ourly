@@ -739,10 +739,6 @@ function AnalyzeServices(objectCollection) {
 
         }
 
-
-        console.log('========hkfdhkfdfdhvfd========')
-        console.log(data)
-        console.log('====================================')
         responseData = data
         error = false
         return [error, responseData]
@@ -1401,19 +1397,11 @@ function AnalyzeServices(objectCollection) {
             emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
                 request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                console.log('=========getEmpsUnderEmergingLead==9999999999999999999999999999999999999999999=============')
-                console.log(data)
-                console.log('====================================')
-
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)              
                 for (let i = 0; i < data.length; i++) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
                     Array.prototype.push.apply(empsData, data2);
                 }
-
-                console.log('=========getEmpsUnderEmergingLead==0000000009=============')
-                console.log(empsData)
-                console.log('====================================')
             }
 
         } else {
