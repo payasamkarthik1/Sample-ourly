@@ -1692,7 +1692,7 @@ function AnalyzeServices(objectCollection) {
                             //filter data by selected employees
                             for (let i = 0; i < emps.length; i++) {
                                 dat.filter(function (data) {
-                                    if (data.employee_id == uniqueEmps[i].employee_id) {
+                                    if (data.employee_id == emps[i].employee_id) {
                                         filteredEmps.push(data)
                                         // Array.prototype.push.apply(finalData, data1);
                                     }
