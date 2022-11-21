@@ -57,7 +57,7 @@ function AnalyzeServices(objectCollection) {
 
         request.lead_assigned_employee_id = request.employee_id
         const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-       
+
         if (data1.length != 0) {
             for (let i = 0; i < data1.length; i++) {
                 const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
@@ -367,7 +367,7 @@ function AnalyzeServices(objectCollection) {
                 .then(async (data) => {
                     if (data.length != 0) {
 
-                        
+
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
@@ -1557,6 +1557,7 @@ function AnalyzeServices(objectCollection) {
     this.getAdminSuperLeadMyTeamReportSummary = async function (request) {
         total_time = {}
         dayWiseData = []
+        filterDataByEmp = []
         let responseData = [],
             error = true;
         flag = 1
@@ -1575,8 +1576,137 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (dat) => {
                     if (dat.length != 0) {
-  
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
+                        if (request.employees.length != 0 && request.groups.length != 0) {
+                            groups = request.groups
+                            //gathering all selected lead,emerging lead employees in gorups
+                            for (let j = 0; j < groups.length; j++) {
+                                request.employee_id = groups[j]
+                                const [err, data] = await employeeService.getEmployeeById(request)
+                                // on group selecton if emp is lead or emerging lead geting emps under them 
+                                if (data[0].role_id == 4) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 4
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+
+                                } else if (data[0].role_id == 6) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 6
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+                                }
+                            }
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(emps, usr);
+                            }
+                            //removeing duplicates employees 
+                            if (emps.length != 0) {
+                                const uniqueids = [];
+                                const uniqueEmps = emps.filter(element => {
+                                    const isDuplicate = uniqueids.includes(element.employee_id);
+                                    if (!isDuplicate) {
+                                        uniqueids.push(element.employee_id);
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                //filter data by selected employees
+                                for (let i = 0; i < uniqueEmps.length; i++) {
+                                    data.filter(function (data) {
+                                        if (data.employee_id == uniqueEmps[i].employee_id) {
+                                            filterDataByEmp.push(data)
+                                            // Array.prototype.push.apply(finalData, data1);
+                                        }
+                                    })
+                                }
+
+                            }
+
+                        } else if (request.employees.length == 0 && request.groups.length != 0) {
+                            groups = request.groups
+                            //gathering all selected lead,emerging lead employees in gorups
+                            for (let j = 0; j < groups.length; j++) {
+                                request.employee_id = groups[j]
+                                const [err, data] = await employeeService.getEmployeeById(request)
+                                console.log('====================================')
+                                console.log(data)
+                                console.log('====================================')
+                                // on group selecton if emp is lead or emerging lead geting emps under them 
+                                if (data[0].role_id == 4) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 4
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+
+                                } else if (data[0].role_id == 6) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 6
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+                                }
+                            }
+                            //removeing duplicates employees 
+                            if (emps.length != 0) {
+                                const uniqueids = [];
+                                const uniqueEmps = emps.filter(element => {
+                                    const isDuplicate = uniqueids.includes(element.employee_id);
+                                    if (!isDuplicate) {
+                                        uniqueids.push(element.employee_id);
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                //filter data by selected employees
+                                for (let i = 0; i < uniqueEmps.length; i++) {
+                                    data.filter(function (data) {
+                                        if (data.employee_id == uniqueEmps[i].employee_id) {
+                                            filterDataByEmp.push(data)
+                                            // Array.prototype.push.apply(finalData, data1);
+                                        }
+                                    })
+                                }
+                            }
+
+                        } else if (request.employees.length != 0 && request.groups.length == 0) {
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(emps, usr);
+                            }
+
+                            //filter data by selected employees
+                            for (let i = 0; i < emps.length; i++) {
+                                data.filter(function (data) {
+                                    if (data.employee_id == uniqueEmps[i].employee_id) {
+                                        filterDataByEmp.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }           
+                        
+                        } else {
+                            const [err, emps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                            
+
+                            for (let i = 0; i < emps.length; i++) {
+                                data.filter(function (data) {
+                                    if (data.employee_id == emps[i].employee_id) {
+                                        filterDataByEmp.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            } 
+                        }
+
+                        const [err1, data] = await this.getFilterReportSummary(request, filterDataByEmp)
 
                         if (data.length != 0) {
                             // total time
@@ -1610,7 +1740,6 @@ function AnalyzeServices(objectCollection) {
 
                         }
                     }
-
 
                     error = false
                     // responseData = data
