@@ -873,6 +873,15 @@ function AnalyzeServices(objectCollection) {
                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                             overallProjects = data3
 
+                            console.log('=====overallProjects========')
+                            console.log(overallProjects)
+                            console.log('====================================')
+
+
+                            console.log('=====DTATATA FOR FILTER========')
+                            console.log(data)
+                            console.log('====================================')
+
                             //loop for adding descriptions 
                             for (let i = 0; i < overallProjects.length; i++) {
                                 let value = []
