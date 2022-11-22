@@ -606,8 +606,8 @@ function AnalyzeServices(objectCollection) {
         obj.lastWeekDay = (request.last_week_day)
         const [err, data] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
 
-        const [err1, data1] = await timeTrackingService.getSubmittedApproveEntries(request,1)
-        const [err2, data2] = await timeTrackingService.getSubmittedApproveEntries(request,2)
+        const [err1, data1] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
+        const [err2, data2] = await timeTrackingService.getSubmittedApproveEntries(request, 2)
 
         if (data1.length != 0 || data2.length != 0) {
             if (data[0].isApp.status === "PENDING") {
@@ -786,7 +786,7 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
 
     };
-    
+
     this.getReportSummary = async function (request) {
         let responseData = [],
             error = true;
@@ -918,28 +918,36 @@ function AnalyzeServices(objectCollection) {
                             flag = 3
                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                             overallProjects = data3
-
-                            console.log('=====overallProjects========')
-                            console.log(overallProjects)
-                            console.log('====================================')
-
-
-                            console.log('=====DTATATA FOR FILTER========')
-                            console.log(data)
-                            console.log('====================================')
-
+                         
+                            //adding uniques keys 
+                            overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
                             //loop for adding descriptions 
-                            for (let i = 0; i < overallProjects.length; i++) {
+                            for (let i = 0; i < overallProjects1.length; i++) {
                                 let value = []
                                 data.filter(function (dat) {
-                                    if (dat.project_id == overallProjects[i].project_id) {
+                                    if (dat.project_id == overallProjects1[i].project_id) {
                                         obj = {}
                                         obj.task_description = dat.task_description
                                         value.push(obj)
                                     }
 
                                 })
-                                overallProjects[i].description = value
+                                overallProjects1[i].description = value
+                            }
+
+
+                            //loop for adding descriptions 
+                            for (let i = 0; i < overallProjects1.length; i++) {
+                                let value = []
+                                data.filter(function (dat) {
+                                    if (dat.project_id == overallProjects1[i].project_id) {
+                                        obj = {}
+                                        obj.task_description = dat.task_description
+                                        value.push(obj)
+                                    }
+
+                                })
+                                overallProjects1[i].description = value
                             }
 
                             //over all total_time daywise
@@ -953,7 +961,7 @@ function AnalyzeServices(objectCollection) {
 
                             responseData.push({ total_time: totalTime })
                             responseData.push(overallTotalTime)
-                            responseData.push(overallProjects)
+                            responseData.push(overallProjects1)
 
                         }
                     }
@@ -1208,19 +1216,22 @@ function AnalyzeServices(objectCollection) {
                                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                                 overallProjects = data3
 
+                                //adding uniques keys 
+                                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
                                 //loop for adding descriptions 
-                                for (let i = 0; i < overallProjects.length; i++) {
+                                for (let i = 0; i < overallProjects1.length; i++) {
                                     let value = []
                                     data.filter(function (dat) {
-                                        if (dat.project_id == overallProjects[i].project_id) {
+                                        if (dat.project_id == overallProjects1[i].project_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             value.push(obj)
                                         }
 
                                     })
-                                    overallProjects[i].description = value
+                                    overallProjects1[i].description = value
                                 }
+
 
                                 //over all total_time daywise
                                 flag = 6
@@ -1233,7 +1244,7 @@ function AnalyzeServices(objectCollection) {
 
                                 responseData.push({ total_time: totalTime })
                                 responseData.push(overallTotalTime)
-                                responseData.push(overallProjects)
+                                responseData.push(overallProjects1)
 
                             }
                         }
@@ -1515,19 +1526,22 @@ function AnalyzeServices(objectCollection) {
                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                 overallProjects = data3
 
+                //adding uniques keys 
+                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
                 //loop for adding descriptions 
-                for (let i = 0; i < overallProjects.length; i++) {
+                for (let i = 0; i < overallProjects1.length; i++) {
                     let value = []
                     data.filter(function (dat) {
-                        if (dat.project_id == overallProjects[i].project_id) {
+                        if (dat.project_id == overallProjects1[i].project_id) {
                             obj = {}
                             obj.task_description = dat.task_description
                             value.push(obj)
                         }
 
                     })
-                    overallProjects[i].description = value
+                    overallProjects1[i].description = value
                 }
+
 
                 //over all total_time daywise
                 flag = 6
@@ -1539,7 +1553,7 @@ function AnalyzeServices(objectCollection) {
 
                 responseData.push({ total_time: totalTime })
                 responseData.push(overallTotalTime)
-                responseData.push(overallProjects)
+                responseData.push(overallProjects1)
             }
         }
 
@@ -1870,18 +1884,20 @@ function AnalyzeServices(objectCollection) {
                                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                                 overallProjects = data3
 
+                                //adding uniques keys 
+                                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
                                 //loop for adding descriptions 
-                                for (let i = 0; i < overallProjects.length; i++) {
+                                for (let i = 0; i < overallProjects1.length; i++) {
                                     let value = []
                                     data.filter(function (dat) {
-                                        if (dat.project_id == overallProjects[i].project_id) {
+                                        if (dat.project_id == overallProjects1[i].project_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             value.push(obj)
                                         }
 
                                     })
-                                    overallProjects[i].description = value
+                                    overallProjects1[i].description = value
                                 }
 
 
@@ -1895,7 +1911,7 @@ function AnalyzeServices(objectCollection) {
                                 await this.dashboardDataCalculation(request, id, flag)
                                 responseData.push({ total_time: totalTime })
                                 responseData.push(overallTotalTime)
-                                responseData.push(overallProjects)
+                                responseData.push(overallProjects1)
                             }
                         }
 

@@ -294,6 +294,17 @@ function Util() {
         return data
 
     }
+    this.addUniqueKeyIndexesToArrayOfObject = async function (data) {
+
+        let i = 1
+        data.forEach(element => {
+            element.key = i
+            i += 1
+        });
+        return data
+
+    }
+
 
     this.getFirstWeekDate = async function (dt) {
         d = new Date(dt);
@@ -379,9 +390,6 @@ function Util() {
 
         return firstMonth.concat("-" + lastMonth)
     }
-
-
-
 
     this.calculateWorkedHours = async function (data) {
         //     console.log('====================================')
