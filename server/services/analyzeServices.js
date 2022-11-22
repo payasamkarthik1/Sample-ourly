@@ -547,6 +547,19 @@ function AnalyzeServices(objectCollection) {
 
             );
 
+        } else if (flag == 8) {
+            paramsArr = new Array(
+                id,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                flag
+
+            );
+
         }
 
         const queryString = util.getQueryString('dashboard_data_calculation', paramsArr);
@@ -918,7 +931,7 @@ function AnalyzeServices(objectCollection) {
                             flag = 3
                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                             overallProjects = data3
-                         
+
                             //adding uniques keys 
                             overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
                             //loop for adding descriptions 
