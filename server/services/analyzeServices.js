@@ -425,10 +425,6 @@ function AnalyzeServices(objectCollection) {
 
                         await this.dashboardDataCalculation(request, id, 5)
 
-
-
-
-
                         responseData.push({ total_time: totalTime, top_project: topProject })
                         responseData.push(newArray)
                         responseData.push(overallTotalTime)
@@ -610,16 +606,7 @@ function AnalyzeServices(objectCollection) {
         obj.lastWeekDay = (request.last_week_day)
         const [err, data] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
 
-        const [err4, data4] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
-        const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 2)
-
-        if (data[0].isApp.status == "PENDING") {
-            data[0].isApp.submited_by = data4[0].submitted_by.concat("(", data4[0].submited_for_approval_datetime, ")");
-        } else if (data[0].isApp.status == "APPROVED") {
-            data[0].isApp.submited_by = data4[0].submitted_by.concat("(", data4[0].submited_for_approval_datetime, ")");
-            data[0].isApp.approved_by = data5[0].approved_by.concat("(", data5[0].approved_on_datetime, ")");
-        }
-        responseData = data
+        responseData.push(data)
         return [err, responseData];
 
     };
@@ -754,7 +741,6 @@ function AnalyzeServices(objectCollection) {
         error = false
         return [error, responseData]
     }
-
     this.getReportSummary = async function (request) {
         let responseData = [],
             error = true;
@@ -870,6 +856,7 @@ function AnalyzeServices(objectCollection) {
                     if (dataa.length != 0) {
                         const [err1, data] = await this.getFilterReportSummary(request, dataa)
                         if (data.length != 0) {
+
                             // total time
                             idGenerate = await util.getRandomNumericId()
                             id = idGenerate
@@ -885,6 +872,20 @@ function AnalyzeServices(objectCollection) {
                             flag = 3
                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                             overallProjects = data3
+
+                            //loop for adding descriptions 
+                            for (let i = 0; i < overallProjects.length; i++) {
+                                let value = []
+                                data.filter(function (dat) {
+                                    if (dat.project_id == overallProjects[i].project_id) {
+                                        obj = {}
+                                        obj.task_description = dat.task_description
+                                        value.push(obj)
+                                    }
+
+                                })
+                                overallProjects[i].description = value
+                            }
 
                             //over all total_time daywise
                             flag = 6
@@ -1151,6 +1152,20 @@ function AnalyzeServices(objectCollection) {
                                 flag = 3
                                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                                 overallProjects = data3
+
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallProjects.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.project_id == overallProjects[i].project_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallProjects[i].description = value
+                                }
 
                                 //over all total_time daywise
                                 flag = 6
@@ -1444,6 +1459,21 @@ function AnalyzeServices(objectCollection) {
                 flag = 3
                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                 overallProjects = data3
+
+                  //loop for adding descriptions 
+                  for (let i = 0; i < overallProjects.length; i++) {
+                    let value = []
+                    data.filter(function (dat) {
+                        if (dat.project_id == overallProjects[i].project_id) {
+                            obj = {}
+                            obj.task_description = dat.task_description
+                            value.push(obj)
+                        }
+
+                    })
+                    overallProjects[i].description = value
+                }
+
                 //over all total_time daywise
                 flag = 6
                 const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
@@ -1776,15 +1806,29 @@ function AnalyzeServices(objectCollection) {
                                 totalTime = await util.calculateWorkedHours(data)
 
                                 //insert data into table for calce
-
                                 for (i = 0; i < data.length; i++) {
                                     flag = 1
                                     const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
                                 }
-                                //get total projects total hours 
+                                //get overall total projects total hours 
                                 flag = 3
                                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                                 overallProjects = data3
+
+                                  //loop for adding descriptions 
+                                  for (let i = 0; i < overallProjects.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.project_id == overallProjects[i].project_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallProjects[i].description = value
+                                }
+
 
                                 //over all total_time daywise
                                 flag = 6
