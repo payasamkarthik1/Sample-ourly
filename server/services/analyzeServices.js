@@ -606,8 +606,8 @@ function AnalyzeServices(objectCollection) {
         obj.lastWeekDay = (request.last_week_day)
         const [err, data] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
 
-        const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
-        const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+        const [err1, data1] = await timeTrackingService.getSubmittedApproveEntries(request,1)
+        const [err2, data2] = await timeTrackingService.getSubmittedApproveEntries(request,2)
 
         if (data1.length != 0 || data2.length != 0) {
             if (data[0].isApp.status === "PENDING") {
