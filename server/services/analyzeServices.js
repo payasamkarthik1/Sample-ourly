@@ -799,7 +799,6 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
 
     };
-
     this.getReportSummary = async function (request) {
         let responseData = [],
             error = true;
@@ -1274,6 +1273,124 @@ function AnalyzeServices(objectCollection) {
 
 
     };
+    this.getEmergingLeadMyTeamReportSummary1 = async function (request) {
+        total_time = {}
+        dayWiseData = []
+        emps = []
+        filteredEmps = []
+        let responseData = [],
+            error = true;
+        flag = 3
+        const paramsArr = new Array(
+            request.employee_id,
+            request.start_date,
+            request.end_date,
+            flag
+
+        );
+
+        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (dat) => {
+                    if (dat.length != 0) {
+                        if (request.employees.length != 0) {
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(emps, usr);
+                            }
+
+
+                            //filter data by selected employees
+                            for (let i = 0; i < emps.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == emps[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }
+
+                        } else {
+                            request.lead_assigned_employee_id = request.employee_id
+                            const [err, data1] = await leadService.getEmpsUnderEmergingLead(request)
+                            for (let i = 0; i < data1.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == data1[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }
+                        }
+
+                        if (filteredEmps.length != 0) {
+                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
+                            if (data.length != 0) {
+                                // total time
+                                idGenerate = await util.getRandomNumericId()
+                                id = idGenerate
+                                totalTime = await util.calculateWorkedHours(data)
+
+                                //insert data into table for calce
+
+                                for (i = 0; i < data.length; i++) {
+                                    flag = 1
+                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
+                                }
+                             //get overall total user hours 
+                             flag = 8
+                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+                             overallUsers = data3
+                             console.log('=============overallUsers==============')
+                             console.log(overallUsers)
+                             console.log('====================================')
+
+                             //loop for adding descriptions 
+                             for (let i = 0; i < overallUsers.length; i++) {
+                                 let value = []
+                                 data.filter(function (dat) {
+                                     if (dat.employee_id == overallUsers[i].employee_id) {
+                                         obj = {}
+                                         obj.task_description = dat.task_description
+                                         obj.task_total_time = dat.task_total_time
+                                         value.push(obj)
+                                     }
+
+                                 })
+                                 overallUsers[i].description = value
+                             }
+
+                                //over all total_time daywise
+                                flag = 6
+                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
+                                overallTotalTime = data5
+
+                                // delete data
+                                flag = 5
+                                await this.dashboardDataCalculation(request, id, flag)
+
+                                responseData.push({ total_time: totalTime })
+                                responseData.push(overallTotalTime)
+                                responseData.push(overallUsers)
+
+                            }
+                        }
+                    }
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
     this.getEmergingLeadMyTeamReportDetailed = async function (request) {
         total_time = {}
         detailedData = []
@@ -1570,6 +1687,146 @@ function AnalyzeServices(objectCollection) {
                 responseData.push({ total_time: totalTime })
                 responseData.push(overallTotalTime)
                 responseData.push(overallProjects1)
+            }
+        }
+
+        error = false
+        return [error, responseData]
+
+    };
+    this.getLeadMyTeamReportSummary1 = async function (request) {
+        responseData = [],
+            error = true;
+
+        total_time = {}
+        dayWiseData = []
+        emergEmps = []
+        empsData = []
+        let emps = []
+
+
+        if (request.employees.length != 0 && request.groups.length != 0) {
+            request.role_id = 6
+            let emergLeads = []
+            emergLeads = request.groups
+            for (let j = 0; j < emergLeads.length; j++) {
+                request.employee_id = emergLeads[j]
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                Array.prototype.push.apply(emps, data);
+
+            }
+            //----single users
+            users = request.employees
+            for (let i = 0; i < users.length; i++) {
+                request.employee_id = users[i]
+                const [err, usr] = await employeeService.getEmployeeById(request)
+                Array.prototype.push.apply(emps, usr);
+            }
+            //removeing duplicates employees 
+
+            const uniqueids = [];
+            uniqueEmps = emps.filter(element => {
+                const isDuplicate = uniqueids.includes(element.employee_id);
+                if (!isDuplicate) {
+                    uniqueids.push(element.employee_id);
+                    return true;
+                }
+                return false;
+            })
+            for (let i = 0; i < uniqueEmps.length; i++) {
+                const [err2, data2] = await this.getleadMyTeamData(request, uniqueEmps[i])
+                Array.prototype.push.apply(empsData, data2);
+            }
+
+
+
+        } else if (request.employees.length != 0 && request.groups.length == 0) {
+
+            //----single users
+            users = request.employees
+            for (let i = 0; i < users.length; i++) {
+                request.employee_id = users[i]
+                const [err, usr] = await employeeService.getEmployeeById(request)
+                Array.prototype.push.apply(emps, usr);
+            }
+
+            for (let i = 0; i < emps.length; i++) {
+                const [err2, data2] = await this.getleadMyTeamData(request, emps[i])
+                Array.prototype.push.apply(empsData, data2);
+            }
+
+        } else if (request.employees.length == 0 && request.groups.length != 0) {
+            request.role_id = 6
+            emergLeads = request.groups
+            for (let j = 0; j < emergLeads.length; j++) {
+                request.employee_id = emergLeads[j]
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err2, data2] = await this.getleadMyTeamData(request, data[i])
+                    Array.prototype.push.apply(empsData, data2);
+                }
+            }
+
+        } else {
+            request.lead_assigned_employee_id = request.employee_id
+            const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+            for (let i = 0; i < data.length; i++) {
+                const [err2, data2] = await this.getleadMyTeamData(request, data[i])
+                Array.prototype.push.apply(empsData, data2);
+            }
+
+        }
+
+        if (empsData.length != 0) {
+            const [err1, data] = await this.getFilterReportSummary(request, empsData)
+            if (data.length != 0) {
+                console.log('========getFilterReportSummary===========')
+                console.log(data)
+                console.log('====================================')
+                // total time
+                idGenerate = await util.getRandomNumericId()
+                id = idGenerate
+                totalTime = await util.calculateWorkedHours(data)
+                //insert data into table for calce
+                for (i = 0; i < data.length; i++) {
+                    flag = 1
+                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
+                }
+               //get overall total user hours 
+               flag = 8
+               const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+               overallUsers = data3
+               console.log('=============overallUsers==============')
+               console.log(overallUsers)
+               console.log('====================================')
+
+               //loop for adding descriptions 
+               for (let i = 0; i < overallUsers.length; i++) {
+                   let value = []
+                   data.filter(function (dat) {
+                       if (dat.employee_id == overallUsers[i].employee_id) {
+                           obj = {}
+                           obj.task_description = dat.task_description
+                           obj.task_total_time = dat.task_total_time
+                           value.push(obj)
+                       }
+
+                   })
+                   overallUsers[i].description = value
+               }
+
+
+                //over all total_time daywise
+                flag = 6
+                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
+                overallTotalTime = data5
+                delete data
+                flag = 5
+                await this.dashboardDataCalculation(request, id, flag)
+
+                responseData.push({ total_time: totalTime })
+                responseData.push(overallTotalTime)
+                responseData.push(overallUsers)
             }
         }
 
