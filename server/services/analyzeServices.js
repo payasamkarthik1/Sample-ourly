@@ -605,10 +605,21 @@ function AnalyzeServices(objectCollection) {
     this.getAllTasksInWeekByEmpId = async function (request) {
         let responseData = []
         obj = {}
+
         obj.firstWeekDay = (request.first_week_day)
         obj.lastWeekDay = (request.last_week_day)
-        const [err, data1] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
-        responseData.push(data1)
+        const [err, data] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
+
+        const [err4, data4] = await timeTrackingService.getSubmittedApproveEntries(request, 1)
+        const [err5, data5] = await timeTrackingService.getSubmittedApproveEntries(request, 2)
+
+        if (data[0].isApp.status == "PENDING") {
+            data[0].isApp.submited_by = data4[0].submitted_by.concat("(", data4[0].submited_for_approval_datetime, ")");
+        } else if (data[0].isApp.status == "APPROVED") {
+            data[0].isApp.submited_by = data4[0].submitted_by.concat("(", data4[0].submited_for_approval_datetime, ")");
+            data[0].isApp.approved_by = data5[0].approved_by.concat("(", data5[0].approved_on_datetime, ")");
+        }
+        responseData.push(data)
         return [err, responseData];
 
     };
@@ -1397,7 +1408,7 @@ function AnalyzeServices(objectCollection) {
             emergLeads = request.groups
             for (let j = 0; j < emergLeads.length; j++) {
                 request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)              
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
                 for (let i = 0; i < data.length; i++) {
                     const [err2, data2] = await this.getleadMyTeamData(request, data[i])
                     Array.prototype.push.apply(empsData, data2);

@@ -1187,7 +1187,7 @@ function TimeTrackingService(objectCollection) {
         let emps = []
         if (request.role_id == 4) {
             if (request.employees.length != 0 && request.groups.length != 0) {
-                //-----groups
+                //groups
                 groups = request.groups
                 for (let j = 0; j < groups.length; j++) {
                     request.employee_id = groups[j]
@@ -1205,17 +1205,13 @@ function TimeTrackingService(objectCollection) {
                         Array.prototype.push.apply(emps, data);
                     }
                 }
-
-
-                //----single users
+                //single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
                     request.employee_id = users[i]
                     const [err, usr] = await employeeService.getEmployeeById(request)
                     Array.prototype.push.apply(emps, usr);
                 }
-
-
                 //removeing duplicates employees 
                 if (emps.length != 0) {
                     const uniqueids = [];
@@ -1236,15 +1232,14 @@ function TimeTrackingService(objectCollection) {
                 }
 
             } else if (request.employees.length != 0 && request.groups.length == 0) {
-
-                //----single users
+                //single users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
                     request.employee_id = users[i]
                     const [err, usr] = await employeeService.getEmployeeById(request)
                     Array.prototype.push.apply(emps, usr);
                 }
-
+                //get approve list 
                 for (let i = 0; i < emps.length; i++) {
                     const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
                     Array.prototype.push.apply(finalData, data1);
