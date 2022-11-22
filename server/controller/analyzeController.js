@@ -112,11 +112,11 @@ function Analyze(objectCollection) {
 
 
          //@Post analyze/get/report/summary/
-    app.post('/' + 'analyze/get/report/summary/by/user',
+    app.post('/' + 'analyze/get/report/summary/group/by/user',
 
     async function (req, res) {
 
-        const [err, resData] = await analyzeServices.getReportWeekly(req.body);
+        const [err, resData] = await analyzeServices.getReportSummary1(req.body);
         if (!err) {
             console.log("analyze/get/report/weekly | Error: ", err);
             res.json(responseWrapper.getResponse({}, resData, 200, req.body));

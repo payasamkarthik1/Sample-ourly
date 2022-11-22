@@ -755,6 +755,38 @@ function AnalyzeServices(objectCollection) {
         error = false
         return [error, responseData]
     }
+
+    this.getReportSummary1 = async function (request) {
+        let responseData = [],
+            error = true;
+
+        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
+        if (request.role_id === 2 || request.role_id === 5) {
+            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummary1(request)
+            error = err1
+            responseData = data1
+            //role_id = 4 for lead , get lead (my team) dashboard
+        } else if (request.role_id === 4) {
+            const [err1, data1] = await this.getLeadMyTeamReportSummary1(request)
+            error = err1
+            responseData = data1
+        }
+        //role_id = 6 for emerging lead , get  (my team) dashboard
+        else if (request.role_id === 6) {
+            const [err1, data1] = await this.getEmergingLeadMyTeamReportSummary1(request)
+            error = err1
+            responseData = data1
+        }
+        //role_id = 3 for user(employee) , get individual employee dashboard
+        else if (request.role_id === 3) {
+            const [err1, data1] = await this.getEmployeeMyTeamReportSummary1(request)
+            error = err1
+            responseData = data1
+        }
+        return [error, responseData]
+
+    };
+    
     this.getReportSummary = async function (request) {
         let responseData = [],
             error = true;
@@ -1864,6 +1896,221 @@ function AnalyzeServices(objectCollection) {
                                 responseData.push({ total_time: totalTime })
                                 responseData.push(overallTotalTime)
                                 responseData.push(overallProjects)
+                            }
+                        }
+
+                    }
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+    this.getAdminSuperLeadMyTeamReportSummary1 = async function (request) {
+        total_time = {}
+        dayWiseData = []
+        emps = []
+        filteredEmps = []
+        let responseData = [],
+            error = true;
+        flag = 1
+        const paramsArr = new Array(
+
+            request.employee_id,
+            request.start_date,
+            request.end_date,
+            flag
+
+        );
+
+        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (dat) => {
+                    if (dat.length != 0) {
+                        //filtering employees based on selection
+                        if (request.employees.length != 0 && request.groups.length != 0) {
+                            groups = request.groups
+                            //gathering all selected lead,emerging lead employees in gorups
+                            for (let j = 0; j < groups.length; j++) {
+                                request.employee_id = groups[j]
+                                const [err, data] = await employeeService.getEmployeeById(request)
+                                // on group selecton if emp is lead or emerging lead geting emps under them 
+                                if (data[0].role_id == 4) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 4
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+
+                                } else if (data[0].role_id == 6) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 6
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+                                }
+                            }
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(emps, usr);
+                            }
+                            //removeing duplicates employees 
+                            if (emps.length != 0) {
+                                const uniqueids = [];
+                                const uniqueEmps = emps.filter(element => {
+                                    const isDuplicate = uniqueids.includes(element.employee_id);
+                                    if (!isDuplicate) {
+                                        uniqueids.push(element.employee_id);
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                //filter data by selected employees
+                                for (let i = 0; i < uniqueEmps.length; i++) {
+                                    dat.filter(function (data) {
+                                        if (data.employee_id == uniqueEmps[i].employee_id) {
+                                            filteredEmps.push(data)
+                                            // Array.prototype.push.apply(finalData, data1);
+                                        }
+                                    })
+                                }
+
+                            }
+
+                        } else if (request.employees.length == 0 && request.groups.length != 0) {
+                            groups = request.groups
+                            //gathering all selected lead,emerging lead employees in gorups
+                            for (let j = 0; j < groups.length; j++) {
+                                request.employee_id = groups[j]
+                                const [err, data] = await employeeService.getEmployeeById(request)
+                                console.log('====================================')
+                                console.log(data)
+                                console.log('====================================')
+                                // on group selecton if emp is lead or emerging lead geting emps under them 
+                                if (data[0].role_id == 4) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 4
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+
+                                } else if (data[0].role_id == 6) {
+                                    request.lead_assigned_employee_id = data[0].employee_id
+                                    request.role_id = 6
+                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                                    Array.prototype.push.apply(emps, data1);
+                                }
+                            }
+                            //removeing duplicates employees 
+                            if (emps.length != 0) {
+                                const uniqueids = [];
+                                const uniqueEmps = emps.filter(element => {
+                                    const isDuplicate = uniqueids.includes(element.employee_id);
+                                    if (!isDuplicate) {
+                                        uniqueids.push(element.employee_id);
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                //filter data by selected employees
+                                for (let i = 0; i < uniqueEmps.length; i++) {
+                                    dat.filter(function (data) {
+                                        if (data.employee_id == uniqueEmps[i].employee_id) {
+                                            filteredEmps.push(data)
+                                            // Array.prototype.push.apply(finalData, data1);
+                                        }
+                                    })
+                                }
+                            }
+
+                        } else if (request.employees.length != 0 && request.groups.length == 0) {
+                            //----single users
+                            users = request.employees
+                            for (let i = 0; i < users.length; i++) {
+                                request.employee_id = users[i]
+                                const [err, usr] = await employeeService.getEmployeeById(request)
+                                Array.prototype.push.apply(emps, usr);
+                            }
+
+                            //filter data by selected employees
+                            for (let i = 0; i < emps.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == emps[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }
+
+                        } else {
+                            const [err, emps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                            for (let i = 0; i < emps.length; i++) {
+                                dat.filter(function (data) {
+                                    if (data.employee_id == emps[i].employee_id) {
+                                        filteredEmps.push(data)
+                                        // Array.prototype.push.apply(finalData, data1);
+                                    }
+                                })
+                            }
+                        }
+
+                        if (filteredEmps.length != 0) {
+                            //filtered data based on emps
+                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
+                            if (data.length != 0) {
+                                // total time
+                                idGenerate = await util.getRandomNumericId()
+                                id = idGenerate
+                                totalTime = await util.calculateWorkedHours(data)
+
+                                //insert data into table for calce
+                                for (i = 0; i < data.length; i++) {
+                                    flag = 1
+                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
+                                }
+                                //get overall total user hours 
+                                flag = 8
+                                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+                                overallUsers = data3
+                                console.log('=============overallUsers==============')
+                                console.log(overallUsers)
+                                console.log('====================================')
+
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallUsers.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.employee_id == overallUsers[i].employee_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallUsers[i].description = value
+                                }
+
+
+                                //over all total_time daywise
+                                flag = 6
+                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
+                                overallTotalTime = data5
+
+                                // delete data
+                                flag = 5
+                                await this.dashboardDataCalculation(request, id, flag)
+                                responseData.push({ total_time: totalTime })
+                                responseData.push(overallTotalTime)
+                                responseData.push(overallUsers)
                             }
                         }
 
