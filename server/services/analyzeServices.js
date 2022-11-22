@@ -619,7 +619,7 @@ function AnalyzeServices(objectCollection) {
             data[0].isApp.submited_by = data4[0].submitted_by.concat("(", data4[0].submited_for_approval_datetime, ")");
             data[0].isApp.approved_by = data5[0].approved_by.concat("(", data5[0].approved_on_datetime, ")");
         }
-        responseData.push(data)
+        responseData = data
         return [err, responseData];
 
     };
