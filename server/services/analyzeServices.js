@@ -624,7 +624,7 @@ function AnalyzeServices(objectCollection) {
 
         if (data1.length != 0 || data2.length != 0) {
             if (data[0].isApp.status === "PENDING") {
-                data[0].isApp.submited_by = data1[0].submited_by.concat("(", data1[0].submited_for_approval_datetime, ")")
+                data[0].isApp.submited_by = data1[0].submitted_by.concat("(", data1[0].submited_for_approval_datetime, ")")
             } else if (data[0].isApp.status === "APPROVED") {
                 data[0].isApp.submited_by = data1[0].submitted_by.concat("(", data1[0].submited_for_approval_datetime, ")")
                 data[0].isApp.approved_by = data2[0].approved_by.concat("(", data2[0].approved_on_datetime, ")")
