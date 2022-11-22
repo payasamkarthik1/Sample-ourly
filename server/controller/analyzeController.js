@@ -113,7 +113,6 @@ function Analyze(objectCollection) {
 
          //@Post analyze/get/report/summary/
     app.post('/' + 'analyze/get/report/summary/group/by/user',
-
     async function (req, res) {
 
         const [err, resData] = await analyzeServices.getReportSummary1(req.body);
