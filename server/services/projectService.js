@@ -75,7 +75,6 @@ function ProjectService(objectCollection) {
             const paramsArr = new Array(
                 request.client_name,
                 util.getCurrentUTCTime(),
-
             );
 
             const queryString = util.getQueryString('project_add_client_insert', paramsArr);

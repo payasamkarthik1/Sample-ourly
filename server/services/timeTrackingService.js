@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const moment = require('moment')
 const ApprovalsService = require('./approvalsService')
 const EmployeeService = require('./employeeService')
+const LeadService = require('./leadService')
+
 
 function TimeTrackingService(objectCollection) {
 
@@ -11,6 +13,10 @@ function TimeTrackingService(objectCollection) {
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
+    const leadService = new LeadService(objectCollection)
+    const approvalsService = new ApprovalsService(objectCollection)
+
+
 
     this.timetrackingAddTaskDetailsInsert = async function (request) {
         let responseData = [],
@@ -808,10 +814,7 @@ function TimeTrackingService(objectCollection) {
                 request.employee_id,
                 flag
             );
-
-
             const queryString = util.getQueryString('dashboard_get_lead_my_teams_dashboard_overview_select', paramsArr);
-
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
@@ -854,108 +857,15 @@ function TimeTrackingService(objectCollection) {
         }
 
     };
-    this.getWorkedHoursOfAllTasksWeekly1 = async function (request) {
-        if (request.role_id == 3) {
-            let responseData = [],
-                error = true;
-            //flag =4 for total hours calculation for all projects for a given week 
-            flag = 1
-            const paramsArr = new Array(
-                request.employee_id,
-                request.start_date,
-                request.end_date,
-                request.client_id,
-                request.project_id,
-                request.tag_id,
-                request.status_id,
-                flag
-            );
-
-
-            const queryString = util.getQueryString('v1_timetracking_timeline_worked_hours_calculation', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        console.log('====================================')
-                        console.log(data)
-                        console.log('====================================')
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-
-            }
-        } else if (request.role_id == 4) {
-            let responseData = [],
-                error = true;
-            //flag =4 for total hours calculation for all projects for a given week 
-            flag = 4
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                flag
-            );
-
-
-            const queryString = util.getQueryString('dashboard_get_lead_my_teams_dashboard_overview_select', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-
-            }
-        } else if (request.role_id == 2) {
-            let responseData = [],
-                error = true;
-            //flag =4 for total hours calculation for all projects for a given week 
-            flag = 4
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                flag
-            );
-
-
-            const queryString = util.getQueryString('dashboard_get_admin_all_emps_dashboard_overview_select', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-
-            }
-        }
-
-    };
 
     this.getAllProjectsTimesheetWeekly = async function (request) {
         let responseData = [],
             error = true;
-        flag = 1
+
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
-            flag
         );
 
         const queryString = util.getQueryString('timesheet_get_all_projects_worked_hours_weekly', paramsArr);
@@ -1055,9 +965,7 @@ function TimeTrackingService(objectCollection) {
 
 
 
-
-    //-----------------AAPROVAls-------------------------
-
+    //----------------------approvals services------------------
 
     this.addUpdateRemoveUnsubmit = async function (request) {
         let responseData = [],
@@ -1177,9 +1085,6 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-
-
-
     this.getUnsubmited = async function (request) {
         let responseData = [],
             error = true;
@@ -1254,6 +1159,8 @@ function TimeTrackingService(objectCollection) {
     this.getEmployeeLead = async function (request) {
         let responseData = [],
             error = true;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id.toString()
         );
@@ -1273,112 +1180,278 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    this.getApprovalsListByStatusId = async function (request) {
-
-        let responseData = [],
-            error = true;
-        if (request.role_id === 4) {
-
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                request.status_id,
-                request.first_week_day,
-                request.last_week_day,
-                1
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-
-            }
-        } else if (request.role_id === 2 || request.role_id === 5) {
-
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                request.status_id,
-                request.first_week_day,
-                request.last_week_day,
-                2
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-
-            }
-        }
-        return [error, responseData];
-    }
-
     this.getApprovalsList = async function (request) {
+        let responseData = []
+        error = true;
+        let finalData = []
+        let emps = []
+        if (request.role_id == 4) {
+            if (request.employees.length != 0 && request.groups.length != 0) {
+                //groups
+                groups = request.groups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = request.employee_id
+                        request.role_id = 4
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+
+                    } else if (data[0].role_id == 6) {
+                        request.role_id = 6
+                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data);
+                    }
+                }
+                //single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+
+            } else if (request.employees.length != 0 && request.groups.length == 0) {
+                //single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+                //get approve list 
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+
+            } else if (request.employees.length == 0 && request.groups.length != 0) {
+                request.role_id = 6
+                let emergLeads = []
+                emergLeads = request.lead_assigned_employee_id
+                for (let j = 0; j < emergLeads.length; j++) {
+                    request.lead_assigned_employee_id = emergLeads[j]
+                    const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                    if (data.length != 0) {
+                        for (let i = 0; i < data.length; i++) {
+                            const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                            Array.prototype.push.apply(finalData, data1);
+                        }
+                    }
+                }
+
+            } else {
+                request.lead_assigned_employee_id = request.employee_id
+                const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+
+            }
+            responseData = finalData
+            error = false
+
+        }
+        else if (request.role_id == 6) {
+            if (request.employees.length != 0) {
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+            } else {
+                request.lead_assigned_employee_id = request.employee_id
+                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+
+            }
+            responseData = finalData
+            error = false
+        }
+        else if (request.role_id === 2 || request.role_id === 5) {
+            if (request.employees.length != 0 && request.groups.length != 0) {
+
+                groups = request.groups
+                //gathering all selected lead,emerging lead employees in gorups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 4
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
+
+                    } else if (data[0].role_id == 6) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 6
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
+                    }
+                }
+
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+
+                responseData = finalData
+                error = false
+
+
+            } else if (request.employees.length == 0 && request.groups.length != 0) {
+                groups = request.groups
+                //gathering all selected lead,emerging lead employees in gorups
+                for (let j = 0; j < groups.length; j++) {
+                    request.employee_id = groups[j]
+                    const [err, data] = await employeeService.getEmployeeById(request)
+                    console.log('====================================')
+                    console.log(data)
+                    console.log('====================================')
+                    // on group selecton if emp is lead or emerging lead geting emps under them 
+                    if (data[0].role_id == 4) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 4
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
+
+                    } else if (data[0].role_id == 6) {
+                        request.lead_assigned_employee_id = data[0].employee_id
+                        request.role_id = 6
+                        const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                        Array.prototype.push.apply(emps, data1);
+                    }
+                }
+                //removeing duplicates employees 
+                if (emps.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = emps.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    //get approve list 
+                    for (let i = 0; i < uniqueEmps.length; i++) {
+                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
+                        Array.prototype.push.apply(finalData, data1);
+                    }
+                }
+
+            } else if (request.employees.length != 0 && request.groups.length == 0) {
+                //----single users
+                users = request.employees
+                for (let i = 0; i < users.length; i++) {
+                    request.employee_id = users[i]
+                    const [err, usr] = await employeeService.getEmployeeById(request)
+                    Array.prototype.push.apply(emps, usr);
+                }
+
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+            } else {
+                const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                for (let i = 0; i < data.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
+                }
+            }
+            responseData = finalData
+            error = false
+        }
+        return [error, responseData];
+
+    }
+
+    this.getListFromApprovals = async function (request, data, flag) {
 
         let responseData = [],
             error = true;
-        if (request.role_id === 4) {
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                0,
-                request.first_week_day,
-                request.last_week_day,
-                3
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
+        const paramsArr = new Array(
+            data.employee_id,
+            0,
+            0,
+            request.first_week_day,
+            request.last_week_day,
+            flag
+        )
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
+        const queryString = util.getQueryString('approvals_get_list', paramsArr);
 
-            }
-        } else if (request.role_id === 2 || request.role_id === 5) {
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
 
-            const paramsArr = new Array(
-                request.employee_id,
-                request.role_id,
-                0,
-                request.first_week_day,
-                request.last_week_day,
-                4
-            );
-            const queryString = util.getQueryString('approvals_get_list', paramsArr);
+                })
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-
-            }
         }
         return [error, responseData];
     }
+
     this.getOnApproveOnRejectList = async function (request) {
 
         let responseData = [],
@@ -1469,8 +1542,8 @@ function TimeTrackingService(objectCollection) {
         console.log(request)
         console.log('====================================')
         flag = 2
-        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
-        request.employee_id=id;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1499,8 +1572,8 @@ function TimeTrackingService(objectCollection) {
         let responseData = [],
             error = true;
         flag = 1
-        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
-        request.employee_id=id;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1512,7 +1585,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
 
                     console.log('====================================')
                     console.log(data)
@@ -1540,8 +1612,8 @@ function TimeTrackingService(objectCollection) {
         flag = 1
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
-        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
-        request.employee_id=id;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1600,8 +1672,8 @@ function TimeTrackingService(objectCollection) {
         flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
-        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
-        request.employee_id=id;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1798,7 +1870,7 @@ function TimeTrackingService(objectCollection) {
     this.onWithdraw = async function (request) {
         let responseData = [],
             error = true;
-        flag = 3
+        flag = 4
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1810,9 +1882,15 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const [err1, data1] = await this.onWithdrawnEntry(request)
-                    responseData = data1;
-                    error = false
+                    if (data[0].message == "success") {
+                        const [err1, data1] = await this.onWithdrawnEntry(request)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = true
+                        responseData = [{ message: data[0].message }];
+                    }
+
 
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -1875,8 +1953,8 @@ function TimeTrackingService(objectCollection) {
             error = true;
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
-        let id =request.employee_id?request.employee_id:request.team_member_employee_id;
-        request.employee_id=id;
+        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+        request.employee_id = id;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
@@ -1904,8 +1982,10 @@ function TimeTrackingService(objectCollection) {
             error = true;
         if (request.role_id == 4) {
             flag = 4
-        } else if (request.role_id == 2 || request.role_id === 5) {
+        } else if (request.role_id == 2 || request.role_id == 5) {
             flag = 5
+        } else if (request.role_id == 3) {
+            flag = 7
         }
 
         const paramsArr = new Array(
@@ -1931,607 +2011,6 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    // this.getUnsubmited1 = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-    //     const firstMonth = util.getMonthName(first_week_day)
-    //     const lastMonth = util.getMonthName(last_week_day)
-
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         0,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //         2,
-    //         3
-    //     );
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-
-    // this.addUpdateRemoveUnsubmit1 = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-    //     const [err2, data2] = await this.getUnsubmited1(request)
-    //     if (data2.length == 0) {
-    //         const [err, data] = await this.getEmployeeLead(request)
-    //         const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-    //         const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-    //         const firstMonth = await util.getMonthName(first_week_day)
-    //         const lastMonth = await util.getMonthName(last_week_day)
-    //         request.first_week_day = first_week_day
-    //         request.last_week_day = last_week_day
-    //         request.role_id = 3
-    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //         const paramsArr = new Array(
-    //             data[0].employee_id,
-    //             data[0].role_id,
-    //             request.employee_id,
-    //             data1[0].weekHours,
-    //             first_week_day,
-    //             last_week_day,
-    //             firstMonth.concat("-" + lastMonth),,
-    //             2,
-    //             1
-    //         );
-
-    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-    //         }
-    //         return [error, responseData];
-    //     } else {
-    //         const [err, data] = await this.getEmployeeLead(request)
-    //         const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-    //         const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-    //         const firstMonth = await util.getMonthName(first_week_day)
-    //         const lastMonth = await util.getMonthName(last_week_day)
-    //         request.first_week_day = first_week_day
-    //         request.last_week_day = last_week_day
-    //         request.role_id = 3
-    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //         const paramsArr = new Array(
-    //             data[0].employee_id,
-    //             data[0].role_id,
-    //             request.employee_id,
-    //             data1[0].weekHours,
-    //             first_week_day,
-    //             last_week_day,
-    //             firstMonth.concat("-" + lastMonth),,
-    //             2,
-    //             2
-    //         );
-
-    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-    //         }
-    //         return [error, responseData];
-
-    //     }
-
-    // }
-
-
-    // this.updateUnsubmit = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-    //     const [err2, data2] = await this.getUnsubmited(request)
-    //     if (data2.length !== 0) {
-    //         const [err, data] = await this.getEmployeeLead(request)
-    //         const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //         const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //         const firstMonth = await util.getMonthName(first_week_day)
-    //         const lastMonth = await util.getMonthName(last_week_day)
-    //         request.first_week_day = first_week_day
-    //         request.last_week_day = last_week_day
-    //         request.role_id = 3
-    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //         const paramsArr = new Array(
-    //             data[0].employee_id,
-    //             data[0].role_id,
-    //             request.employee_id,
-    //             data1[0].weekHours,
-    //             first_week_day,
-    //             last_week_day,
-    //             data2[0].week_name,
-    //             2,
-    //             2
-    //         );
-
-    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-    //         }
-
-    //     } else {
-    //         const [err, data] = await this.getEmployeeLead(request)
-    //         const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //         const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //         const firstMonth = await util.getMonthName(first_week_day)
-    //         const lastMonth = await util.getMonthName(last_week_day)
-    //         request.first_week_day = first_week_day
-    //         request.last_week_day = last_week_day
-    //         request.role_id = 3
-    //         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //         const paramsArr = new Array(
-    //             data[0].employee_id,
-    //             data[0].role_id,
-    //             request.employee_id,
-    //             data1[0].weekHours,
-    //             first_week_day,
-    //             last_week_day,
-    //             firstMonth.concat("-" + lastMonth),,
-    //             2,
-    //             1
-    //         );
-    //         const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-    //         }
-
-    //     }
-
-    //     return [error, responseData];
-    // }
-
-    // this.removeUnsubmited = async function (request) {
-
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     console.log('======RRRRRRRRRRRRRRRRRRRRRMOEV=========');
-    //     console.log(data);
-    //     console.log('====================================');
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         0,
-    //         request.first_week_day,
-    //         request.last_week_day,
-    //         request.week_name,
-    //         2,
-    //         4
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-    // this.removePending = async function (request) {
-
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         0,
-    //         request.first_week_day,
-    //         request.last_week_day,
-    //         request.week_name,
-    //         0,
-    //         4
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-    // this.getWeekInPendingStateInLead = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         data[0].role_id,
-    //         1,
-    //         first_week_day,
-    //         last_week_day,
-    //         5
-    //     );
-    //     const queryString = util.getQueryString('approvals_get_list', paramsArr);
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-    // this.getWeekInPendingStateAtTaskAdding = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         data[0].role_id,
-    //         1,
-    //         first_week_day,
-    //         last_week_day,
-    //         5
-    //     );
-    //     const queryString = util.getQueryString('approvals_get_list', paramsArr);
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-
-    // this.getWeekInUnsubmitedStateInLead = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         data[0].role_id,
-    //         2,
-    //         first_week_day,
-    //         last_week_day,
-    //         5
-    //     );
-    //     const queryString = util.getQueryString('approvals_get_list', paramsArr);
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-    // this.updatePending = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const firstMonth = await util.getMonthName(first_week_day)
-    //     const lastMonth = await util.getMonthName(last_week_day)
-    //     request.first_week_day = first_week_day, request.last_week_day = last_week_day, request.role_id = 3
-    //     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //     console.log('====================================')
-    //     console.log(data)
-    //     console.log(data1)
-    //     console.log(first_week_day + "" + last_week_day)
-    //     console.log('====================================')
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         data1[0].weekHours,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //         1,
-    //         2
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-
-    //             })
-    //     }
-    //     return [error, responseData];
-    // }
-
-    // this.updateRemoveTaskInPending = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.previous_task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.previous_task_created_datetime)
-    //     const firstMonth = await util.getMonthName(first_week_day)
-    //     const lastMonth = await util.getMonthName(last_week_day)
-    //     request.first_week_day = first_week_day, request.last_week_day = last_week_day, request.role_id = 3
-    //     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //     console.log('====================================')
-    //     console.log(data)
-    //     console.log(data1)
-    //     console.log(first_week_day + " " + last_week_day)
-    //     console.log('====================================')
-
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         data1[0].weekHours,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //         1,
-    //         2
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-
-    //             })
-    //     }
-    //     return [error, responseData];
-    // }
-
-    // this.updateRemoveTask = async function (request) {
-    //     console.log('====================================')
-    //     console.log("uodate")
-    //     console.log(request.task_created_datetime)
-    //     console.log('====================================')
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const firstMonth = await util.getMonthName(first_week_day)
-    //     const lastMonth = await util.getMonthName(last_week_day)
-    //     request.first_week_day = first_week_day, request.last_week_day = last_week_day, request.role_id = 3
-    //     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //     console.log('====================================')
-    //     console.log(data)
-    //     console.log(data1)
-    //     console.log(first_week_day + " " + last_week_day)
-    //     console.log('====================================')
-
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         data1[0].weekHours,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //         1,
-    //         2
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-
-    //             })
-    //     }
-    //     return [error, responseData];
-    // }
-    // this.updateaddedTaskInPending = async function (request) {
-
-    //     console.log('====================================')
-    //     console.log("enrrrrrrrrrrrrrrrrrrrrrt")
-    //     console.log(request.task_created_datetime)
-    //     console.log('====================================')
-    //     let responseData = [],
-    //         error = true;
-    //     const [err, data] = await this.getEmployeeLead(request)
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const firstMonth = await util.getMonthName(first_week_day)
-    //     const lastMonth = await util.getMonthName(last_week_day)
-    //     request.first_week_day = first_week_day, request.last_week_day = last_week_day, request.role_id = 3
-    //     const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
-    //     console.log('====================================')
-    //     console.log(data)
-    //     console.log(data1)
-    //     console.log(first_week_day + " " + last_week_day)
-    //     console.log('====================================')
-
-    //     const paramsArr = new Array(
-    //         data[0].employee_id,
-    //         data[0].role_id,
-    //         request.employee_id,
-    //         data1[0].weekHours,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //         1,
-    //         2
-    //     );
-
-    //     const queryString = util.getQueryString('approvals_add_update_remove_unsubmit', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-
-    //             })
-    //     }
-    //     return [error, responseData];
-    // }
-
-    // this.changeStatusToPending = async function (request, flag) {
-    //     let responseData = [],
-    //         error = true;
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         first_week_day,
-    //         last_week_day,
-    //         flag
-    //     );
-    //     const queryString = util.getQueryString('approvals_change_status', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
-
-
-    // this.getWeekStatus = async function (request1, request) {
-    //     let responseData = [],
-    //         error = true;
-    //     // flag = 1
-    //     const first_week_day = await util.getFirstWeekDate(request.task_created_datetime)
-    //     const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
-    //     const firstMonth = await util.getMonthName(first_week_day)
-    //     const lastMonth = await util.getMonthName(last_week_day)
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         first_week_day,
-    //         last_week_day,
-    //         firstMonth.concat("-" + lastMonth),,
-    //     );
-    //     const queryString = util.getQueryString('get_week_status', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-
-    // }
 
 
 

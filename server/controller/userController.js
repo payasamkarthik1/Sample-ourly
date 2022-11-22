@@ -63,7 +63,6 @@ function UserController(objectCollection) {
         }
     })
 
-
     //@Postuser/forget/change/password
     app.post('/' + 'user/forget/change/password', async function (req, res) {
         const [err, resData] = await validations.forgetChangePassword(req.body, res);

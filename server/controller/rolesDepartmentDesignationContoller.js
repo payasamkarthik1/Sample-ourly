@@ -1,5 +1,4 @@
 
-const AdminServices = require("../services/adminService");
 const Validations = require('../utils/validations')
 const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
 
@@ -11,7 +10,6 @@ function RolesDepartmentDesignation(objectCollection) {
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
-    const adminServices = new AdminServices(objectCollection)
     const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
@@ -43,6 +41,21 @@ function RolesDepartmentDesignation(objectCollection) {
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
                 console.log("role/get/all/roles/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post role/remove/delete
+    app.get('/' + 'role/remove/delete',
+
+        async function (req, res) {
+
+            const [err, resData] = await rolesDepartDesignService.deleteRole(req.body);
+            if (!err) {
+                console.log("role/remove/delete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("role/remove/delete | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })

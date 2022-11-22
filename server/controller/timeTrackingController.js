@@ -1,5 +1,4 @@
 const { json } = require("body-parser");
-const AdminServices = require("../services/adminService");
 const ProjectService = require("../services/projectService");
 const TimeTrackingService = require("../services/timeTrackingService");
 const moment = require('moment')
@@ -13,7 +12,6 @@ function TimeTrackingController(objectCollection) {
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
-    const adminServices = new AdminServices(objectCollection)
     const projectService = new ProjectService(objectCollection)
     const timeTrackingService = new TimeTrackingService(objectCollection)
     const validations = new Validations(objectCollection)

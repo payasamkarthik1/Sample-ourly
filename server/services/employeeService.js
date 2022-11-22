@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
 
 
-function AdminService(objectCollection) {
+function EmployeeServices(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -45,17 +45,13 @@ function AdminService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
-                        if (data[0].email === "EMAIL ALREADY EXIST") {
-                            data[0].message = data[0].email
-                            delete data[0].email
+                        if (data[0].message === "EMAIL ALREADY EXIST") {
                             error = true
-                            responseData = data;
-                        } else if (data[0].email === "PHONENUMBER ALREADY EXIST") {
-                            data[0].message = data[0].email
-                            delete data[0].email
+                            responseData = [{ message: data[0].message }];
+                        } else if (data[0].message === "PHONENUMBER ALREADY EXIST") {
                             error = true
-                            responseData = data;
-                        } else {
+                            responseData = [{ message: data[0].message }];
+                        } else if (data[0].message === "data") {
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                             responseData = data1;
                             error = false;
@@ -65,6 +61,7 @@ function AdminService(objectCollection) {
                     .catch((err) => {
                         error = err;
                     })
+                return [error, responseData];
             }
         }
         return [error, responseData];
@@ -121,7 +118,7 @@ function AdminService(objectCollection) {
 
         let responseData = [],
             error = true;
-            flag=1
+        flag = 1
         const paramsArr = new Array(
             request.employee_id.toString(),
             flag
@@ -142,11 +139,12 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.removeEmployeeComplete = async function (request) {
 
         let responseData = [],
             error = true;
-            flag=2
+        flag = 2
         const paramsArr = new Array(
             request.employee_id,
             flag
@@ -167,11 +165,12 @@ function AdminService(objectCollection) {
             return [error, responseData];
         }
     }
+
     this.inactiveEmpToActive = async function (request) {
 
         let responseData = [],
             error = true;
-            flag=3
+        flag = 3
         const paramsArr = new Array(
             request.employee_id,
             flag
@@ -238,88 +237,9 @@ function AdminService(objectCollection) {
         return [error, responseData];
     }
 
-    this.addEmployeesUnderLeads = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.role_id,
-            request.team_lead_employee_id,
-            request.employee_id,
-            util.getCurrentUTCTime()
-        );
-
-        const queryString = util.getQueryString('lead_add_employees_under_lead', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-    this.getAllLeads = async function (request) {
-
-        let responseData = [],
-            error = true;
-        // if flag = 2 get all leads
-        flag = 2
-        const paramsArr = new Array(
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('get_leads', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-    this.getEmpsUnderLeads = async function (request) {
-
-        let responseData = [],
-            error = true;
-        // if flag = 1 get all employess under lead
-        flag = 1
-        const paramsArr = new Array(
-            request.lead_assigned_employee_id,
-            flag
-        );
-
-        const queryString = util.getQueryString('get_leads', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
 
 }
 
 
 
-module.exports = AdminService;
+module.exports = EmployeeServices;

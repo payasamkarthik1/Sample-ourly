@@ -22,15 +22,16 @@ const timeTrackingService = require('../services/timeTrackingService')
 const analyzeController = require('../controller/analyzeController')
 const analyzeServices = require('../services/analyzeServices')
 
-const adminController = require('../controller/adminController')
-const adminService = require('../services/adminService')
-
 const holidayListController = require('../controller/HolidaysListController')
 const holidaysListService = require('../services/HolidaysListService')
 
 
 const approvalsController = require('../controller/approvalsController')
 const approvalsService = require('../services/approvalsService')
+
+const leadController = require('../controller/leadController')
+const leadService = require('../services/leadService')
+
 
 
 function ControllInterceptor(objCollection) {
@@ -58,14 +59,14 @@ function ControllInterceptor(objCollection) {
     new analyzeController(objCollection)
     new analyzeServices(objCollection)
 
-    new adminController(objCollection)
-    new adminService(objCollection)
-
     new holidayListController(objCollection)
     new holidaysListService(objCollection)
 
     new approvalsController(objCollection)
     new approvalsService(objCollection)
+
+    new leadController(objCollection)
+    new leadService(objCollection)
 }
 
 

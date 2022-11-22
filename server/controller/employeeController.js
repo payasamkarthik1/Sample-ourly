@@ -1,5 +1,4 @@
 const { json } = require("body-parser");
-const AdminServices = require("../services/adminService");
 const ProjectService = require("../services/projectService");
 const EmployeeService = require("../services/employeeService");
 
@@ -12,7 +11,6 @@ function EmployeeController(objectCollection) {
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
-    const adminServices = new AdminServices(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const projectService = new ProjectService(objectCollection)
     const validations = new Validations(objectCollection)
@@ -113,38 +111,6 @@ function EmployeeController(objectCollection) {
         async function (req, res) {
 
             const [err, resData] = await employeeService.updateEmployeeDetails(req.body);
-            if (!err) {
-                console.log("employee/update/employee/details | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("employee/update/employee/details | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-    //-------------------------leads---------------
-
-    //@Get lead/get/all/leads/list
-    app.get('/' + 'lead/get/all/leads/list',
-
-        async function (req, res) {
-
-            const [err, resData] = await employeeService.getAllLeads(req.body);
-            if (!err) {
-                console.log("employee/update/employee/details | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("employee/update/employee/details | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-    //@Post lead/get/emps/assigned/under/leads/list 
-    app.post('/' + 'lead/get/emps/assigned/under/leads/list',
-
-        async function (req, res) {
-
-            const [err, resData] = await employeeService.getEmpsUnderLeads(req.body);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));

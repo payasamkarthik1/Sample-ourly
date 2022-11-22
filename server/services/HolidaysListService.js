@@ -11,8 +11,8 @@ function HolidaysListService(objectCollection) {
             error = true;
         await this.removeHolidayListDelete(request);
         data1 = request.data
-        for (let i = 0; i < Object.keys(data1[0]).length; i++) {
-            await this.addHolidaysListInsert(data1[0][i], request)
+        for (let i = 0; i < data1.length; i++) {
+            await this.addHolidaysListInsert(data1[i], request)
 
         }
         const [err1, respData1] = await this.getHolidayslistSelect(request)
@@ -21,15 +21,12 @@ function HolidaysListService(objectCollection) {
     }
 
     this.addHolidaysListInsert = async function (data, request) {
-        console.log('==========sss===========');
-        console.log(data);
-        console.log('====================================');
 
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-            data.holidays,
-            await util.dateConvertInExcel(data.date),
+            data.Holiday,
+            data.Date,
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
