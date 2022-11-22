@@ -111,6 +111,22 @@ function Analyze(objectCollection) {
         })
 
 
+         //@Post analyze/get/report/summary/
+    app.post('/' + 'analyze/get/report/summary/by/user',
+
+    async function (req, res) {
+
+        const [err, resData] = await analyzeServices.getReportWeekly(req.body);
+        if (!err) {
+            console.log("analyze/get/report/weekly | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("analyze/get/report/weekly | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+
 
 
 

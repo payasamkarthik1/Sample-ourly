@@ -606,6 +606,20 @@ function AnalyzeServices(objectCollection) {
         obj.lastWeekDay = (request.last_week_day)
         const [err, data] = await timeTrackingService.getAllTasksInThatWeeks(request, obj)
 
+        const [err1, data1] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+        const [err2, data2] = await timeTrackingService.getWorkedHoursOfAllTasksWeekly(request)
+
+        if (data1.length != 0 || data2.length != 0) {
+            if (data[0].isApp.status === "PENDING") {
+                data[0].isApp.submited_by = data1[0].submited_by.concat("(", data1[0].submited_for_approval_datetime, ")")
+            } else if (data[0].isApp.status === "APPROVED") {
+                data[0].isApp.submited_by = data1[0].submitted_by.concat("(", data1[0].submited_for_approval_datetime, ")")
+                data[0].isApp.approved_by = data2[0].approved_by.concat("(", data2[0].approved_on_datetime, ")")
+            }
+
+        }
+
+
         responseData.push(data)
         return [err, responseData];
 
@@ -1469,8 +1483,8 @@ function AnalyzeServices(objectCollection) {
                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                 overallProjects = data3
 
-                  //loop for adding descriptions 
-                  for (let i = 0; i < overallProjects.length; i++) {
+                //loop for adding descriptions 
+                for (let i = 0; i < overallProjects.length; i++) {
                     let value = []
                     data.filter(function (dat) {
                         if (dat.project_id == overallProjects[i].project_id) {
@@ -1824,8 +1838,8 @@ function AnalyzeServices(objectCollection) {
                                 const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
                                 overallProjects = data3
 
-                                  //loop for adding descriptions 
-                                  for (let i = 0; i < overallProjects.length; i++) {
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallProjects.length; i++) {
                                     let value = []
                                     data.filter(function (dat) {
                                         if (dat.project_id == overallProjects[i].project_id) {
