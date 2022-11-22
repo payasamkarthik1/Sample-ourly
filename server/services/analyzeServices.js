@@ -956,6 +956,7 @@ function AnalyzeServices(objectCollection) {
                                     if (dat.project_id == overallProjects1[i].project_id) {
                                         obj = {}
                                         obj.task_description = dat.task_description
+                                        obj.task_total_time = dat.task_total_time
                                         value.push(obj)
                                     }
 
@@ -1238,6 +1239,7 @@ function AnalyzeServices(objectCollection) {
                                         if (dat.project_id == overallProjects1[i].project_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
                                             value.push(obj)
                                         }
 
@@ -1548,6 +1550,7 @@ function AnalyzeServices(objectCollection) {
                         if (dat.project_id == overallProjects1[i].project_id) {
                             obj = {}
                             obj.task_description = dat.task_description
+                            obj.task_total_time = dat.task_total_time
                             value.push(obj)
                         }
 
@@ -1906,6 +1909,7 @@ function AnalyzeServices(objectCollection) {
                                         if (dat.project_id == overallProjects1[i].project_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
                                             value.push(obj)
                                         }
 
