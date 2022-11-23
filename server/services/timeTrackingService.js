@@ -887,6 +887,11 @@ function TimeTrackingService(objectCollection) {
                             });
                         });
 
+
+                        console.log('======data1=================')
+                        console.log(data1)
+                        console.log('====================================')
+
                         //renaming object key and calculating total time
                         for (let i = 0; i < data1.length; i++) {
                             data1[i].task_total_time = data1[i].total_hour
@@ -895,7 +900,7 @@ function TimeTrackingService(objectCollection) {
 
                         console.log('=====data1==============');
                         console.log(data1);
-                        console.log('===================================='); 
+                        console.log('====================================');
                         let total = await util.calculateWorkedHours(data1)
                         console.log('========total================')
                         console.log(total)
