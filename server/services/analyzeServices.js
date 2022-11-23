@@ -769,33 +769,28 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
     }
 
-    this.getReportSummary1 = async function (request) {
+    this.getReportSummaryGroupByUser = async function (request) {
         let responseData = [],
             error = true;
 
         //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
         if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummary1(request)
+            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummaryGroupByUser(request)
             error = err1
             responseData = data1
             //role_id = 4 for lead , get lead (my team) dashboard
         } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getLeadMyTeamReportSummary1(request)
+            const [err1, data1] = await this.getLeadMyTeamReportSummaryGroupByUser(request)
             error = err1
             responseData = data1
         }
         //role_id = 6 for emerging lead , get  (my team) dashboard
         else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamReportSummary1(request)
+            const [err1, data1] = await this.getEmergingLeadMyTeamReportSummaryGroupByUser(request)
             error = err1
             responseData = data1
         }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeMyTeamReportSummary1(request)
-            error = err1
-            responseData = data1
-        }
+
         return [error, responseData]
 
     };
@@ -1273,7 +1268,7 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-    this.getEmergingLeadMyTeamReportSummary1 = async function (request) {
+    this.getEmergingLeadMyTeamReportSummaryGroupByUser = async function (request) {
         total_time = {}
         dayWiseData = []
         emps = []
@@ -1342,28 +1337,50 @@ function AnalyzeServices(objectCollection) {
                                     flag = 1
                                     const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
                                 }
-                             //get overall total user hours 
-                             flag = 8
-                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                             overallUsers = data3
-                             console.log('=============overallUsers==============')
-                             console.log(overallUsers)
-                             console.log('====================================')
+                                //get overall total user hours 
+                                flag = 8
+                                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+                                overallUsers = data3
+                                console.log('=============overallUsers==============')
+                                console.log(overallUsers)
+                                console.log('====================================')
 
-                             //loop for adding descriptions 
-                             for (let i = 0; i < overallUsers.length; i++) {
-                                 let value = []
-                                 data.filter(function (dat) {
-                                     if (dat.employee_id == overallUsers[i].employee_id) {
-                                         obj = {}
-                                         obj.task_description = dat.task_description
-                                         obj.task_total_time = dat.task_total_time
-                                         value.push(obj)
-                                     }
 
-                                 })
-                                 overallUsers[i].description = value
-                             }
+
+
+                                //adding uniques keys 
+                                overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallUsers1.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.project_id == overallUsers1[i].project_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallUsers1[i].description = value
+                                }
+
+
+
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallUsers1.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.employee_id == overallUsers1[i].employee_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallUsers1[i].description = value
+                                }
 
                                 //over all total_time daywise
                                 flag = 6
@@ -1376,7 +1393,7 @@ function AnalyzeServices(objectCollection) {
 
                                 responseData.push({ total_time: totalTime })
                                 responseData.push(overallTotalTime)
-                                responseData.push(overallUsers)
+                                responseData.push(overallUsers1)
 
                             }
                         }
@@ -1694,7 +1711,7 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
 
     };
-    this.getLeadMyTeamReportSummary1 = async function (request) {
+    this.getLeadMyTeamReportSummaryGroupByUser = async function (request) {
         responseData = [],
             error = true;
 
@@ -1792,28 +1809,51 @@ function AnalyzeServices(objectCollection) {
                     flag = 1
                     const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
                 }
-               //get overall total user hours 
-               flag = 8
-               const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-               overallUsers = data3
-               console.log('=============overallUsers==============')
-               console.log(overallUsers)
-               console.log('====================================')
+                //get overall total user hours 
+                flag = 8
+                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
+                overallUsers = data3
+                console.log('=============overallUsers==============')
+                console.log(overallUsers)
+                console.log('====================================')
 
-               //loop for adding descriptions 
-               for (let i = 0; i < overallUsers.length; i++) {
-                   let value = []
-                   data.filter(function (dat) {
-                       if (dat.employee_id == overallUsers[i].employee_id) {
-                           obj = {}
-                           obj.task_description = dat.task_description
-                           obj.task_total_time = dat.task_total_time
-                           value.push(obj)
-                       }
 
-                   })
-                   overallUsers[i].description = value
-               }
+
+                //adding uniques keys 
+                overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+                //loop for adding descriptions 
+                for (let i = 0; i < overallUsers1.length; i++) {
+                    let value = []
+                    data.filter(function (dat) {
+                        if (dat.project_id == overallUsers1[i].project_id) {
+                            obj = {}
+                            obj.task_description = dat.task_description
+                            obj.task_total_time = dat.task_total_time
+                            value.push(obj)
+                        }
+
+                    })
+                    overallUsers1[i].description = value
+                }
+
+
+
+
+
+                //loop for adding descriptions 
+                for (let i = 0; i < overallUsers1.length; i++) {
+                    let value = []
+                    data.filter(function (dat) {
+                        if (dat.employee_id == overallUsers1[i].employee_id) {
+                            obj = {}
+                            obj.task_description = dat.task_description
+                            obj.task_total_time = dat.task_total_time
+                            value.push(obj)
+                        }
+
+                    })
+                    overallUsers1[i].description = value
+                }
 
 
                 //over all total_time daywise
@@ -1826,7 +1866,7 @@ function AnalyzeServices(objectCollection) {
 
                 responseData.push({ total_time: totalTime })
                 responseData.push(overallTotalTime)
-                responseData.push(overallUsers)
+                responseData.push(overallUsers1)
             }
         }
 
@@ -2200,7 +2240,7 @@ function AnalyzeServices(objectCollection) {
 
 
     };
-    this.getAdminSuperLeadMyTeamReportSummary1 = async function (request) {
+    this.getAdminSuperLeadMyTeamReportSummaryGroupByUser = async function (request) {
         total_time = {}
         dayWiseData = []
         emps = []
@@ -2374,11 +2414,15 @@ function AnalyzeServices(objectCollection) {
                                 console.log(overallUsers)
                                 console.log('====================================')
 
+
+
+                                //adding uniques keys 
+                                overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
                                 //loop for adding descriptions 
-                                for (let i = 0; i < overallUsers.length; i++) {
+                                for (let i = 0; i < overallUsers1.length; i++) {
                                     let value = []
                                     data.filter(function (dat) {
-                                        if (dat.employee_id == overallUsers[i].employee_id) {
+                                        if (dat.project_id == overallUsers1[i].project_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
@@ -2386,7 +2430,26 @@ function AnalyzeServices(objectCollection) {
                                         }
 
                                     })
-                                    overallUsers[i].description = value
+                                    overallUsers1[i].description = value
+                                }
+
+
+
+
+
+                                //loop for adding descriptions 
+                                for (let i = 0; i < overallUsers1.length; i++) {
+                                    let value = []
+                                    data.filter(function (dat) {
+                                        if (dat.employee_id == overallUsers1[i].employee_id) {
+                                            obj = {}
+                                            obj.task_description = dat.task_description
+                                            obj.task_total_time = dat.task_total_time
+                                            value.push(obj)
+                                        }
+
+                                    })
+                                    overallUsers1[i].description = value
                                 }
 
 
@@ -2400,7 +2463,7 @@ function AnalyzeServices(objectCollection) {
                                 await this.dashboardDataCalculation(request, id, flag)
                                 responseData.push({ total_time: totalTime })
                                 responseData.push(overallTotalTime)
-                                responseData.push(overallUsers)
+                                responseData.push(overallUsers1)
                             }
                         }
 
