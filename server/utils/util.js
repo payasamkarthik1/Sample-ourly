@@ -314,7 +314,7 @@ function Util() {
                 <td
                     style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
 
-                    <img src="efinder-3.png" alt="" style="width: 16%;">
+                    <img src="../../efinder-3.png" alt="" style="width: 16%;">
                 </td>
             </tr>
             <tr>
