@@ -286,6 +286,8 @@ function Util() {
 
                                     <h5 style="color:#777;color: #777;margin: 0;"><span
                                             style="font-weight: 100;">Rejected by:</span> ${request.rejected_by}</h5>
+                                            <h5 style="color:#777;color: #777;margin: 0;"><span
+                                            style="font-weight: 100;">Note:</span>${request.note}</h5>
                                 </td>
                             </tr>
                             <tr>
