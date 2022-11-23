@@ -879,7 +879,6 @@ function TimeTrackingService(objectCollection) {
                         const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request, flag)
                         const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request, flag)
 
-
                         data.filter(function (o1, i) {
                             data1.some(function (o2) {
                                 if (o1.project_id === o2.project_id) {
@@ -893,7 +892,7 @@ function TimeTrackingService(objectCollection) {
                             data1[i].task_total_time = data1[i].total_hour
                             delete data1[i].total_hour
                         }
-                        let total = await this.calculateWorkedHours(data1)
+                        let total = await util.calculateWorkedHours(data1)
                         data2[0].total_hour = total
                         data.push(data2[0])
                         responseData = data;
