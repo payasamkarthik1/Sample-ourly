@@ -173,23 +173,81 @@ function Util() {
                   
                   `,// Subject line
                     html: `
-                    <table>
-                    <tr>
-                    <td><h2>Timesheet rejected</h2>
-                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
-                    </tr>                 
-                    <hr>                  
-                    <tr>
-                    <td><br><h2>${request.week_name}</h2>
-                    <p style="font-size:22px">${request.employee_name}</p></td>
-                    </tr>
-                    <tr>
-                    <td><br>Rejected by:<b>${request.rejected_by}</b><br>
-                    <span>Note:<b>${request.note}</b></span>
-                    
-                    </td>
-                    </tr>
-                    </table>`
+                    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Docket</title>
+</head>
+
+<body style="padding: 30px;background: #f3f4fb;">
+    <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+        margin: 0 auto;">
+        <tbody>
+            <tr>
+                <td
+                    style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+
+                    <img src="../../efinder-3.png" alt="" style="width: 16%;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                        <tbody>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                    <h2 style="font-weight: 100;">Timesheet rejected</h2>
+                                    <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border:1px solid #ccc;border-radius:5px;padding: 15px;">
+                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2>
+                                    <h4 style="color:#777;color: #777;margin: 0;padding-top: 25px;">${request.employee_name}</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="font-family:Arial, sans-serif; font-size: 16px;">
+
+                                    <h5 style="color:#777;color: #777;margin: 0;"><span
+                                            style="font-weight: 100;">Rejected by:</span> ${request.rejected_by}</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                    <button
+                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                    <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                        padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>`
                     // html body
 
                 };
@@ -238,20 +296,81 @@ function Util() {
                   
                   `,// Subject line
                     html: `
-                    <table>
-                    <tr>
-                    <td><h2>Timesheet approved</h2>
-                    <p style="font-size:16px">Pronteff IT Solutions</p></td>
-                    </tr>                 
-                    <hr>                  
-                    <tr>
-                    <td><br><h2>${request.week_name}</h2>
-                    <p style="font-size:22px">${request.employee_name}</p></td>
-                    </tr>
-                    <tr>
-                    <td><br>Approved by:<b>${request.approved_by}</b></td>
-                    </tr>
-                    </table>`
+                    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Docket</title>
+</head>
+
+<body style="padding: 30px;background: #f3f4fb;">
+    <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+        margin: 0 auto;">
+        <tbody>
+            <tr>
+                <td
+                    style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+
+                    <img src="efinder-3.png" alt="" style="width: 16%;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                        <tbody>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                    <h2 style="font-weight: 100;">Timesheet approved</h2>
+                                    <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border:1px solid #ccc;border-radius:5px;padding: 15px;">
+                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2>
+                                    <h4 style="color:#777;color: #777;margin: 0;padding-top: 25px;">${request.employee_name}</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="font-family:Arial, sans-serif; font-size: 16px;">
+
+                                    <h5 style="color:#777;color: #777;margin: 0;"><span
+                                            style="font-weight: 100;">Approved by:</span> ${request.approved_by}</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                    <button
+                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                    <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                        padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>`
 
 
                     // html body
@@ -335,7 +454,7 @@ function Util() {
     }
 
     this.getCurrentUTCTime = function (format) {
-        
+
         // let now = moment().utc().format(format || "YYYY-MM-DD HH:mm:ss");
         date = new Date()
         var year = date.getFullYear();
