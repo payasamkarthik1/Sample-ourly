@@ -122,7 +122,70 @@ function Util() {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
                     subject: 'Prontify Request to change the password', // Subject line
-                    html: `<a href="http://192.168.0.251:4179/forgotpass">Click to Change Password</a>`
+                    html:
+
+                        `
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                            <title>Employee Docket</title>
+                        </head>
+                        
+                        <body style="padding: 30px;background: #f3f4fb;">
+                            <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+                                margin: 0 auto;">
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+                        
+                                            <img src="../../efinder-3.png" alt="" style="width: 16%;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                                            <h2 style="font-weight: 100;">Forget Password</h2>
+                                                            <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>                                
+                                                    <tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                                            <a href="http://192.168.0.251:4179/forgotpass">
+                                                            <button
+                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
+                                                                </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td
+                                                            style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                                            <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                                                padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </body>
+                        
+                        </html>
+                    `
 
                     // html body
 
