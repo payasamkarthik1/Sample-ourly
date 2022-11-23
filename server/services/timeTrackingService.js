@@ -892,7 +892,14 @@ function TimeTrackingService(objectCollection) {
                             data1[i].task_total_time = data1[i].total_hour
                             delete data1[i].total_hour
                         }
+
+                        console.log('=====data1==============');
+                        console.log(data1);
+                        console.log('===================================='); 
                         let total = await util.calculateWorkedHours(data1)
+                        console.log('========total================')
+                        console.log(total)
+                        console.log('====================================')
                         data2[0].total_hour = total
                         data.push(data2[0])
                         responseData = data;
