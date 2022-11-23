@@ -859,6 +859,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllProjectsTimesheetWeekly = async function (request) {
+        console.log("---------ENTERED GET ALL PROJECTS TIMESHEET-----------");
         let responseData = [],
             error = true;
 
@@ -873,14 +874,12 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
                     if (!data.length == 0) {
                         flag = 1, request.role_id = 3
                         const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request, flag)
                         const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request, flag)
-                        data.push(data2[0])
+
+
                         data.filter(function (o1, i) {
                             data1.some(function (o2) {
                                 if (o1.project_id === o2.project_id) {
@@ -889,7 +888,14 @@ function TimeTrackingService(objectCollection) {
                             });
                         });
 
-                        console.log(data);
+                        //renaming object key and calculating total time
+                        for (let i = 0; i < data1.length; i++) {
+                            data1[i].task_total_time = data1[i].total_hour
+                            delete data1[i].total_hour
+                        }
+                        let total = await this.calculateWorkedHours(data1)
+                        data2[0].total_hour = total
+                        data.push(data2[0])
                         responseData = data;
                         error = false
                     } else {
