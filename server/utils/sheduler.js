@@ -10,7 +10,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemaider = async function () {
-        schedule.scheduleJob('00 38 16 * * 4', async function () {
+        schedule.scheduleJob('00 41 16 * * 4', async function () {
             console.log('====================================')
             console.log("EEeee")
             console.log('====================================')
@@ -35,7 +35,7 @@ function Scheduler(objectCollection) {
                             // responseData = data
                             // error = true
                             data.map(async (d) => {
-                                request.email = d
+                                request.email = d.email
                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                             })
                         })
