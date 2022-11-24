@@ -10,15 +10,15 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemaider = async function (request) {
-        schedule.scheduleJob('00 49 12 * * 4', async function () {
+        schedule.scheduleJob('00 24 15 * * 4', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
             sun = "2022-11-15"
             request.sun = sun
-      
+
             const [err, data] = this.employeesGetEmpsTimesheetStatusNotSubmitted(request)
-            
+
             data.map(async (d) => {
                 request.email = d
                 await this.nodemailerSenderForTimesheetSubmitRemainder(request)
