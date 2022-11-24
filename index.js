@@ -2,7 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 require('dotenv').config()
 require('./server/utils/globalConfig');
-const sche = require('./server/utils/sheduler');
+const rem = require('./server/utils/sheduler');
+new rem().sendRemaider()
 const cors = require('cors')
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
@@ -26,7 +27,6 @@ const Db = require('./server/utils/dbConfig')
 const db = new Db();
 const ResponseWrapper = require('./server/utils/responseWrapper')
 const responseWrapper = new ResponseWrapper(util)
-sche.scheduler();
 
 
 var objCollection = {

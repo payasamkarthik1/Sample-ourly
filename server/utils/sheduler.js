@@ -9,7 +9,7 @@ function Scheduler(objectCollection) {
     const db = objectCollection.db;
 
 
-    this.scheduler = async function (request) {
+    this.sendRemaider = async function (request) {
         schedule.scheduleJob('00 49 12 * * 4', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
