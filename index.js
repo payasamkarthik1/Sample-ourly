@@ -39,7 +39,7 @@ const ControllInterceptor = require('./server/interceptors/controllerInterceptor
 new ControllInterceptor(objCollection);
 
 const rem = require('./server/utils/sheduler');
-new rem(objectCollection).sendRemaider()
+new rem(objCollection).sendRemaider()
 
 
 const port = process.env.PORT
