@@ -11,11 +11,14 @@ function Scheduler(objectCollection) {
 
     this.sendRemaider = async function (request) {
         schedule.scheduleJob('00 27 15 * * 4', async function () {
+            console.log('====================================')
+            console.log("EEeee")
+            console.log('====================================')
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
             sun = "2022-11-15"
-            request.sun = sun
+            request.dat = sun
             console.log('========sun==========')
             console.log(sun)
             console.log('====================================')
@@ -40,7 +43,7 @@ function Scheduler(objectCollection) {
 
 
         const paramsArr = new Array(
-            request.sun.toString(),
+            request.dat.toString(),
 
         );
 
