@@ -10,7 +10,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemaider = async function () {
-        schedule.scheduleJob('00 34 15 * * 4', async function () {
+        schedule.scheduleJob('00 38 15 * * 4', async function () {
             console.log('====================================')
             console.log("EEeee")
             console.log('====================================')
@@ -24,47 +24,49 @@ function Scheduler(objectCollection) {
             console.log(sun)
             console.log('====================================')
 
+
             const [err, data] = this.employeesGetEmpsTimesheetStatusNotSubmitted(request)
 
             data.map(async (d) => {
                 request.email = d
                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
             })
+            this.employeesGetEmpsTimesheetStatusNotSubmitted = async function (request) {
+                console.log('=============employeesGetEmpsTimesheetStatusNotSubmitted===================')
+                console.log("entered")
+                console.log('====================================')
+                let responseData = []
+                error = true
+        
+        
+                const paramsArr = new Array(
+                    request.dat.toString(),
+        
+                );
+        
+                const queryString = util.getQueryString('employees_get_emps_timesheet_status_not_submitted', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(0, queryString, request)
+                        .then(async (data) => {
+                            console.log('=========DATAA=========')
+                            console.log(data)
+                            console.log('====================================')
+                            responseData = data
+                            error = true
+                        })
+                        .catch((err) => {
+                            error = err;
+                        })
+                    return [error, responseData];
+                }
+            }
 
         })
     }
 
-
-    this.employeesGetEmpsTimesheetStatusNotSubmitted = async function (request) {
-        console.log('====================================')
-        console.log("entered")
-        console.log('====================================')
-        let responseData = []
-        error = true
-
-
-        const paramsArr = new Array(
-            request.dat.toString(),
-
-        );
-
-        const queryString = util.getQueryString('employees_get_emps_timesheet_status_not_submitted', paramsArr);
-        if (queryString !== '') {
-            await db.executeQuery(0, queryString, request)
-                .then(async (data) => {
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data
-                    error = true
-                })
-                .catch((err) => {
-                    error = err;
-                })
-            return [error, responseData];
-        }
-    }
 }
 
-module.exports = Scheduler;
+
+
+    module.exports = Scheduler;
 
