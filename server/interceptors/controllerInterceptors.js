@@ -33,6 +33,9 @@ const leadController = require('../controller/leadController')
 const leadService = require('../services/leadService')
 
 
+const Scheduler = require('../utils/sheduler')
+
+
 
 function ControllInterceptor(objCollection) {
 
@@ -67,6 +70,8 @@ function ControllInterceptor(objCollection) {
 
     new leadController(objCollection)
     new leadService(objCollection)
+
+    new Scheduler(objCollection)
 }
 
 

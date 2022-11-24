@@ -2,8 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 require('dotenv').config()
 require('./server/utils/globalConfig');
-const rem = require('./server/utils/sheduler');
-new rem().sendRemaider()
 const cors = require('cors')
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
@@ -39,6 +37,9 @@ var objCollection = {
 
 const ControllInterceptor = require('./server/interceptors/controllerInterceptors');
 new ControllInterceptor(objCollection);
+
+const rem = require('./server/utils/sheduler');
+new rem(objectCollection).sendRemaider()
 
 
 const port = process.env.PORT
