@@ -275,9 +275,9 @@ function Util() {
                                                     </tr>                                
                                                     <tr>
                                                         <td align="left"
-                                                            style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                                            style="font-family:Arial, sans-serif; font-size: 14px;padding: 12px 0;">
                                                             <p>
-                                                            Hi, <br>
+                                                            Hi, <br><br>
                                                             For approval, please submit your last week's timesheet by the end of today.
 Please ignore the email if the timesheet is submitted.
                                                             </p>

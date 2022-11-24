@@ -10,7 +10,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemaider = async function () {
-        schedule.scheduleJob('00 41 16 * * 4', async function () {
+        schedule.scheduleJob('00 20 17 * * 4', async function () {
             console.log('====================================')
             console.log("EEeee")
             console.log('====================================')
@@ -21,40 +21,55 @@ function Scheduler(objectCollection) {
             sun = "2022-11-13"
             request.dat = sun
 
+            await employeesGetEmpsTimesheetStatusNotSubmitted();
+            async function employeesGetEmpsTimesheetStatusNotSubmitted(request) {
+                console.log('====================================')
+                console.log("entered")
+                console.log('====================================')
+                let responseData = []
+                error = true
+
                 const paramsArr = new Array(
                     request.dat.toString(),
-    
-                );    
+
+                );
+
                 const queryString = util.getQueryString('employees_get_emps_timesheet_status_not_submitted', paramsArr);
                 if (queryString !== '') {
-                     db.executeQuery(0, queryString, request)
+                    await db.executeQuery(0, queryString, request)
                         .then(async (data) => {
-                            console.log('=========DATAA=========')
+                            console.log('====================================')
                             console.log(data)
                             console.log('====================================')
-                            // responseData = data
-                            // error = true
                             data.map(async (d) => {
-                                request.email = d.email
+                                request.email = d
                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                             })
+                            responseData = data
+                            error = true
                         })
                         .catch((err) => {
                             error = err;
                         })
                     return [error, responseData];
                 }
-            // }
-           
+            }
 
-           
+
+
 
         })
     }
+
+
+
+
+
 
 }
 
 
 
-    module.exports = Scheduler;
+
+module.exports = Scheduler;
 
