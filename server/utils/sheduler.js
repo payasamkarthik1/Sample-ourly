@@ -18,7 +18,7 @@ function Scheduler(objectCollection) {
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
             let request = {}
-            sun = "2022-11-15"
+            sun = "2022-11-13"
             request.dat = sun
 
                 const paramsArr = new Array(
