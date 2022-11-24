@@ -10,7 +10,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemaider = async function (request) {
-        schedule.scheduleJob('00 27 15 * * 4', async function () {
+        schedule.scheduleJob('00 31 15 * * 4', async function () {
             console.log('====================================')
             console.log("EEeee")
             console.log('====================================')
