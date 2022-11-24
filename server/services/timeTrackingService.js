@@ -1193,49 +1193,29 @@ function TimeTrackingService(objectCollection) {
         let emps = []
         if (request.role_id == 4) {
             if (request.employees.length != 0 && request.groups.length != 0) {
-                //groups
-                groups = request.groups
-                for (let j = 0; j < groups.length; j++) {
-                    request.employee_id = groups[j]
-                    const [err, data] = await employeeService.getEmployeeById(request)
-                    // on group selecton if emp is lead or emerging lead geting emps under them 
-                    if (data[0].role_id == 4) {
-                        request.lead_assigned_employee_id = request.employee_id
-                        request.role_id = 4
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
 
-                    } else if (data[0].role_id == 6) {
-                        request.role_id = 6
-                        const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                        Array.prototype.push.apply(emps, data);
-                    }
+                //groups
+                request.role_id = 6
+                let emergLeads = []
+                emergLeads = request.groups
+                for (let j = 0; j < emergLeads.length; j++) {
+                    request.lead_assigned_employee_id = emergLeads[j]
+                    const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+                    Array.prototype.push.apply(emps, data);
                 }
-                //single users
+                //users
                 users = request.employees
                 for (let i = 0; i < users.length; i++) {
                     request.employee_id = users[i]
                     const [err, usr] = await employeeService.getEmployeeById(request)
                     Array.prototype.push.apply(emps, usr);
                 }
-                //removeing duplicates employees 
-                if (emps.length != 0) {
-                    const uniqueids = [];
-                    const uniqueEmps = emps.filter(element => {
-                        const isDuplicate = uniqueids.includes(element.employee_id);
-                        if (!isDuplicate) {
-                            uniqueids.push(element.employee_id);
-                            return true;
-                        }
-                        return false;
-                    });
-
-                    //get approve list 
-                    for (let i = 0; i < uniqueEmps.length; i++) {
-                        const [err, data1] = await this.getListFromApprovals(request, uniqueEmps[i], 7)
-                        Array.prototype.push.apply(finalData, data1);
-                    }
+                //get approve list 
+                for (let i = 0; i < emps.length; i++) {
+                    const [err, data1] = await this.getListFromApprovals(request, emps[i], 7)
+                    Array.prototype.push.apply(finalData, data1);
                 }
+
 
             } else if (request.employees.length != 0 && request.groups.length == 0) {
                 //single users
@@ -1254,10 +1234,10 @@ function TimeTrackingService(objectCollection) {
             } else if (request.employees.length == 0 && request.groups.length != 0) {
                 request.role_id = 6
                 let emergLeads = []
-                emergLeads = request.lead_assigned_employee_id
+                emergLeads = request.groups
                 for (let j = 0; j < emergLeads.length; j++) {
                     request.lead_assigned_employee_id = emergLeads[j]
-                    const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
+                    const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
                     if (data.length != 0) {
                         for (let i = 0; i < data.length; i++) {
                             const [err, data1] = await this.getListFromApprovals(request, data[i], 7)
