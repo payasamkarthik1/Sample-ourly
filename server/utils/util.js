@@ -729,6 +729,7 @@ Please ignore the email if the timesheet is submitted.
         //     return finaladd
 
         // }
+        let total_time;
 
         function timestrToSec(timestr) {
             var parts = timestr.split(":");
@@ -756,6 +757,7 @@ Please ignore the email if the timesheet is submitted.
         data.map(async (d) => {
             time2 = d.task_total_time
             total_time = await formatTime(timestrToSec(time1) + timestrToSec(time2));
+            console.log(total_time);
             time1 = total_time
         })
         return total_time
