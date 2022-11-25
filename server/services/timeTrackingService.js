@@ -892,7 +892,7 @@ function TimeTrackingService(objectCollection) {
                             data1[i].task_total_time = data1[i].total_hours
                             delete data1[i].total_hour
                         }
-                        let total = await util.calculateWorkedHours(data1)
+                        let total = await util.sumOfTime(data1)
 
                         data2[0].total_hour = total
                         data.push(data2[0])
