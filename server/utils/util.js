@@ -757,11 +757,11 @@ Please ignore the email if the timesheet is submitted.
  
         data.map(async (d) => {
             time2 = d.task_total_time
-            total_time = await formatTime(timestrToSec(time1) + timestrToSec(time2));
-            console.log('=========formatTime(timestrToSec(time1) + timestrToSec(time2));==================')
-            console.log(formatTime(timestrToSec(time1) + timestrToSec(time2)))
-            console.log('====================================')
+            total_time =  formatTime(timestrToSec(time1) + timestrToSec(time2));
             time1 = total_time
+            console.log('====================================')
+            console.log(total_time)
+            console.log('====================================')
         })
         console.log('=========return=============')
         console.log(total_time)
