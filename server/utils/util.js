@@ -759,7 +759,7 @@ Please ignore the email if the timesheet is submitted.
             time2 = d.task_total_time
             total_time = await formatTime(timestrToSec(time1) + timestrToSec(time2));
             console.log('=========formatTime(timestrToSec(time1) + timestrToSec(time2));==================')
-            console.log(formatTime(timestrToSec(time1) + timestrToSec(time2));)
+            console.log(formatTime(timestrToSec(time1) + timestrToSec(time2)))
             console.log('====================================')
             time1 = total_time
         })
