@@ -729,44 +729,36 @@ Please ignore the email if the timesheet is submitted.
         //     return finaladd
 
         // }
-        let total_time;
-        time1 = "00:00:00";
-
         function timestrToSec(timestr) {
             var parts = timestr.split(":");
             return (parts[0] * 3600) +
-                (parts[1] * 60) +
-                (+parts[2]);
-        }
-
-        function pad(num) {
-            if (num < 10) {
-                return "0" + num;
+                   (parts[1] * 60) +
+                   (+parts[2]);
+          }
+          
+          function pad(num) {
+            if(num < 10) {
+              return "0" + num;
             } else {
-                return "" + num;
+              return "" + num;
             }
-        }
-
-        async function formatTime(seconds) {
-            return [pad(Math.floor(seconds / 3600)),
-            pad(Math.floor(seconds / 60) % 60),
-            pad(seconds % 60),
-            ].join(":");
-        }
-
- 
-        data.map(async (d) => {
-            time2 = d.task_total_time
-            total_time =  formatTime(timestrToSec(time1) + timestrToSec(time2));
-            time1 = total_time
-            console.log('====================================')
-            console.log(total_time)
-            console.log('====================================')
-        })
-        console.log('=========return=============')
-        console.log(total_time)
-        console.log('====================================')
-        return total_time
+          }
+          
+          async function formatTime(seconds) {
+            return [pad(Math.floor(seconds/3600)),
+                    pad(Math.floor(seconds/60)%60),
+                    pad(seconds%60),
+                    ].join(":");
+          }
+          
+          time1 = "00:00:00"
+          for(let i=0;i<data.length;i++){ 
+          time2 = data[i].task_total_time
+          total = await formatTime(timestrToSec(time1) + timestrToSec(time2))
+          time1 = total
+          }
+          
+         return  total
 
     }
 
