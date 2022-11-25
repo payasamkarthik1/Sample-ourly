@@ -275,6 +275,9 @@ function AnalyzeServices(objectCollection) {
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
                         totalTime = await util.sumOfTime(data)
+                        console.log('========TOTAL TIME FOR DASHBOARD================');
+                        console.log(totalTime);
+                        console.log('====================================');
 
                         //insert data into table for calce
                         for (i = 0; i < data.length; i++) {
