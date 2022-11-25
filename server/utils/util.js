@@ -689,7 +689,7 @@ Please ignore the email if the timesheet is submitted.
         return firstMonth.concat("-" + lastMonth)
     }
 
-    this.calculateWorkedHours = async function (data) {
+    this.sumOfTime = async function (data) {
         //     console.log('====================================')
         //     console.log(data)
         //     console.log('====================================')
@@ -730,52 +730,37 @@ Please ignore the email if the timesheet is submitted.
 
         // }
 
-
-        var start_time = "00:00:00";
-        for (let k = 0; k < data.length; k++) {
-
-            var times = [0, 0, 0]
-            var max = times.length
-
-            var a = (start_time || '').split(':')
-            var b = (data[k].task_total_time || '').split(':')
-
-            // normalize time values
-            for (let i = 0; i < max; i++) {
-                a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i])
-                b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i])
-            }
-
-            // store time values
-            for (var i = 0; i < max; i++) {
-                times[i] = a[i] + b[i]
-            }
-
-            var hours = times[0]
-            var minutes = times[1]
-            var seconds = times[2]
-
-            if (seconds >= 60) {
-                var m = (seconds / 60) << 0
-                minutes += m
-                seconds -= 60 * m
-            }
-
-            if (minutes >= 60) {
-                var h = (minutes / 60) << 0
-                hours += h
-                minutes -= 60 * h
-            }
-
-            finaladd = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
-            start_time = finaladd
+        function timestrToSec(timestr) {
+            var parts = timestr.split(":");
+            return (parts[0] * 3600) +
+                (parts[1] * 60) +
+                (+parts[2]);
         }
-        return finaladd
+
+        function pad(num) {
+            if (num < 10) {
+                return "0" + num;
+            } else {
+                return "" + num;
+            }
+        }
+
+        async function formatTime(seconds) {
+            return [pad(Math.floor(seconds / 3600)),
+            pad(Math.floor(seconds / 60) % 60),
+            pad(seconds % 60),
+            ].join(":");
+        }
+
+        time1 = "00:00:00";
+        data.map(async (d) => {
+            time2 = d.task_total_time
+            total_time = await formatTime(timestrToSec(time1) + timestrToSec(time2));
+            time1 = total_time
+        })
+        return total_time
 
     }
-
-
-
 
 
 }

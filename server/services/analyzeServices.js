@@ -70,7 +70,7 @@ function AnalyzeServices(objectCollection) {
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
+                totalTime = await util.sumOfTime(data)
 
                 //insert data into table for calce
                 for (i = 0; i < data.length; i++) {
@@ -185,7 +185,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -274,7 +274,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
                         for (i = 0; i < data.length; i++) {
@@ -371,7 +371,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for data calculatiom
 
@@ -913,7 +913,7 @@ function AnalyzeServices(objectCollection) {
                             // total time
                             idGenerate = await util.getRandomNumericId()
                             id = idGenerate
-                            totalTime = await util.calculateWorkedHours(data)
+                            totalTime = await util.sumOfTime(data)
 
                             //insert data into table for calce
 
@@ -1012,7 +1012,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -1080,7 +1080,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -1211,7 +1211,7 @@ function AnalyzeServices(objectCollection) {
                                 // total time
                                 idGenerate = await util.getRandomNumericId()
                                 id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
+                                totalTime = await util.sumOfTime(data)
 
                                 //insert data into table for calce
 
@@ -1329,7 +1329,7 @@ function AnalyzeServices(objectCollection) {
                                 // total time
                                 idGenerate = await util.getRandomNumericId()
                                 id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
+                                totalTime = await util.sumOfTime(data)
 
                                 //insert data into table for calce
 
@@ -1434,7 +1434,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -1502,7 +1502,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -1664,7 +1664,7 @@ function AnalyzeServices(objectCollection) {
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
+                totalTime = await util.sumOfTime(data)
                 //insert data into table for calce
                 for (i = 0; i < data.length; i++) {
                     flag = 1
@@ -1803,7 +1803,7 @@ function AnalyzeServices(objectCollection) {
                 // total time
                 idGenerate = await util.getRandomNumericId()
                 id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
+                totalTime = await util.sumOfTime(data)
                 //insert data into table for calce
                 for (i = 0; i < data.length; i++) {
                     flag = 1
@@ -1900,7 +1900,7 @@ function AnalyzeServices(objectCollection) {
                     // total time
                     idGenerate = await util.getRandomNumericId()
                     id = idGenerate
-                    totalTime = await util.calculateWorkedHours(data)
+                    totalTime = await util.sumOfTime(data)
 
                     //insert data into table for calce
 
@@ -1964,7 +1964,7 @@ function AnalyzeServices(objectCollection) {
                     // total time
                     idGenerate = await util.getRandomNumericId()
                     id = idGenerate
-                    totalTime = await util.calculateWorkedHours(data)
+                    totalTime = await util.sumOfTime(data)
 
                     //insert data into table for calce
 
@@ -2185,7 +2185,7 @@ function AnalyzeServices(objectCollection) {
                                 // total time
                                 idGenerate = await util.getRandomNumericId()
                                 id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
+                                totalTime = await util.sumOfTime(data)
 
                                 //insert data into table for calce
                                 for (i = 0; i < data.length; i++) {
@@ -2399,7 +2399,7 @@ function AnalyzeServices(objectCollection) {
                                 // total time
                                 idGenerate = await util.getRandomNumericId()
                                 id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
+                                totalTime = await util.sumOfTime(data)
 
                                 //insert data into table for calce
                                 for (i = 0; i < data.length; i++) {
@@ -2503,7 +2503,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
@@ -2571,7 +2571,7 @@ function AnalyzeServices(objectCollection) {
                         // total time
                         idGenerate = await util.getRandomNumericId()
                         id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
+                        totalTime = await util.sumOfTime(data)
 
                         //insert data into table for calce
 
