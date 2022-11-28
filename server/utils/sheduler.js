@@ -13,7 +13,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemainder = async function () {
-        schedule.scheduleJob('00 08 15 * * 1', async function () {
+        schedule.scheduleJob('00 23 15 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -56,6 +56,7 @@ function Scheduler(objectCollection) {
 
                                 let reomovedObj2Emails = []
                                 if (obj1.length != 0 && obj2.length != 0) {
+                                    console.log("enterrrrrrr");
                                     //step1
                                     emps.map((d1) => {
                                         obj2.map((d2) => {
@@ -78,6 +79,10 @@ function Scheduler(objectCollection) {
                                         return false;
                                     });
 
+
+                                    console.log('========jdnckjdcm cmc c jc jc dj============');
+                                    console.log(sendEmails);
+                                    console.log('====================================');
                                 } else if (obj1.length != 0 && obj2.length == 0) {
                                     //step2
                                     Array.prototype.push.apply(emps, obj1);
