@@ -277,9 +277,7 @@ function Util() {
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                             <p>
-                                                            Hi, <br><br>
-                                                            For approval, please submit your last week's timesheet by the end of today.
-Please ignore the email if the timesheet is submitted.
+                                                            ${request.text}
                                                             </p><br>
                                                         </td>
                                                     </tr>
@@ -732,33 +730,33 @@ Please ignore the email if the timesheet is submitted.
         function timestrToSec(timestr) {
             var parts = timestr.split(":");
             return (parts[0] * 3600) +
-                   (parts[1] * 60) +
-                   (+parts[2]);
-          }
-          
-          function pad(num) {
-            if(num < 10) {
-              return "0" + num;
+                (parts[1] * 60) +
+                (+parts[2]);
+        }
+
+        function pad(num) {
+            if (num < 10) {
+                return "0" + num;
             } else {
-              return "" + num;
+                return "" + num;
             }
-          }
-          
-          async function formatTime(seconds) {
-            return [pad(Math.floor(seconds/3600)),
-                    pad(Math.floor(seconds/60)%60),
-                    pad(seconds%60),
-                    ].join(":");
-          }
-          
-          time1 = "00:00:00"
-          for(let i=0;i<data.length;i++){ 
-          time2 = data[i].task_total_time
-          total = await formatTime(timestrToSec(time1) + timestrToSec(time2))
-          time1 = total
-          }
-          
-         return  total
+        }
+
+        async function formatTime(seconds) {
+            return [pad(Math.floor(seconds / 3600)),
+            pad(Math.floor(seconds / 60) % 60),
+            pad(seconds % 60),
+            ].join(":");
+        }
+
+        time1 = "00:00:00"
+        for (let i = 0; i < data.length; i++) {
+            time2 = data[i].task_total_time
+            total = await formatTime(timestrToSec(time1) + timestrToSec(time2))
+            time1 = total
+        }
+
+        return total
 
     }
 

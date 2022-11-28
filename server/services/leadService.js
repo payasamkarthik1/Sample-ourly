@@ -5,12 +5,12 @@ function LeadService(objectCollection) {
     const db = objectCollection.db;
 
 
-    this.getAllLeads = async function (request) {
+    this.getAllLeads = async function (request,flag) {
 
         let responseData = [],
             error = true;
         // if flag = 2 get all leads at create employee form
-        flag = 2
+
         const paramsArr = new Array(
             0,
             flag

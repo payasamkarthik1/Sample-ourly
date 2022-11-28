@@ -13,7 +13,7 @@ function LeadController(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await leadService.getAllLeads(req.body);
+            const [err, resData] = await leadService.getAllLeads(req.body,2);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
