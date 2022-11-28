@@ -13,7 +13,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemainder = async function () {
-        schedule.scheduleJob('00 03 15 * * 1', async function () {
+        schedule.scheduleJob('00 08 15 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -60,7 +60,7 @@ function Scheduler(objectCollection) {
                                     emps.map((d1) => {
                                         obj2.map((d2) => {
                                             if (d1.email !== d2.email) {
-                                                Array.prototype.push.apply(reomovedobj2Emails, d1);
+                                                Array.prototype.push.apply(reomovedObj2Emails, d1);
                                             }
                                         })
                                     })
@@ -97,7 +97,7 @@ function Scheduler(objectCollection) {
                                     emps.map((d1) => {
                                         obj2.map((d2) => {
                                             if (d1.email !== d2.email) {
-                                                Array.prototype.push.apply(reomovedobj2Emails, d1);
+                                                Array.prototype.push.apply(reomovedObj2Emails, d1);
                                             }
                                         })
                                     })
