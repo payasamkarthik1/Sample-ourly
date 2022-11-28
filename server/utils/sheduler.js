@@ -13,7 +13,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemainder = async function () {
-        schedule.scheduleJob('00 53 14 * * 1', async function () {
+        schedule.scheduleJob('00 03 15 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -54,9 +54,9 @@ function Scheduler(objectCollection) {
                                     }
                                 })
 
+                                let reomovedObj2Emails = []
                                 if (obj1.length != 0 && obj2.length != 0) {
                                     //step1
-                                    reomovedObj2Emails = []
                                     emps.map((d1) => {
                                         obj2.map((d2) => {
                                             if (d1.email !== d2.email) {
@@ -93,7 +93,7 @@ function Scheduler(objectCollection) {
                                     });
                                 } else if (obj1.length == 0 && obj2.length != 0) {
                                     //step1
-                                    reomovedObj2Emails = []
+
                                     emps.map((d1) => {
                                         obj2.map((d2) => {
                                             if (d1.email !== d2.email) {
@@ -106,10 +106,17 @@ function Scheduler(objectCollection) {
                             } else {
                                 sendEmails = emps
                             }
-                            sendEmails.map(async (mail) => {
-                                request.email = mail.email
-                                await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-                            })
+                            if (sendEmails.length != 0) {
+                                console.log('=========sendEmails===============')
+                                console.log(sendEmails)
+                                console.log('====================================')
+                                sendEmails.map(async (mail) => {
+                                    request.email = mail.email
+                                    await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                                })
+                            } else {
+                                console.log("no mails to send")
+                            }
                         })
                         .catch((err) => {
                             console.log("err-------" + err);
