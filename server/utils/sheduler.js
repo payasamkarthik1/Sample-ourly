@@ -32,7 +32,7 @@ function Scheduler(objectCollection) {
                     request.sunDate.toString(),
                 );
 
-                const queryString = util.getQueryString('employees_get_emps_timesheet_status_not_submitted', paramsArr);
+                const queryString = util.getQueryString('employees_get_emps_timesheet_status', paramsArr);
                 if (queryString !== '') {
                     await db.executeQuery(0, queryString, request)
                         .then(async (data) => {
