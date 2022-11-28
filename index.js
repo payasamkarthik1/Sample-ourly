@@ -40,6 +40,7 @@ new ControllInterceptor(objCollection);
 
 const rem = require('./server/utils/sheduler');
 new rem(objCollection).sendRemainder()
+new rem(objCollection).sendRemainderToLeadsEmergingLead()
 
 
 const port = process.env.PORT
