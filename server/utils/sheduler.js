@@ -31,13 +31,56 @@ function Scheduler(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(0, queryString, request)
                         .then(async (data) => {
-                            console.log('========MAILS TO SUBMIT TIMESHEET=============')
+                            console.log('========MAILS TO SUBMIT TIMESHEET====data=========')
                             console.log(data)
                             console.log('====================================')
-                            data.map(async (d) => {
+                            const [err, data1] = await employeesGetEmps(request)
+                            console.log('==========data1=================')
+                            console.log(data1)
+                            console.log('====================================')
+
+                            Array.prototype.push.apply(data, data1);
+
+                            const uniqueids = [];
+                            const uniqueEmails = data.filter(element => {
+                                const isDuplicate = uniqueids.includes(element.email);
+                                if (!isDuplicate) {
+                                    uniqueids.push(element.email);
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                            uniqueEmails.map(async (d) => {
                                 request.email = d.email
                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                             })
+                            responseData = data
+                            error = true
+                        })
+                        .catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData];
+                }
+            }
+            async function employeesGetEmps(request) {
+                let responseData = []
+                error = true
+
+                const paramsArr = new Array(
+                    request.sunDate.toString(),
+
+                );
+
+                const queryString = util.getQueryString('employees_get_emps_lead_emergL_user', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(0, queryString, request)
+                        .then(async (data) => {
+                            console.log('========employees_get_emps_lead_emergL_user=============')
+                            console.log(data)
+                            console.log('====================================')
                             responseData = data
                             error = true
                         })
