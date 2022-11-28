@@ -147,7 +147,7 @@ function Scheduler(objectCollection) {
 
     //on every monday at 12:30 to leads,emerging lead if anyone of the employee under then no submiutted send mail rmainder to lead , emerging lead
     this.sendRemainderToLeadsEmergingLead = async function () {
-        schedule.scheduleJob('00 53 19 * * 1', async function () {
+        schedule.scheduleJob('00 56 19 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -164,7 +164,7 @@ function Scheduler(objectCollection) {
                 for (let i = 0; i < leads.length; i++) {
                     if (leads[i].role_id == 4) {
                         console.log('=======GET EACH LEAD role-4===================');
-                        console.log(lead[i]);
+                        console.log(leads[i]);
                         console.log('====================================');
                         request.text = "Hi, <br><br>  please approve the timesheets of your employees.Please ignore if already apprroved"
                         request.email = leads[i].email
