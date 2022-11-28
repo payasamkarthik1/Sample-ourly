@@ -123,7 +123,6 @@ function Scheduler(objectCollection) {
                 error = true
 
                 const paramsArr = new Array(
-                    request.sunDate.toString(),
                 );
 
                 const queryString = util.getQueryString('employee_get_all_emps_for_timesheet_remainder_select', paramsArr);
