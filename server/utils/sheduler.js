@@ -13,7 +13,7 @@ function Scheduler(objectCollection) {
 
 
     this.sendRemainder = async function () {
-        schedule.scheduleJob('00 36 14 * * 1', async function () {
+        schedule.scheduleJob('00 39 14 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
