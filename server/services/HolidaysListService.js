@@ -27,6 +27,7 @@ function HolidaysListService(objectCollection) {
         const paramsArr = new Array(
             data.Holiday,
             data.Date,
+            data.Day,
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
