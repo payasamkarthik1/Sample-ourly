@@ -1331,6 +1331,9 @@ function AnalyzeServices(objectCollection) {
 
                         if (filteredEmps.length != 0) {
                             const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
+                            console.log('=======cnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnksssssssssssssssss=============')
+                            console.log(data)
+                            console.log('====================================')
                             if (data.length != 0) {
                                 // total time
                                 idGenerate = await util.getRandomNumericId()
@@ -1352,15 +1355,33 @@ function AnalyzeServices(objectCollection) {
                                 console.log('====================================')
 
 
-
-
                                 //adding uniques keys 
                                 overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+                                //loop for adding descriptions 
+                                // for (let i = 0; i < overallUsers1.length; i++) {
+                                //     let value = []
+                                //     data.filter(function (dat) {
+                                //         if (dat.project_id == overallUsers1[i].project_id) {
+                                //             obj = {}
+                                //             obj.task_description = dat.task_description
+                                //             obj.task_total_time = dat.task_total_time
+                                //             obj.project_name = dat.project_name
+                                //             obj.project_code = dat.project_code
+                                //             obj.project_color_code = dat.project_color_code
+                                //             value.push(obj)
+                                //         }
+
+                                //     })
+                                //     overallUsers1[i].description = value
+                                // }
+
+
+
                                 //loop for adding descriptions 
                                 for (let i = 0; i < overallUsers1.length; i++) {
                                     let value = []
                                     data.filter(function (dat) {
-                                        if (dat.project_id == overallUsers1[i].project_id) {
+                                        if (dat.employee_id == overallUsers1[i].employee_id) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
@@ -1374,22 +1395,6 @@ function AnalyzeServices(objectCollection) {
                                     overallUsers1[i].description = value
                                 }
 
-
-
-                                //loop for adding descriptions 
-                                for (let i = 0; i < overallUsers1.length; i++) {
-                                    let value = []
-                                    data.filter(function (dat) {
-                                        if (dat.employee_id == overallUsers1[i].employee_id) {
-                                            obj = {}
-                                            obj.task_description = dat.task_description
-                                            obj.task_total_time = dat.task_total_time
-                                            value.push(obj)
-                                        }
-
-                                    })
-                                    overallUsers1[i].description = value
-                                }
 
                                 //over all total_time daywise
                                 flag = 6
@@ -1832,25 +1837,22 @@ function AnalyzeServices(objectCollection) {
                 //adding uniques keys 
                 overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
                 //loop for adding descriptions 
-                for (let i = 0; i < overallUsers1.length; i++) {
-                    let value = []
-                    data.filter(function (dat) {
-                        if (dat.project_id == overallUsers1[i].project_id) {
-                            obj = {}
-                            obj.task_description = dat.task_description
-                            obj.task_total_time = dat.task_total_time
-                            obj.project_name = dat.project_name
-                            obj.project_code = dat.project_code
-                            obj.project_color_code = dat.project_color_code
-                            value.push(obj)
-                        }
+                // for (let i = 0; i < overallUsers1.length; i++) {
+                //     let value = []
+                //     data.filter(function (dat) {
+                //         if (dat.project_id == overallUsers1[i].project_id) {
+                //             obj = {}
+                //             obj.task_description = dat.task_description
+                //             obj.task_total_time = dat.task_total_time
+                //             obj.project_name = dat.project_name
+                //             obj.project_code = dat.project_code
+                //             obj.project_color_code = dat.project_color_code
+                //             value.push(obj)
+                //         }
 
-                    })
-                    overallUsers1[i].description = value
-                }
-
-
-
+                //     })
+                //     overallUsers1[i].description = value
+                // }
 
 
                 //loop for adding descriptions 
@@ -1861,6 +1863,9 @@ function AnalyzeServices(objectCollection) {
                             obj = {}
                             obj.task_description = dat.task_description
                             obj.task_total_time = dat.task_total_time
+                            obj.project_name = dat.project_name
+                            obj.project_code = dat.project_code
+                            obj.project_color_code = dat.project_color_code
                             value.push(obj)
                         }
 
@@ -2433,22 +2438,22 @@ function AnalyzeServices(objectCollection) {
                                 //adding uniques keys 
                                 overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
                                 //loop for adding descriptions 
-                                for (let i = 0; i < overallUsers1.length; i++) {
-                                    let value = []
-                                    data.filter(function (dat) {
-                                        if (dat.project_id == overallUsers1[i].project_id) {
-                                            obj = {}
-                                            obj.task_description = dat.task_description
-                                            obj.task_total_time = dat.task_total_time
-                                            obj.project_name = dat.project_name
-                                            obj.project_code = dat.project_code
-                                            obj.project_color_code = dat.project_color_code
-                                            value.push(obj)
-                                        }
+                                // for (let i = 0; i < overallUsers1.length; i++) {
+                                //     let value = []
+                                //     data.filter(function (dat) {
+                                //         if (dat.project_id == overallUsers1[i].project_id) {
+                                //             obj = {}
+                                //             obj.task_description = dat.task_description
+                                //             obj.task_total_time = dat.task_total_time
+                                //             obj.project_name = dat.project_name
+                                //             obj.project_code = dat.project_code
+                                //             obj.project_color_code = dat.project_color_code
+                                //             value.push(obj)
+                                //         }
 
-                                    })
-                                    overallUsers1[i].description = value
-                                }
+                                //     })
+                                //     overallUsers1[i].description = value
+                                // }
 
 
 
@@ -2462,6 +2467,9 @@ function AnalyzeServices(objectCollection) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
+                                            obj.project_name = dat.project_name
+                                            obj.project_code = dat.project_code
+                                            obj.project_color_code = dat.project_color_code
                                             value.push(obj)
                                         }
 
