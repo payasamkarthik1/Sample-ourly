@@ -938,6 +938,8 @@ function AnalyzeServices(objectCollection) {
                                     if (dat.project_id == overallProjects1[i].project_id) {
                                         obj = {}
                                         obj.task_description = dat.task_description
+                                        obj.task_total_time = dat.task_total_time
+                                        obj.employee_name = dat.employee_full_name
                                         value.push(obj)
                                     }
 
@@ -1237,6 +1239,7 @@ function AnalyzeServices(objectCollection) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
+                                            obj.employee_name = dat.employee_full_name
                                             value.push(obj)
                                         }
 
@@ -1361,6 +1364,9 @@ function AnalyzeServices(objectCollection) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
+                                            obj.project_name = dat.project_name
+                                            obj.project_code = dat.project_code
+                                            obj.project_color_code = dat.project_color_code
                                             value.push(obj)
                                         }
 
@@ -1688,6 +1694,7 @@ function AnalyzeServices(objectCollection) {
                             obj = {}
                             obj.task_description = dat.task_description
                             obj.task_total_time = dat.task_total_time
+                            obj.employee_name = dat.employee_full_name
                             value.push(obj)
                         }
 
@@ -1832,6 +1839,9 @@ function AnalyzeServices(objectCollection) {
                             obj = {}
                             obj.task_description = dat.task_description
                             obj.task_total_time = dat.task_total_time
+                            obj.project_name = dat.project_name
+                            obj.project_code = dat.project_code
+                            obj.project_color_code = dat.project_color_code
                             value.push(obj)
                         }
 
@@ -2210,6 +2220,7 @@ function AnalyzeServices(objectCollection) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
+                                            obj.employee_name = dat.employee_full_name
                                             value.push(obj)
                                         }
 
@@ -2429,6 +2440,9 @@ function AnalyzeServices(objectCollection) {
                                             obj = {}
                                             obj.task_description = dat.task_description
                                             obj.task_total_time = dat.task_total_time
+                                            obj.project_name = dat.project_name
+                                            obj.project_code = dat.project_code
+                                            obj.project_color_code = dat.project_color_code
                                             value.push(obj)
                                         }
 
