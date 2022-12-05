@@ -91,35 +91,6 @@ function TagCreations(objectCollection) {
             }
         })
 
-    //@Post ttag/remove/tag_category/delete
-    app.post('/' + 'tag/tag_category/update',
-
-        async function (req, res) {
-
-            const [err, resData] = await timeTrackingService.getApprovalsList(req.body);
-            if (!err) {
-                console.log("approvals/get/list | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("approvals/get/list | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-    //@Post ttag/remove/tag_category/delete
-    app.post('/' + 'tag/remove/tag_category/delete',
-
-        async function (req, res) {
-
-            const [err, resData] = await timeTrackingService.getApprovalsList(req.body);
-            if (!err) {
-                console.log("approvals/get/list | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("approvals/get/list | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
 
     //@Post tag/get/tag_category/select
     app.post('/' + 'tag/get/tag_category/select',
