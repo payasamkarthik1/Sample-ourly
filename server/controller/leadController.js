@@ -13,7 +13,7 @@ function LeadController(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await leadService.getAllLeads(req.body,2);
+            const [err, resData] = await leadService.getAllHeads(req.body);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
@@ -28,8 +28,7 @@ function LeadController(objectCollection) {
     app.post('/' + 'lead/get/emps/assigned/under/leads/list',
 
         async function (req, res) {
-
-            const [err, resData] = await leadService.getEmpsAssignUnderLeads(req.body);
+            const [err, resData] = await leadService.getEmployessAssignUnderHeads(req.body,1);
             if (!err) {
                 console.log("employee/update/employee/details | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
@@ -44,7 +43,7 @@ function LeadController(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await leadService.getGroupsUnderLeads(req.body);
+            const [err, resData] = await leadService.getEmployessAssignUnderHeads(req.body,2);
             if (!err) {
                 console.log("lead/get/groups | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));

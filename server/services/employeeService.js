@@ -45,6 +45,9 @@ function EmployeeServices(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
+                        console.log('====================================')
+                        console.log(data)
+                        console.log('====================================')
                         if (data[0].message === "EMAIL ALREADY EXIST") {
                             error = true
                             responseData = [{ message: data[0].message }];

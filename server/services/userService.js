@@ -1,5 +1,6 @@
 
 const Validations = require('../utils/validations')
+const TagCreationService = require('./tagCreationService')
 const jwt = require('jsonwebtoken')
 
 function UserService(objectCollection) {
@@ -7,6 +8,7 @@ function UserService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
+    const tagCreationService = new TagCreationService(objectCollection)
 
     this.userLoginInsertAfterRegistration = async function (data, request) {
         let responseData = [],
@@ -51,6 +53,19 @@ function UserService(objectCollection) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
                     const [err3, resData3] = await this.userLoginInsert(request, resData1)
+                    // console.log('====================================')
+                    // console.log(resData3)
+                    // console.log('====================================')
+
+                    // const [err, data] = await tagCreationService.tagPermissionGet();
+                    // if (data.length != 0) {
+                    //     data.map((d) => {
+                    //         if (d.employee_id == resData3[0].employee_id) {
+                    //             resData3[0].permission = d
+                    //         }
+                    //     })
+
+                    // }
                     return [err3, resData3]
                 } else {
                     return [err2, resData2]

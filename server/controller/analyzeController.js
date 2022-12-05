@@ -77,7 +77,7 @@ function Analyze(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
+ 
 
     //@Post analyze/get/report/detailed
     app.post('/' + 'analyze/get/report/detailed',
@@ -109,8 +109,6 @@ function Analyze(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-
          //@Post analyze/get/report/summary/
     app.post('/' + 'analyze/get/report/summary/group/by/user',
     async function (req, res) {
@@ -124,10 +122,6 @@ function Analyze(objectCollection) {
             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
         }
     })
-
-
-
-
 
 
 

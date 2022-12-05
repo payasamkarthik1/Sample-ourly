@@ -32,6 +32,10 @@ const approvalsService = require('../services/approvalsService')
 const leadController = require('../controller/leadController')
 const leadService = require('../services/leadService')
 
+const tagCreationsController = require('../controller/tagCreationsController')
+const tagCreationService = require('../services/tagCreationService')
+
+
 
 const Scheduler = require('../utils/sheduler')
 
@@ -70,6 +74,10 @@ function ControllInterceptor(objCollection) {
 
     new leadController(objCollection)
     new leadService(objCollection)
+
+    
+    new tagCreationsController(objCollection)
+    new tagCreationService(objCollection)
 
     new Scheduler(objCollection)
 }

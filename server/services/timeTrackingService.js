@@ -379,9 +379,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksInThatWeeks = async function (request, data) {
-        console.log('========came into=============')
-        console.log(data)
-        console.log('====================================')
+        console.log('----------entered getAllTasksInThatWeeks-----------');
         let responseData = [],
             error = true;
 
@@ -396,7 +394,6 @@ function TimeTrackingService(objectCollection) {
             data.firstWeekDay,
             data.lastWeekDay,
             request.employee_id,
-
         );
 
         const queryString = util.getQueryString('timetracking_get_all_tasks_in_Week_select', paramsArr);
@@ -424,30 +421,17 @@ function TimeTrackingService(objectCollection) {
                             month = formatDate[1]
                             day = formatDate[0]
                             hours = hours
-
                             header = { month, day, hours }
                             child = data2
-
                             arrObj.push({ header, child })
-
                             headObj.head = arrObj
-
-                            console.log('==========ARRAY OF OBJECT(each day header and child in week)===============')
-                            console.log(arrObj)
-                            console.log('=================================================================')
-
                         }
 
                         let newDate = loop.setDate(loop.getDate() - 1);
                         loop = new Date(newDate)
                     }
                     headObj.head = arrObj
-
                     eachWeek.unshift({ isApp, ...headObj })
-                    console.log('==========EACH WEEK DATA===============')
-                    console.log(eachWeek)
-                    console.log('====================================')
-
                     responseData = eachWeek;
                     error = false
                 }).catch((err) => {

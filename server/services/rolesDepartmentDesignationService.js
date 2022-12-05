@@ -10,6 +10,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     this.roleCreateInsert = async function (request) {
+        console.log('===========entered roleCreateInsert====================')
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -22,9 +23,8 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async(data) => {
-                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
+                .then(async (data) => {
+                    responseData = data;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -133,19 +133,19 @@ function RolesDepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if(data.length > 0){
-                    if (data[0].message === "data") {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
-                        error = false
+                    if (data.length > 0) {
+                        if (data[0].message === "data") {
+                            let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            responseData = data1;
+                            error = false
+                        } else {
+                            error = true,
+                                responseData = [{ message: data[0].message }];
+                        }
                     } else {
-                        error = true,
-                            responseData = [{ message: data[0].message }];
+                        error = false,
+                            responseData = [];
                     }
-                }else{
-                    error = false,
-                    responseData = [];
-                }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
