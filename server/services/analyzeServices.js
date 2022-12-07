@@ -81,52 +81,6 @@ function AnalyzeServices(objectCollection) {
         return [false, responseData]
     }
 
-    this.getDataByDates = async function (request) {
-        console.log('------------entered getDataByDatesF');
-        let responseData = [],
-            error = true;
-        // if flag =3 get get data by dates
-        flag = 1
-        const paramsArr = new Array(
-            request.start_date,
-            request.end_date,
-            flag
-        );
-
-        const queryString = util.getQueryString('data_get_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('====================================');
-                    console.log(data);
-                    console.log('====================================');
-                    error = false
-                    responseData = data
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-    this.filterDataByEmps = async function (request, data1, data2) {
-        let filterData = []
-        console.log('------------entered filterDataByEmps----------------------');
-        for (let i = 0; i < data1.length; i++) {
-            data2.filter(function (dat) {
-                if (dat.employee_id == data1[i].employee_id) {
-                    filterData.push(dat)
-                }
-            })
-        }
-
-        return filterData
-    }
-
     this.dashboardDataCalculationOverview = async function (request, data3) {
         console.log('-------------------------entered dashboardDataCalculationOverview--------');
         let responseData = []
@@ -189,68 +143,6 @@ function AnalyzeServices(objectCollection) {
         responseData.push(overallProjects)
 
         return [false, responseData];
-
-
-    };
-
-    this.dataInsertForCalculation = async function (request, data, id) {
-        let responseData = [],
-            error = true;
-        paramsArr = new Array(
-            id,
-            data.employee_id,
-            data.project_id,
-            data.task_total_time,
-            data.task_created_datetime,
-            data.task_start_time,
-            data.task_end_time,
-        );
-
-        const queryString = util.getQueryString('data_insert_for_calucation', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-    this.dataGetBasedOnRequirment = async function (request, id, flag) {
-        let responseData = [],
-            error = true;
-
-        console.log('====================================')
-        console.log(id)
-        console.log(flag)
-        console.log('====================================')
-        const paramsArr = new Array(
-            id,
-            flag
-        );
-
-        const queryString = util.getQueryString('data_get_requirment', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
 
 
     };
@@ -410,6 +302,103 @@ function AnalyzeServices(objectCollection) {
             console.log(data3)
             console.log('====================================')
             const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
+            responseData = data
+        }
+        return [false, responseData]
+    }
+
+    this.getReportSummaryGroupByUser = async function (request) {
+        let responseData = []
+
+        let data1 = []
+        let empsGathered = []
+        //get employess under head
+        if (request.role_id == 2) {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    for (let i = 0; employees.length; i++) {
+                        request.employee_id = employees[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    for (let i = 0; groups.length; i++) {
+                        request.employee_id = groups[i]
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                data1 = uniqueEmps
+
+            } else {
+                const [err8, data8] = await employeeService.getAllEmployees(request)
+                data1 = data8
+            }
+
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    for (let i = 0; employees.length; i++) {
+                        request.employee_id = employees[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    for (let i = 0; groups.length; i++) {
+                        request.employee_id = groups[i]
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                data1 = uniqueEmps
+
+            } else {
+                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                data1 = data9
+            }
+        }
+
+        //get data between date
+        const [err2, data2] = await this.getDataByDates(request)
+
+
+        //get dashboard data overview
+        if (data1.length != 0 && data2.length != 0) {
+            //filter data with emps
+            const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('==========filterDataByEmps=============')
+            console.log(data3)
+            console.log('====================================')
+            const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
             responseData = data
         }
         return [false, responseData]
@@ -596,6 +585,173 @@ function AnalyzeServices(objectCollection) {
         }
         return [false, responseData]
     }
+
+    this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+        let responseData = []
+        const [err, filterData] = await this.getFilterReportSummary(request, data)
+        if (filterData.length != 0) {
+            // total time
+            idGenerate = await util.getRandomNumericId()
+            id = idGenerate
+            totalTime = await util.sumOfTime(filterData)
+            //insert data into table for calce
+            for (i = 0; i < filterData.length; i++) {
+                flag = 1
+                const [err1, data1] = await this.dataInsertForCalculation(request, filterData[i], id)
+            }
+            //get overall total user hours 
+            flag = 8
+            const [err3, data3] = await this.dataGetBasedOnRequirment(request, id, flag)
+            overallUsers = data3
+
+
+            //adding uniques keys 
+            overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+
+            //loop for adding descriptions 
+            for (let i = 0; i < overallUsers1.length; i++) {
+                let value = []
+                data.filter(function (dat) {
+                    if (dat.employee_id == overallUsers1[i].employee_id) {
+                        obj = {}
+                        obj.task_description = dat.task_description
+                        obj.task_total_time = dat.task_total_time
+                        obj.project_name = dat.project_name
+                        obj.project_code = dat.project_code
+                        obj.project_color_code = dat.project_color_code
+                        value.push(obj)
+                    }
+
+                })
+                overallUsers1[i].description = value
+            }
+
+            //over all total_time daywise
+            flag = 6
+            const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+            overallTotalTime = data5
+            delete data
+            flag = 5
+            await this.dataGetBasedOnRequirment(request, id, flag)
+
+            responseData.push({ total_time: totalTime })
+            responseData.push(overallTotalTime)
+            responseData.push(overallUsers1)
+        }
+
+        return [false, responseData]
+    }
+
+
+
+
+    this.dataInsertForCalculation = async function (request, data, id) {
+        console.log('====================================')
+        console.log(data)
+        console.log('====================================')
+        let responseData = [],
+            error = true;
+        paramsArr = new Array(
+            id,
+            data.employee_id,
+            data.project_id,
+            data.task_total_time,
+            data.task_created_datetime,
+            data.task_start_time,
+            data.task_end_time,
+        );
+
+        const queryString = util.getQueryString('data_insert_for_calucation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    error = false
+                    responseData = data
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.dataGetBasedOnRequirment = async function (request, id, flag) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            id,
+            flag
+        );
+
+        const queryString = util.getQueryString('data_get_requirment', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    error = false
+                    responseData = data
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.getDataByDates = async function (request) {
+        console.log('------------entered getDataByDatesF');
+        let responseData = [],
+            error = true;
+        // if flag =3 get get data by dates
+        flag = 1
+        const paramsArr = new Array(
+            request.start_date,
+            request.end_date,
+            flag
+        );
+
+        const queryString = util.getQueryString('data_get_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('====================================');
+                    console.log(data);
+                    console.log('====================================');
+                    error = false
+                    responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.filterDataByEmps = async function (request, data1, data2) {
+        let filterData = []
+        console.log('------------entered filterDataByEmps----------------------');
+        for (let i = 0; i < data1.length; i++) {
+            data2.filter(function (dat) {
+                if (dat.employee_id == data1[i].employee_id) {
+                    filterData.push(dat)
+                }
+            })
+        }
+
+        return filterData
+    }
+
+
 };
 
 
