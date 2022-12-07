@@ -15,8 +15,6 @@ function EmployeeController(objectCollection) {
     const projectService = new ProjectService(objectCollection)
     const validations = new Validations(objectCollection)
 
-
-
     //@Post employee/create/add
     app.post('/' + 'employee/create/add', async function (req, res) {
         const [err, resData] = await employeeService.employeeCreationInsert(req.body);

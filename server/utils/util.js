@@ -752,12 +752,10 @@ function Util() {
         time1 = "00:00:00"
         for (let i = 0; i < data.length; i++) {
             time2 = data[i].task_total_time
-            total = await formatTime(timestrToSec(time1) + timestrToSec(time2))
+            var total = await formatTime(timestrToSec(time1) + timestrToSec(time2))
             time1 = total
         }
-
         return total
-
     }
 
 

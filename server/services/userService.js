@@ -1,6 +1,5 @@
 
 const Validations = require('../utils/validations')
-const TagCreationService = require('./tagCreationService')
 const jwt = require('jsonwebtoken')
 
 function UserService(objectCollection) {
@@ -8,7 +7,6 @@ function UserService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
-    const tagCreationService = new TagCreationService(objectCollection)
 
     this.userLoginInsertAfterRegistration = async function (data, request) {
         let responseData = [],

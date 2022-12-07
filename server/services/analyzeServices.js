@@ -70,8 +70,13 @@ function AnalyzeServices(objectCollection) {
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
-            const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
-            responseData = data
+            if (data3.length != 0) {
+                // //get dashboard data
+                const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
+                responseData = data
+            }
+
+
         }
         return [false, responseData]
     }
@@ -396,10 +401,14 @@ function AnalyzeServices(objectCollection) {
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
 
+
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('==========filterDataByEmps=============')
+            console.log(data3)
+            console.log('====================================')
             const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
             responseData = data
         }
@@ -534,9 +543,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryOverviewCalculation = async function (request, data) {
-        console.log('=========entered getReportSummaryOverviewCalculation==============')
-        console.log(data)
-        console.log('====================================')
         let responseData = []
 
         const [err, filterData] = await this.getFilterReportSummary(request, data)
