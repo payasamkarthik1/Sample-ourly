@@ -15,36 +15,6 @@ function AnalyzeServices(objectCollection) {
 
 
     //----------------------dashboards----------------
-    // this.getDasboardOverview = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-
-    //     //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-    //     if (request.role_id === 2 || request.role_id === 5) {
-    //         const [err1, data1] = await this.getadminSuperLeadMyTeamDasboardOverview(request)
-    //         error = err1
-    //         responseData = data1
-    //         //role_id = 4 for lead , get lead (my team) dashboard
-    //     } else if (request.role_id === 4) {
-    //         const [err1, data1] = await this.getleadMyTeamDasboardOverview(request)
-    //         error = err1
-    //         responseData = data1
-    //     }
-    //     //role_id = 6 for emerging lead , get  (my team) dashboard
-    //     else if (request.role_id === 6) {
-    //         const [err1, data1] = await this.getEmergingLeadMyTeamDasboardOverview(request)
-    //         error = err1
-    //         responseData = data1
-    //     }
-    //     //role_id = 3 for user(employee) , get individual employee dashboard
-    //     else if (request.role_id === 3) {
-    //         const [err1, data1] = await this.getEmployeeDasboardOverview(request)
-    //         error = err1
-    //         responseData = data1
-    //     }
-    //     return [error, responseData]
-
-    // };
 
 
     this.getDasboardOverview = async function (request) {
@@ -59,7 +29,7 @@ function AnalyzeServices(objectCollection) {
             const [err9, data9] = await employeeService.getEmployeeById(request)
             data1 = data9
         } else {
-            const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 1)
+            const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 2)
             data1 = data10
         }
 
@@ -228,7 +198,7 @@ function AnalyzeServices(objectCollection) {
                 if (request.groups.length != 0) {
                     for (let i = 0; groups.length; i++) {
                         request.employee_id = groups[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -266,7 +236,7 @@ function AnalyzeServices(objectCollection) {
                 if (request.groups.length != 0) {
                     for (let i = 0; groups.length; i++) {
                         request.employee_id = groups[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -285,7 +255,7 @@ function AnalyzeServices(objectCollection) {
                 data1 = uniqueEmps
 
             } else {
-                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
                 data1 = data9
             }
         }
@@ -706,7 +676,7 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getDataByDates = async function (request) {
-        console.log('------------entered getDataByDatesF');
+        console.log('------------entered getDataByDates------------------------');
         let responseData = [],
             error = true;
         // if flag =3 get get data by dates
