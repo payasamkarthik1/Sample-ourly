@@ -77,7 +77,7 @@ function LeadService(objectCollection) {
                     await this.seperationUsersAndHeads(dat, request, users, usrs, groups)
                 }
 
-                return (flag == 1 ? [false, users] : greaterThanZero());
+                return (flag == 2 ? [false, users] : greaterThanZero());
 
                 function greaterThanZero() {
                     console.log('============grppppp============');
