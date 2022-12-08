@@ -125,8 +125,7 @@ function AnalyzeServices(objectCollection) {
         const paramsArr = new Array(
             request.start_date,
             request.end_date,
-            request.employee_id,
-            flag
+            request.employee_id
         );
 
         const queryString = util.getQueryString('dashboard_get_top_tasks_filter_select', paramsArr);
