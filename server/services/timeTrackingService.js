@@ -882,6 +882,7 @@ function TimeTrackingService(objectCollection) {
         }
 
     }
+
     this.addInApprovalsOnRejectAfterApprove = async function (request) {
         let responseData = [],
             error = true;
@@ -1669,7 +1670,7 @@ function TimeTrackingService(objectCollection) {
         }
 
     }
-
+    
     // count list 
     this.getEmpsSubmittedListByLeadId = async function (request) {
         let responseData = [],

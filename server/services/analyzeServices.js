@@ -254,6 +254,7 @@ function AnalyzeServices(objectCollection) {
                 data1 = uniqueEmps
 
             } else {
+                
                 const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
                 data1 = data9
             }
@@ -265,6 +266,14 @@ function AnalyzeServices(objectCollection) {
 
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
+            console.log('==========data1================')
+            console.log(data1)
+            console.log('====================================')
+
+
+            console.log('==========data2================')
+            console.log(data2)
+            console.log('====================================')
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
             console.log('==========filterDataByEmps=============')
