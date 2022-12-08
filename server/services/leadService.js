@@ -38,7 +38,7 @@ function LeadService(objectCollection) {
     this.getEmployessAssignUnderHeads = async function (request, flag) {
         // flag =1 get all employee except admin and super admin
         // flag =2 get users and heads separation  in tow objects
-        let users = [], usrs = [], grps = []
+        let users = [], usrs = [], groups = []
         //role_id 2 for admin default all emps
         if (request.role_id == 2 && flag == 1) {
             console.log("-----------------admin---------------------");
@@ -63,8 +63,8 @@ function LeadService(objectCollection) {
                 delete o.employee_id;
             }
 
-            grps = data1
-            return [false, [{ users, grps }]]
+            groups = data1
+            return [false, [{ users, groups }]]
         }
         else {
             console.log("-----------------not admin---------------------");
@@ -72,24 +72,24 @@ function LeadService(objectCollection) {
             console.log(level1Data);
             if (level1Data.length != 0) {
                 Array.prototype.push.apply(users, level1Data)
-                const dat = await this.seperationUsersAndHeads(level1Data, request, users, usrs, grps)
+                const dat = await this.seperationUsersAndHeads(level1Data, request, users, usrs, groups)
                 if (dat.length != 0) {
-                    await this.seperationUsersAndHeads(dat, request, users, usrs, grps)
+                    await this.seperationUsersAndHeads(dat, request, users, usrs, groups)
                 }
 
                 return (flag == 1 ? [false, users] : greaterThanZero());
 
                 function greaterThanZero() {
                     console.log('============grppppp============');
-                    console.log(grps);
+                    console.log(groups);
                     console.log('====================================');
-                    for (let i = 0; i < grps.length; i++) {
-                        grps[i].lead_assigned_head = grps[i].lead_assigned_employee_id;
-                        delete grps[i].lead_assigned_employee_id;
-                        grps[i].lead_assigned_employee_id = grps[i].employee_id;
-                        delete grps[i].employee_id;
+                    for (let i = 0; i < groups.length; i++) {
+                        groups[i].lead_assigned_head = groups[i].lead_assigned_employee_id;
+                        delete groups[i].lead_assigned_employee_id;
+                        groups[i].lead_assigned_employee_id = groups[i].employee_id;
+                        delete groups[i].employee_id;
                     }
-                    return [false, [{ users, grps }]]
+                    return [false, [{ users, groups }]]
                 }
             } else {
                 return [false, []]
@@ -97,11 +97,11 @@ function LeadService(objectCollection) {
         }
     }
 
-    this.seperationUsersAndHeads = async function (data, request, users, usrs, grps) {
+    this.seperationUsersAndHeads = async function (data, request, users, usrs, groups) {
         let heads1 = []
         for (let j = 0; j < data.length; j++) {
             if (data[j].role_id != 3) {
-                grps.push(data[j])
+                groups.push(data[j])
                 request.employee_id = data[j].employee_id
                 var data1 = await this.getEmpsUnderHeadsLevel1(request)
                 if (data1.length != 0) {
@@ -109,7 +109,7 @@ function LeadService(objectCollection) {
                         if (data1[i].role_id != 3) {
                             heads1.push(data1[i])
                             users.push(data1[i])
-                            grps.push(data1[i])
+                            groups.push(data1[i])
                         } else {
                             users.push(data1[i])
                             usrs.push(data1[i])
