@@ -16,12 +16,10 @@ function AnalyzeServices(objectCollection) {
 
     //----------------------dashboards----------------
 
-
     this.getDasboardOverview = async function (request) {
         let responseData = []
 
         let data1 = []
-        //get employess under head
         if (request.role_id == 2) {
             const [err8, data8] = await employeeService.getAllEmployees(request)
             data1 = data8
@@ -29,19 +27,28 @@ function AnalyzeServices(objectCollection) {
             const [err9, data9] = await employeeService.getEmployeeById(request)
             data1 = data9
         } else {
-            const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 2)
+            const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 1)
+            console.log('===========getEmployessAssignUnderHeads====================')
+            console.log(data10)
+            console.log('====================================')
             data1 = data10
         }
 
-        //get data between date
+        //get data between dates
         const [err2, data2] = await this.getDataByDates(request)
+        console.log('===========getDataByDates====================')
+        console.log(data2)
+        console.log('====================================')
 
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('===========filterDataByEmps====================')
+            console.log(data3)
+            console.log('====================================')
             if (data3.length != 0) {
-                // //get dashboard data
+                //get dashboard data
                 const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
                 responseData = data
             }
@@ -174,10 +181,7 @@ function AnalyzeServices(objectCollection) {
     };
 
 
-
-
     //-------------------------reports---------------------
-
 
     this.getReportSummary = async function (request) {
         let responseData = []
@@ -235,12 +239,11 @@ function AnalyzeServices(objectCollection) {
                 if (request.groups.length != 0) {
                     for (let i = 0; groups.length; i++) {
                         request.employee_id = groups[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 //unique employess
-
                 const uniqueids = [];
                 const uniqueEmps = empsGathered.filter(element => {
                     const isDuplicate = uniqueids.includes(element.employee_id);
@@ -250,12 +253,9 @@ function AnalyzeServices(objectCollection) {
                     }
                     return false;
                 });
-
                 data1 = uniqueEmps
-
             } else {
-                
-                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
+                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                 data1 = data9
             }
         }
@@ -263,22 +263,10 @@ function AnalyzeServices(objectCollection) {
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
 
-
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
-            console.log('==========data1================')
-            console.log(data1)
-            console.log('====================================')
-
-
-            console.log('==========data2================')
-            console.log(data2)
-            console.log('====================================')
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
-            console.log('==========filterDataByEmps=============')
-            console.log(data3)
-            console.log('====================================')
             const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
             responseData = data
         }
@@ -368,14 +356,10 @@ function AnalyzeServices(objectCollection) {
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
 
-
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
-            console.log('==========filterDataByEmps=============')
-            console.log(data3)
-            console.log('====================================')
             const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
             responseData = data
         }
@@ -399,9 +383,7 @@ function AnalyzeServices(objectCollection) {
 
         if (client_id.length == 0 && project_id.length == 0 && tag_id.length == 0 && status_id.length == 0) {
             console.log('===========ENTERED ALL FILTERES NOT SELECTED DAFAULT==============')
-            console.log('==========DATA==============')
-            console.log(data)
-            console.log('====================================')
+
         } else if (client_id.length != 0 && project_id.length != 0 && tag_id.length != 0 && status_id.length != 0) {
             console.log('=========ENTERED ALL FILTERES SELECTED=============')
             if (client_id != []) {
@@ -441,14 +423,10 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
-                console.log('=====jfnkf=============')
-                console.log(filterStatus)
-                console.log('====================================')
+
             }
             data = filterStatus1;
-            console.log('=========FILTERED DATA==============')
-            console.log(data)
-            console.log('====================================')
+
 
         } else {
             console.log('===========ENTERED ANY ONE FILTER SELECTED=============')
@@ -620,13 +598,8 @@ function AnalyzeServices(objectCollection) {
         return [false, responseData]
     }
 
-
-
-
     this.dataInsertForCalculation = async function (request, data, id) {
-        console.log('====================================')
-        console.log(data)
-        console.log('====================================')
+
         let responseData = [],
             error = true;
         paramsArr = new Array(
@@ -728,7 +701,6 @@ function AnalyzeServices(objectCollection) {
 
         return filterData
     }
-
 
 };
 

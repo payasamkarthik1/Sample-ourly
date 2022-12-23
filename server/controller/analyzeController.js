@@ -1,7 +1,7 @@
 
 const Validations = require('../utils/validations')
 const AnalyzeServices = require('../services/analyzeServices')
-const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
+const RolesDepartmentDesignationService = require("../services/departmentDesignationService");
 
 
 
@@ -18,9 +18,7 @@ function Analyze(objectCollection) {
 
     //@Post analyze/get/dashboad/overview
     app.post('/' + 'analyze/get/dashboad/overview',
-
         async function (req, res) {
-
             const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
             if (!err) {
                 console.log("analyze/get/dashboad/overview | Error: ", err);
@@ -108,7 +106,7 @@ function Analyze(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-        
+
     //@Post analyze/get/report/summary/
     app.post('/' + 'analyze/get/report/summary/group/by/user',
         async function (req, res) {

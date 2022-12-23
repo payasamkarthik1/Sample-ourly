@@ -152,7 +152,7 @@ function TimeTrackingService(objectCollection) {
                             request1.first_week_day = data2[0].first_week_day
                             request1.last_week_day = data2[0].last_week_day
                             request1.week_name = await util.getWeekName(request1)
-                            request1.role_id = 3
+                            // request1.role_id = 3
 
                             await this.timesheetAddUpdateRemoveProjects(request1)
                             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request1)
@@ -209,7 +209,7 @@ function TimeTrackingService(objectCollection) {
                         request.first_week_day = firstWeekDate
                         request.last_week_day = lastWeekDate
                         request.week_name = await util.getWeekName(request)
-                        request.role_id = 3;
+                        // request.role_id = 3;
                         const [err1, data2] = await this.getWorkedHoursOfAllTasksWeekly(request)
                         if (data2[0].weekHours == null) {
                             await this.removeUnsubmited(request)
@@ -404,7 +404,7 @@ function TimeTrackingService(objectCollection) {
                     request.last_week_day = data1[0].last_week_day
                     const start = new Date(data1[0].first_week_day);
                     const end = new Date(data1[0].last_week_day);
-                    request.role_id = 3
+                    // request.role_id = 3
                     const [err1, weekhour] = await this.getWorkedHoursOfAllTasksWeekly(request)
                     isApp.startDate = util.getMonthName(data1[0].first_week_day)
                     isApp.endDate = util.getMonthName(data1[0].last_week_day)
@@ -628,64 +628,63 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getWorkedHrsOfAllPrjsInDay = async function (request) {
-       
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                0,
-                5
-            );
 
-            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id,
+            0,
+            5
+        );
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then((data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
-            }
-     
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then((data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
     }
 
-
     this.getWorkedHoursOfAllTasksWeekly = async function (request) {
-        
-            let responseData = [],
-                error = true;
-            //flag =4 for total hours calculation for all projects for a given week 
-            flag = 4
-            const paramsArr = new Array(
-                request.first_week_day,
-                request.last_week_day,
-                request.employee_id,
-                0,
-                flag
-            );
+
+        let responseData = [],
+            error = true;
+        //flag =4 for total hours calculation for all projects for a given week 
+        flag = 4
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id,
+            0,
+            flag
+        );
 
 
-            const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
+        const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        responseData = data;
-                        error = false
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
 
-            }
-   
+        }
+
 
     };
 
@@ -706,7 +705,8 @@ function TimeTrackingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (!data.length == 0) {
-                        flag = 1, request.role_id = 3
+                        flag = 1
+                        // request.role_id = 3
                         const [err1, data1] = await this.getWorkedHrsOfEachPrjInWeek(request, flag)
                         const [err2, data2] = await this.getWorkedHrsOfAllPrjsInDay(request, flag)
 
@@ -816,11 +816,10 @@ function TimeTrackingService(objectCollection) {
             const lastMonth = await util.getMonthName(last_week_day)
             request.first_week_day = first_week_day
             request.last_week_day = last_week_day
-            request.role_id = 3
+            // request.role_id = 3
             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
             const paramsArr = new Array(
                 data[0].employee_id,
-                data[0].role_id,
                 request.employee_id,
                 data1[0].weekHours,
                 first_week_day,
@@ -851,11 +850,9 @@ function TimeTrackingService(objectCollection) {
             const lastMonth = await util.getMonthName(last_week_day)
             request.first_week_day = first_week_day
             request.last_week_day = last_week_day
-            request.role_id = 3
             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
             const paramsArr = new Array(
                 data[0].employee_id,
-                data[0].role_id,
                 request.employee_id,
                 data1[0].weekHours,
                 first_week_day,
@@ -894,11 +891,9 @@ function TimeTrackingService(objectCollection) {
         const lastMonth = await util.getMonthName(last_week_day)
         request.first_week_day = first_week_day
         request.last_week_day = last_week_day
-        request.role_id = 3
         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
         const paramsArr = new Array(
             data[0].employee_id,
-            data[0].role_id,
             request.employee_id,
             data1[0].weekHours,
             first_week_day,
@@ -935,7 +930,6 @@ function TimeTrackingService(objectCollection) {
 
         const paramsArr = new Array(
             data[0].employee_id,
-            data[0].role_id,
             request.employee_id,
             0,
             first_week_day,
@@ -967,7 +961,6 @@ function TimeTrackingService(objectCollection) {
         const [err, data] = await this.getEmployeeLead(request)
         const paramsArr = new Array(
             data[0].employee_id,
-            data[0].role_id,
             request.employee_id,
             0,
             request.first_week_day,
@@ -1027,19 +1020,32 @@ function TimeTrackingService(objectCollection) {
 
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
-                if (request.employees.length != 0) {
-                    for (let i = 0; employees.length; i++) {
+                let employees = request.employees
+                let groups = request.groups
+                console.log('=========skjnxmsnx snxsnx  njxdndncdndjcdnc====================')
+                console.log(employees)
+                console.log(groups)
+
+                console.log('====================================')
+                if (employees.length != 0) {
+                    for (let i = 0; i<employees.length; i++) {
                         request.employee_id = employees[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 if (request.groups.length != 0) {
-                    for (let i = 0; groups.length; i++) {
+                    for (let i = 0;i<groups.length; i++) {
+                        console.log('========iiiii=================')
+                        console.log(groups[i])
+                        console.log('====================================')
                         request.employee_id = groups[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
+                    console.log('=======empsGathered=================')
+                    console.log(empsGathered)
+                    console.log('====================================')
                 }
                 //unique employess
 
@@ -1095,11 +1101,17 @@ function TimeTrackingService(objectCollection) {
 
             } else {
                 const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                console.log('=========emplpyee undef==================')
+                console.log(data9)
+                console.log('====================================')
                 data1 = data9
             }
         }
 
         if (data1.length != 0) {
+            console.log('==========data1========')
+            console.log(data1)
+            console.log('====================================')
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i], 7)
@@ -1116,7 +1128,6 @@ function TimeTrackingService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             data.employee_id,
-            0,
             0,
             request.first_week_day,
             request.last_week_day,
@@ -1312,8 +1323,6 @@ function TimeTrackingService(objectCollection) {
             null,
             null,
             null,
-            null,
-            null,
             util.getCurrentUTCTime(),
             null,
             flag
@@ -1368,9 +1377,7 @@ function TimeTrackingService(objectCollection) {
             request.week_name,
             data1[0].submited_for_approval_datetime,
             request.lead_id,
-            request.role_id,
             util.getCurrentUTCTime(),
-            null,
             null,
             null,
             null,
@@ -1481,9 +1488,7 @@ function TimeTrackingService(objectCollection) {
                 data1[0].submited_for_approval_datetime,
                 null,
                 null,
-                null,
                 request.lead_id,
-                request.role_id,
                 util.getCurrentUTCTime(),
                 request.note,
                 null,
@@ -1504,10 +1509,8 @@ function TimeTrackingService(objectCollection) {
                 request.week_name,
                 data1[0].submited_for_approval_datetime,
                 data1[0].approved_by_employee_id,
-                data1[0].approved_by_role_id,
                 data1[0].approved_on_datetime,
                 request.lead_id,
-                request.role_id,
                 util.getCurrentUTCTime(),
                 request.note,
                 null,
@@ -1617,8 +1620,6 @@ function TimeTrackingService(objectCollection) {
             null,
             null,
             null,
-            null,
-            null,
             util.getCurrentUTCTime(),
             util.getCurrentUTCTime(),
             data1[0].sno,
@@ -1670,41 +1671,41 @@ function TimeTrackingService(objectCollection) {
         }
 
     }
-    
+
     // count list 
-    this.getEmpsSubmittedListByLeadId = async function (request) {
-        let responseData = [],
-            error = true;
-        if (request.role_id == 4) {
-            flag = 4
-        } else if (request.role_id == 2 || request.role_id == 5) {
-            flag = 5
-        } else if (request.role_id == 3) {
-            flag = 7
-        }
+    // this.getEmpsSubmittedListByLeadId = async function (request) {
+    //     let responseData = [],
+    //         error = true;
+    //     if (request.role_id == 4) {
+    //         flag = 4
+    //     } else if (request.role_id == 2 || request.role_id == 5) {
+    //         flag = 5
+    //     } else if (request.role_id == 3) {
+    //         flag = 7
+    //     }
 
-        const paramsArr = new Array(
-            request.employee_id,
-            null,
-            null,
-            flag
-        );
-        const queryString = util.getQueryString('approvals_get_entries_date', paramsArr);
+    //     const paramsArr = new Array(
+    //         request.employee_id,
+    //         null,
+    //         null,
+    //         flag
+    //     );
+    //     const queryString = util.getQueryString('approvals_get_entries_date', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    data.push({ total_count: data.length });
-                    responseData = data
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 data.push({ total_count: data.length });
+    //                 responseData = data
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
 
-    }
+    // }
 
 
 

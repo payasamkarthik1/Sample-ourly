@@ -1,12 +1,19 @@
 
 const Validations = require('../utils/validations')
 const jwt = require('jsonwebtoken')
+const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
+const ComponentsService = require('../services/componentsService')
+const LeadService = require('./leadService')
+
 
 function UserService(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
+    const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
+    const componentsService = new ComponentsService(objectCollection)
+    const leadService = new LeadService(objectCollection)
 
     this.userLoginInsertAfterRegistration = async function (data, request) {
         let responseData = [],
@@ -51,19 +58,12 @@ function UserService(objectCollection) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
                     const [err3, resData3] = await this.userLoginInsert(request, resData1)
-                    // console.log('====================================')
-                    // console.log(resData3)
-                    // console.log('====================================')
-
-                    // const [err, data] = await tagCreationService.tagPermissionGet();
-                    // if (data.length != 0) {
-                    //     data.map((d) => {
-                    //         if (d.employee_id == resData3[0].employee_id) {
-                    //             resData3[0].permission = d
-                    //         }
-                    //     })
-
-                    // }
+                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_admin = 1, request.is_admin = 1, request.role_id = 2) : (resData3[0].is_admin = 0, request.is_admin = 0, request.role_id = 0)
+                    request.employee_id = resData3[0].employee_id
+                    const [err, permiss] = await rolePermissionEmployeeMapping.rolePermissionEmployeeget(request, 3)
+                    const [err1, data1] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                    data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
+                    resData3[0].permission_ids = permiss
                     return [err3, resData3]
                 } else {
                     return [err2, resData2]
@@ -71,7 +71,6 @@ function UserService(objectCollection) {
             } else {
                 return [err1, resData1]
             }
-
         }
         return [error, responseData]
 
@@ -85,8 +84,6 @@ function UserService(objectCollection) {
         const paramsArr = new Array(
             resData1[0].employee_id,
             resData1[0].email,
-            resData1[0].role_id,
-            resData1[0].role_name,
             resData1[0].password,
             jwtToken,
             util.getCurrentUTCTime()

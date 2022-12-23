@@ -8,131 +8,113 @@ function LeadService(objectCollection) {
 
     const employeeService = new EmployeeService(objectCollection)
 
-
-    this.getAllHeads = async function (request) {
-        let responseData = [],
-            error = true;
-        //    if flag = 2 get all heads
-        flag = 2
-
-        const paramsArr = new Array(
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
     this.getEmployessAssignUnderHeads = async function (request, flag) {
-        // flag =1 get all employee except admin and super admin
-        // flag =2 get users and heads separation  in tow objects
-        let users = [], usrs = [], groups = []
-        //role_id 2 for admin default all emps
-        if (request.role_id == 2 && flag == 1) {
-            console.log("-----------------admin---------------------");
+
+        var users = [], groups = [], dataRepeat = [], usrs = []
+        if (request.role_id == 2) {
             const [err, data] = await employeeService.getAllEmployees()
             if (data.length != 0) {
-                users = data
-                return [false, users]
+                dataRepeat = data
+                do {
+                    data1 = await this.seperationUsersAndHeads(dataRepeat, request, users, groups)
+                    dataRepeat = data1
+                } while (dataRepeat.length != 0)
+
+                if (users.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = users.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+                    users = uniqueEmps
+                }
+
+                if (groups.length != 0) {
+                    const uniqueids = [];
+                    const uniqueEmps = groups.filter(element => {
+                        const isDuplicate = uniqueids.includes(element.employee_id);
+                        if (!isDuplicate) {
+                            uniqueids.push(element.employee_id);
+                            return true;
+                        }
+                        return false;
+                    });
+                    groups = uniqueEmps
+
+                }
             }
-
-        } else if (request.role_id == 2 && flag == 2) {
-            console.log("-----------------admin---------------------");
-            const [err, data] = await employeeService.getAllEmployees()
-            const [err1, data1] = await this.getAllHeads()
-            users = data
-
-            for (var i = 0; i < data1.length; i++) {
-                var o = data1[i];
-                o.lead_assigned_head = o.lead_assigned_employee_id;
-                delete o.lead_assigned_employee_id;
-
-                o.lead_assigned_employee_id = o.employee_id;
-                delete o.employee_id;
-            }
-
-            groups = data1
-            return [false, [{ users, groups }]]
         }
         else {
-            console.log("-----------------not admin---------------------");
-            var level1Data = await this.getEmpsUnderHeadsLevel1(request)
-            console.log(level1Data);
-            if (level1Data.length != 0) {
-                Array.prototype.push.apply(users, level1Data)
-                const dat = await this.seperationUsersAndHeads(level1Data, request, users, usrs, groups)
-                if (dat.length != 0) {
-                    await this.seperationUsersAndHeads(dat, request, users, usrs, groups)
-                }
-
-                return (flag == 2 ? [false, users] : greaterThanZero());
-
-                function greaterThanZero() {
-                    console.log('============grppppp============');
-                    console.log(groups);
-                    console.log('====================================');
-                    for (let i = 0; i < groups.length; i++) {
-                        groups[i].lead_assigned_head = groups[i].lead_assigned_employee_id;
-                        delete groups[i].lead_assigned_employee_id;
-                        groups[i].lead_assigned_employee_id = groups[i].employee_id;
-                        delete groups[i].employee_id;
-                    }
-                    return [false, [{ users, groups }]]
-                }
-            } else {
-                return [false, []]
+            var data = await this.getEmpsUnderHeadsLevel1(request)
+            if (data.length != 0) {
+                dataRepeat = data
+                do {
+                    data1 = await this.seperationUsersAndHeads(dataRepeat, request, users, groups)
+                    dataRepeat = data1
+                } while (dataRepeat.length != 0)
             }
         }
+        // function usersAndGrps(groups) {
+        //     for (let i = 0; i < groups.length; i++) {
+        //         console.log('====================================')
+        //         console.log(groups[i])
+        //         console.log('====================================')
+        //         groups[i].lead_assigned_head = groups[i].lead_assigned_employee_id;
+        //         delete groups[i].lead_assigned_employee_id;
+        //         groups[i].lead_assigned_employee_id = groups[i].employee_id;
+        //         delete groups[i].employee_id;
+        //     }
+
+        //     console.log('========users and groups ================')
+        //     console.log(users)
+        //     console.log(groups)
+        //     console.log('====================================')
+        //     return [false, [{ users, groups }]]
+        // }
+        if (flag == 1) {
+            return [false, users]
+        } else {
+            if (groups.length != 0) {
+                groups.map((item) => {
+                    item.lead_assigned_head = item.lead_assigned_employee_id;
+                    delete item.lead_assigned_employee_id;
+                    item.lead_assigned_employee_id = item.employee_id;
+                })
+
+            }
+            return [false, [{ users, groups }]]
+        }
+        // return (flag == 1 ? [false, users] :  [false, [{ users, groups }]]);
     }
 
-    this.seperationUsersAndHeads = async function (data, request, users, usrs, groups) {
-        let heads1 = []
+    this.seperationUsersAndHeads = async function (data, request, users, groups) {
+        let empsUnder = []
         for (let j = 0; j < data.length; j++) {
-            if (data[j].role_id != 3) {
+            request.employee_id = data[j].employee_id
+            var data1 = await this.getEmpsUnderHeadsLevel1(request)
+            if (data1.length != 0) {
+                users.push(data[j])
+                Array.prototype.push.apply(empsUnder, data1);
+
                 groups.push(data[j])
-                request.employee_id = data[j].employee_id
-                var data1 = await this.getEmpsUnderHeadsLevel1(request)
-                if (data1.length != 0) {
-                    for (let i = 0; i < data1.length; i++) {
-                        if (data1[i].role_id != 3) {
-                            heads1.push(data1[i])
-                            users.push(data1[i])
-                            groups.push(data1[i])
-                        } else {
-                            users.push(data1[i])
-                            usrs.push(data1[i])
-                        }
-                    }
-                }
             } else {
-                usrs.push(data[j])
+                users.push(data[j])
+                // usrs.push(data[j])
+
             }
         }
-        return heads1
-    };
+        return empsUnder
+    }
 
     this.getEmpsUnderHeadsLevel1 = async function (request) {
-        console.log('========getEmpsUnderHeadsLevel1=======================')
-        console.log(request)
-        console.log('====================================')
-        let responseData = [],
-            error = true;
-        flag = 1
+        let responseData = []
+
         const paramsArr = new Array(
-            request.employee_id.toString(),
-            flag
+            request.employee_id.toString()
         );
 
         const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
@@ -151,6 +133,10 @@ function LeadService(objectCollection) {
 
 
     };
+
+
+
+
 
 }
 

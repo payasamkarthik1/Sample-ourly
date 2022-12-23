@@ -1,17 +1,14 @@
 
 const Validations = require('../utils/validations')
 const jwt = require('jsonwebtoken')
-
-const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
-
+const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
 
 function EmployeeServices(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
-    const rolesDepartDesigService = new RolesDepartmentDesignationService(objectCollection)
-
+    const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
 
 
     this.employeeCreationInsert = async function (request) {
@@ -32,7 +29,6 @@ function EmployeeServices(objectCollection) {
                 request.phone_number,
                 request.blood_group,
                 request.dob,
-                request.role_id,
                 request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
@@ -45,9 +41,6 @@ function EmployeeServices(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(0, queryString, request)
                     .then(async (data) => {
-                        console.log('====================================')
-                        console.log(data)
-                        console.log('====================================')
                         if (data[0].message === "EMAIL ALREADY EXIST") {
                             error = true
                             responseData = [{ message: data[0].message }];
@@ -55,6 +48,12 @@ function EmployeeServices(objectCollection) {
                             error = true
                             responseData = [{ message: data[0].message }];
                         } else if (data[0].message === "data") {
+                            //adding role perimissions to user
+                            console.log('===============xsxsx============')
+                            console.log(data)
+                            console.log('====================================')
+                            request.employee_id = data[0].employee_id
+                            await rolePermissionEmployeeMapping.rolePermissionEmployeeAdd(request)
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                             responseData = data1;
                             error = false;
@@ -158,6 +157,7 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    await rolePermissionEmployeeMapping.rolePermissionEmployeeDelete(request)
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1
                     error = false
@@ -215,7 +215,6 @@ function EmployeeServices(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.image,
-                request.role_id,
                 request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
@@ -227,6 +226,7 @@ function EmployeeServices(objectCollection) {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
                         error = false
+                        await rolePermissionEmployeeMapping.rolePermissionEmployeeUpdate(request)
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1
                     }).catch((err) => {

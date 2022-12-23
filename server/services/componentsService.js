@@ -1,16 +1,11 @@
 const EmployeeService = require('./employeeService')
 
 
+
 function Components(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
 
-    const employeeService = new EmployeeService(objectCollection)
-
-
-
-
-    //--------------------component-------------------------------
 
     this.componentAdd = async function (request) {
         console.log('---------------------entered componentAdd-------------------------');

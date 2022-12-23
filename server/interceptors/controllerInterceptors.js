@@ -10,8 +10,8 @@ const employeeController = require('../controller/employeeController')
 const employeeService = require('../services/employeeService')
 
 
-const rolesDepartmentDesignationContoller = require('../controller/rolesDepartmentDesignationContoller')
-const rolesDepartmentDesignationService = require('../services/rolesDepartmentDesignationService')
+const DepartmentDesignationContoller = require('../controller/departmentDesignationContoller')
+const DepartmentDesignationsService = require('../services/departmentDesignationService')
 
 const userController = require('../controller/userController')
 const userService = require('../services/userService')
@@ -35,7 +35,10 @@ const leadService = require('../services/leadService')
 const componentsController = require('../controller/componentsController')
 const componentsService = require('../services/componentsService')
 
+const RoleComponentsMappingController = require('../controller/roleComponentsMappingController')
+const RoleComponentsMappingService = require('../services/roleComponentsMappingService')
 
+const RolePermissionEmployeeMapping = require('../services/roleComponentsMappingService')
 
 const Scheduler = require('../utils/sheduler')
 
@@ -51,8 +54,8 @@ function ControllInterceptor(objCollection) {
     new employeeController(objCollection)
     new employeeService(objCollection)
 
-    new rolesDepartmentDesignationContoller(objCollection)
-    new rolesDepartmentDesignationService(objCollection)
+    new DepartmentDesignationContoller(objCollection)
+    new DepartmentDesignationsService(objCollection)
 
     new userController(objCollection)
     new userService(objCollection)
@@ -75,9 +78,14 @@ function ControllInterceptor(objCollection) {
     new leadController(objCollection)
     new leadService(objCollection)
 
-    
     new componentsController(objCollection)
     new componentsService(objCollection)
+
+    new RoleComponentsMappingController(objCollection)
+    new RoleComponentsMappingService(objCollection)
+
+    new RolePermissionEmployeeMapping(objCollection)
+
 
     new Scheduler(objCollection)
 }

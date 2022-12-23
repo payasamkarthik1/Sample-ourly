@@ -2,7 +2,6 @@ const { json } = require("body-parser");
 const ProjectService = require("../services/projectService");
 const TimeTrackingService = require("../services/timeTrackingService");
 const moment = require('moment')
-
 const Validations = require('../utils/validations')
 
 

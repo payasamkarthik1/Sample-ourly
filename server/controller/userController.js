@@ -1,16 +1,16 @@
 const { json } = require("body-parser");
 const UserService = require("../services/userService");
 const Validations = require('../utils/validations')
-
+const RolePermissionEmployeeMapping = require('../services/rolePermissionEmployeeMappingService')
 
 
 function UserController(objectCollection) {
-
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const userService = new UserService(objectCollection)
     const validations = new Validations(objectCollection)
+    const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
 
 
     //@Post user/login/insert
@@ -63,7 +63,7 @@ function UserController(objectCollection) {
         }
     })
 
-    //@Postuser/forget/change/password
+    //@Pos tuser/forget/change/password
     app.post('/' + 'user/forget/change/password', async function (req, res) {
         const [err, resData] = await validations.forgetChangePassword(req.body, res);
         if (!err) {
@@ -76,10 +76,17 @@ function UserController(objectCollection) {
     })
 
 
-
-
-
-
+    //@Post user/get/permission/ids
+    app.post('/' + 'user/get/permission/ids', async function (req, res) {
+        const [err, resData] = await rolePermissionEmployeeMapping.rolePermissionEmployeeget(req.body, 3);
+        if (!err) {
+            console.log("user/get/permission/ids | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("user/get/permission/ids | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
 
 }
 

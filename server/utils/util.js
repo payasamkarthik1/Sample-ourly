@@ -575,7 +575,7 @@ function Util() {
 
     }
 
-    this.generateRandtoken = async function (req) {
+    this.generateRandtoken = async function () {
         const id = randtoken.generate(4, "0123456789");
         return id
     }
