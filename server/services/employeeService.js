@@ -82,6 +82,49 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
+
+                    var dat = data1.reduce(function (acc, curr) {
+                        //finding Index in the array where the NamaCategory matched
+                        var findIfNameExist = acc.findIndex(function (item) {
+                            return item.employee_id === curr.employee_id;
+                        })
+                        if (findIfNameExist === -1) {
+
+                            let obj = {
+                                'employee_id': curr.employee_id,
+                                'first_name': curr.first_name,
+                                'last_name': curr.last_name,
+                                'full_name': curr.full_name,
+                                'email': curr.email,
+                                'phone_number': curr.phone_number,
+                                'blood_group': curr.blood_group,
+                                'dob': curr.dob,
+                                'gender': curr.gender,
+                                'designation_name': curr.designation_name,
+                                'department_name': curr.department_name,
+                                'lead_assigned_employee_id': curr.lead_assigned_employee_id,
+                                'role_id': curr.role_id,
+                                'role_name': curr.role_name,
+
+                                "value": [
+
+
+                                    {
+                                        'role_id': curr.role_id,
+                                        'role_name': curr.role_name,
+                                    }]
+                            }
+                            acc.push(obj)
+                        } else {
+                            acc[findIfNameExist].value.push({    'role_id': curr.role_id,
+                            'role_name': curr.role_name, })
+                        }
+
+                        return acc;
+
+                    }, []);
+
                     responseData = data1;
                     error = false
                 }).catch((err) => {

@@ -152,6 +152,50 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
 
+    this.roleGetByEmpId = async function (request) {
+        console.log('---------------------entered roleGet-------------------------');
+        let responseData = [],
+            error = true
+        const paramsArr = new Array(
+        );
+        const queryString = util.getQueryString('role_get_all_select', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    var data1 = data.reduce(function (acc, curr) {
+                        //finding Index in the array where the NamaCategory matched
+                        var findIfNameExist = acc.findIndex(function (item) {
+                            return item.role_id === curr.role_id;
+                        })
+                        if (findIfNameExist === -1) {
+
+                            let obj = {
+                                'role_name': curr.role_name,
+                                'role_id': curr.role_id,
+                                "value": [
+
+
+                                    { component_id: curr.component_id, component_name: curr.component_name }]
+                            }
+                            acc.push(obj)
+                        } else {
+                            acc[findIfNameExist].value.push({ component_id: curr.component_id, component_name: curr.component_name })
+                        }
+
+                        return acc;
+
+                    }, []);
+                    responseData = data1;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
+
 
 
 
