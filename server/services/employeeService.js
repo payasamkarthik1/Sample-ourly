@@ -70,6 +70,9 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getAllEmployees = async function (request) {
+        console.log('====================================')
+        console.log("enyterd")
+        console.log('====================================')
 
         let responseData = [],
             error = true;
@@ -82,7 +85,6 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-
 
                     var dat = data1.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
@@ -117,15 +119,17 @@ function EmployeeServices(objectCollection) {
                             }
                             acc.push(obj)
                         } else {
-                            acc[findIfNameExist].value.push({    'role_id': curr.role_id,
-                            'role_name': curr.role_name, })
+                            acc[findIfNameExist].value.push({
+                                'role_id': curr.role_id,
+                                'role_name': curr.role_name,
+                            })
                         }
 
                         return acc;
 
                     }, []);
 
-                    responseData = data1;
+                    responseData = dat;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
