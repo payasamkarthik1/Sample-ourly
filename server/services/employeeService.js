@@ -86,6 +86,11 @@ function EmployeeServices(objectCollection) {
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
 
+
+                    console.log('====================================')
+                    console.log(data1)
+                    console.log('====================================')
+
                     var dat = data1.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
                         var findIfNameExist = acc.findIndex(function (item) {
