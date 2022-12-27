@@ -71,7 +71,7 @@ function EmployeeServices(objectCollection) {
 
     this.getAllEmployees = async function (request) {
         console.log('====================================')
-        console.log("enyterd")
+        console.log("entered     ")
         console.log('====================================')
 
         let responseData = [],
