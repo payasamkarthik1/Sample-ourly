@@ -106,12 +106,7 @@ function EmployeeServices(objectCollection) {
                                 'designation_name': curr.designation_name,
                                 'department_name': curr.department_name,
                                 'lead_assigned_employee_id': curr.lead_assigned_employee_id,
-                                'role_id': curr.role_id,
-                                'role_name': curr.role_name,
-
                                 "value": [
-
-
                                     {
                                         'role_id': curr.role_id,
                                         'role_name': curr.role_name,
