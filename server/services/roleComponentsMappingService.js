@@ -1,11 +1,8 @@
-const EmployeeService = require('./employeeService')
 
 
 function RoleComponentsMappingService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
-
-    const employeeService = new EmployeeService(objectCollection)
 
 
     this.roleCreation = async function (request) {

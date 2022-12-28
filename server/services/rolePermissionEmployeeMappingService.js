@@ -1,11 +1,10 @@
-const EmployeeService = require('./employeeService')
-const ComponentsService = require('./componentsService')
+// const ComponentsService = require('./componentsService')
 const RoleComponentsMappingService = require('./roleComponentsMappingService')
 
 function RolePermissionEmployeeMapping(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
-    const componentsService = new ComponentsService(objectCollection)
+    // const componentsService = new ComponentsService(objectCollection)
     const roleComponentsMappingService = new RoleComponentsMappingService(objectCollection)
 
     this.rolePermissionEmployeeAdd = async function (request) {
