@@ -59,7 +59,7 @@ function Validations(objectCollection) {
             responseData = [{ message: 'dob  is required' }]
             return [error, responseData];
         }
-        else if (permission_data.length == 0) {
+        else if (request.permission_data.length == 0) {
             error = true
             responseData = [{ message: 'permission is required' }]
             return [error, responseData];
