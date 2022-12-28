@@ -80,56 +80,55 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    // console.log('======employee==================')
-                    // console.log(data1)
-                    // console.log('====================================')
-
-                    var dat = data.reduce(function (acc, curr) {
-                        //finding Index in the array where the NamaCategory matched
-                        var findIfNameExist = acc.findIndex(function (item) {
-                            return item.employee_id === curr.employee_id;
-                        })
-                        if (findIfNameExist === -1) {
-
-                            let obj = {
-                                'employee_id': curr.employee_id,
-                                'first_name': curr.first_name,
-                                'last_name': curr.last_name,
-                                'full_name': curr.full_name,
-                                'email': curr.email,
-                                'phone_number': curr.phone_number,
-                                'blood_group': curr.blood_group,
-                                'dob': curr.dob,
-                                'gender': curr.gender,
-                                'designation_name': curr.designation_name,
-                                'department_name': curr.department_name,
-                                'lead_assigned_employee_id': curr.lead_assigned_employee_id,
-                                'id': curr.id,
-                                'log_state': curr.log_state,
-                                "permission_data": [
-                                    {
-                                        'role_id': curr.role_id,
-                                        'role_name': curr.role_name,
-                                    }]
-                            }
-                            acc.push(obj)
-                        } else {
-                            acc[findIfNameExist].permission_data.push({
-                                'role_id': curr.role_id,
-                                'role_name': curr.role_name,
+                    if (data.length != 0) {
+                        var dat = data.reduce(function (acc, curr) {
+                            //finding Index in the array where the NamaCategory matched
+                            var findIfNameExist = acc.findIndex(function (item) {
+                                return item.employee_id === curr.employee_id;
                             })
-                        }
+                            if (findIfNameExist === -1) {
 
-                        return acc;
+                                let obj = {
+                                    'id': curr.id,
+                                    'employee_id': curr.employee_id,
+                                    'first_name': curr.first_name,
+                                    'last_name': curr.last_name,
+                                    'full_name': curr.full_name,
+                                    'email': curr.email,
+                                    'phone_number': curr.phone_number,
+                                    'blood_group': curr.blood_group,
+                                    'dob': curr.dob,
+                                    'gender': curr.gender,
+                                    'designation_id': curr.designation_id,
+                                    'designation_name': curr.designation_name,
+                                    'department_id': curr.designation_id,
+                                    'department_name': curr.department_name,
+                                    'lead_assigned_employee_id': curr.lead_assigned_employee_id,
+                                    'log_state': curr.log_state,
+                                    "permission_data": [
+                                        {
+                                            'role_id': curr.role_id,
+                                            'role_name': curr.role_name,
+                                        }]
+                                }
+                                acc.push(obj)
+                            } else {
+                                acc[findIfNameExist].permission_data.push({
+                                    'role_id': curr.role_id,
+                                    'role_name': curr.role_name,
+                                })
+                            }
 
-                    }, []);
+                            return acc;
 
-
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(dat)
-
-
-                    responseData = data1;
-                    error = false
+                        }, []);
+                        //adding unique id for array of objects
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(dat)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
