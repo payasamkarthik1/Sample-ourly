@@ -12,6 +12,7 @@ function EmployeeServices(objectCollection) {
 
 
     this.employeeCreationInsert = async function (request) {
+        console.log("----------------------entered employeeCreationInsert----------------------");
         let responseData = [],
             error = true;
         const [err, respData] = await validations.employeeCreationInputValidations(request);
@@ -70,6 +71,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getAllEmployees = async function (request) {
+        console.log("----------------------entered getAllEmployees----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -101,7 +103,7 @@ function EmployeeServices(objectCollection) {
                                     'gender': curr.gender,
                                     'designation_id': curr.designation_id,
                                     'designation_name': curr.designation_name,
-                                    'department_id': curr.designation_id,
+                                    'department_id': curr.department_id,
                                     'department_name': curr.department_name,
                                     'lead_assigned_employee_id': curr.lead_assigned_employee_id,
                                     'log_state': curr.log_state,
@@ -138,7 +140,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getEmployeeById = async function (request) {
-
+        console.log("----------------------entered getEmployeeById----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -162,7 +164,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.removeEmployeeDelete = async function (request) {
-
+        console.log("----------------------entered removeEmployeeDelete----------------------");
         let responseData = [],
             error = true;
         flag = 1
@@ -188,7 +190,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.removeEmployeeComplete = async function (request) {
-
+        console.log("----------------------entered removeEmployeeComplete----------------------");
         let responseData = [],
             error = true;
         flag = 2
@@ -215,7 +217,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.inactiveEmpToActive = async function (request) {
-
+        console.log("----------------------entered inactiveEmpToActive----------------------");
         let responseData = [],
             error = true;
         flag = 3
@@ -242,6 +244,7 @@ function EmployeeServices(objectCollection) {
     }
 
     this.updateEmployeeDetails = async function (request) {
+        console.log("----------------------entered updateEmployeeDetails----------------------");
         let responseData = [],
             error = true;
         const [err, respData] = await validations.employeeUpdateCreationInputValidations(request);
