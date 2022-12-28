@@ -130,7 +130,6 @@ function RoleComponentsMappingService(objectCollection) {
                                 'role_id': curr.role_id,
                                 "value": [
 
-
                                     { component_id: curr.component_id, component_name: curr.component_name }]
                             }
                             acc.push(obj)
@@ -151,7 +150,6 @@ function RoleComponentsMappingService(objectCollection) {
         }
     }
 
-
     this.roleGetByEmpId = async function (request) {
         console.log('---------------------entered roleGet-------------------------');
         let responseData = [],
@@ -168,13 +166,10 @@ function RoleComponentsMappingService(objectCollection) {
                             return item.role_id === curr.role_id;
                         })
                         if (findIfNameExist === -1) {
-
                             let obj = {
                                 'role_name': curr.role_name,
                                 'role_id': curr.role_id,
                                 "value": [
-
-
                                     { component_id: curr.component_id, component_name: curr.component_name }]
                             }
                             acc.push(obj)

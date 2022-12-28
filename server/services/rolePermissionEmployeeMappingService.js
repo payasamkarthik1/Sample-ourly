@@ -117,52 +117,53 @@ function RolePermissionEmployeeMapping(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (request.is_admin == 1) {
-                        const [err, data] = await componentsService.componentGetAll()
+                    // if (request.is_admin == 1) {
+                    //     const [err, data] = await componentsService.componentGetAll()
+                    //     let components_ids = []
+
+                    //     if (data.length != 0) {
+                    //         await data.map((id) => {
+                    //             components_ids.push(id.component_id)
+                    //         })
+                    //         for (let i = 0; i < components_ids.length; i++) {
+                    //             if (components_ids[i] > 0 && components_ids[i] < 3) {
+                    //                 time.push(components_ids[i])
+                    //                 time.pop()
+                    //             } else if (components_ids[i] > 2 && components_ids[i] < 5) {
+                    //                 analyze.push(components_ids[i])
+                    //             }
+                    //             else {
+                    //                 manage.push(components_ids[i])
+                    //             }
+                    //         }
+                    //     }
+                    // } else {
+
+                    if (data.length != 0) {
+
                         let components_ids = []
+                        await data.map((id) => {
+                            components_ids.push(id.component_id)
+                        })
+                        var unique_components_ids = components_ids.filter((value, index, self) => {
+                            return self.indexOf(value) === index;
+                        })
 
-                        if (data.length != 0) {
-                            await data.map((id) => {
-                                components_ids.push(id.component_id)
-                            })
-                            for (let i = 0; i < components_ids.length; i++) {
-                                if (components_ids[i] > 0 && components_ids[i] < 3) {
-                                    time.push(components_ids[i])
-                                    time.pop()
-                                } else if (components_ids[i] > 2 && components_ids[i] < 5) {
-                                    analyze.push(components_ids[i])
-                                }
-                                else {
-                                    manage.push(components_ids[i])
-                                }
+
+                        for (let i = 0; i < unique_components_ids.length; i++) {
+                            if (unique_components_ids[i] > 0 && unique_components_ids[i] < 3) {
+                                time.push(unique_components_ids[i])
+
+                            } else if (unique_components_ids[i] >= 3 && unique_components_ids[i] <= 5) {
+                                analyze.push(unique_components_ids[i])
+                            }
+                            else {
+                                manage.push(unique_components_ids[i])
                             }
                         }
-                    } else {
-                        if (data.length != 0) {
 
-                            let components_ids = []
-                            await data.map((id) => {
-                                components_ids.push(id.component_id)
-                            })
-                            var unique_components_ids = components_ids.filter((value, index, self) => {
-                                return self.indexOf(value) === index;
-                            })
-
-
-                            for (let i = 0; i < unique_components_ids.length; i++) {
-                                if (unique_components_ids[i] > 0 && unique_components_ids[i] < 3) {
-                                    time.push(unique_components_ids[i])
-
-                                } else if (unique_components_ids[i] >= 3 && unique_components_ids[i] <= 5) {
-                                    analyze.push(unique_components_ids[i])
-                                }
-                                else {
-                                    manage.push(unique_components_ids[i])
-                                }
-                            }
-
-                        }
                     }
+                    // }
                     responseData.push({ time: time.map(String) })
                     responseData.push({ manage: manage.map(String) })
                     responseData.push({ analyze: analyze.map(String) })

@@ -70,10 +70,6 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getAllEmployees = async function (request) {
-        console.log('====================================')
-        console.log("entered     ")
-        console.log('====================================')
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -85,11 +81,6 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-
-
-                    console.log('====================================')
-                    console.log(data1)
-                    console.log('====================================')
 
                     var dat = data1.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
