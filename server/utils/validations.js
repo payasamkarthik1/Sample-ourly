@@ -32,9 +32,6 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'email is required' }]
             return [error, responseData];
-            console.log('====================================')
-            console.log("entered ")
-            console.log('====================================')
 
         }
         else if (Validator.isEmpty(request.phone_number)) {
@@ -62,11 +59,11 @@ function Validations(objectCollection) {
             responseData = [{ message: 'dob  is required' }]
             return [error, responseData];
         }
-        // else if (Validator.isEmpty(request.permission_data.toString())) {
-        //     error = true
-        //     responseData = [{ message: 'permission_data  is required' }]
-        //     return [error, responseData];
-        // }
+        else if (permission_data.length == 0) {
+            error = true
+            responseData = [{ message: 'permission is required' }]
+            return [error, responseData];
+        }
         else if (Validator.isEmpty(request.department_id.toString())) {
             error = true
             responseData = [{ message: 'department  is required' }]
