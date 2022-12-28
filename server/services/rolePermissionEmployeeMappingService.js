@@ -25,6 +25,8 @@ function RolePermissionEmployeeMapping(objectCollection) {
             error = true
         const paramsArr = new Array(
             request.employee_id.toString(),
+            0,
+            0,
             flag
         );
         const queryString = util.getQueryString('role_permission_employee', paramsArr);
