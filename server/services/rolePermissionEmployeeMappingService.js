@@ -1,10 +1,12 @@
 const EmployeeService = require('./employeeService')
 const ComponentsService = require('./componentsService')
+const RoleComponentsMappingService = require('./roleComponentsMappingService')
 
 function RolePermissionEmployeeMapping(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
     const componentsService = new ComponentsService(objectCollection)
+    const roleComponentsMappingService = new RoleComponentsMappingService(objectCollection)
 
     this.rolePermissionEmployeeAdd = async function (request) {
         console.log('---------------------entered rolePermissionEmployeeAdd-------------------------');
@@ -15,7 +17,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
         console.log('---------------------entered rolePermissionEmployeeUpdate-------------------------');
         await this.rolePermissionEmployeeDelete(request)
         await this.rolePermissionsEmployeeDataLoopForUpdate(request, 1)
-        const [err, data] = await this.roleGet()
+        const [err, data] = await roleComponentsMappingService.roleGet()
         return [err, data]
     }
 
@@ -33,7 +35,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const [err, data1] = await this.roleGet()
+                    const [err, data1] = await roleComponentsMappingService.roleGet()
                     responseData = data1;
                     error = false
                 }).catch((err) => {
