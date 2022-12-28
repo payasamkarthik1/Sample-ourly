@@ -81,6 +81,9 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    console.log('======employee==================')
+                    console.log(data1)
+                    console.log('====================================')
 
                     var dat = data1.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
@@ -103,7 +106,6 @@ function EmployeeServices(objectCollection) {
                                 'department_name': curr.department_name,
                                 'lead_assigned_employee_id': curr.lead_assigned_employee_id,
                                 'log_state': curr.log_state,
-
                                 "permission_data": [
                                     {
                                         'role_id': curr.role_id,
