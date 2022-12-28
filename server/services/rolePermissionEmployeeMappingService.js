@@ -155,7 +155,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
                             if (unique_components_ids[i] > 0 && unique_components_ids[i] < 3) {
                                 time.push(unique_components_ids[i])
 
-                            } else if (unique_components_ids[i] >= 3 && unique_components_ids[i] <= 5) {
+                            } else if (unique_components_ids[i] >= 3 && unique_components_ids[i] < 5) {
                                 analyze.push(unique_components_ids[i])
                             }
                             else {
