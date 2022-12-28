@@ -80,12 +80,11 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('======employee==================')
-                    console.log(data1)
-                    console.log('====================================')
+                    // console.log('======employee==================')
+                    // console.log(data1)
+                    // console.log('====================================')
 
-                    var dat = data1.reduce(function (acc, curr) {
+                    var dat = data.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
                         var findIfNameExist = acc.findIndex(function (item) {
                             return item.employee_id === curr.employee_id;
@@ -125,7 +124,11 @@ function EmployeeServices(objectCollection) {
 
                     }, []);
 
-                    responseData = dat;
+
+                    let data1 = await util.addUniqueIndexesToArrayOfObject(dat)
+
+
+                    responseData = data1;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
