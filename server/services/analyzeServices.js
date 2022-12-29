@@ -192,15 +192,18 @@ function AnalyzeServices(objectCollection) {
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
-                    for (let i = 0; employees.length; i++) {
-                        request.employee_id = employees[i]
+                    let emp = request.employees
+                    for (let i = 0; emp.length; i++) {
+                        request.employee_id = emp[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 if (request.groups.length != 0) {
-                    for (let i = 0; groups.length; i++) {
-                        request.employee_id = groups[i]
+                    let grp = request.groups
+
+                    for (let i = 0; grp.length; i++) {
+                        request.employee_id = grp[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
@@ -230,15 +233,17 @@ function AnalyzeServices(objectCollection) {
         } else {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
-                    for (let i = 0; employees.length; i++) {
-                        request.employee_id = employees[i]
+                    let emp = request.employees
+                    for (let i = 0; emp.length; i++) {
+                        request.employee_id = emp[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 if (request.groups.length != 0) {
-                    for (let i = 0; groups.length; i++) {
-                        request.employee_id = groups[i]
+                    let grp = request.groups
+                    for (let i = 0; grp.length; i++) {
+                        request.employee_id = grp[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
