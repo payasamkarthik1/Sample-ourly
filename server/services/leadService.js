@@ -26,7 +26,7 @@ function LeadService(objectCollection) {
                         const isDuplicate = uniqueids.includes(element.employee_id);
                         if (!isDuplicate) {
                             console.log('====================================')
-                            console.log(element.emailaddad)
+                            console.log(element.email)
                             console.log('====================================')
                             if (element.email !== "admin@pronteff.com") {
                                 uniqueids.push(element.employee_id);
