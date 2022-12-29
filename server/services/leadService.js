@@ -25,7 +25,9 @@ function LeadService(objectCollection) {
                     const uniqueEmps = users.filter(element => {
                         const isDuplicate = uniqueids.includes(element.employee_id);
                         if (!isDuplicate) {
-                            uniqueids.push(element.employee_id);
+                            if (element.email != "admin@pronteff.com") {
+                                uniqueids.push(element.employee_id);
+                            }
                             return true;
                         }
                         return false;
@@ -38,7 +40,9 @@ function LeadService(objectCollection) {
                     const uniqueEmps = groups.filter(element => {
                         const isDuplicate = uniqueids.includes(element.employee_id);
                         if (!isDuplicate) {
-                            uniqueids.push(element.employee_id);
+                            if (element.email != "admin@pronteff.com") {
+                                uniqueids.push(element.employee_id);
+                            }
                             return true;
                         }
                         return false;
