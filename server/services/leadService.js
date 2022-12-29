@@ -25,12 +25,7 @@ function LeadService(objectCollection) {
                     const uniqueEmps = users.filter(element => {
                         const isDuplicate = uniqueids.includes(element.employee_id);
                         if (!isDuplicate) {
-                            console.log('====================================')
-                            console.log(element.email)
-                            console.log('====================================')
-                            if (element.email !== "admin@pronteff.com") {
-                                uniqueids.push(element.employee_id);
-                            }
+                            uniqueids.push(element.employee_id);
                             return true;
                         }
                         return false;
@@ -43,9 +38,7 @@ function LeadService(objectCollection) {
                     const uniqueEmps = groups.filter(element => {
                         const isDuplicate = uniqueids.includes(element.employee_id);
                         if (!isDuplicate) {
-                            if (element.email != "admin@pronteff.com") {
-                                uniqueids.push(element.employee_id);
-                            }
+                            uniqueids.push(element.employee_id);
                             return true;
                         }
                         return false;
@@ -104,12 +97,15 @@ function LeadService(objectCollection) {
             request.employee_id = data[j].employee_id
             var data1 = await this.getEmpsUnderHeadsLevel1(request)
             if (data1.length != 0) {
-                users.push(data[j])
-                Array.prototype.push.apply(empsUnder, data1);
-
-                groups.push(data[j])
+                if (data1.email !== "admin@pronteff.com") {
+                    users.push(data[j])
+                    Array.prototype.push.apply(empsUnder, data1);
+                    groups.push(data[j])
+                }
             } else {
-                users.push(data[j])
+                if (data1.email !== "admin@pronteff.com") {
+                    users.push(data[j])
+                }
                 // usrs.push(data[j])
 
             }
