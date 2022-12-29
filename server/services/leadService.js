@@ -97,13 +97,13 @@ function LeadService(objectCollection) {
             request.employee_id = data[j].employee_id
             var data1 = await this.getEmpsUnderHeadsLevel1(request)
             if (data1.length != 0) {
-                if (data1.email !== "admin@pronteff.com") {
+                if (data[j].email !== "admin@pronteff.com") {
                     users.push(data[j])
                     Array.prototype.push.apply(empsUnder, data1);
                     groups.push(data[j])
                 }
             } else {
-                if (data1.email !== "admin@pronteff.com") {
+                if (data[j].email !== "admin@pronteff.com") {
                     users.push(data[j])
                 }
                 // usrs.push(data[j])
