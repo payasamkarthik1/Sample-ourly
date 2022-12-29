@@ -83,10 +83,13 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data.length != 0) {
+                        console.log('=========getAllEmployees=================');
+                        console.log(data);
+                        console.log('====================================');
                         var dat = data.reduce(function (acc, curr) {
                             //finding Index in the array where the NamaCategory matched
                             var findIfNameExist = acc.findIndex(function (item) {
-                                return (item.employee_id === curr.employee_id && item.log_state==1 && curr.log_state==1);
+                                return (item.employee_id === curr.employee_id && item.log_state == 1 && curr.log_state == 1);
                             })
                             if (findIfNameExist === -1) {
 
