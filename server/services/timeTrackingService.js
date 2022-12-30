@@ -1031,16 +1031,19 @@ function TimeTrackingService(objectCollection) {
                     }
                 }
                 if (groups.length != 0) {
+                    console.log('========enetr   groups=================================================')
+                    console.log(groups)
+                    console.log('====================================')
                     for (let i = 0;i<groups.length; i++) {
                         request.employee_id = groups[i]
-                        console.log('========groups by =================')
+                        console.log('========groups by=================================== =================')
                         console.log(request.employee_id)
                         console.log('====================================')
 
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
-                    console.log('=======empsGathered=================')
+                    console.log('=======empsGathered==========================================')
                     console.log(empsGathered)
                     console.log('====================================')
                 }
