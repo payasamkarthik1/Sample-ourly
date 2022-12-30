@@ -194,7 +194,7 @@ function AnalyzeServices(objectCollection) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
                     let emp = request.employees
-                    for (let i = 0; emp.length; i++) {
+                    for (let i = 0; i<emp.length; i++) {
                         request.employee_id = emp[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
@@ -203,7 +203,7 @@ function AnalyzeServices(objectCollection) {
                 if (request.groups.length != 0) {
                     let grp = request.groups
 
-                    for (let i = 0; grp.length; i++) {
+                    for (let i = 0; i<grp.length; i++) {
                         request.employee_id = grp[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
@@ -245,13 +245,7 @@ function AnalyzeServices(objectCollection) {
                     let grp = request.groups
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        console.log('==========each groups person==================');
-                        console.log(request.employee_id = grp[i]);
-                        console.log('====================================');
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
-                        console.log('===========data9=====================')
-                        console.log(data9)
-                        console.log('====================================')
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }

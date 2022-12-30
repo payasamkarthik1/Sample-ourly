@@ -32,7 +32,6 @@ function LeadService(objectCollection) {
                     });
                     users = uniqueEmps
                 }
-
                 if (groups.length != 0) {
                     const uniqueids = [];
                     const uniqueEmps = groups.filter(element => {
@@ -58,23 +57,6 @@ function LeadService(objectCollection) {
                 } while (dataRepeat.length != 0)
             }
         }
-        // function usersAndGrps(groups) {
-        //     for (let i = 0; i < groups.length; i++) {
-        //         console.log('====================================')
-        //         console.log(groups[i])
-        //         console.log('====================================')
-        //         groups[i].lead_assigned_head = groups[i].lead_assigned_employee_id;
-        //         delete groups[i].lead_assigned_employee_id;
-        //         groups[i].lead_assigned_employee_id = groups[i].employee_id;
-        //         delete groups[i].employee_id;
-        //     }
-
-        //     console.log('========users and groups ================')
-        //     console.log(users)
-        //     console.log(groups)
-        //     console.log('====================================')
-        //     return [false, [{ users, groups }]]
-        // }
         if (flag == 1) {
             return [false, users]
         } else {
@@ -88,7 +70,6 @@ function LeadService(objectCollection) {
             }
             return [false, [{ users, groups }]]
         }
-        // return (flag == 1 ? [false, users] :  [false, [{ users, groups }]]);
     }
 
     this.getEmployessAssignUnderHeads = async function (request, flag) {
@@ -103,7 +84,6 @@ function LeadService(objectCollection) {
                 dataRepeat = data1
             } while (dataRepeat.length != 0)
         }
-
         if (flag == 1) {
             return [false, users]
         } else {
@@ -117,7 +97,6 @@ function LeadService(objectCollection) {
             }
             return [false, [{ users, groups }]]
         }
-        // return (flag == 1 ? [false, users] :  [false, [{ users, groups }]]);
     }
     this.seperationUsersAndHeads = async function (data, request, users, groups) {
         let empsUnder = []
