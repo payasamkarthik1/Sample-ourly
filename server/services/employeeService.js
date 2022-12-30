@@ -143,6 +143,9 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getEmployeeById = async function (request) {
+        console.log('========enterd getEmployeeById======================')
+        console.log( request.employee_id)
+        console.log('====================================')
         console.log("----------------------entered getEmployeeById----------------------");
         let responseData = [],
             error = true;
@@ -284,9 +287,7 @@ function EmployeeServices(objectCollection) {
                         console.log("err-------" + err);
                         error = err
                     })
-
             }
-
         }
         return [error, responseData];
     }
