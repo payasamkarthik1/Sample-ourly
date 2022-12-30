@@ -1061,7 +1061,9 @@ function TimeTrackingService(objectCollection) {
             data1 = data9
         } else {
             if (request.employees.length != 0 || request.groups.length != 0) {
+
                 if (request.employees.length != 0) {
+                    let employees = request.employees
                     for (let i = 0; i<employees.length; i++) {
                         request.employee_id = employees[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
@@ -1069,6 +1071,7 @@ function TimeTrackingService(objectCollection) {
                     }
                 }
                 if (request.groups.length != 0) {
+                    let groups = request.groups
                     for (let i = 0; i<groups.length; i++) {
                         request.employee_id = groups[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
