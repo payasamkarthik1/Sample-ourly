@@ -184,6 +184,7 @@ function AnalyzeServices(objectCollection) {
     //-------------------------reports---------------------
 
     this.getReportSummary = async function (request) {
+        console.log("----------------entered getReportSummary---------------");
         let responseData = []
 
         let data1 = []
@@ -234,28 +235,17 @@ function AnalyzeServices(objectCollection) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
                     let emp = request.employees
-                    console.log('=============emp===========')
-                    console.log(emp)
-                    console.log('====================================')
-                    for (let i = 0; emp.length; i++) {
+                    for (let i = 0; i < emp.length; i++) {
                         request.employee_id = emp[i]
-                        console.log('=======pushing employe_id==============')
-                        console.log(request.employee_id)
-                        console.log('====================================')
+
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 if (request.groups.length != 0) {
-                    console.log('====================================')
-                    console.log(request.groups)
-                    console.log('====================================')
                     let grp = request.groups
-                    for (let i = 0; grp.length; i++) {
+                    for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        console.log('===========grouod single single getiing emps===================')
-                        console.log(request.employee_id)
-                        console.log('====================================')
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
