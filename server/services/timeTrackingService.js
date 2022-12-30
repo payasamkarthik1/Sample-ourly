@@ -1022,11 +1022,7 @@ function TimeTrackingService(objectCollection) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 let employees = request.employees
                 let groups = request.groups
-                console.log('=========skjnxmsnx snxsnx  njxdndncdndjcdnc====================')
-                console.log(employees)
-                console.log(groups)
-
-                console.log('====================================')
+    
                 if (employees.length != 0) {
                     for (let i = 0; i<employees.length; i++) {
                         request.employee_id = employees[i]
@@ -1034,12 +1030,13 @@ function TimeTrackingService(objectCollection) {
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
-                if (request.groups.length != 0) {
+                if (groups.length != 0) {
                     for (let i = 0;i<groups.length; i++) {
-                        console.log('========iiiii=================')
-                        console.log(groups[i])
-                        console.log('====================================')
                         request.employee_id = groups[i]
+                        console.log('========groups by =================')
+                        console.log(request.employee_id)
+                        console.log('====================================')
+
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
