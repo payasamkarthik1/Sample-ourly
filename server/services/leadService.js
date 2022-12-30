@@ -8,7 +8,7 @@ function LeadService(objectCollection) {
 
     const employeeService = new EmployeeService(objectCollection)
 
-    this.getEmployessAssignUnderHeads = async function (request, flag) {
+    this.getEmployessAssignUnderHeadsAdminAndEmpl = async function (request, flag) {
 
         var users = [], groups = [], dataRepeat = [], usrs = []
         if (request.role_id == 2) {
@@ -91,6 +91,34 @@ function LeadService(objectCollection) {
         // return (flag == 1 ? [false, users] :  [false, [{ users, groups }]]);
     }
 
+    this.getEmployessAssignUnderHeads = async function (request, flag) {
+
+        var users = [], groups = [], dataRepeat = [], usrs = []
+
+        var data = await this.getEmpsUnderHeadsLevel1(request)
+        if (data.length != 0) {
+            dataRepeat = data
+            do {
+                data1 = await this.seperationUsersAndHeads(dataRepeat, request, users, groups)
+                dataRepeat = data1
+            } while (dataRepeat.length != 0)
+        }
+
+        if (flag == 1) {
+            return [false, users]
+        } else {
+            if (groups.length != 0) {
+                groups.map((item) => {
+                    item.lead_assigned_head = item.lead_assigned_employee_id;
+                    delete item.lead_assigned_employee_id;
+                    item.lead_assigned_employee_id = item.employee_id;
+                })
+
+            }
+            return [false, [{ users, groups }]]
+        }
+        // return (flag == 1 ? [false, users] :  [false, [{ users, groups }]]);
+    }
     this.seperationUsersAndHeads = async function (data, request, users, groups) {
         let empsUnder = []
         for (let j = 0; j < data.length; j++) {

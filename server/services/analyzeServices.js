@@ -205,7 +205,7 @@ function AnalyzeServices(objectCollection) {
 
                     for (let i = 0; grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 2)
+                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
