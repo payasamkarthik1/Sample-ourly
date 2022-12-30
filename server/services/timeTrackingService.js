@@ -1062,14 +1062,14 @@ function TimeTrackingService(objectCollection) {
         } else {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
-                    for (let i = 0; employees.length; i++) {
+                    for (let i = 0; i<employees.length; i++) {
                         request.employee_id = employees[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 if (request.groups.length != 0) {
-                    for (let i = 0; groups.length; i++) {
+                    for (let i = 0; i<groups.length; i++) {
                         request.employee_id = groups[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
