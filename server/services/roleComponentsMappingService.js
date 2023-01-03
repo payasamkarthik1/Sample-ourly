@@ -8,7 +8,12 @@ function RoleComponentsMappingService(objectCollection) {
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
         const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1)
-        return [err, data]
+        if (err) {
+            return [err, data]
+        } else {
+            return [err, data]
+
+        }
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
@@ -30,7 +35,6 @@ function RoleComponentsMappingService(objectCollection) {
             )
 
             const queryString = util.getQueryString('role_create_insert', paramsArr);
-
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
@@ -38,8 +42,8 @@ function RoleComponentsMappingService(objectCollection) {
                         console.log(data)
                         console.log('====================================')
                         if (data[0].message === "data") {
-                            const [err, data] = await this.roleGet()
-                            responseData = data;
+                            const [err1, data1] = await this.roleGet()
+                            responseData = data1;
                             error = false
                         } else {
                             responseData = [{ message: data[0].message }]
@@ -78,8 +82,8 @@ function RoleComponentsMappingService(objectCollection) {
                         console.log(data);
                         console.log('====================================');
                         if (data[0].message === "data") {
-                            const [err, data] = await this.roleGet()
-                            responseData = data;
+                            const [err, data1] = await this.roleGet(request)
+                            responseData = data1;
                             error = false
                         } else {
                             responseData = [{ message: data[0].message }]
