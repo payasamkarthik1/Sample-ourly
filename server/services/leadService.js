@@ -131,7 +131,6 @@ function LeadService(objectCollection) {
         flag = 1
         const paramsArr = new Array(
             request.employee_id.toString(),
-            flag
         );
 
         const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
