@@ -40,8 +40,7 @@ function RoleComponentsMappingService(objectCollection) {
                             responseData = [{ message: data[0].message }]
                             error = true
                         }
-                        responseData = data;
-                        error = false
+                  
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
