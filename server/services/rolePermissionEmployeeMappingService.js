@@ -12,7 +12,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
 
     this.rolePermissionEmployeeUpdate = async function (request) {
         console.log('---------------------entered rolePermissionEmployeeUpdate-------------------------');
-        await this.rolePermissionEmployeeDelete(request,2)
+        await this.rolePermissionEmployeeDelete(request, 2)
         await this.rolePermissionsEmployeeDataLoopForUpdate(request, 1)
         const [err, data] = await roleComponentsMappingService.roleGet()
         return [err, data]
@@ -33,6 +33,9 @@ function RolePermissionEmployeeMapping(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const [err, data1] = await roleComponentsMappingService.roleGet()
+                    console.log('============data=============')
+                    console.log(data1F)
+                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -141,7 +144,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
                     // } else {
 
                     if (data.length != 0) {
-
                         let components_ids = []
                         await data.map((id) => {
                             components_ids.push(id.component_id)
@@ -149,12 +151,9 @@ function RolePermissionEmployeeMapping(objectCollection) {
                         var unique_components_ids = components_ids.filter((value, index, self) => {
                             return self.indexOf(value) === index;
                         })
-
-
                         for (let i = 0; i < unique_components_ids.length; i++) {
                             if (unique_components_ids[i] > 0 && unique_components_ids[i] < 3) {
                                 time.push(unique_components_ids[i])
-
                             } else if (unique_components_ids[i] >= 3 && unique_components_ids[i] < 5) {
                                 analyze.push(unique_components_ids[i])
                             }
@@ -168,6 +167,9 @@ function RolePermissionEmployeeMapping(objectCollection) {
                     responseData.push({ time: time.map(String) })
                     responseData.push({ manage: manage.map(String) })
                     responseData.push({ analyze: analyze.map(String) })
+                    console.log('============data=================');
+                    console.log(responseData);
+                    console.log('====================================');
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

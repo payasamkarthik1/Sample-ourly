@@ -10,7 +10,9 @@ function ProjectService(objectCollection) {
 
 
 
+
     this.removeClientDelete = async function (request) {
+        console.log("---------------------entered removeClientDelete-----------------------");
 
         let responseData = [],
             error = true;
@@ -24,6 +26,9 @@ function ProjectService(objectCollection) {
                 .then(async (data) => {
                     if (data[0].message === "data") {
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        console.log('===========data=================');
+                        console.log(data1);
+                        console.log('====================================');
                         responseData = data1;
                         error = false
                     } else {
@@ -41,11 +46,10 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllClientsSelect = async function (request) {
-
+        console.log("---------------------entered getAllClientsSelect-----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
 
         const queryString = util.getQueryString('project_get_all_clients_select', paramsArr);
@@ -54,6 +58,9 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                    console.log('===========data=================')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -65,6 +72,8 @@ function ProjectService(objectCollection) {
     }
 
     this.addClientInsert = async function (request) {
+        console.log("---------------------entered addClientInsert-----------------------");
+
         const [err, data] = await validations.addClientValidation(request)
         if (err) {
             error = true
@@ -84,6 +93,9 @@ function ProjectService(objectCollection) {
                     .then(async (data) => {
                         if (data[0].message === "data") {
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                            console.log('=========data=====================')
+                            console.log(data1)
+                            console.log('====================================')
                             responseData = data1;
                             error = false
                         } else {
@@ -101,6 +113,8 @@ function ProjectService(objectCollection) {
     }
 
     this.updateClientDetails = async function (request) {
+        console.log("---------------------entered updateClientDetails-----------------------");
+
         let responseData = [],
             error = true;
         const [err, data] = await this.getClientByClientidSelect(request)
@@ -122,6 +136,9 @@ function ProjectService(objectCollection) {
                         .then(async (data) => {
                             if (data[0].message === "data") {
                                 let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                                console.log('==========dataf================')
+                                console.log(data1)
+                                console.log('====================================')
                                 responseData = data1;
                                 error = false
                             } else {
@@ -143,33 +160,31 @@ function ProjectService(objectCollection) {
         return [error, responseData];
     }
 
-    this.getProjectsByClientidSelect = async function (request) {
+    // this.getProjectsByClientidSelect = async function (request) {
 
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.client_id.toString()
-        );
+    //     let responseData = [],
+    //         error = true;
+    //     const paramsArr = new Array(
+    //         request.client_id.toString()
+    //     );
 
-        const queryString = util.getQueryString('project_get_projects_by_clientid_select', paramsArr);
+    //     const queryString = util.getQueryString('project_get_projects_by_clientid_select', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('=========getProjectsByClientidSelect==============')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 responseData = data;
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
+    // }
 
     this.getClientByClientidSelect = async function (request) {
+        console.log("---------------entered getClientByClientidSelect---------------------- ");
 
         let responseData = [],
             error = true;
@@ -199,6 +214,7 @@ function ProjectService(objectCollection) {
     }
 
     this.addProjectsToClientInsert = async function (request) {
+        console.log("---------------entered addProjectsToClientInsert---------------------- ");
         let responseData = [],
             error = true;
         const [err1, respData] = await validations.addProjectToClientValidation(request);
@@ -246,6 +262,8 @@ function ProjectService(objectCollection) {
     }
 
     this.updateProjectDetails = async function (request) {
+        console.log("---------------entered updateProjectDetails---------------------- ");
+
         let responseData = [],
             error = true;
         const [err1, respData] = await validations.updateProjectToClientValidation(request);
@@ -286,8 +304,9 @@ function ProjectService(objectCollection) {
         return [error, responseData];
     }
 
-
     this.removeProjectDelete = async function (request) {
+        console.log("---------------entered removeProjectDelete---------------------- ");
+
         let responseData = [],
             error = true;
         flag = 1
@@ -312,7 +331,10 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.deleteProjectComplete = async function (request) {
+        console.log("---------------entered deleteProjectComplete---------------------- ");
+
         let responseData = [],
             error = true;
         flag = 2
@@ -337,7 +359,10 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.inactiveProjToActive = async function (request) {
+        console.log("---------------entered inactiveProjToActive---------------------- ");
+
         let responseData = [],
             error = true;
         flag = 3
@@ -363,13 +388,11 @@ function ProjectService(objectCollection) {
 
     }
 
-
-
     this.getAllProjectsSelect = async function (request) {
+        console.log("---------------entered getAllProjectsSelect---------------------- ");
 
         let responseData = [],
             error = true;
-
 
         const paramsArr = new Array(
 
@@ -390,6 +413,8 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllTagsSelect = async function (request) {
+        console.log("---------------entered getAllTagsSelect---------------------- ");
+
 
         let responseData = [],
             error = true;
@@ -441,6 +466,8 @@ function ProjectService(objectCollection) {
     }
 
     this.updateTagDetails = async function (request) {
+        console.log("---------------entered updateTagDetails---------------------- ");
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -465,6 +492,8 @@ function ProjectService(objectCollection) {
     }
 
     this.removeTagDelete = async function (request) {
+        console.log("---------------entered removeTagDelete---------------------- ");
+
 
         const [err, data] = await this.getProjectsByTagidSelect(request)
         if (!err) {
@@ -494,6 +523,7 @@ function ProjectService(objectCollection) {
     }
 
     this.getProjectsByTagidSelect = async function (request) {
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(

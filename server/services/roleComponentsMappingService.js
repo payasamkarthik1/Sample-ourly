@@ -7,9 +7,8 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        await this.rolePermissionsDataLoopForAdd(request, 1)
-        const [err, data] = await this.roleGet()
-        return [false, data]
+       const[err,data] =  await this.rolePermissionsDataLoopForAdd(request, 1)
+        return [err, data]
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
@@ -33,6 +32,14 @@ function RoleComponentsMappingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
+                        if (data[0].message === "data") {
+                            const [err, data] = await this.roleGet()
+                            responseData = data;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
                         responseData = data;
                         error = false
                     }).catch((err) => {
@@ -64,6 +71,14 @@ function RoleComponentsMappingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
+                        if (data[0].message === "data") {
+                            const [err, data] = await this.roleGet()
+                            responseData = data;
+                            error = false
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
                         responseData = data;
                         error = false
                     }).catch((err) => {
@@ -99,9 +114,9 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleUpdate = async function (request) {
+        console.log('---------------------entered roleCreation-------------------------');
         await this.roleDelete(request)
-        await this.rolePermissionsDataLoopForUpdate(request, 2)
-        const [err, data] = await this.roleGet()
+        const[err,data] = await this.rolePermissionsDataLoopForUpdate(request, 2)
         return [err, data]
     }
 

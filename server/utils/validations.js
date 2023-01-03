@@ -246,6 +246,7 @@ function Validations(objectCollection) {
     }
 
     this.userLoginValidation = async function (request) {
+        console.log("---------------------------entered userLoginValidation-----------------------------------");
 
         let responseData = []
 
@@ -462,6 +463,8 @@ function Validations(objectCollection) {
     }
 
     this.userDetailsList = async function (request) {
+        console.log("---------------------------entered userDetailsList-----------------------------------");
+
         let responseData = [],
             error = true
         const paramsArr = new Array(

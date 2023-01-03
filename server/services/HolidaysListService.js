@@ -7,8 +7,7 @@ function HolidaysListService(objectCollection) {
 
 
     this.addHolidaysList = async function (request) {
-        let responseData = [],
-            error = true;
+        console.log("---------------------entered addHolidaysList-----------------------");
         await this.removeHolidayListDelete(request);
         data1 = request.data
         for (let i = 0; i < data1.length; i++) {
@@ -21,7 +20,7 @@ function HolidaysListService(objectCollection) {
     }
 
     this.addHolidaysListInsert = async function (data, request) {
-
+        console.log("---------------------entered addHolidaysListInsert-----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -48,6 +47,7 @@ function HolidaysListService(objectCollection) {
     }
 
     this.getHolidayslistSelect = async function (request) {
+        console.log("---------------------entered getHolidayslistSelect-----------------------");
 
         let responseData = [],
             error = true;
@@ -60,9 +60,9 @@ function HolidaysListService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('====================================');
+                    console.log('===========data============');
                     console.log(data1);
-                    console.log('=========================oooe=====');
+                    console.log('================================');
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -76,7 +76,7 @@ function HolidaysListService(objectCollection) {
     }
 
     this.removeHolidayListDelete = async function (request) {
-
+        console.log("---------------------entered removeHolidayListDelete-----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(

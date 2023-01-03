@@ -9,7 +9,7 @@ function LeadService(objectCollection) {
     const employeeService = new EmployeeService(objectCollection)
 
     this.getEmployessAssignUnderHeadsAdminAndEmpl = async function (request, flag) {
-
+        console.log("---------------------entered getEmployessAssignUnderHeadsAdminAndEmpl-----------------------");
         var users = [], groups = [], dataRepeat = [], usrs = []
         if (request.role_id == 2) {
             const [err, data] = await employeeService.getAllEmployees()
@@ -73,8 +73,9 @@ function LeadService(objectCollection) {
     }
 
     this.getEmployessAssignUnderHeads = async function (request, flag) {
+        console.log("---------------------entered getEmployessAssignUnderHeads-----------------------");
 
-        var users = [], groups = [], dataRepeat = [], usrs = []
+        var users = [], groups = [], dataRepeat = []
 
         var data = await this.getEmpsUnderHeadsLevel1(request)
         if (data.length != 0) {
@@ -98,7 +99,10 @@ function LeadService(objectCollection) {
             return [false, [{ users, groups }]]
         }
     }
+
     this.seperationUsersAndHeads = async function (data, request, users, groups) {
+        console.log("---------------------entered seperationUsersAndHeads-----------------------");
+
         let empsUnder = []
         for (let j = 0; j < data.length; j++) {
             request.employee_id = data[j].employee_id
@@ -121,10 +125,13 @@ function LeadService(objectCollection) {
     }
 
     this.getEmpsUnderHeadsLevel1 = async function (request) {
+        console.log("---------------------entered getEmpsUnderHeadsLevel1-----------------------");
         let responseData = []
-
+        //flag=1 to get emp assign under head
+        flag = 1
         const paramsArr = new Array(
-            request.employee_id.toString()
+            request.employee_id.toString(),
+            flag
         );
 
         const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
@@ -132,6 +139,36 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return responseData
+        }
+
+
+    };
+
+    this.getAllHeads = async function (request) {
+        console.log("---------------------entered getAllHeads-----------------------");
+        let responseData = []
+        //if flag =2 get all the heads
+        flag = 2
+        const paramsArr = new Array(
+            0,
+            flag
+        );
+
+        const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('===========data================');
+                    console.log(data);
+                    console.log('====================================');
                     responseData = data;
                     error = false
                 }).catch((err) => {

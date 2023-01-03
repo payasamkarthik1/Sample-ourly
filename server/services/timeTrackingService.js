@@ -1012,6 +1012,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApprovalsList = async function (request) {
+        console.log("------------------------entered getApprovalsList--------------------------------");
         let responseData = []
         error = true;
 
@@ -1038,7 +1039,6 @@ function TimeTrackingService(objectCollection) {
                     }
                 }
                 //unique employess
-
                 const uniqueids = [];
                 const uniqueEmps = empsGathered.filter(element => {
                     const isDuplicate = uniqueids.includes(element.employee_id);
@@ -1064,7 +1064,7 @@ function TimeTrackingService(objectCollection) {
 
                 if (request.employees.length != 0) {
                     let employees = request.employees
-                    for (let i = 0; i<employees.length; i++) {
+                    for (let i = 0; i < employees.length; i++) {
                         request.employee_id = employees[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
@@ -1072,14 +1072,13 @@ function TimeTrackingService(objectCollection) {
                 }
                 if (request.groups.length != 0) {
                     let groups = request.groups
-                    for (let i = 0; i<groups.length; i++) {
+                    for (let i = 0; i < groups.length; i++) {
                         request.employee_id = groups[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
                 //unique employess
-
                 const uniqueids = [];
                 const uniqueEmps = empsGathered.filter(element => {
                     const isDuplicate = uniqueids.includes(element.employee_id);
@@ -1094,9 +1093,6 @@ function TimeTrackingService(objectCollection) {
 
             } else {
                 const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
-                console.log('=========emplpyee undef==================')
-                console.log(data9)
-                console.log('====================================')
                 data1 = data9
             }
         }
@@ -1116,7 +1112,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getListFromApprovals = async function (request, data, flag) {
-
+        console.log("------------------------entered getListFromApprovals--------------------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -1198,6 +1194,7 @@ function TimeTrackingService(objectCollection) {
     // }
 
     this.getSubmittedApproveEntries = async function (request, flag) {
+        console.log("---------------------entered getSubmittedApproveEntries-----------------------");
 
         let responseData = [],
             error = true;

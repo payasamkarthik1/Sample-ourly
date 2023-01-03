@@ -10,7 +10,7 @@ function RolesDepartmentDesignationsService(objectCollection) {
 
 
     this.roleCreateInsert = async function (request) {
-        console.log('===========entered roleCreateInsert====================')
+        console.log('====================entered roleCreateInsert====================')
         let responseData = [],
             error = true;
         const paramsArr = new Array(

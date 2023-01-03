@@ -44,13 +44,14 @@ function UserService(objectCollection) {
     }
 
     this.userLogin = async function (request) {
+        console.log("---------------------------entered userLogin-----------------------------------");
         let responseData = [],
             error = true;
 
         const [err, data] = await validations.userLoginValidation(request)
         if (err) {
             error = err,
-                responseData = data
+            responseData = data
         }
         else {
             const [err1, resData1] = await validations.userDetailsList(request)

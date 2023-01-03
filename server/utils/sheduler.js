@@ -66,6 +66,7 @@ function Scheduler(objectCollection) {
                         })
                 }
             }
+
             async function employeesGetEmps(request) {
                 console.log('---------------entered employeesGetEmps---------------------');
                 let responseData = []
@@ -96,98 +97,58 @@ function Scheduler(objectCollection) {
 
     //on every monday at 12:30 to leads,emerging lead if anyone of the employee under then no submiutted send mail rmainder to lead , emerging lead
     // this.sendRemainderToLeadsEmergingLead = async function () {
-    //     schedule.scheduleJob('00 56 19 * * 1', async function () {
+    //     schedule.scheduleJob('00 30 12 * * 1', async function () {
     //         var mon = moment();
     //         sun = mon.subtract(1, "days");
     //         sun = mon.format("YYYY-MM-DD");
     //         let request = {}
     //         request.sunDate = sun
-    //         //get employess under leads
-    //         //step1 get any emp is incomplete from function
+    //         let headsGather = []
+    //         //get all heads 
+    //         const [err, heads] = await leadService.getAllHeads(request, 7)
+    //         //get all emps
+    //         const [err2, data2] = await employeeService.getAllEmployees(request)
 
-    //         const [err, leads] = await leadService.getAllLeads(request, 7)
-    //         console.log('===========GET ALL LEADS=============')
-    //         console.log(leads)
-    //         console.log('====================================')
-    //         if (leads.length != 0) {
-    //             for (let i = 0; i < leads.length; i++) {
-    //                 if (leads[i].role_id == 4) {
-    //                     console.log('=======GET EACH LEAD role-4===================');
-    //                     console.log(leads[i]);
-    //                     console.log('====================================');
-    //                     request.text = "Hi, <br><br>  please approve the timesheets of your employees.Please ignore if already apprroved"
-    //                     request.email = leads[i].email
-
-    //                     filterLeadEmpsApproved = []
-    //                     request.lead_assigned_employee_id = leads[i].employee_id
-    //                     request.role_id = leads[i].role_id
-    //                     const [err1, leadEmps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-    //                     console.log('=====EMPLOYEES ASSIGN UNDER LEADS=========')
-    //                     console.log(leadEmps)
-    //                     console.log('====================================')
-    //                     if (leadEmps.length != 0) {
-    //                         const empsSubmitted = await employeesGetEmpsTimesheetStatusApproved(request)
-    //                         console.log('=======GET EMPS TIMESHEET STATUS OF WEEK APPROVED===========')
-    //                         console.log(empsSubmitted)
-    //                         console.log('====================================')
-    //                         if (empsSubmitted.length != 0) {
-    //                             //comapring  empsSubmitted with lead emps
-    //                             const arrayTwoEmails = new Set(empsSubmitted.map((el) => el.email));
-    //                             const arrayOneFiltered = leadEmps.filter((el) => arrayTwoEmails.has(el.email));
-    //                             Array.prototype.push.apply(filterLeadEmpsApproved, arrayOneFiltered);
-    //                             if (filterLeadEmpsApproved.length == 0) {
-
-    //                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-    //                             } else if (leadEmps.length != filterLeadEmpsApproved.length) {
-    //                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-    //                             } else if (leadEmps.length == filterLeadEmpsApproved.length) {
-    //                                 console.log('====================================')
-    //                                 console.log("no mail remaninder")
-    //                                 console.log('====================================')
+    //         if (heads.length != 0) {
+    //             for (let i = 0; i < heads.length; i++) {
+    //                 request.employee_id = heads[i]
+    //                 const [err1, data1] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //                 const [err3, data3] = await employeesGetEmpsTimesheetStatusApproved(request, 1)
+    //                 var unique = [];
+    //                 if (data3.length != 0) {
+    //                     for (var i = 0; i < data1.length; i++) {
+    //                         var found = false;
+    //                         for (var j = 0; j < data3.length; j++) { // j < is missed;
+    //                             if (data1[i] == data3[j]) {
+    //                                 found = true;
+    //                                 break;
     //                             }
-
-    //                         } else {
-    //                             await util.nodemailerSenderForTimesheetSubmitRemainder(request)
     //                         }
-
-    //                     }
-    //                 } else if (leads[i].role_id == 6) {
-    //                     request.text = "Hi, <br><br>  please approve the timesheets of your employees.Please ignore if already apprroved"
-    //                     request.email = leads[i].email
-
-    //                     filterEmergingEmpsApproved = []
-    //                     request.lead_assigned_employee_id = leads[i].employee_id
-    //                     request.role_id = leads[i].role_id
-    //                     const [err1, emrgingEmps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-    //                     if (emrgingEmps.length != 0) {
-    //                         const empsSubmitted = await employeesGetEmpsTimesheetStatusApproved(request)
-    //                         if (empsSubmitted.length != 0) {
-    //                             //comapring  empsSubmitted with lead emps
-    //                             const arrayTwoEmails = new Set(empsSubmitted.map((el) => el.email));
-    //                             const arrayOneFiltered = emrgingEmps.filter((el) => arrayTwoEmails.has(el.email));
-    //                             Array.prototype.push.apply(filterEmergingEmpsApproved, arrayOneFiltered);
-    //                             if (filterEmergingEmpsApproved.length == 0) {
-    //                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-    //                             } else if (emrgingEmps.length != filterEmergingEmpsApproved.length) {
-    //                                 await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-    //                             } else if (emrgingEmps.length == filterEmergingEmpsApproved.length) {
-    //                                 console.log('====================================')
-    //                                 console.log("no mail remaninder")
-    //                                 console.log('====================================')
-    //                             }
-
-    //                         } else {
-    //                             await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+    //                         if (found == false) {
+    //                             unique.push(data1[i]);
     //                         }
-
     //                     }
     //                 }
+    //                 if (data1.length != unique.length) {
+    //                     headsGather.push(heads[i].email)
+    //                 }
+
+    //             }
+    //             if (headsGather.length != 0) {
+    //                 headsGather.map(async (mail) => {
+    //                     request.email = mail.email
+    //                     request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+    //                     await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+    //                 })
+    //             } else {
+    //                 console.log("no mails to send");
     //             }
 
     //         }
+
     //         async function employeesGetEmpsTimesheetStatusApproved(request) {
     //             let responseData = []
-    //             let empsApproved = []
+    //             let error = true
     //             const paramsArr = new Array(
     //                 request.sunDate.toString(),
     //             );
@@ -196,15 +157,8 @@ function Scheduler(objectCollection) {
     //             if (queryString !== '') {
     //                 await db.executeQuery(0, queryString, request)
     //                     .then(async (data) => {
-    //                         if (data.length != 0) {
-    //                             //for emps having status 4 in that week
-    //                             data.filter(function (data1) {
-    //                                 if (data1.status_id == 5) {
-    //                                     empsApproved.push(data1)
-    //                                 }
-    //                             })
-    //                         }
-    //                         responseData = empsApproved
+    //                         responseData = data
+    //                         error = false
     //                     })
     //                     .catch((err) => {
     //                         console.log("err-------" + err);
