@@ -1,14 +1,16 @@
 
 
+const Validations = require('../utils/validations')
 function RoleComponentsMappingService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
+    const validations = new Validations(objectCollection)
 
 
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const [err, validation] = this.roleValidation(request);
+        const [err, validation] = validations.roleValidation(request);
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()
@@ -29,19 +31,23 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
-        const data = request.permission_data
-        const addedDate = await util.getCurrentUTCTime()
+        const [err, validation] = validations.roleValidation(request);
+        if (!err) {
+            const data = request.permission_data
+            const addedDate = await util.getCurrentUTCTime()
 
-        for (let i = 0; i < data.length; i++) {
-            const [error, data1] = await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
-            if (error) {
-                return [error, data1]
-            } else {
-                return [error, data1]
+            for (let i = 0; i < data.length; i++) {
+                const [error, data1] = await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
+                if (error) {
+                    return [error, data1]
+                } else {
+                    return [error, data1]
+                }
+
             }
-
+        } else {
+            return [err, validation]
         }
-
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, item, role_id, addedDate, flag) {
