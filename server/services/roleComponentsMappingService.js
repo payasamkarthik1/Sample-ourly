@@ -7,9 +7,9 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        await this.rolePermissionsDataLoopForAdd(request, 1)
-        const [err, data] = await this.roleGet()
-        return [false, data]
+        const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1)
+        // const [err, data] = await this.roleGet()
+        return [err, data]
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
@@ -33,11 +33,24 @@ function RoleComponentsMappingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        console.log('===========hbchre cmnc mnd=============')
+                        console.log('===========dataacame form DBBB=============')
                         console.log(data)
                         console.log('====================================')
-                        responseData = data;
-                        error = false
+
+                        if (data[0].message == "data") {
+                            const [err1, data1] = await this.roleGet();
+                            console.log('=========get role afrer addddd================')
+                            console.log(data1)
+                            console.log('====================================')
+                            responseData = data1
+                            error = false
+
+                        } else {
+                            responseData = [{ message: data[0].message }]
+                            error = true
+                        }
+                        // responseData = data;
+                        // error = false
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
