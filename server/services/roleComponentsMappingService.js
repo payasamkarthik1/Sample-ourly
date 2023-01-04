@@ -8,24 +8,18 @@ function RoleComponentsMappingService(objectCollection) {
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
         const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1);
-        // const [err, data] = await this.roleGet()
         return [err, data]
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
         console.log('---------------------entered rolePermissionsDataLoop-------------------------');
 
-        let responseData = []
-        let error = true
+        var responseData = []
+        var error = true
 
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
         const role_id = await util.generateRandtoken()
-
-        console.log('==========data  step1=================')
-        console.log(data)
-        console.log('====================================')
-
 
         data.map(async (item) => {
             paramsArr = new Array(
@@ -45,7 +39,7 @@ function RoleComponentsMappingService(objectCollection) {
                         console.log(data)
                         console.log('====================================')
 
-                        if (data[0].message == "data") {
+                        if (data[0].message === "data") {
                             const [err1, data1] = await this.roleGet();
                             console.log('=========get role afrer addddd================')
                             console.log(data1)
@@ -53,14 +47,11 @@ function RoleComponentsMappingService(objectCollection) {
                             responseData = data1
                             error = false
 
-
                         } else {
                             responseData = [{ message: data[0].message }]
                             error = true
-
                         }
-                        // responseData = data;
-                        // error = false
+
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
