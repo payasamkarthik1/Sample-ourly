@@ -67,6 +67,9 @@ function RoleComponentsMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('============data=================')
+                    console.log(data)
+                    console.log('====================================')
                     if (data[0].message === "data") {
                         const [err1, data1] = await this.roleGet();
                         responseData = data1
