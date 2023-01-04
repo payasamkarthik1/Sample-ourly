@@ -13,7 +13,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
     this.rolePermissionEmployeeUpdate = async function (request) {
         console.log('---------------------entered rolePermissionEmployeeUpdate-------------------------');
         await this.rolePermissionEmployeeDelete(request, 2)
-        await this.rolePermissionsEmployeeDataLoopForUpdate(request, 1)
+        await this.rolePermissionsEmployeeDataLoopForUpdate(request, 2)
         const [err, data] = await roleComponentsMappingService.roleGet()
         return [err, data]
     }

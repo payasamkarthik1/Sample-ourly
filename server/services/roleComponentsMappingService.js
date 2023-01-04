@@ -34,11 +34,10 @@ function RoleComponentsMappingService(objectCollection) {
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()
-
             for (let i = 0; i < data.length; i++) {
                 await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
             }
-            await this.roleUpdateInPermissions(request)
+            // await this.roleUpdateInPermissions(request)
             const [err1, data1] = await this.roleGet()
             return [err1, data1]
         } else {
@@ -120,7 +119,7 @@ function RoleComponentsMappingService(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-            return [error, responseData];
+            // return [error, responseData];
         }
 
 
