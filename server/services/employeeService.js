@@ -50,9 +50,6 @@ function EmployeeServices(objectCollection) {
                             responseData = [{ message: data[0].message }];
                         } else if (data[0].message === "data") {
                             //adding role perimissions to user
-                            console.log('===============xsxsx============')
-                            console.log(data)
-                            console.log('====================================')
                             request.employee_id = data[0].employee_id
                             await rolePermissionEmployeeMapping.rolePermissionEmployeeAdd(request)
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)

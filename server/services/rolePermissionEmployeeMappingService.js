@@ -50,7 +50,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
         console.log('---------------------entered rolePermissionsEmployeeDataLoopForAdd-------------------------');
         const addedDate = await util.getCurrentUTCTime()
         const data1 = request.permission_data
-
         data1.map(async (item) => {
             paramsArr = new Array(
                 request.employee_id,
@@ -73,14 +72,12 @@ function RolePermissionEmployeeMapping(objectCollection) {
                 return [error, responseData];
             }
         })
-
     }
 
     this.rolePermissionsEmployeeDataLoopForUpdate = async function (request, flag) {
         console.log('---------------------entered rolePermissionsDataLoop-------------------------');
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
-
         data.map(async (item) => {
             paramsArr = new Array(
                 request.employee_id,
