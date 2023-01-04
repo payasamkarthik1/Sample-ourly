@@ -7,7 +7,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1)
+        const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1);
         // const [err, data] = await this.roleGet()
         return [err, data]
     }
@@ -44,10 +44,14 @@ function RoleComponentsMappingService(objectCollection) {
                             console.log('====================================')
                             responseData = data1
                             error = false
+                            return [error, responseData];
+
 
                         } else {
                             responseData = [{ message: data[0].message }]
                             error = true
+                            return [error, responseData];
+
                         }
                         // responseData = data;
                         // error = false
@@ -55,7 +59,6 @@ function RoleComponentsMappingService(objectCollection) {
                         console.log("err-------" + err);
                         error = err
                     })
-                return [error, responseData];
             }
         })
 
