@@ -66,6 +66,8 @@ function UserService(objectCollection) {
                     //employee having emps assign under him if assign  is_team =1 else is_team=0
                     const [err1, data1] = await leadService.getEmployessAssignUnderHeads(request, 1)
                     data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
+                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_team = 1) : data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
+
                     resData3[0].permission_ids = permiss
                     return [err3, resData3]
                 } else {
