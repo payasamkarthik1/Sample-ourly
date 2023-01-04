@@ -389,8 +389,10 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'role name contains white spaces' }]
             return [error, responseData];
-        } else if (Validator.isEmpty(request.role_name.toString())) {
-
+        }else if(Validator.isEmpty(request.role_name)){
+            error = true
+            responseData = [{ message: 'rolename is required' }]  
+        }else if (request.role_name) {
             const [err, data] = await this.roleNameValidChk(request)
             console.log('============roleNameValidChk=================')
             console.log(data)
