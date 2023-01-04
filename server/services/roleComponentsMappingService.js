@@ -7,55 +7,72 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1);
+        const [err, data] = await this.rolePermissionsDataLoopForAdd(request);
         return [err, data]
     }
 
-    this.rolePermissionsDataLoopForAdd = async function (request, flag) {
-        console.log('---------------------entered rolePermissionsDataLoop-------------------------');
+    this.rolePermissionsDataLoopForAdd = async function (request) {
+        // let responseData = []
+        // let error = true
 
+
+        console.log('---------------------entered rolePermissionsDataLoopForAdd-------------------------');
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
         const role_id = await util.generateRandtoken()
 
         data.map(async (item) => {
-            paramsArr = new Array(
-                role_id,
-                request.role_name,
-                item.component_id,
-                addedDate,
-                flag
-            )
-
-            const queryString = util.getQueryString('role_create_insert', paramsArr);
-
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data) => {
-                        var responseData = []
-                        var error = true
-                        console.log('===========dataacame form DBBB=============')
-                        console.log(data)
-                        console.log('====================================')
-
-                        if (data[0].message === "data") {
-                            const [err1, data1] = await this.roleGet();
-                            responseData = data1
-                            error = false
-
-                        } else {
-
-                            responseData = [{ message: data[0].message }]
-                            error = true
-                        }
-
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-            }
+            const [e, d] = await this.rolePermissionsDataLoopForAdd1(request, item, role_id, addedDate, 1)
+            console.log('=============final=================')
+            console.log(d)
+            console.log('====================================')
         })
-        return [error, responseData];
+
+
+    }
+
+    this.rolePermissionsDataLoopForAdd1 = async function (request, item, role_id, addedDate, flag) {
+
+        console.log('---------------------entered rolePermissionsDataLoopForAdd1-------------------------');
+
+        let responseData = []
+        let error = []
+
+        let paramsArr = new Array(
+            role_id,
+            request.role_name,
+            item.component_id,
+            addedDate,
+            flag
+        )
+        const queryString = util.getQueryString('role_create_insert', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data[0].message === "data") {
+                        const [err1, data1] = await this.roleGet();
+                        responseData = data1
+                        error = false
+                    } else {
+                        responseData = [{ message: data[0].message }]
+                        error = true
+                    }
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+
+
+
+        // if (res) {
+        //     return [true, [{ message: data[0].message }]]
+        // }
+        // const [err1, data1] = await this.roleGet();
+        // return [false, data1]
     }
 
     this.rolePermissionsDataLoopForUpdate = async function (request, flag) {
