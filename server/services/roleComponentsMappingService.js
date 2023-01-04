@@ -12,11 +12,11 @@ function RoleComponentsMappingService(objectCollection) {
         const addedDate = await util.getCurrentUTCTime()
         const role_id = await util.generateRandtoken()
         for (let i = 0; i < data.length; i++) {
-            const [error, data] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
+            const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
             if (error) {
-                return [error, data]
+                return [error, data1]
             } else {
-                return [error, data]
+                return [error, data1]
             }
         }
 
@@ -29,11 +29,11 @@ function RoleComponentsMappingService(objectCollection) {
         const addedDate = await util.getCurrentUTCTime()
 
         for (let i = 0; i < data.length; i++) {
-            const [error, data] = await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
+            const [error, data1] = await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
             if (error) {
-                return [error, data]
+                return [error, data1]
             } else {
-                return [error, data]
+                return [error, data1]
             }
 
         }
