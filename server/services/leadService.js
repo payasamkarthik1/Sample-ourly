@@ -150,35 +150,35 @@ function LeadService(objectCollection) {
 
     };
 
-    this.getAllHeads = async function (request) {
-        console.log("---------------------entered getAllHeads-----------------------");
-        let responseData = []
-        //if flag =2 get all the heads
-        flag = 2
-        const paramsArr = new Array(
-            0,
-            flag
-        );
+    // this.getAllHeads = async function (request) {
+    //     console.log("---------------------entered getAllHeads-----------------------");
+    //     let responseData = []
+    //     //if flag =2 get all the heads
+    //     flag = 2
+    //     const paramsArr = new Array(
+    //         0,
+    //         flag
+    //     );
 
-        const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
+    //     const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('===========data================');
-                    console.log(data);
-                    console.log('====================================');
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return responseData
-        }
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 console.log('===========data================');
+    //                 console.log(data);
+    //                 console.log('====================================');
+    //                 responseData = data;
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return responseData
+    //     }
 
 
-    };
+    // };
 }
 
 

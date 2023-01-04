@@ -8,12 +8,7 @@ function RoleComponentsMappingService(objectCollection) {
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
         const [err, data] = await this.rolePermissionsDataLoopForAdd(request, 1)
-        if (err) {
-            return [err, data]
-        } else {
-            return [err, data]
-
-        }
+        return [err, data]
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
@@ -41,13 +36,13 @@ function RoleComponentsMappingService(objectCollection) {
                         console.log('============data======================')
                         console.log(data)
                         console.log('====================================')
-                        if (data[0].message === "data") {
+                     //   if (data[0].message === "data") {
                             const [err1, data1] = await this.roleGet()
                             responseData = data1;
                             error = false
-                        } else {
-                            responseData = [{ message: data[0].message }]
-                        }
+                       // } else {
+                         //   responseData = [{ message: data[0].message }]
+                        //}
 
                     }).catch((err) => {
                         console.log("err-------" + err);
