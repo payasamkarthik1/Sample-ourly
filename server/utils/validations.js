@@ -392,6 +392,9 @@ function Validations(objectCollection) {
         } else if (Validator.isEmpty(request.role_name.toString())) {
 
             const [err, data] = await this.roleNameValidChk(request)
+            console.log('============roleNameValidChk=================')
+            console.log(data)
+            console.log('====================================')
             if (data[0].cnt != 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]

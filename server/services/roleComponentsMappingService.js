@@ -16,18 +16,18 @@ function RoleComponentsMappingService(objectCollection) {
             const addedDate = await util.getCurrentUTCTime()
             const role_id = await util.generateRandtoken()
             for (let i = 0; i < data.length; i++) {
-                const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
-                if (error) {
-                    return [error, data1]
-                }
+                await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
+
             }
+            const [err1, data1] = await this.roleGet()
+            return [err1, data1]
         } else {
             return [err, validation]
         }
 
     }
 
-  
+
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
         const [err, validation] = await validations.roleValidation(request);
@@ -71,15 +71,6 @@ function RoleComponentsMappingService(objectCollection) {
                     console.log('============data=================')
                     console.log(data)
                     console.log('====================================')
-                    if (data[0].message === "data") {
-                        const [err1, data1] = await this.roleGet();
-                        responseData = data1
-                        error = false
-                    } else {
-                        responseData = [{ message: data[0].message }]
-                        error = true
-                    }
-
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
