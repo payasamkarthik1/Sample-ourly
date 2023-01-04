@@ -399,14 +399,15 @@ function Validations(objectCollection) {
             console.log('============roleNameValidChk=================')
             console.log(data)
             console.log('====================================')
-            if (data[0].cnt != 0) {
+            if (data[0].cnt >0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
             } else {
                 error = false
-                return [error, responseData];
             }
         }
+        return [error, responseData];
+
 
 
     }
