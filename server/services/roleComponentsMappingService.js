@@ -13,6 +13,9 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
+        let responseData = []
+        let error = true
+        
         console.log('---------------------entered rolePermissionsDataLoop-------------------------');
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
