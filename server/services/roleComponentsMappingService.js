@@ -17,7 +17,6 @@ function RoleComponentsMappingService(objectCollection) {
             const role_id = await util.generateRandtoken()
             for (let i = 0; i < data.length; i++) {
                 await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
-
             }
             const [err1, data1] = await this.roleGet()
             return [err1, data1]
@@ -30,20 +29,17 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
+        await this.roleDelete(request);
         const [err, validation] = await validations.roleValidation(request);
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()
 
             for (let i = 0; i < data.length; i++) {
-                const [error, data1] = await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
-                if (error) {
-                    return [error, data1]
-                } else {
-                    return [error, data1]
-                }
-
+                await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
             }
+            const [err1, data1] = await this.roleGet()
+            return [err1, data1]
         } else {
             return [err, validation]
         }
@@ -68,9 +64,7 @@ function RoleComponentsMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('============data=================')
-                    console.log(data)
-                    console.log('====================================')
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -78,13 +72,6 @@ function RoleComponentsMappingService(objectCollection) {
             return [error, responseData]
         }
 
-
-
-        // if (res) {
-        //     return [true, [{ message: data[0].message }]]
-        // }
-        // const [err1, data1] = await this.roleGet();
-        // return [false, data1]
     }
 
     this.rolePermissionsDataLoopForUpdate = async function (request, item, addedDate, flag) {
@@ -102,14 +89,6 @@ function RoleComponentsMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    if (data[0].message === "data") {
-                        const [err1, data1] = await this.roleGet();
-                        responseData = data1
-                        error = false
-                    } else {
-                        responseData = [{ message: data[0].message }]
-                        error = true
-                    }
 
                 }).catch((err) => {
                     console.log("err-------" + err);
