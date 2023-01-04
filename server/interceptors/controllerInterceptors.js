@@ -1,6 +1,3 @@
-// const adminController = require('../controller/adminController');
-// const adminServices = require('../services/adminService');
-
 const validations = require('../utils/validations')
 
 const projectController = require('../controller/projectController')
@@ -8,7 +5,6 @@ const projectService = require('../services/projectService')
 
 const employeeController = require('../controller/employeeController')
 const employeeService = require('../services/employeeService')
-
 
 const DepartmentDesignationContoller = require('../controller/departmentDesignationContoller')
 const DepartmentDesignationsService = require('../services/departmentDesignationService')
@@ -25,7 +21,6 @@ const analyzeServices = require('../services/analyzeServices')
 const holidayListController = require('../controller/HolidaysListController')
 const holidaysListService = require('../services/HolidaysListService')
 
-
 const approvalsController = require('../controller/approvalsController')
 const approvalsService = require('../services/approvalsService')
 
@@ -41,7 +36,6 @@ const RoleComponentsMappingService = require('../services/roleComponentsMappingS
 const RolePermissionEmployeeMapping = require('../services/roleComponentsMappingService')
 
 const Scheduler = require('../utils/sheduler')
-
 
 
 function ControllInterceptor(objCollection) {
@@ -85,8 +79,7 @@ function ControllInterceptor(objCollection) {
     new RoleComponentsMappingService(objCollection)
 
     new RolePermissionEmployeeMapping(objCollection)
-
-
+    
     new Scheduler(objCollection)
 }
 

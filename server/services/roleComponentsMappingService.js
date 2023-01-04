@@ -38,10 +38,36 @@ function RoleComponentsMappingService(objectCollection) {
             for (let i = 0; i < data.length; i++) {
                 await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
             }
+            await this.roleUpdateInPermissions(request)
             const [err1, data1] = await this.roleGet()
             return [err1, data1]
         } else {
             return [err, validation]
+        }
+    }
+
+    this.roleUpdateInPermissions = async function (request) {
+        console.log('---------------------entered roleUpdateInPermissions-------------------------');
+        //for updating rolename in role permission
+        flag = 4
+        let paramsArr = new Array(
+            0,
+            request.role_id,
+            request.role_name,
+            flag
+        )
+
+        const queryString = util.getQueryString('role_permission_employee', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
         }
     }
 
