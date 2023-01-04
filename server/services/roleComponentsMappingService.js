@@ -8,18 +8,22 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const data = request.permission_data
-        const addedDate = await util.getCurrentUTCTime()
-        const role_id = await util.generateRandtoken()
-        for (let i = 0; i < data.length; i++) {
-            const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
-            if (error) {
-                return [error, data1]
-            } else {
-                return [error, data1]
+        const [err, validation] = this.roleValidation(request);
+        if (!err) {
+            const data = request.permission_data
+            const addedDate = await util.getCurrentUTCTime()
+            const role_id = await util.generateRandtoken()
+            for (let i = 0; i < data.length; i++) {
+                const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
+                if (error) {
+                    return [error, data1]
+                } else {
+                    return [error, data1]
+                }
             }
+        } else {
+            return [err, validation]
         }
-
 
     }
 

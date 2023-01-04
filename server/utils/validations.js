@@ -352,6 +352,27 @@ function Validations(objectCollection) {
 
 
     }
+    this.roleValidation = async function (request) {
+
+        let responseData = []
+
+        str = request.project_name
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'role name contains white spaces' }]
+            return [error, responseData];
+        }
+        else {
+            error = false
+            return [error, responseData];
+
+        }
+
+
+    }
 
     this.updateProjectToClientValidation = async function (request) {
 
