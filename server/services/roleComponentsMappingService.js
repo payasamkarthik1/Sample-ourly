@@ -20,18 +20,19 @@ function RoleComponentsMappingService(objectCollection) {
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
         const role_id = await util.generateRandtoken()
-        data.map(async (item) => {
+        for (let i = 0; i < data.length; i++) {
             const [e, d] = await this.rolePermissionsDataLoopForAdd1(request, item, role_id, addedDate, 1)
             console.log('=============final=================')
             console.log(d)
             console.log('====================================')
             if (e) {
                 return [e, d]
+                break;
             } else {
                 return [e, d]
 
             }
-        })
+        }
 
 
     }
