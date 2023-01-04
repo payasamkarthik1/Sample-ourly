@@ -26,7 +26,6 @@ function RoleComponentsMappingService(objectCollection) {
 
     }
 
-
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
         await this.roleDelete(request);
