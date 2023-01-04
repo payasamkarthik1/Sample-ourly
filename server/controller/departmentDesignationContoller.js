@@ -13,52 +13,6 @@ function DepartmentDesignation(objectCollection) {
     const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
-    //--------role-----------
-
-    // //@Post role/add/role/insert
-    // app.post('/' + 'role/add/role/insert',
-
-    //     async function (req, res) {
-
-    //         const [err, resData] = await rolesDepartDesignService.roleCreateInsert(req.body);
-    //         if (!err) {
-    //             console.log("role/add/role/insert | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("role/add/role/insert | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
-
-    // //@Get role/get/all/roles/list
-    // app.get('/' + 'role/get/all/roles/list',
-
-    //     async function (req, res) {
-
-    //         const [err, resData] = await rolesDepartDesignService.getAllRoles(req.body);
-    //         if (!err) {
-    //             console.log("role/get/all/roles/list | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("role/get/all/roles/list | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
-
-    // //@Post role/remove/delete
-    // app.get('/' + 'role/remove/delete',
-
-    //     async function (req, res) {
-
-    //         const [err, resData] = await rolesDepartDesignService.deleteRole(req.body);
-    //         if (!err) {
-    //             console.log("role/remove/delete | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("role/remove/delete | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
 
     //--------department-----------
 
