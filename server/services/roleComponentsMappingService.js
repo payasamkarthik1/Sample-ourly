@@ -10,7 +10,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const [err, validation] = validations.roleValidation(request);
+        const [err, validation] = await validations.roleValidation(request);
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()
@@ -31,7 +31,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
-        const [err, validation] = validations.roleValidation(request);
+        const [err, validation] = await validations.roleValidation(request);
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()

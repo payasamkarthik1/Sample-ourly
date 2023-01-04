@@ -368,9 +368,7 @@ function Validations(objectCollection) {
         else {
             error = false
             return [error, responseData];
-
         }
-
 
     }
 
