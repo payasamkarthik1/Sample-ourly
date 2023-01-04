@@ -100,6 +100,8 @@ function Validations(objectCollection) {
 
     }
     this.roleNameValidChk = async function (request) {
+        let responseData = []
+        error = true
         console.log('---------------------entered roleNameValidChk-------------------------');
         let paramsArr = new Array(
             request.role_name.toString()
@@ -113,7 +115,7 @@ function Validations(objectCollection) {
                     console.log(data)
                     console.log('====================================')
                     responseData = data
-                    error = true
+                    error = false
 
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -389,10 +391,10 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'role name contains white spaces' }]
             return [error, responseData];
-        }else if(Validator.isEmpty(request.role_name)){
+        } else if (Validator.isEmpty(request.role_name)) {
             error = true
-            responseData = [{ message: 'rolename is required' }]  
-        }else if (request.role_name) {
+            responseData = [{ message: 'rolename is required' }]
+        } else if (request.role_name) {
             const [err, data] = await this.roleNameValidChk(request)
             console.log('============roleNameValidChk=================')
             console.log(data)
@@ -400,12 +402,12 @@ function Validations(objectCollection) {
             if (data[0].cnt != 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
+            } else {
+                error = false
+                return [error, responseData];
             }
         }
-        else {
-            error = false
-            return [error, responseData];
-        }
+
 
     }
 
