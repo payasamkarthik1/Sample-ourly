@@ -8,14 +8,13 @@ const Validator = require('validator')
 const isEmpty = require('is-empty');
 const { response } = require('express');
 
-const Valid = require('../services/roleComponentsMappingService')
-
+// const Valid = require('../services/roleComponentsMappingService')
 
 function Validations(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
-    const valid = new Valid(objectCollection)
+    // const valid = new Valid(objectCollection)
 
 
     this.employeeCreationInputValidations = async function (request) {
@@ -100,6 +99,31 @@ function Validations(objectCollection) {
 
 
     }
+    this.roleNameValidChk = async function (request) {
+        console.log('---------------------entered roleNameValidChk-------------------------');
+        let paramsArr = new Array(
+            request.role_name.toString()
+        )
+        const queryString = util.getQueryString('role_name_check_validation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('============data=================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data
+                    error = true
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+
+    }
+
 
     this.employeeUpdateCreationInputValidations = async function (request) {
 
@@ -367,7 +391,7 @@ function Validations(objectCollection) {
             return [error, responseData];
         } else if (Validator.isEmpty(request.role_name.toString())) {
 
-            const [err, data] = await valid.roleNameValidChk(request)
+            const [err, data] = await this.roleNameValidChk(request)
             if (data[0].cnt != 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
