@@ -48,6 +48,9 @@ function RoleComponentsMappingService(objectCollection) {
                             error = false
 
                         } else {
+                            console.log('=========error message===============')
+                            console.log(data[0].message)
+                            console.log('====================================')
                             responseData = [{ message: data[0].message }]
                             error = true
                         }
@@ -59,8 +62,6 @@ function RoleComponentsMappingService(objectCollection) {
             }
         })
         return [error, responseData];
-
-
     }
 
     this.rolePermissionsDataLoopForUpdate = async function (request, flag) {
