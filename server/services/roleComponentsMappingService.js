@@ -33,6 +33,9 @@ function RoleComponentsMappingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
+                        console.log('===========hbchre cmnc mnd=============')
+                        console.log(data)
+                        console.log('====================================')
                         responseData = data;
                         error = false
                     }).catch((err) => {
