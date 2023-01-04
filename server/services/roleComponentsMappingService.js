@@ -19,13 +19,40 @@ function RoleComponentsMappingService(objectCollection) {
                 const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
                 if (error) {
                     return [error, data1]
-                } 
+                }
             }
         } else {
             return [err, validation]
         }
 
     }
+
+    this.roleNameValidChk = async function (request) {
+        console.log('---------------------entered roleNameValidChk-------------------------');
+        let paramsArr = new Array(
+            request.role_name.toString()
+        )
+        const queryString = util.getQueryString('role_name_check_validation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('============data=================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data
+                    error = true
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+
+    }
+
+
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');

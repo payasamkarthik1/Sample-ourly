@@ -8,11 +8,14 @@ const Validator = require('validator')
 const isEmpty = require('is-empty');
 const { response } = require('express');
 
+const Valid = require('../services/roleComponentsMappingService')
+
 
 function Validations(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
+    const valid = new Valid(objectCollection)
 
 
     this.employeeCreationInputValidations = async function (request) {
@@ -362,6 +365,13 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'role name contains white spaces' }]
             return [error, responseData];
+        } else if (Validator.isEmpty(request.role_name.toString())) {
+
+            const [err, data] = await valid.roleNameValidChk(request)
+            if (data[0].cnt != 0) {
+                error = true
+                responseData = [{ message: 'role name already exist' }]
+            }
         }
         else {
             error = false
