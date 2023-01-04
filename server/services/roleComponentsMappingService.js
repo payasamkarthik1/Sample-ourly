@@ -13,13 +13,18 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, flag) {
+        console.log('---------------------entered rolePermissionsDataLoop-------------------------');
+
         let responseData = []
         let error = true
-        
-        console.log('---------------------entered rolePermissionsDataLoop-------------------------');
+
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
         const role_id = await util.generateRandtoken()
+
+        console.log('==========data  step1=================')
+        console.log(data)
+        console.log('====================================')
 
 
         data.map(async (item) => {
@@ -47,13 +52,11 @@ function RoleComponentsMappingService(objectCollection) {
                             console.log('====================================')
                             responseData = data1
                             error = false
-                            return [error, responseData];
 
 
                         } else {
                             responseData = [{ message: data[0].message }]
                             error = true
-                            return [error, responseData];
 
                         }
                         // responseData = data;
@@ -64,6 +67,8 @@ function RoleComponentsMappingService(objectCollection) {
                     })
             }
         })
+        return [error, responseData];
+
 
     }
 
