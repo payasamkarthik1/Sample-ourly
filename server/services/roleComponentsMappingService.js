@@ -19,9 +19,7 @@ function RoleComponentsMappingService(objectCollection) {
                 const [error, data1] = await this.rolePermissionsDataLoopForAdd(request, data[i], role_id, addedDate, 1)
                 if (error) {
                     return [error, data1]
-                } else {
-                    return [error, data1]
-                }
+                } 
             }
         } else {
             return [err, validation]
