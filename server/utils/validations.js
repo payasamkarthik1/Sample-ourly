@@ -356,7 +356,7 @@ function Validations(objectCollection) {
 
         let responseData = []
 
-        str = request.project_name
+        str = request.role_name
         l = str.trimLeft()
         r = str.trimRight()
 
