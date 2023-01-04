@@ -343,7 +343,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
-                    subject: `Timesheet rejected
+                    subject: `Timesheet Rejected
                    
                   
                   `,// Subject line
@@ -376,7 +376,7 @@ function Util() {
                             <tr>
                                 <td align="left"
                                     style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                    <h2 style="font-weight: 100;">Timesheet rejected</h2>
+                                    <h2 style="font-weight: 100;">Timesheet Rejected</h2>
                                     <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                 </td>
                             </tr>
@@ -468,7 +468,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
-                    subject: `Timesheet aprroved
+                    subject: `Timesheet Aprroved
                   
                   
                   `,// Subject line
@@ -501,7 +501,7 @@ function Util() {
                             <tr>
                                 <td align="left"
                                     style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                    <h2 style="font-weight: 100;">Timesheet approved</h2>
+                                    <h2 style="font-weight: 100;">Timesheet Approved</h2>
                                     <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                 </td>
                             </tr>

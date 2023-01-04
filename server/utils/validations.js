@@ -142,11 +142,7 @@ function Validations(objectCollection) {
             responseData = [{ message: 'dob  is required' }]
             return [error, responseData];
         }
-        else if (Validator.isEmpty(request.permission_data.toString())) {
-            error = true
-            responseData = [{ message: 'permission_data  is required' }]
-            return [error, responseData];
-        }
+
         else if (Validator.isEmpty(request.department_id.toString())) {
             error = true
             responseData = [{ message: 'department  is required' }]
@@ -155,6 +151,11 @@ function Validations(objectCollection) {
         else if (Validator.isEmpty(request.designation_id.toString())) {
             error = true
             responseData = [{ message: 'designation  is required' }]
+            return [error, responseData];
+        }
+        else if (request.permission_data.length == 0) {
+            error = true
+            responseData = [{ message: 'permission is required' }]
             return [error, responseData];
         }
         else if (Validator.isEmpty(request.lead_assigned_employee_id.toString())) {
@@ -247,7 +248,6 @@ function Validations(objectCollection) {
 
     this.userLoginValidation = async function (request) {
         console.log("---------------------------entered userLoginValidation-----------------------------------");
-
         let responseData = []
 
         str = request.email
@@ -272,10 +272,7 @@ function Validations(objectCollection) {
         else {
             error = false
             return [error, responseData];
-
         }
-
-
     }
 
     this.addDesignationValidation = async function (request) {
@@ -352,6 +349,7 @@ function Validations(objectCollection) {
 
 
     }
+
     this.roleValidation = async function (request) {
 
         let responseData = []
