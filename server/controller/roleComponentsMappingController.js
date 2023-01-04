@@ -14,7 +14,7 @@ function RoleComponentsMapping(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await roleComponentsMappingService.roleCreation(req.body);
+            const [err, resData] = await roleComponentsMappingService.rolePermissionsDataLoopForAdd(req.body);
             if (!err) {
                 console.log("role/add/insert | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
