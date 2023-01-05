@@ -28,7 +28,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
-        await this.roleDelete(request);
+        await this.roleDelete(request, 1);
         const [err, validation] = await validations.roleValidation(request);
         if (!err) {
             const data = request.permission_data
@@ -36,7 +36,6 @@ function RoleComponentsMappingService(objectCollection) {
             for (let i = 0; i < data.length; i++) {
                 await this.rolePermissionsDataLoopForUpdate(request, data[i], addedDate, 2)
             }
-            // await this.roleUpdateInPermissions(request)
             const [err1, data1] = await this.roleGet()
             return [err1, data1]
         } else {
@@ -124,20 +123,34 @@ function RoleComponentsMappingService(objectCollection) {
 
     }
 
-    this.roleDelete = async function (request) {
+    this.roleDelete = async function (request, flag) {
         console.log('---------------------entered roleDelete-------------------------');
         let responseData = [],
             error = true
+        //flag =1 for update role delete it before
+
         const paramsArr = new Array(
             request.role_id.toString(),
+            flag
         );
         const queryString = util.getQueryString('role_remove_delete', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const [err, data1] = await this.roleGet()
-                    responseData = data1;
-                    error = false
+                    console.log('==========role_remove_delete==================')
+                    console.log(data)
+                    console.log('====================================')
+                    if (flag == 1) {
+                        error = false
+                    } else if (flag == 2) {
+                        if (data[0].message === "deleted") {
+                            const [err, data1] = await this.roleGet()
+                            responseData = data1
+                            error = false
+                        } else {
+                            responseData = [{ meaasge: data[0].message }];
+                        }
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

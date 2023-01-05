@@ -29,7 +29,7 @@ function RoleComponentsMapping(objectCollection) {
 
         async function (req, res) {
 
-            const [err, resData] = await roleComponentsMappingService.roleDelete(req.body);
+            const [err, resData] = await roleComponentsMappingService.roleDelete(req.body,2);
             if (!err) {
                 console.log("role/delete | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
