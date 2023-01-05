@@ -104,7 +104,8 @@ function Validations(objectCollection) {
         error = true
         console.log('---------------------entered roleNameValidChk-------------------------');
         let paramsArr = new Array(
-            request.role_name.toString()
+            request.role_id,
+            request.role_name
         )
         const queryString = util.getQueryString('role_name_check_validation', paramsArr);
 
@@ -394,12 +395,17 @@ function Validations(objectCollection) {
         } else if (Validator.isEmpty(request.role_name)) {
             error = true
             responseData = [{ message: 'rolename is required' }]
-        } else if (request.role_name) {
+        } else if (request.role_name == "Admin Access") {
+            error = true
+            responseData = [{ message: 'Admin role cannot be updated' }]
+        }
+
+        else if (request.role_name) {
             const [err, data] = await this.roleNameValidChk(request)
             console.log('============roleNameValidChk=================')
             console.log(data)
             console.log('====================================')
-            if (data[0].cnt >0) {
+            if (data[0].cnt > 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
             } else {
