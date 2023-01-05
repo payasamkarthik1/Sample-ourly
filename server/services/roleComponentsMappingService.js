@@ -125,10 +125,12 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleDelete = async function (request, flag) {
         console.log('---------------------entered roleDelete-------------------------');
+        console.log('=============flag==============')
+        console.log(flag)
+        console.log('====================================')
         let responseData = [],
             error = true
         //flag =1 for update role delete it before
-
         const paramsArr = new Array(
             request.role_id.toString(),
             flag
