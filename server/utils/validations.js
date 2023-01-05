@@ -568,7 +568,7 @@ function Validations(objectCollection) {
         const paramsArr = new Array(
             request.email,
         );
-        const queryString = util.getQueryString('user_get_all_employees_list', paramsArr);
+        const queryString = util.getQueryString('user_get_usr_by_email', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)

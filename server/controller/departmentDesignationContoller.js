@@ -11,8 +11,6 @@ function DepartmentDesignation(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
-    //--------department-----------
-
     //@Post department/add/department/insert
     app.post('/' + 'department/add/department/insert',
 
