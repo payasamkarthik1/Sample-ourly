@@ -151,7 +151,7 @@ function RoleComponentsMappingService(objectCollection) {
                                 responseData = data1
                                 error = false
                             } else {
-                                responseData = [{ meaasge: data[0].message }];
+                                responseData = [{ message: data[0].message }];
                             }
                         }
                     }).catch((err) => {
