@@ -10,7 +10,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
-        const [err, validation] = await validations.roleValidation(request);
+        const [err, validation] = await validations.roleValidationAdd(request);
         if (!err) {
             const data = request.permission_data
             const addedDate = await util.getCurrentUTCTime()
@@ -28,7 +28,7 @@ function RoleComponentsMappingService(objectCollection) {
 
     this.roleUpdate = async function (request) {
         console.log('---------------------entered roleUpdate-------------------------');
-        const [err, validation] = await validations.roleValidation(request);
+        const [err, validation] = await validations.roleValidationUpdate(request);
         if (!err) {
             await this.roleDelete(request, 1);
             const data = request.permission_data
@@ -163,13 +163,6 @@ function RoleComponentsMappingService(objectCollection) {
         }
 
     }
-
-    // this.roleUpdate = async function (request) {
-    //     await this.roleDelete(request)
-    //     await this.rolePermissionsDataLoopForUpdate(request, 2)
-    //     const [err, data] = await this.roleGet()
-    //     return [err, data]
-    // }
 
     this.roleGet = async function (request) {
         console.log('---------------------entered roleGet-------------------------');

@@ -99,13 +99,14 @@ function Validations(objectCollection) {
 
 
     }
-    this.roleNameValidChk = async function (request) {
+    this.roleNameValidChk = async function (request, flag) {
         let responseData = []
         error = true
         console.log('---------------------entered roleNameValidChk-------------------------');
         let paramsArr = new Array(
             request.role_id,
-            request.role_name
+            request.role_name,
+            flag
         )
         const queryString = util.getQueryString('role_name_check_validation', paramsArr);
 
@@ -380,7 +381,7 @@ function Validations(objectCollection) {
 
     }
 
-    this.roleValidation = async function (request) {
+    this.roleValidationUpdate = async function (request) {
 
         let responseData = []
 
@@ -399,9 +400,40 @@ function Validations(objectCollection) {
             error = true
             responseData = [{ message: 'Admin role cannot be updated' }]
         }
-
         else if (request.role_name) {
-            const [err, data] = await this.roleNameValidChk(request)
+            const [err, data] = await this.roleNameValidChk(request,2)
+            console.log('============roleNameValidChk=================')
+            console.log(data)
+            console.log('====================================')
+            if (data[0].cnt > 0) {
+                error = true
+                responseData = [{ message: 'role name already exist' }]
+            } else {
+                error = false
+            }
+        }
+        return [error, responseData];
+
+
+
+    }
+    this.roleValidationAdd = async function (request) {
+
+        let responseData = []
+
+        str = request.role_name
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'role name contains white spaces' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.role_name)) {
+            error = true
+            responseData = [{ message: 'rolename is required' }]
+        } else if (request.role_name) {
+            const [err, data] = await this.roleNameValidChk(request, 1)
             console.log('============roleNameValidChk=================')
             console.log(data)
             console.log('====================================')
