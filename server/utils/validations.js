@@ -99,35 +99,6 @@ function Validations(objectCollection) {
 
 
     }
-    this.roleNameValidChk = async function (request, flag) {
-        let responseData = []
-        error = true
-        console.log('---------------------entered roleNameValidChk-------------------------');
-        let paramsArr = new Array(
-            request.role_id,
-            request.role_name,
-            flag
-        )
-        const queryString = util.getQueryString('role_name_check_validation', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('============data=================')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data
-                    error = false
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData]
-        }
-
-    }
-
 
     this.employeeUpdateCreationInputValidations = async function (request) {
 
@@ -417,6 +388,7 @@ function Validations(objectCollection) {
 
 
     }
+
     this.roleValidationAdd = async function (request) {
 
         let responseData = []
@@ -447,6 +419,35 @@ function Validations(objectCollection) {
         return [error, responseData];
 
 
+
+    }
+
+    this.roleNameValidChk = async function (request, flag) {
+        let responseData = []
+        error = true
+        console.log('---------------------entered roleNameValidChk-------------------------');
+        let paramsArr = new Array(
+            request.role_id,
+            request.role_name,
+            flag
+        )
+        const queryString = util.getQueryString('role_name_check_validation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('============data=================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data
+                    error = false
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
 
     }
 

@@ -1,10 +1,6 @@
 
 const Validations = require('../utils/validations')
 const AnalyzeServices = require('../services/analyzeServices')
-const RolesDepartmentDesignationService = require("../services/departmentDesignationService");
-
-
-
 
 function Analyze(objectCollection) {
 
@@ -12,7 +8,6 @@ function Analyze(objectCollection) {
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const analyzeServices = new AnalyzeServices(objectCollection)
-    const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
 
