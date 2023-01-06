@@ -106,6 +106,7 @@ function EmployeeServices(objectCollection) {
                                     'department_id': curr.department_id,
                                     'department_name': curr.department_name,
                                     'lead_assigned_employee_id': curr.lead_assigned_employee_id,
+                                    'lead_assigned_employee_name': curr.lead_assigned_employee_name,
                                     'log_state': curr.log_state,
                                     "permission_data": [
                                         {
