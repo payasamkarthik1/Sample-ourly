@@ -143,7 +143,7 @@ function Util() {
                                         <td
                                             style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
                         
-                                            <img src="efinder-3.png" alt="" style="width: 16%;">
+                                            <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
                                         </td>
                                     </tr>
                                     <tr>
@@ -172,7 +172,7 @@ function Util() {
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
-                                                            <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                                            <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
                                                                 padding-left: 4px;">Pronteff IT Solutions</span></p>
                                                         </td>
                                                     </tr>
@@ -256,7 +256,7 @@ function Util() {
                                         <td
                                             style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
                         
-                                            <img src="efinder-3.png" alt="" style="width: 16%;">
+                                            <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
                                         </td>
                                     </tr>
                                     <tr>
@@ -284,7 +284,7 @@ function Util() {
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
-                                                            <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                                            <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
                                                                 padding-left: 4px;">Pronteff IT Solutions</span></p>
                                                         </td>
                                                     </tr>
@@ -366,7 +366,7 @@ function Util() {
                 <td
                     style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
 
-                    <img src="efinder-3.png" alt="" style="width: 16%;">
+                    <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
                 </td>
             </tr>
             <tr>
@@ -412,7 +412,7 @@ function Util() {
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
-                                    <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                    <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
                                         padding-left: 4px;">Pronteff IT Solutions</span></p>
                                 </td>
                             </tr>
@@ -491,7 +491,7 @@ function Util() {
                 <td
                     style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
 
-                    <img src="efinder-3.png" alt="" style="width: 16%;">
+                    <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
                 </td>
             </tr>
             <tr>
@@ -535,7 +535,7 @@ function Util() {
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
-                                    <p>@Docket powered by<span style="font-weight: 600;color: #0c1d40;
+                                    <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
                                         padding-left: 4px;">Pronteff IT Solutions</span></p>
                                 </td>
                             </tr>
