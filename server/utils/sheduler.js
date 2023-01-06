@@ -16,20 +16,51 @@ function Scheduler(objectCollection) {
 
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
-        schedule.scheduleJob('00 30 10 * * 1', async function () {
+        schedule.scheduleJob('00 57 15 * * 5', async function () {
             var mon = moment();
-            sun = mon.subtract(1, "days");
+            sun = mon.subtract(4, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
 
-            const [err, emps] = await employeeService.getAllEmployees()
+            let sendMails = []
+            const [err, emps] = await employeeService.getAllEmployees(request)
+            console.log('============getAllEmployees=================')
+            console.log(emps)
+            console.log('====================================')
+            const [err1, emps1] = await employeesGetEmpsTimesheetStatusApproved(request)
+            console.log('============employeesGetEmpsTimesheetStatusApproved=================')
+            console.log(emps1)
+            console.log('====================================')
             if (emps.length != 0) {
-                await employeesGetEmpsTimesheetStatusNotSubmitted(request);
+                if (emps1.length != 0) {
+                    for (let i = 0; i < emps.length; i++) {
+                        console.log(emps[i])
+                        emps1.filter((item) => {
+                            if (item.email != emps[i].email) {
+                                sendMails.push(emps[i])
+                            }
+                        });
+                    }
+                } else {
+                    sendMails = emps
+                }
+                console.log('===========sendMails=================')
+                console.log(sendMails)
+                console.log('====================================')
+                await sendMails.map(async (mail) => {
+                    request.email = mail.email
+                    request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+                    await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                })
             } else {
                 console.log("No employees available")
             }
-            async function employeesGetEmpsTimesheetStatusNotSubmitted(request) {
+
+
+            async function employeesGetEmpsTimesheetStatusApproved(request) {
+                let responseData = []
+                let error = true
                 const paramsArr = new Array(
                     request.sunDate.toString(),
                 );
@@ -38,64 +69,21 @@ function Scheduler(objectCollection) {
                 if (queryString !== '') {
                     await db.executeQuery(0, queryString, request)
                         .then(async (data) => {
-                            let sendMails = []
-                            if (data.length != 0) {
-                                //step1 -- removing emps haivng status 1,4 from all employess
-                                const arrayTwoEmails = new Set(emps1.map((el) => el.email));
-                                const arrayOneFiltered = emps.filter((el) => !arrayTwoEmails.has(el.email));
-                                Array.prototype.push.apply(sendMails, arrayOneFiltered);
-                            } else {
-                                sendMails = emps
-                            }
-                            if (sendMails.length != 0) {
-                                console.log('=========sendEmails===============')
-                                console.log(sendEmails)
-                                console.log('====================================')
-                                sendEmails.map(async (mail) => {
-                                    request.email = mail.email
-                                    request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                                    await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-                                })
-                            } else {
-                                console.log("no mails to send")
-                            }
-                        })
-                        .catch((err) => {
-                            console.log("err-------" + err);
-                            error = err
-                        })
-                }
-            }
-
-            async function employeesGetEmps(request) {
-                console.log('---------------entered employeesGetEmps---------------------');
-                let responseData = []
-                error = true
-
-                const paramsArr = new Array(
-                );
-
-                const queryString = util.getQueryString('employee_get_all_emps_for_timesheet_remainder_select', paramsArr);
-                if (queryString !== '') {
-                    await db.executeQuery(0, queryString, request)
-                        .then(async (data) => {
-
                             responseData = data
-                            error = true
+                            error = false
                         })
                         .catch((err) => {
                             console.log("err-------" + err);
                             error = err
                         })
-                    return [error, responseData];
+                    return responseData
                 }
             }
-
 
         })
     }
 
-    //on every monday at 12:30 to leads,emerging lead if anyone of the employee under then no submiutted send mail rmainder to lead , emerging lead
+    //  on every monday at 12:30 to leads,emerging lead if anyone of the employee under then no submiutted send mail rmainder to lead , emerging lead
     // this.sendRemainderToLeadsEmergingLead = async function () {
     //     schedule.scheduleJob('00 30 12 * * 1', async function () {
     //         var mon = moment();
