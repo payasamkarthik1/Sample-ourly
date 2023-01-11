@@ -486,12 +486,6 @@ function AnalyzeServices(objectCollection) {
 
     }
 
-
-
-
-
-
-
     //-------------------------reports---------------------
 
     this.getReportSummary = async function (request) {
@@ -808,33 +802,81 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
     }
 
+    // this.getReportSummaryOverviewCalculation = async function (request, data) {
+    //     let responseData = []
+
+    //     const [err, filterData] = await this.getFilterReportSummary(request, data)
+    //     if (filterData.length != 0) {
+    //         // total time
+    //         idGenerate = await util.getRandomNumericId()
+    //         const id = idGenerate
+    //         totalTime = await util.sumOfTime(filterData)
+
+    //         //insert data into table for calce
+    //         for (i = 0; i < filterData.length; i++) {
+    //             flag = 1
+    //             const [err1, data1] = await this.dataInsertForCalculation(request, filterData[i], id)
+    //         }
+    //         //get total projects total hours 
+    //         flag = 3
+    //         const [err3, data3] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //         overallProjects = data3
+
+    //         //adding uniques keys 
+    //         overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
+    //         //loop for adding descriptions 
+    //         for (let i = 0; i < overallProjects1.length; i++) {
+    //             let value = []
+    //             filterData.filter(function (dat) {
+    //                 if (dat.project_id == overallProjects1[i].project_id) {
+    //                     obj = {}
+    //                     obj.task_description = dat.task_description
+    //                     obj.task_total_time = dat.task_total_time
+    //                     obj.employee_name = dat.employee_full_name
+    //                     value.push(obj)
+    //                 }
+
+    //             })
+    //             overallProjects1[i].description = value
+    //         }
+
+    //         //over all total_time daywise
+    //         flag = 6
+    //         const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //         overallTotalTime = data5
+
+    //         // delete data
+    //         flag = 5
+    //         await this.dataGetBasedOnRequirment(request, id, flag)
+
+    //         responseData.push({ total_time: totalTime })
+    //         responseData.push(overallTotalTime)
+    //         responseData.push(overallProjects1)
+
+    //     }
+    //     return [false, responseData]
+    // }
+
     this.getReportSummaryOverviewCalculation = async function (request, data) {
+        console.log("--------------------entered getReportSummaryOverviewCalculation---------------------");
         let responseData = []
 
         const [err, filterData] = await this.getFilterReportSummary(request, data)
+        console.log('=============getFilterReportSummary=================')
+        console.log(filterData)
+        console.log('====================================')
         if (filterData.length != 0) {
-            // total time
-            idGenerate = await util.getRandomNumericId()
-            const id = idGenerate
             totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.dayWiseTotalTime(request, filterData)
+            const data2 = await this.overAllProject(request, filterData)
 
-            //insert data into table for calce
-            for (i = 0; i < filterData.length; i++) {
-                flag = 1
-                const [err1, data1] = await this.dataInsertForCalculation(request, filterData[i], id)
-            }
-            //get total projects total hours 
-            flag = 3
-            const [err3, data3] = await this.dataGetBasedOnRequirment(request, id, flag)
-            overallProjects = data3
-
-            //adding uniques keys 
-            overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
+            //  adding uniques keys 
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
             //loop for adding descriptions 
-            for (let i = 0; i < overallProjects1.length; i++) {
+            for (let i = 0; i < data3.length; i++) {
                 let value = []
                 filterData.filter(function (dat) {
-                    if (dat.project_id == overallProjects1[i].project_id) {
+                    if (dat.project_id == data3[i].project_id) {
                         obj = {}
                         obj.task_description = dat.task_description
                         obj.task_total_time = dat.task_total_time
@@ -843,21 +885,12 @@ function AnalyzeServices(objectCollection) {
                     }
 
                 })
-                overallProjects1[i].description = value
+                data3[i].description = value
             }
 
-            //over all total_time daywise
-            flag = 6
-            const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
-            overallTotalTime = data5
-
-            // delete data
-            flag = 5
-            await this.dataGetBasedOnRequirment(request, id, flag)
-
             responseData.push({ total_time: totalTime })
-            responseData.push(overallTotalTime)
-            responseData.push(overallProjects1)
+            responseData.push(data1)
+            responseData.push(data3)
 
         }
         return [false, responseData]
