@@ -195,9 +195,9 @@ function AnalyzeServices(objectCollection) {
         console.log('====================================');
         totalTime = await util.sumOfTime(data3)
         const respData1 = await this.topProject(request, data3)
-        const respData2 = await this.dayWiseProj(request, data3)
+        const respData2 = await this.dayWiseProject(request, data3)
         const respData3 = await this.dayWiseTotalTime(request, data3)
-        const respData4 = await this.overAllProj(request, data3)
+        const respData4 = await this.overAllProject(request, data3)
 
         responseData.push({ total_time: totalTime, top_project: respData1 })
         responseData.push(respData2)
