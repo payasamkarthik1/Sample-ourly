@@ -994,7 +994,7 @@ function AnalyzeServices(objectCollection) {
         if (filterData.length != 0) {
 
             totalTime = await util.sumOfTime(filterData)
-            const data1 = await this.overallTotalTime(request, filterData);
+            const data1 = await this.dayWiseTotalTime(request, filterData);
             const data2 = await this.overAllUsers(request, filterData)
 
             //adding uniques keys 
