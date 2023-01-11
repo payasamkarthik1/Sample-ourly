@@ -515,7 +515,7 @@ function AnalyzeServices(objectCollection) {
             toaltime = newArray[i].value
             tym = await util.sumOfTime(toaltime)
             responseData.push({
-                full_name: newArray[i].value[0].full_name,
+                full_name: newArray[i].value[0].employee_full_name,
                 employee_id: newArray[i].employee_id,
                 total_time: tym
             })
