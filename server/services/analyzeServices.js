@@ -190,14 +190,14 @@ function AnalyzeServices(objectCollection) {
     this.dashboardDataCalculationOverview = async function (request, data3) {
         console.log('-------------------------entered dashboardDataCalculationOverview--------');
         let responseData = []
-      console.log('==========data3==============');
-      console.log(data3);
-      console.log('====================================');
+        console.log('==========data==============');
+        console.log(data3);
+        console.log('====================================');
         totalTime = await util.sumOfTime(data3)
-        const respData1 = await this.topProject(request,data3)
-        const respData2 = await this.dayWiseProj(request,data3)
-        const respData3 = await this.dayWiseTotalTime(request,data3)
-        const respData4 = await this.overAllProj(request,data3)
+        const respData1 = await this.topProject(request, data3)
+        const respData2 = await this.dayWiseProj(request, data3)
+        const respData3 = await this.dayWiseTotalTime(request, data3)
+        const respData4 = await this.overAllProj(request, data3)
 
         responseData.push({ total_time: totalTime, top_project: respData1 })
         responseData.push(respData2)
@@ -268,8 +268,8 @@ function AnalyzeServices(objectCollection) {
     };
 
 
-    //total time
     this.dayWiseTotalTime = async function (request, data) {
+        console.log("---------------------entered dayWiseTotalTime--------------------------------");
         let tt = []
 
         var newArray = data.reduce(function (acc, curr) {
@@ -294,20 +294,19 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f =  await util.sumOfTime(toaltime)
+            f = await util.sumOfTime(toaltime)
             tt.push({ task_created_datetime: newArray[i].task_created_datetime, total_time: f })
         }
         return tt
 
     }
 
-    //over all projects
-    this.overAllProj = async function (request, data) {
-        let tt = []
-
+    this.overAllProject = async function (request, data) {
+        console.log("---------------------------entered overAllProject---------------------");
+        let responseData = []
 
         var newArray = data.reduce(function (acc, curr) {
-          
+
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist = acc.findIndex(function (item) {
                 return item.project_id === curr.project_id;
@@ -329,8 +328,8 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await util.sumOfTime(toaltime)
-            tt.push({
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
                 project_id: newArray[i].project_id,
                 project_name: newArray[i].value[0].project_name,
                 project_color_code: newArray[i].value[0].project_color_code,
@@ -339,16 +338,17 @@ function AnalyzeServices(objectCollection) {
                 client_name: newArray[i].value[0].client_name,
                 tag_id: newArray[i].value[0].tag_id,
                 tag_name: newArray[i].value[0].tag_name,
-                total_time: f
+                total_time: tym
             })
         }
-        return tt
+        return responseData
 
     }
 
-    //daywise projects
-    this.dayWiseProj = async function (request, data) {
-        let tt = []
+    this.dayWiseProject = async function (request, data) {
+        console.log('==========entered dayWiseProject================')
+
+        let responseData = []
 
 
         var newArray = data.reduce(function (acc, curr) {
@@ -394,30 +394,25 @@ function AnalyzeServices(objectCollection) {
             return acc;
 
         }, []);
-
-        console.log('===========newArray=====================')
-        console.log(newArray)
-        console.log('====================================')
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await util.sumOfTime(toaltime)
-            tt.push({
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
                 project_id: newArray[i].project_id,
-                task_created_datetime: newArray[i].task_created_datetime,
                 project_name: newArray[i].value[0].project_name,
                 project_color_code: newArray[i].value[0].project_color_code,
                 project_code: newArray[i].value[0].project_code,
                 client_id: newArray[i].value[0].client_id,
                 client_name: newArray[i].value[0].client_name,
-                total_time: f
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: tym,
+                task_created_datetime: newArray[i].task_created_datetime,
+
             })
         }
 
-        console.log('=============tt==============')
-        console.log(tt)
-        console.log('====================================')
-
-        var newArray1 = tt.reduce(function (acc1, curr1) {
+        var newArray1 = responseData.reduce(function (acc1, curr1) {
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist1 = acc1.findIndex(function (item1) {
                 return item1.project_name === curr1.project_name;
@@ -436,16 +431,14 @@ function AnalyzeServices(objectCollection) {
             return acc1;
 
         }, []);
-
-        return newArray1
+        responseData = newArray1
+        return responseData
 
     }
 
-    //top project
     this.topProject = async function (request, data) {
-        let tt = []
-
-
+        console.log('==========entered topProject================')
+        let responseData = []
         var newArray = data.reduce(function (acc, curr) {
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist = acc.findIndex(function (item) {
@@ -468,25 +461,27 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f =  await util.sumOfTime(toaltime)
-            tt.push({
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
                 project_id: newArray[i].project_id,
                 project_name: newArray[i].value[0].project_name,
                 project_color_code: newArray[i].value[0].project_color_code,
                 project_code: newArray[i].value[0].project_code,
                 client_id: newArray[i].value[0].client_id,
                 client_name: newArray[i].value[0].client_name,
-                total_time: f
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: tym
             })
         }
 
-        tt.map((item) => {
+        responseData.map((item) => {
             var timeParts = item.total_time.split(":");
             item.total_milliseconds = (timeParts[0] * (60000 * 60)) + (timeParts[1] * 60000)
         })
 
-        tt.sort((a, b) => b.total_milliseconds - a.total_milliseconds)
-        return tt[0]
+        responseData.sort((a, b) => b.total_milliseconds - a.total_milliseconds)
+        return responseData[0]
 
 
     }
