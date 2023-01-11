@@ -292,7 +292,7 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await sumOfTime(toaltime)
+            f =  await util.sumOfTime(toaltime)
             tt.push({ task_created_datetime: newArray[i].task_created_datetime, total_time: f })
         }
         return tt
@@ -328,7 +328,7 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await sumOfTime(toaltime)
+            f = await util.sumOfTime(toaltime)
             tt.push({
                 project_id: newArray[i].project_id,
                 project_name: newArray[i].value[0].project_name,
@@ -399,7 +399,7 @@ function AnalyzeServices(objectCollection) {
         console.log('====================================')
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await sumOfTime(toaltime)
+            f = await util.sumOfTime(toaltime)
             tt.push({
                 project_id: newArray[i].project_id,
                 task_created_datetime: newArray[i].task_created_datetime,
@@ -467,7 +467,7 @@ function AnalyzeServices(objectCollection) {
 
         for (let i = 0; i < newArray.length; i++) {
             toaltime = newArray[i].value
-            f = await sumOfTime(toaltime)
+            f =  await util.sumOfTime(toaltime)
             tt.push({
                 project_id: newArray[i].project_id,
                 project_name: newArray[i].value[0].project_name,
