@@ -425,7 +425,7 @@ function AnalyzeServices(objectCollection) {
             if (findIfNameExist1 === -1) {
 
                 let obj = {
-                    'project_id': curr1.project_name,
+                    'project_name': curr1.project_name,
                     "value": [curr1]
                 }
                 acc1.push(obj)
