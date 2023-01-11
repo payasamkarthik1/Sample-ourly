@@ -52,77 +52,162 @@ function AnalyzeServices(objectCollection) {
                 const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
                 responseData = data
             }
-
-
         }
         return [false, responseData]
     }
 
+    // this.dashboardDataCalculationOverview = async function (request, data3) {
+    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
+    //     let responseData = []
+    //     // total time
+    //     idGenerate = await util.getRandomNumericId()
+    //     const id = idGenerate
+    //     totalTime = await util.sumOfTime(data3)
+
+    //     //insert data into table for calce
+    //     for (i = 0; i < data3.length; i++) {
+    //         flag = 1
+    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
+    //     }
+
+    //     //get data daywise in dashboard
+    //     flag = 2
+    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     dayWiseData = data4
+    //     var newArray = dayWiseData.reduce(function (acc, curr) {
+    //         //finding Index in the array where the NamaCategory matched
+    //         var findIfNameExist = acc.findIndex(function (item) {
+    //             return item.project_name === curr.project_name;
+    //         })
+    //         if (findIfNameExist === -1) {
+
+    //             let obj = {
+    //                 'project_name': curr.project_name,
+    //                 "value": [curr]
+    //             }
+    //             acc.push(obj)
+    //         } else {
+    //             acc[findIfNameExist].value.push(curr)
+    //         }
+
+    //         return acc;
+
+    //     }, []);
+
+    //     //get total projects total hours 
+    //     flag = 3
+    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallProjects = data5
+
+    //     //over all total_time daywise
+    //     flag = 6
+    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallTotalTime = data6
+
+    //     //get top project
+    //     flag = 4
+    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     topProject = data7[0]
+
+    //     // delete data
+    //     await this.dataGetBasedOnRequirment(request, id, 5)
+
+    //     responseData.push({ total_time: totalTime, top_project: topProject })
+    //     responseData.push(newArray)
+    //     responseData.push(overallTotalTime)
+    //     responseData.push(overallProjects)
+
+    //     return [false, responseData];
+
+
+    // };
+
+    // this.dashboardDataCalculationOverview = async function (request, data3) {
+    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
+    //     let responseData = []
+    //     // total time
+    //     idGenerate = await util.getRandomNumericId()
+    //     const id = idGenerate
+    //     totalTime = await util.sumOfTime(data3)
+
+    //     //insert data into table for calce
+    //     for (i = 0; i < data3.length; i++) {
+    //         flag = 1
+    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
+    //     }
+
+    //     //get data daywise in dashboard
+    //     flag = 2
+    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     dayWiseData = data4
+    //     var newArray = dayWiseData.reduce(function (acc, curr) {
+    //         //finding Index in the array where the NamaCategory matched
+    //         var findIfNameExist = acc.findIndex(function (item) {
+    //             return item.project_name === curr.project_name;
+    //         })
+    //         if (findIfNameExist === -1) {
+
+    //             let obj = {
+    //                 'project_name': curr.project_name,
+    //                 "value": [curr]
+    //             }
+    //             acc.push(obj)
+    //         } else {
+    //             acc[findIfNameExist].value.push(curr)
+    //         }
+
+    //         return acc;
+
+    //     }, []);
+
+    //     //get total projects total hours 
+    //     flag = 3
+    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallProjects = data5
+
+    //     //over all total_time daywise
+    //     flag = 6
+    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallTotalTime = data6
+
+    //     //get top project
+    //     flag = 4
+    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     topProject = data7[0]
+
+    //     // delete data
+    //     await this.dataGetBasedOnRequirment(request, id, 5)
+
+    //     responseData.push({ total_time: totalTime, top_project: topProject })
+    //     responseData.push(newArray)
+    //     responseData.push(overallTotalTime)
+    //     responseData.push(overallProjects)
+
+    //     return [false, responseData];
+
+
+    // };
     this.dashboardDataCalculationOverview = async function (request, data3) {
         console.log('-------------------------entered dashboardDataCalculationOverview--------');
         let responseData = []
-        // total time
-        idGenerate = await util.getRandomNumericId()
-        const id = idGenerate
+      
         totalTime = await util.sumOfTime(data3)
+        const respData1 = await this.topProject(request,data3)
+        const respData2 = await this.dayWiseProj(request,data3)
+        const respData3 = await this.toaltime(request,data3)
+        const respData4 = await this.overAllProj(request,data3)
 
-        //insert data into table for calce
-        for (i = 0; i < data3.length; i++) {
-            flag = 1
-            const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
-        }
-
-        //get data daywise in dashboard
-        flag = 2
-        const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
-        dayWiseData = data4
-        var newArray = dayWiseData.reduce(function (acc, curr) {
-            //finding Index in the array where the NamaCategory matched
-            var findIfNameExist = acc.findIndex(function (item) {
-                return item.project_name === curr.project_name;
-            })
-            if (findIfNameExist === -1) {
-
-                let obj = {
-                    'project_name': curr.project_name,
-                    "value": [curr]
-                }
-                acc.push(obj)
-            } else {
-                acc[findIfNameExist].value.push(curr)
-            }
-
-            return acc;
-
-        }, []);
-
-        //get total projects total hours 
-        flag = 3
-        const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
-        overallProjects = data5
-
-        //over all total_time daywise
-        flag = 6
-        const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
-        overallTotalTime = data6
-
-        //get top project
-        flag = 4
-        const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
-        topProject = data7[0]
-
-        // delete data
-        await this.dataGetBasedOnRequirment(request, id, 5)
-
-        responseData.push({ total_time: totalTime, top_project: topProject })
-        responseData.push(newArray)
-        responseData.push(overallTotalTime)
-        responseData.push(overallProjects)
+        responseData.push({ total_time: totalTime, top_project: respData1 })
+        responseData.push(respData2)
+        responseData.push(respData3)
+        responseData.push(respData4)
 
         return [false, responseData];
 
 
     };
+
+
 
     this.getAllTasksFilterByDescrip = async function (request) {
         console.log('---------------entered getAllTasksFilterByDescrip---------------------- ');
@@ -181,6 +266,236 @@ function AnalyzeServices(objectCollection) {
     };
 
 
+    //total time
+    this.dayWiseTotalTime = async function (request, data) {
+        let tt = []
+
+        var newArray = data.reduce(function (acc, curr) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.task_created_datetime === curr.task_created_datetime;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'task_created_datetime': curr.task_created_datetime,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            f = await sumOfTime(toaltime)
+            tt.push({ task_created_datetime: newArray[i].task_created_datetime, total_time: f })
+        }
+        return tt
+
+    }
+
+    //over all projects
+    this.overAllProj = async function (request, data) {
+        let tt = []
+
+
+        var newArray = data.reduce(function (acc, curr) {
+            console.log("acc", acc);
+            console.log("curr", curr);
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_id === curr.project_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_id': curr.project_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            f = await sumOfTime(toaltime)
+            tt.push({
+                project_id: newArray[i].project_id,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: f
+            })
+        }
+        return tt
+
+    }
+
+    //daywise projects
+    this.dayWiseProj = async function (request, data) {
+        let tt = []
+
+
+        var newArray = data.reduce(function (acc, curr) {
+
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_id === curr.project_id && item.task_created_datetime === curr.task_created_datetime
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_id': curr.project_id,
+                    'task_created_datetime': curr.task_created_datetime,
+                    "value": [{
+                        project_id: curr.project_id,
+                        project_name: curr.project_name,
+                        project_code: curr.project_code,
+                        project_color_code: curr.project_color_code,
+                        client_id: curr.client_id,
+                        client_name: curr.client_name,
+                        tag_id: curr.tag_id,
+                        tag_name: curr.tag_name,
+                        task_created_datetime: curr.task_created_datetime,
+                        total_time: curr.total_time
+                    }]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push({
+                    project_id: curr.project_id,
+                    project_name: curr.project_name,
+                    project_code: curr.project_code,
+                    project_color_code: curr.project_color_code,
+                    client_id: curr.client_id,
+                    client_name: curr.client_name,
+                    tag_id: curr.tag_id,
+                    tag_name: curr.tag_name,
+                    task_created_datetime: curr.task_created_datetime,
+                    total_time: curr.total_time
+                })
+            }
+
+            return acc;
+
+        }, []);
+
+        console.log('===========newArray=====================')
+        console.log(newArray)
+        console.log('====================================')
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            f = await sumOfTime(toaltime)
+            tt.push({
+                project_id: newArray[i].project_id,
+                task_created_datetime: newArray[i].task_created_datetime,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                total_time: f
+            })
+        }
+
+        console.log('=============tt==============')
+        console.log(tt)
+        console.log('====================================')
+
+        var newArray1 = tt.reduce(function (acc1, curr1) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist1 = acc1.findIndex(function (item1) {
+                return item1.project_id === curr1.project_id;
+            })
+            if (findIfNameExist1 === -1) {
+
+                let obj = {
+                    'project_id': curr1.project_id,
+                    "value": [curr1]
+                }
+                acc1.push(obj)
+            } else {
+                acc1[findIfNameExist1].value.push(curr1)
+            }
+
+            return acc1;
+
+        }, []);
+
+        return newArray1
+
+    }
+
+    //top project
+    this.topProject = async function (request, data) {
+        let tt = []
+
+
+        var newArray = data.reduce(function (acc, curr) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_id === curr.project_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_id': curr.project_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            f = await sumOfTime(toaltime)
+            tt.push({
+                project_id: newArray[i].project_id,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                total_time: f
+            })
+        }
+
+        tt.map((item) => {
+            var timeParts = item.total_time.split(":");
+            item.total_milliseconds = (timeParts[0] * (60000 * 60)) + (timeParts[1] * 60000)
+        })
+
+        tt.sort((a, b) => b.total_milliseconds - a.total_milliseconds)
+        return tt[0]
+
+
+    }
+
+
+
+
+
+
+
     //-------------------------reports---------------------
 
     this.getReportSummary = async function (request) {
@@ -194,7 +509,7 @@ function AnalyzeServices(objectCollection) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
                     let emp = request.employees
-                    for (let i = 0; i<emp.length; i++) {
+                    for (let i = 0; i < emp.length; i++) {
                         request.employee_id = emp[i]
                         const [err9, data9] = await employeeService.getEmployeeById(request)
                         Array.prototype.push.apply(empsGathered, data9);
@@ -203,7 +518,7 @@ function AnalyzeServices(objectCollection) {
                 if (request.groups.length != 0) {
                     let grp = request.groups
 
-                    for (let i = 0; i<grp.length; i++) {
+                    for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
                         const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
