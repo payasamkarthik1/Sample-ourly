@@ -486,6 +486,44 @@ function AnalyzeServices(objectCollection) {
 
     }
 
+    this.overAllUsers = async function (request, data) {
+        console.log("---------------------------entered overAllProject---------------------");
+        let responseData = []
+
+        var newArray = data.reduce(function (acc, curr) {
+
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.employee_id === curr.employee_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'employee_id': curr.employee_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
+                full_name: newArray[i].value[0].full_name,
+                employee_id: newArray[i].employee_id,
+                total_time: tym
+            })
+        }
+        return responseData
+
+    }
+
     //-------------------------reports---------------------
 
     this.getReportSummary = async function (request) {
@@ -856,7 +894,6 @@ function AnalyzeServices(objectCollection) {
     //     }
     //     return [false, responseData]
     // }
-
     this.getReportSummaryOverviewCalculation = async function (request, data) {
         console.log("--------------------entered getReportSummaryOverviewCalculation---------------------");
         let responseData = []
@@ -895,34 +932,79 @@ function AnalyzeServices(objectCollection) {
         }
         return [false, responseData]
     }
+    // this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+    //     let responseData = []
+    //     const [err, filterData] = await this.getFilterReportSummary(request, data)
+    //     if (filterData.length != 0) {
+    //         // total time
+    //         idGenerate = await util.getRandomNumericId()
+    //         id = idGenerate
+    //         totalTime = await util.sumOfTime(filterData)
+    //         //insert data into table for calce
+    //         for (i = 0; i < filterData.length; i++) {
+    //             flag = 1
+    //             const [err1, data1] = await this.dataInsertForCalculation(request, filterData[i], id)
+    //         }
+    //         //get overall total user hours 
+    //         flag = 8
+    //         const [err3, data3] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //         overallUsers = data3
+
+
+    //         //adding uniques keys 
+    //         overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+
+    //         //loop for adding descriptions 
+    //         for (let i = 0; i < overallUsers1.length; i++) {
+    //             let value = []
+    //             data.filter(function (dat) {
+    //                 if (dat.employee_id == overallUsers1[i].employee_id) {
+    //                     obj = {}
+    //                     obj.task_description = dat.task_description
+    //                     obj.task_total_time = dat.task_total_time
+    //                     obj.project_name = dat.project_name
+    //                     obj.project_code = dat.project_code
+    //                     obj.project_color_code = dat.project_color_code
+    //                     value.push(obj)
+    //                 }
+
+    //             })
+    //             overallUsers1[i].description = value
+    //         }
+
+    //         //over all total_time daywise
+    //         flag = 6
+    //         const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //         overallTotalTime = data5
+    //         delete data
+    //         flag = 5
+    //         await this.dataGetBasedOnRequirment(request, id, flag)
+
+    //         responseData.push({ total_time: totalTime })
+    //         responseData.push(overallTotalTime)
+    //         responseData.push(overallUsers1)
+    //     }
+
+    //     return [false, responseData]
+    // }
 
     this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
         let responseData = []
         const [err, filterData] = await this.getFilterReportSummary(request, data)
         if (filterData.length != 0) {
-            // total time
-            idGenerate = await util.getRandomNumericId()
-            id = idGenerate
-            totalTime = await util.sumOfTime(filterData)
-            //insert data into table for calce
-            for (i = 0; i < filterData.length; i++) {
-                flag = 1
-                const [err1, data1] = await this.dataInsertForCalculation(request, filterData[i], id)
-            }
-            //get overall total user hours 
-            flag = 8
-            const [err3, data3] = await this.dataGetBasedOnRequirment(request, id, flag)
-            overallUsers = data3
 
+            totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.overallTotalTime(request, filterData);
+            const data2 = await this.overAllUsers(request, filterData)
 
             //adding uniques keys 
-            overallUsers1 = await util.addUniqueKeyIndexesToArrayOfObject(overallUsers)
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
 
             //loop for adding descriptions 
-            for (let i = 0; i < overallUsers1.length; i++) {
+            for (let i = 0; i < data3.length; i++) {
                 let value = []
                 data.filter(function (dat) {
-                    if (dat.employee_id == overallUsers1[i].employee_id) {
+                    if (dat.employee_id == data3[i].employee_id) {
                         obj = {}
                         obj.task_description = dat.task_description
                         obj.task_total_time = dat.task_total_time
@@ -933,24 +1015,19 @@ function AnalyzeServices(objectCollection) {
                     }
 
                 })
-                overallUsers1[i].description = value
+                data3[i].description = value
             }
 
-            //over all total_time daywise
-            flag = 6
-            const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
-            overallTotalTime = data5
-            delete data
-            flag = 5
-            await this.dataGetBasedOnRequirment(request, id, flag)
+
 
             responseData.push({ total_time: totalTime })
-            responseData.push(overallTotalTime)
-            responseData.push(overallUsers1)
+            responseData.push(data1)
+            responseData.push(data3)
         }
 
         return [false, responseData]
     }
+
 
     this.dataInsertForCalculation = async function (request, data, id) {
 
