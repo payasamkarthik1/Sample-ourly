@@ -360,7 +360,7 @@ function AnalyzeServices(objectCollection) {
             if (findIfNameExist === -1) {
 
                 let obj = {
-                    'project_id': curr.project_name,
+                    'project_name': curr.project_name,
                     'task_created_datetime': curr.task_created_datetime,
                     "value": [{
                         project_id: curr.project_id,
@@ -420,12 +420,12 @@ function AnalyzeServices(objectCollection) {
         var newArray1 = tt.reduce(function (acc1, curr1) {
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist1 = acc1.findIndex(function (item1) {
-                return item1.project_id === curr1.project_id;
+                return item1.project_name === curr1.project_name;
             })
             if (findIfNameExist1 === -1) {
 
                 let obj = {
-                    'project_id': curr1.project_id,
+                    'project_id': curr1.project_name,
                     "value": [curr1]
                 }
                 acc1.push(obj)
