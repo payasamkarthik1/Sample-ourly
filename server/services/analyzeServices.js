@@ -190,7 +190,9 @@ function AnalyzeServices(objectCollection) {
     this.dashboardDataCalculationOverview = async function (request, data3) {
         console.log('-------------------------entered dashboardDataCalculationOverview--------');
         let responseData = []
-      
+      console.log('==========data3==============');
+      console.log(data3);
+      console.log('====================================');
         totalTime = await util.sumOfTime(data3)
         const respData1 = await this.topProject(request,data3)
         const respData2 = await this.dayWiseProj(request,data3)
@@ -305,8 +307,7 @@ function AnalyzeServices(objectCollection) {
 
 
         var newArray = data.reduce(function (acc, curr) {
-            console.log("acc", acc);
-            console.log("curr", curr);
+          
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist = acc.findIndex(function (item) {
                 return item.project_id === curr.project_id;
@@ -371,7 +372,7 @@ function AnalyzeServices(objectCollection) {
                         tag_id: curr.tag_id,
                         tag_name: curr.tag_name,
                         task_created_datetime: curr.task_created_datetime,
-                        total_time: curr.total_time
+                        task_total_time: curr.task_total_time
                     }]
                 }
                 acc.push(obj)
@@ -386,7 +387,7 @@ function AnalyzeServices(objectCollection) {
                     tag_id: curr.tag_id,
                     tag_name: curr.tag_name,
                     task_created_datetime: curr.task_created_datetime,
-                    total_time: curr.total_time
+                    task_total_time: curr.task_total_time
                 })
             }
 
