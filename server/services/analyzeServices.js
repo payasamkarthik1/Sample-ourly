@@ -355,12 +355,12 @@ function AnalyzeServices(objectCollection) {
 
             //finding Index in the array where the NamaCategory matched
             var findIfNameExist = acc.findIndex(function (item) {
-                return item.project_id === curr.project_id && item.task_created_datetime === curr.task_created_datetime
+                return item.project_name === curr.project_name && item.task_created_datetime === curr.task_created_datetime
             })
             if (findIfNameExist === -1) {
 
                 let obj = {
-                    'project_id': curr.project_id,
+                    'project_id': curr.project_name,
                     'task_created_datetime': curr.task_created_datetime,
                     "value": [{
                         project_id: curr.project_id,
