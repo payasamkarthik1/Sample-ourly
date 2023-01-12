@@ -121,7 +121,7 @@ function Scheduler(objectCollection) {
                     console.log(emps2)
                     console.log('====================================')
                     if (emps2.length != 0) {
-                        empUnderGrpWithStatus.push(emps2)
+                        empUnderGrpWithStatus.push(emps2[0])
                     }
                 }
                 console.log('===========empUnderGrpWithStatus==================')
@@ -138,6 +138,9 @@ function Scheduler(objectCollection) {
                             }
                         });
                     }
+                    console.log('==========count===================')
+                    console.log(count)
+                    console.log('====================================')
                     if (count.length != 0) {
                         request.mail = grps[i].email
                         request.emps = count
