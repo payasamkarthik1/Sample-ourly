@@ -120,7 +120,9 @@ function Scheduler(objectCollection) {
                     console.log('==========emps2====================')
                     console.log(emps2)
                     console.log('====================================')
-                    empUnderGrpWithStatus.push(emps2)
+                    if (emps2.length != 0) {
+                        empUnderGrpWithStatus.push(emps2)
+                    }
                 }
                 console.log('===========empUnderGrpWithStatus==================')
                 console.log(empUnderGrpWithStatus)
