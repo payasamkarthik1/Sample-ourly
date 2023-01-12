@@ -76,7 +76,134 @@ function Scheduler(objectCollection) {
                             console.log("err-------" + err);
                             error = err
                         })
-                    return [error,responseData]
+                    return [error, responseData]
+                }
+            }
+
+        })
+    }
+
+
+
+    this.sendRemainder1 = async function () {
+        schedule.scheduleJob('00 35 15 * * 4', async function () {
+            var mon = moment();
+            sun = mon.subtract(4, "days");
+            sun = mon.format("YYYY-MM-DD");
+            let request = {}
+            request.sunDate = sun
+
+            let sendMails = []
+
+            //get groups
+            request.role_id = 2
+            const [err, emps] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 2)
+            grps = emps[0].groups
+            console.log('==========groups====================')
+            console.log(grps)
+            console.log('====================================')
+
+            //get emps assign under grps
+            for (let i = 0; i < grps.length; i++) {
+                let empUnderGrpWithStatus = []
+                let count = []
+                // let emps =[]
+                request.employee_id = grps[i].employee_id, request.role_id = 0
+                const [err1, emps1] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 1)
+                console.log('==========emps1====================')
+                console.log(emps1)
+                console.log('====================================')
+
+                for (let j = 0; j < emps1.length; j++) {
+                    request.employee_id = emps1[j]
+                    const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
+                    console.log('==========emps2====================')
+                    console.log(emps2)
+                    console.log('====================================')
+                    empUnderGrpWithStatus.push(emps2)
+                }
+                console.log('===========empUnderGrpWithStatus==================')
+                console.log(empUnderGrpWithStatus)
+                console.log('====================================')
+                if (empUnderGrpWithStatus.length == 0) {
+                    request.mail = grps[i].email
+                    request.emps = emps1
+                } else {
+                    for (let i = 0; i < emps1.length; i++) {
+                        empUnderGrpWithStatus.filter((item) => {
+                            if (item.email != emps1[i].email) {
+                                count.push(item[i])
+                            }
+                        });
+                    }
+                    if (count.length != 0) {
+                        request.mail = grps[i].email
+                        request.emps = count
+                    }
+
+                }
+
+                console.log('=================================at the and......for each loopp===================')
+                console.log(request)
+                console.log('====================================')
+
+            }
+
+
+
+            // console.log('============getAllEmployees=================')
+            // console.log(emps)
+            // console.log('====================================')
+            // const [err1, emps1] = await employeesGetEmpsTimesheetStatusApproved(request)
+            // console.log('============employeesGetEmpsTimesheetStatusApproved=================')
+            // console.log(emps1)
+            // console.log('====================================')
+            // if (emps.length != 0) {
+            //     if (emps1.length != 0) {
+            //         for (let i = 0; i < emps.length; i++) {
+            //             console.log(emps[i])
+            //             emps1.filter((item) => {
+            //                 if (item.email != emps[i].email) {
+            //                     sendMails.push(emps[i])
+            //                 }
+            //             });
+            //         }
+            //     } else {
+            //         sendMails = emps
+            //     }
+            //     console.log('===========sendMails=================')
+            //     console.log(sendMails)
+            //     console.log('====================================')
+            //     await sendMails.map(async (mail) => {
+            //         request.email = mail.email
+            //         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+            //         await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+            //     })
+            // } else {
+            //     console.log("No employees available")
+            // }
+
+
+            async function employeesGetEmpsTimesheetStatusByEmpid(request) {
+                let responseData = []
+                let error = true
+                const paramsArr = new Array(
+                    request.sunDate.toString(),
+                    request.employee_id
+                );
+
+                const queryString = util.getQueryString('employees_get_emps_timesheet_status_by_empid', paramsArr);
+                if (queryString !== '') {
+                    await db.executeQuery(0, queryString, request)
+                        .then(async (data) => {
+                            responseData = data
+                            error = false
+                        })
+                        .catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData]
                 }
             }
 

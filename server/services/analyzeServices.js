@@ -14,7 +14,6 @@ function AnalyzeServices(objectCollection) {
     const leadService = new LeadService(objectCollection)
 
 
-    //----------------------dashboards----------------
 
     this.getDasboardOverview = async function (request) {
         let responseData = []
@@ -209,8 +208,6 @@ function AnalyzeServices(objectCollection) {
 
     };
 
-
-
     this.getAllTasksFilterByDescrip = async function (request) {
         console.log('---------------entered getAllTasksFilterByDescrip---------------------- ');
         let responseData = [],
@@ -266,7 +263,6 @@ function AnalyzeServices(objectCollection) {
         return [err, responseData];
 
     };
-
 
     this.dayWiseTotalTime = async function (request, data) {
         console.log("---------------------entered dayWiseTotalTime--------------------------------");
@@ -524,8 +520,6 @@ function AnalyzeServices(objectCollection) {
 
     }
 
-    //-------------------------reports---------------------
-
     this.getReportSummary = async function (request) {
         console.log("----------------entered getReportSummary---------------");
         let responseData = []
@@ -623,6 +617,7 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryGroupByUser = async function (request) {
+        console.log("---------------------enterd getReportSummaryGroupByUser--------------------");
         let responseData = []
 
         let data1 = []
@@ -720,9 +715,8 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getFilterReportSummary = async function (request, data) {
-        console.log('=====entered into getFilterReportSummary==============')
-        console.log(data)
-        console.log('====================================')
+        console.log("---------------------enterd getFilterReportSummary--------------------");
+
         let responseData = []
         error = true
         filterClients1 = []
@@ -932,6 +926,7 @@ function AnalyzeServices(objectCollection) {
         }
         return [false, responseData]
     }
+
     // this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
     //     let responseData = []
     //     const [err, filterData] = await this.getFilterReportSummary(request, data)
@@ -987,8 +982,8 @@ function AnalyzeServices(objectCollection) {
 
     //     return [false, responseData]
     // }
-
     this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+        console.log("-----------------------entered getReportSummaryGroupByUserOverviewCalculation-----------------------");
         let responseData = []
         const [err, filterData] = await this.getFilterReportSummary(request, data)
         if (filterData.length != 0) {
@@ -1017,9 +1012,6 @@ function AnalyzeServices(objectCollection) {
                 })
                 data3[i].description = value
             }
-
-
-
             responseData.push({ total_time: totalTime })
             responseData.push(data1)
             responseData.push(data3)
@@ -1027,7 +1019,6 @@ function AnalyzeServices(objectCollection) {
 
         return [false, responseData]
     }
-
 
     this.dataInsertForCalculation = async function (request, data, id) {
 
