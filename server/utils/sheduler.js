@@ -133,8 +133,11 @@ function Scheduler(objectCollection) {
                 } else {
                     for (let i = 0; i < emps1.length; i++) {
                         empUnderGrpWithStatus.filter((item) => {
-                            if (item.email != emps1[i].email) {
-                                count.push(emps1[i])
+                            console.log('=========item==================')
+                            console.log(item)
+                            console.log('====================================')
+                            if (item.email !== emps1[i].email) {
+                                count.push(emps1[i].email)
                             }
                         });
                     }
