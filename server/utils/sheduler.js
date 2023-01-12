@@ -134,10 +134,11 @@ function Scheduler(objectCollection) {
                     for (let i = 0; i < emps1.length; i++) {
                         empUnderGrpWithStatus.filter((item) => {
                             console.log('=========item==================')
-                            console.log(item)
+                            console.log(item.email)
+                            console.log(emps1[i].email)
                             console.log('====================================')
                             if (item.email !== emps1[i].email) {
-                                count.push(emps1[i].email)
+                                count.push(emps1[i])
                             }
                         });
                     }
@@ -152,7 +153,9 @@ function Scheduler(objectCollection) {
                 }
 
                 console.log('=================================at the and......for each loopp===================')
-                console.log(request)
+                console.log(request.mail)
+                console.log(request.emps)
+
                 console.log('====================================')
 
             }
