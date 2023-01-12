@@ -346,8 +346,8 @@ function Util() {
                 // setup email data with unicode symbols
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
-                    to: `${request.email}`, // list of receivers
-                    subject: 'Clockify- Reminder to submit your timesheet', // Subject line
+                    to: `${request.mail}`, // list of receivers
+                    subject: 'Ourly- Reminder to submit your timesheet', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -357,7 +357,7 @@ function Util() {
                             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                             <meta http-equiv="X-UA-Compatible" content="IE=edge">
                             <meta name="viewport" content="width=device-width, initial-scale=1">
-                            <title>Employee Docket</title>
+                            <title>Ourly</title>
                         </head>
                         
                         <body style="padding: 30px;background: #f3f4fb;">
@@ -398,7 +398,7 @@ function Util() {
                                                         style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                         <p>
                                                         ${request.emps.map((item) => `
-                                                       <p>${item}</p><br/>
+                                                       <p>${item.full_name}</p><br/>
                                                         `)}
                                                         </p><br>
                                                     </td>
