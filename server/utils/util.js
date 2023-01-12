@@ -323,6 +323,128 @@ function Util() {
         })
 
     }
+    this.nodemailerSenderForTimesheetSubmitRemainderForLeads = async function (request) {
+        var responseData = [];
+        error = false;
+
+        return new Promise((resolve, reject) => {
+            try {
+
+
+                var smtpConfig = {
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true, // use SSL
+                    auth: {
+                        user: 'no-reply@pronteff.com',
+                        pass: 'Welcome@1234'
+                    }
+                };
+
+                let transporter = nodemailer.createTransport(smtpConfig);
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'no-reply@pronteff.com', // sender address
+                    to: `${request.email}`, // list of receivers
+                    subject: 'Clockify- Reminder to submit your timesheet', // Subject line
+                    html:
+                        `
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                            <title>Employee Docket</title>
+                        </head>
+                        
+                        <body style="padding: 30px;background: #f3f4fb;">
+                            <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+                                margin: 0 auto;">
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+                        
+                                            <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                                            <h2 style="font-weight: 100;">Clockify- Reminder to submit your timesheet</h2>
+                                                            <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>                                
+                                                    <tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
+                                                            <p>
+                                                            ${request.text}
+                                                            </p><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    <td align="left"
+                                                        style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
+                                                        <p>
+                                                        ${request.emps.map((item) => `
+                                                       <p>${item}</p><br/>
+                                                        `)}
+                                                        </p><br>
+                                                    </td>
+                                                </tr>
+                                                    <tr>
+                                                        <td
+                                                            style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                                            <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
+                                                                padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </body>
+                        
+                        </html>
+                    `
+
+                    // html body
+
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
     this.nodemailerSenderOnReject = async function (request) {
 
         return new Promise((resolve, reject) => {
@@ -758,7 +880,7 @@ function Util() {
         return total
     }
 
-   
+
 
 
 }

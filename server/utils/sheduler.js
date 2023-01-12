@@ -83,8 +83,6 @@ function Scheduler(objectCollection) {
         })
     }
 
-
-
     this.sendRemainder1 = async function () {
         schedule.scheduleJob('00 35 15 * * 4', async function () {
             var mon = moment();
@@ -151,6 +149,9 @@ function Scheduler(objectCollection) {
                     }
 
                 }
+
+                request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+                await util.nodemailerSenderForTimesheetSubmitRemainder(request)
 
                 console.log('=================================at the and......for each loopp===================')
                 console.log(request.mail)
