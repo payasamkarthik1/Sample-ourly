@@ -115,7 +115,7 @@ function Scheduler(objectCollection) {
                 console.log('====================================')
 
                 for (let j = 0; j < emps1.length; j++) {
-                    request.employee_id = emps1[j]
+                    request.employee_id = emps1[j].employee_id
                     const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
                     console.log('==========emps2====================')
                     console.log(emps2)
