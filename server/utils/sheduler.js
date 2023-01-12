@@ -148,9 +148,11 @@ function Scheduler(objectCollection) {
                     }
 
                 }
-
+                console.log('=========request================');
+                console.log(request);
+                console.log('====================================');
                 request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
 
                 console.log('=================================at the and......for each loopp===================')
                 console.log(request.mail)
@@ -221,7 +223,7 @@ function Scheduler(objectCollection) {
         })
     }
 
-   
+
 }
 
 
