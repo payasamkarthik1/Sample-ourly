@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 09 11 * * 5', async function () {
+        schedule.scheduleJob('00 39 11 * * 5', async function () {
             var mon = moment();
             sun = mon.subtract(5, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -34,19 +34,24 @@ function Scheduler(objectCollection) {
             console.log('====================================')
             if (emps.length != 0) {
                 if (emps1.length != 0) {
-                    for (let i = 0; i < emps.length; i++) {
-                        // console.log(emps[i])
-                        emps1.filter((item) => {
-                            if (item.email !== emps[i].email) {
-                                sendMails.push(emps[i])
-                            }
-                        });
-                    }
+                    myArray = emps.filter(ar => !emps1.find(rm => (rm.email === ar.email) ))
+                    console.log(myArray)
+                    sendMails = myArray
+
+
+                    // for (let i = 0; i < emps.length; i++) {
+                    //     // console.log(emps[i])
+                    //     emps1.filter((item) => {
+                    //         if (item.email !== emps[i].email) {
+                    //             sendMails.push(emps[i])
+                    //         }
+                    //     });
+                    // }
                 } else {
                     sendMails = emps
                 }
                 console.log('===========sendMails=================')
-                // console.log(sendMails)
+                 console.log(sendMails.email)
                 console.log('====================================')
                 await sendMails.map(async (mail) => {
                     request.email = mail.email
