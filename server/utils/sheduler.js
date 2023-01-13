@@ -17,9 +17,9 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 05 19 * * 4', async function () {
+        schedule.scheduleJob('00 59 10 * * 5', async function () {
             var mon = moment();
-            sun = mon.subtract(4, "days");
+            sun = mon.subtract(5, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
@@ -51,7 +51,10 @@ function Scheduler(objectCollection) {
                 await sendMails.map(async (mail) => {
                     request.email = mail.email
                     request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                    await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                   console.log('==================================================send mails======================================================')
+                   console.log(mail.email)
+                   console.log('==============================================')
+                    // await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                 })
             } else {
                 console.log("No employees available")
@@ -84,7 +87,7 @@ function Scheduler(objectCollection) {
     }
 
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
-    this.sendRemainder1 = async function () {
+    this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
         schedule.scheduleJob('00 11 19 * * 4', async function () {
             var mon = moment();
@@ -151,7 +154,7 @@ function Scheduler(objectCollection) {
                 console.log('=========request================');
                 console.log(request);
                 console.log('====================================');
-                request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+                request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
                 await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
 
                 console.log('=================================at the and......for each loopp===================')
@@ -161,41 +164,6 @@ function Scheduler(objectCollection) {
                 console.log('====================================')
 
             }
-
-
-
-            // console.log('============getAllEmployees=================')
-            // console.log(emps)
-            // console.log('====================================')
-            // const [err1, emps1] = await employeesGetEmpsTimesheetStatusApproved(request)
-            // console.log('============employeesGetEmpsTimesheetStatusApproved=================')
-            // console.log(emps1)
-            // console.log('====================================')
-            // if (emps.length != 0) {
-            //     if (emps1.length != 0) {
-            //         for (let i = 0; i < emps.length; i++) {
-            //             console.log(emps[i])
-            //             emps1.filter((item) => {
-            //                 if (item.email != emps[i].email) {
-            //                     sendMails.push(emps[i])
-            //                 }
-            //             });
-            //         }
-            //     } else {
-            //         sendMails = emps
-            //     }
-            //     console.log('===========sendMails=================')
-            //     console.log(sendMails)
-            //     console.log('====================================')
-            //     await sendMails.map(async (mail) => {
-            //         request.email = mail.email
-            //         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-            //         await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-            //     })
-            // } else {
-            //     console.log("No employees available")
-            // }
-
 
             async function employeesGetEmpsTimesheetStatusByEmpid(request) {
                 let responseData = []
