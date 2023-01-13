@@ -68,6 +68,8 @@ function LeadService(objectCollection) {
                 })
 
             }
+            users.sort((a, b) => a.first_name.localeCompare(b.first_name))
+            groups.sort((a, b) => a.full_name.localeCompare(b.full_name))
             return [false, [{ users, groups }]]
         }
     }
