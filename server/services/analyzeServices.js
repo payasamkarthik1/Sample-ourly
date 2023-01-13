@@ -55,137 +55,6 @@ function AnalyzeServices(objectCollection) {
         return [false, responseData]
     }
 
-    // this.dashboardDataCalculationOverview = async function (request, data3) {
-    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
-    //     let responseData = []
-    //     // total time
-    //     idGenerate = await util.getRandomNumericId()
-    //     const id = idGenerate
-    //     totalTime = await util.sumOfTime(data3)
-
-    //     //insert data into table for calce
-    //     for (i = 0; i < data3.length; i++) {
-    //         flag = 1
-    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
-    //     }
-
-    //     //get data daywise in dashboard
-    //     flag = 2
-    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     dayWiseData = data4
-    //     var newArray = dayWiseData.reduce(function (acc, curr) {
-    //         //finding Index in the array where the NamaCategory matched
-    //         var findIfNameExist = acc.findIndex(function (item) {
-    //             return item.project_name === curr.project_name;
-    //         })
-    //         if (findIfNameExist === -1) {
-
-    //             let obj = {
-    //                 'project_name': curr.project_name,
-    //                 "value": [curr]
-    //             }
-    //             acc.push(obj)
-    //         } else {
-    //             acc[findIfNameExist].value.push(curr)
-    //         }
-
-    //         return acc;
-
-    //     }, []);
-
-    //     //get total projects total hours 
-    //     flag = 3
-    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     overallProjects = data5
-
-    //     //over all total_time daywise
-    //     flag = 6
-    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     overallTotalTime = data6
-
-    //     //get top project
-    //     flag = 4
-    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     topProject = data7[0]
-
-    //     // delete data
-    //     await this.dataGetBasedOnRequirment(request, id, 5)
-
-    //     responseData.push({ total_time: totalTime, top_project: topProject })
-    //     responseData.push(newArray)
-    //     responseData.push(overallTotalTime)
-    //     responseData.push(overallProjects)
-
-    //     return [false, responseData];
-
-
-    // };
-
-    // this.dashboardDataCalculationOverview = async function (request, data3) {
-    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
-    //     let responseData = []
-    //     // total time
-    //     idGenerate = await util.getRandomNumericId()
-    //     const id = idGenerate
-    //     totalTime = await util.sumOfTime(data3)
-
-    //     //insert data into table for calce
-    //     for (i = 0; i < data3.length; i++) {
-    //         flag = 1
-    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
-    //     }
-
-    //     //get data daywise in dashboard
-    //     flag = 2
-    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     dayWiseData = data4
-    //     var newArray = dayWiseData.reduce(function (acc, curr) {
-    //         //finding Index in the array where the NamaCategory matched
-    //         var findIfNameExist = acc.findIndex(function (item) {
-    //             return item.project_name === curr.project_name;
-    //         })
-    //         if (findIfNameExist === -1) {
-
-    //             let obj = {
-    //                 'project_name': curr.project_name,
-    //                 "value": [curr]
-    //             }
-    //             acc.push(obj)
-    //         } else {
-    //             acc[findIfNameExist].value.push(curr)
-    //         }
-
-    //         return acc;
-
-    //     }, []);
-
-    //     //get total projects total hours 
-    //     flag = 3
-    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     overallProjects = data5
-
-    //     //over all total_time daywise
-    //     flag = 6
-    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     overallTotalTime = data6
-
-    //     //get top project
-    //     flag = 4
-    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
-    //     topProject = data7[0]
-
-    //     // delete data
-    //     await this.dataGetBasedOnRequirment(request, id, 5)
-
-    //     responseData.push({ total_time: totalTime, top_project: topProject })
-    //     responseData.push(newArray)
-    //     responseData.push(overallTotalTime)
-    //     responseData.push(overallProjects)
-
-    //     return [false, responseData];
-
-
-    // };
     this.dashboardDataCalculationOverview = async function (request, data3) {
         console.log('-------------------------entered dashboardDataCalculationOverview--------');
         let responseData = []
@@ -834,6 +703,261 @@ function AnalyzeServices(objectCollection) {
         return [error, responseData]
     }
 
+    this.getReportSummaryOverviewCalculation = async function (request, data) {
+        console.log("--------------------entered getReportSummaryOverviewCalculation---------------------");
+        let responseData = []
+
+        const [err, filterData] = await this.getFilterReportSummary(request, data)
+        console.log('=============getFilterReportSummary=================')
+        console.log(filterData)
+        console.log('====================================')
+        if (filterData.length != 0) {
+            totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.dayWiseTotalTime(request, filterData)
+            const data2 = await this.overAllProject(request, filterData)
+
+            //  adding uniques keys 
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
+            //loop for adding descriptions 
+            for (let i = 0; i < data3.length; i++) {
+                let value = []
+                filterData.filter(function (dat) {
+                    if (dat.project_id == data3[i].project_id) {
+                        obj = {}
+                        obj.task_description = dat.task_description
+                        obj.task_total_time = dat.task_total_time
+                        obj.employee_name = dat.employee_full_name
+                        value.push(obj)
+                    }
+
+                })
+                data3[i].description = value
+            }
+
+            responseData.push({ total_time: totalTime })
+            responseData.push(data1)
+            responseData.push(data3)
+
+        }
+        return [false, responseData]
+    }
+
+    this.getDataByDates = async function (request) {
+        console.log('------------entered getDataByDates------------------------');
+        let responseData = [],
+            error = true;
+        // if flag =3 get get data by dates
+        flag = 1
+        const paramsArr = new Array(
+            request.start_date,
+            request.end_date,
+            flag
+        );
+
+        const queryString = util.getQueryString('data_get_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('====================================');
+                    console.log(data);
+                    console.log('====================================');
+                    error = false
+                    responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.filterDataByEmps = async function (request, data1, data2) {
+        let filterData = []
+        console.log('------------entered filterDataByEmps----------------------');
+        for (let i = 0; i < data1.length; i++) {
+            data2.filter(function (dat) {
+                if (dat.employee_id == data1[i].employee_id) {
+                    filterData.push(dat)
+                }
+            })
+        }
+
+        return filterData
+    }
+
+    this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+        console.log("-----------------------entered getReportSummaryGroupByUserOverviewCalculation-----------------------");
+        let responseData = []
+        const [err, filterData] = await this.getFilterReportSummary(request, data)
+        if (filterData.length != 0) {
+
+            totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.dayWiseTotalTime(request, filterData);
+            const data2 = await this.overAllUsers(request, filterData)
+
+            //adding uniques keys 
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
+
+            //loop for adding descriptions 
+            for (let i = 0; i < data3.length; i++) {
+                let value = []
+                data.filter(function (dat) {
+                    if (dat.employee_id == data3[i].employee_id) {
+                        obj = {}
+                        obj.task_description = dat.task_description
+                        obj.task_total_time = dat.task_total_time
+                        obj.project_name = dat.project_name
+                        obj.project_code = dat.project_code
+                        obj.project_color_code = dat.project_color_code
+                        value.push(obj)
+                    }
+
+                })
+                data3[i].description = value
+            }
+            responseData.push({ total_time: totalTime })
+            responseData.push(data1)
+            responseData.push(data3)
+        }
+
+        return [false, responseData]
+    }
+
+    // this.dashboardDataCalculationOverview = async function (request, data3) {
+    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
+    //     let responseData = []
+    //     // total time
+    //     idGenerate = await util.getRandomNumericId()
+    //     const id = idGenerate
+    //     totalTime = await util.sumOfTime(data3)
+
+    //     //insert data into table for calce
+    //     for (i = 0; i < data3.length; i++) {
+    //         flag = 1
+    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
+    //     }
+
+    //     //get data daywise in dashboard
+    //     flag = 2
+    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     dayWiseData = data4
+    //     var newArray = dayWiseData.reduce(function (acc, curr) {
+    //         //finding Index in the array where the NamaCategory matched
+    //         var findIfNameExist = acc.findIndex(function (item) {
+    //             return item.project_name === curr.project_name;
+    //         })
+    //         if (findIfNameExist === -1) {
+
+    //             let obj = {
+    //                 'project_name': curr.project_name,
+    //                 "value": [curr]
+    //             }
+    //             acc.push(obj)
+    //         } else {
+    //             acc[findIfNameExist].value.push(curr)
+    //         }
+
+    //         return acc;
+
+    //     }, []);
+
+    //     //get total projects total hours 
+    //     flag = 3
+    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallProjects = data5
+
+    //     //over all total_time daywise
+    //     flag = 6
+    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallTotalTime = data6
+
+    //     //get top project
+    //     flag = 4
+    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     topProject = data7[0]
+
+    //     // delete data
+    //     await this.dataGetBasedOnRequirment(request, id, 5)
+
+    //     responseData.push({ total_time: totalTime, top_project: topProject })
+    //     responseData.push(newArray)
+    //     responseData.push(overallTotalTime)
+    //     responseData.push(overallProjects)
+
+    //     return [false, responseData];
+
+
+    // };
+
+    // this.dashboardDataCalculationOverview = async function (request, data3) {
+    //     console.log('-------------------------entered dashboardDataCalculationOverview--------');
+    //     let responseData = []
+    //     // total time
+    //     idGenerate = await util.getRandomNumericId()
+    //     const id = idGenerate
+    //     totalTime = await util.sumOfTime(data3)
+
+    //     //insert data into table for calce
+    //     for (i = 0; i < data3.length; i++) {
+    //         flag = 1
+    //         const [err1, data4] = await this.dataInsertForCalculation(request, data3[i], id)
+    //     }
+
+    //     //get data daywise in dashboard
+    //     flag = 2
+    //     const [err4, data4] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     dayWiseData = data4
+    //     var newArray = dayWiseData.reduce(function (acc, curr) {
+    //         //finding Index in the array where the NamaCategory matched
+    //         var findIfNameExist = acc.findIndex(function (item) {
+    //             return item.project_name === curr.project_name;
+    //         })
+    //         if (findIfNameExist === -1) {
+
+    //             let obj = {
+    //                 'project_name': curr.project_name,
+    //                 "value": [curr]
+    //             }
+    //             acc.push(obj)
+    //         } else {
+    //             acc[findIfNameExist].value.push(curr)
+    //         }
+
+    //         return acc;
+
+    //     }, []);
+
+    //     //get total projects total hours 
+    //     flag = 3
+    //     const [err5, data5] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallProjects = data5
+
+    //     //over all total_time daywise
+    //     flag = 6
+    //     const [err6, data6] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     overallTotalTime = data6
+
+    //     //get top project
+    //     flag = 4
+    //     const [err7, data7] = await this.dataGetBasedOnRequirment(request, id, flag)
+    //     topProject = data7[0]
+
+    //     // delete data
+    //     await this.dataGetBasedOnRequirment(request, id, 5)
+
+    //     responseData.push({ total_time: totalTime, top_project: topProject })
+    //     responseData.push(newArray)
+    //     responseData.push(overallTotalTime)
+    //     responseData.push(overallProjects)
+
+    //     return [false, responseData];
+
+
+    // };
+
     // this.getReportSummaryOverviewCalculation = async function (request, data) {
     //     let responseData = []
 
@@ -888,44 +1012,6 @@ function AnalyzeServices(objectCollection) {
     //     }
     //     return [false, responseData]
     // }
-    this.getReportSummaryOverviewCalculation = async function (request, data) {
-        console.log("--------------------entered getReportSummaryOverviewCalculation---------------------");
-        let responseData = []
-
-        const [err, filterData] = await this.getFilterReportSummary(request, data)
-        console.log('=============getFilterReportSummary=================')
-        console.log(filterData)
-        console.log('====================================')
-        if (filterData.length != 0) {
-            totalTime = await util.sumOfTime(filterData)
-            const data1 = await this.dayWiseTotalTime(request, filterData)
-            const data2 = await this.overAllProject(request, filterData)
-
-            //  adding uniques keys 
-            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
-            //loop for adding descriptions 
-            for (let i = 0; i < data3.length; i++) {
-                let value = []
-                filterData.filter(function (dat) {
-                    if (dat.project_id == data3[i].project_id) {
-                        obj = {}
-                        obj.task_description = dat.task_description
-                        obj.task_total_time = dat.task_total_time
-                        obj.employee_name = dat.employee_full_name
-                        value.push(obj)
-                    }
-
-                })
-                data3[i].description = value
-            }
-
-            responseData.push({ total_time: totalTime })
-            responseData.push(data1)
-            responseData.push(data3)
-
-        }
-        return [false, responseData]
-    }
 
     // this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
     //     let responseData = []
@@ -982,147 +1068,68 @@ function AnalyzeServices(objectCollection) {
 
     //     return [false, responseData]
     // }
-    this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
-        console.log("-----------------------entered getReportSummaryGroupByUserOverviewCalculation-----------------------");
-        let responseData = []
-        const [err, filterData] = await this.getFilterReportSummary(request, data)
-        if (filterData.length != 0) {
 
-            totalTime = await util.sumOfTime(filterData)
-            const data1 = await this.dayWiseTotalTime(request, filterData);
-            const data2 = await this.overAllUsers(request, filterData)
+    // this.dataInsertForCalculation = async function (request, data, id) {
 
-            //adding uniques keys 
-            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
+    //     let responseData = [],
+    //         error = true;
+    //     paramsArr = new Array(
+    //         id,
+    //         data.employee_id,
+    //         data.project_id,
+    //         data.task_total_time,
+    //         data.task_created_datetime,
+    //         data.task_start_time,
+    //         data.task_end_time,
+    //     );
 
-            //loop for adding descriptions 
-            for (let i = 0; i < data3.length; i++) {
-                let value = []
-                data.filter(function (dat) {
-                    if (dat.employee_id == data3[i].employee_id) {
-                        obj = {}
-                        obj.task_description = dat.task_description
-                        obj.task_total_time = dat.task_total_time
-                        obj.project_name = dat.project_name
-                        obj.project_code = dat.project_code
-                        obj.project_color_code = dat.project_color_code
-                        value.push(obj)
-                    }
+    //     const queryString = util.getQueryString('data_insert_for_calucation', paramsArr);
 
-                })
-                data3[i].description = value
-            }
-            responseData.push({ total_time: totalTime })
-            responseData.push(data1)
-            responseData.push(data3)
-        }
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 error = false
+    //                 responseData = data
 
-        return [false, responseData]
-    }
-
-    this.dataInsertForCalculation = async function (request, data, id) {
-
-        let responseData = [],
-            error = true;
-        paramsArr = new Array(
-            id,
-            data.employee_id,
-            data.project_id,
-            data.task_total_time,
-            data.task_created_datetime,
-            data.task_start_time,
-            data.task_end_time,
-        );
-
-        const queryString = util.getQueryString('data_insert_for_calucation', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
+    // };
 
 
-    };
-
-    this.dataGetBasedOnRequirment = async function (request, id, flag) {
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            id,
-            flag
-        );
-
-        const queryString = util.getQueryString('data_get_requirment', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
 
 
-    };
 
-    this.getDataByDates = async function (request) {
-        console.log('------------entered getDataByDates------------------------');
-        let responseData = [],
-            error = true;
-        // if flag =3 get get data by dates
-        flag = 1
-        const paramsArr = new Array(
-            request.start_date,
-            request.end_date,
-            flag
-        );
+    // this.dataGetBasedOnRequirment = async function (request, id, flag) {
+    //     let responseData = [],
+    //         error = true;
+    //     const paramsArr = new Array(
+    //         id,
+    //         flag
+    //     );
 
-        const queryString = util.getQueryString('data_get_by_dates', paramsArr);
+    //     const queryString = util.getQueryString('data_get_requirment', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('====================================');
-                    console.log(data);
-                    console.log('====================================');
-                    error = false
-                    responseData = data
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 error = false
+    //                 responseData = data
+
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
 
 
-    };
+    // };
 
-    this.filterDataByEmps = async function (request, data1, data2) {
-        let filterData = []
-        console.log('------------entered filterDataByEmps----------------------');
-        for (let i = 0; i < data1.length; i++) {
-            data2.filter(function (dat) {
-                if (dat.employee_id == data1[i].employee_id) {
-                    filterData.push(dat)
-                }
-            })
-        }
 
-        return filterData
-    }
 
 };
 

@@ -122,7 +122,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
-                    subject: 'Prontify Request to change the password', // Subject line
+                    subject: 'Ourly Request to change the password', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -132,7 +132,7 @@ function Util() {
                             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                             <meta http-equiv="X-UA-Compatible" content="IE=edge">
                             <meta name="viewport" content="width=device-width, initial-scale=1">
-                            <title>Employee Docket</title>
+                            <title>Ourly</title>
                         </head>
                         
                         <body style="padding: 30px;background: #f3f4fb;">
@@ -211,6 +211,7 @@ function Util() {
         })
 
     }
+
     this.nodemailerSenderForTimesheetSubmitRemainder = async function (request) {
         var responseData = [];
         error = false;
@@ -235,7 +236,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.email}`, // list of receivers
-                    subject: 'Clockify- Reminder to submit your timesheet', // Subject line
+                    subject: 'Ourly- Reminder to submit your timesheet', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -245,7 +246,7 @@ function Util() {
                             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                             <meta http-equiv="X-UA-Compatible" content="IE=edge">
                             <meta name="viewport" content="width=device-width, initial-scale=1">
-                            <title>Employee Docket</title>
+                            <title>Ourly</title>
                         </head>
                         
                         <body style="padding: 30px;background: #f3f4fb;">
@@ -323,6 +324,7 @@ function Util() {
         })
 
     }
+
     this.nodemailerSenderForTimesheetSubmitRemainderForLeads = async function (request) {
         var responseData = [];
         error = false;
@@ -347,7 +349,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.mail}`, // list of receivers
-                    subject: 'Ourly- Reminder to submit your timesheet', // Subject line
+                    subject: 'Ourly- Reminder all of your team members have not been submit timesheet', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -445,6 +447,7 @@ function Util() {
         })
 
     }
+
     this.nodemailerSenderOnReject = async function (request) {
 
         return new Promise((resolve, reject) => {
@@ -477,7 +480,7 @@ function Util() {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Employee Docket</title>
+    <title>Ourly</title>
 </head>
 
 <body style="padding: 30px;background: #f3f4fb;">
@@ -571,6 +574,7 @@ function Util() {
         })
 
     }
+
     this.nodemailerSenderOnApprove = async function (request) {
 
         return new Promise((resolve, reject) => {
@@ -602,7 +606,7 @@ function Util() {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Employee Docket</title>
+    <title>Ourly</title>
 </head>
 
 <body style="padding: 30px;background: #f3f4fb;">
@@ -712,6 +716,7 @@ function Util() {
         return data
 
     }
+
     this.addUniqueKeyIndexesToArrayOfObject = async function (data) {
 
         let i = 1
@@ -722,7 +727,6 @@ function Util() {
         return data
 
     }
-
 
     this.getFirstWeekDate = async function (dt) {
         d = new Date(dt);
