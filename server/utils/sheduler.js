@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 02 11 * * 5', async function () {
+        schedule.scheduleJob('00 09 11 * * 5', async function () {
             var mon = moment();
             sun = mon.subtract(5, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -35,7 +35,7 @@ function Scheduler(objectCollection) {
             if (emps.length != 0) {
                 if (emps1.length != 0) {
                     for (let i = 0; i < emps.length; i++) {
-                        console.log(emps[i])
+                        // console.log(emps[i])
                         emps1.filter((item) => {
                             if (item.email !== emps[i].email) {
                                 sendMails.push(emps[i])
@@ -46,13 +46,13 @@ function Scheduler(objectCollection) {
                     sendMails = emps
                 }
                 console.log('===========sendMails=================')
-                console.log(sendMails)
+                // console.log(sendMails)
                 console.log('====================================')
                 await sendMails.map(async (mail) => {
                     request.email = mail.email
                     request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
                    console.log('==================================================send mails======================================================')
-                   console.log(mail.email)
+                   console.log(request.email)
                    console.log('==============================================')
                     // await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                 })
