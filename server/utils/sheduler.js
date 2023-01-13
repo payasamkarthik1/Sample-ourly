@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 59 10 * * 5', async function () {
+        schedule.scheduleJob('00 02 11 * * 5', async function () {
             var mon = moment();
             sun = mon.subtract(5, "days");
             sun = mon.format("YYYY-MM-DD");
