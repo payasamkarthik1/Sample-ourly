@@ -34,7 +34,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
                 .then(async (data) => {
                     const [err, data1] = await roleComponentsMappingService.roleGet()
                     console.log('============data=============')
-                    console.log(data1F)
+                    console.log(data1)
                     console.log('====================================')
                     responseData = data1;
                     error = false
