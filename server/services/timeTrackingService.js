@@ -1323,6 +1323,11 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    const [err1, data1] = await this.getEmployeeLead(request);
+                    const [err2, data2] = await employeeService.getEmployeeById(request)
+                    request.email = data1[0].email
+                    request.employee_name=data2[0].full_name
+                    await util.nodemailerSenderToLeadOnTimesheetSubmit(request)
                     responseData = [{ message: "Timesheet has been submited successfully for approval" }];
                     error = false
                 }).catch((err) => {
@@ -1621,6 +1626,7 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    await this.getEmployeeLead()
                     responseData = [{ message: "Timesheet has been withdrawn successfully by employee" }];
                     error = false
                 }).catch((err) => {

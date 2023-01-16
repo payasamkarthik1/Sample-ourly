@@ -701,6 +701,132 @@ function Util() {
 
     }
 
+    this.nodemailerSenderToLeadOnTimesheetSubmit = async function (request) {
+
+        return new Promise((resolve, reject) => {
+            try {
+                var smtpConfig = {
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true, // use SSL
+                    auth: {
+                        user: 'no-reply@pronteff.com',
+                        pass: 'Welcome@1234'
+                    }
+                };
+                let transporter = nodemailer.createTransport(smtpConfig);
+
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: 'no-reply@pronteff.com', // sender address
+                    to: `${request.email}`, // list of receivers
+                    subject: `Timesheet Submitted For Approval
+                  
+                  
+                  `,// Subject line
+                    html: `
+                    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ourly</title>
+</head>
+
+<body style="padding: 30px;background: #f3f4fb;">
+    <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+        margin: 0 auto;">
+        <tbody>
+            <tr>
+                <td
+                    style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+
+                    <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                        <tbody>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                    <h2 style="font-weight: 100;">Timesheet Approved</h2>
+                                    <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;border:1px solid #ccc;border-radius:5px;padding: 15px;">
+                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2>
+                                    <h4 style="color:#777;color: #777;margin: 0;padding-top: 25px;">${request.employee_name}</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="font-family:Arial, sans-serif; font-size: 16px;">
+
+                                    <h5 style="color:#777;color: #777;margin: 0;"><span
+                                            style="font-weight: 100;">Submitted by:</span> ${request.employee_name}</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left"
+                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                    <button
+                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                    <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
+                                        padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>`
+
+
+                    // html body
+
+                };
+
+                // send mail with defined transport object
+                const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        error = err
+                        console.log(error);
+                        reject(err)
+                    } else {
+                        error = false
+                        console.log("send")
+                        resolve(error)
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                error = err
+            }
+
+        })
+
+    }
+
     this.generateRandtoken = async function () {
         const id = randtoken.generate(4, "0123456789");
         return id
