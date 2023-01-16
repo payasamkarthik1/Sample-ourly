@@ -283,6 +283,15 @@ function Util() {
                                                         </td>
                                                     </tr>
                                                     <tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                                            <a href="http://192.168.0.251:4181/">
+                                                            <button
+                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
+                                                                </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
                                                             <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
@@ -753,7 +762,7 @@ function Util() {
                             <tr>
                                 <td align="left"
                                     style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                    <h2 style="font-weight: 100;">Timesheet Approved</h2>
+                                    <h2 style="font-weight: 100;">Timesheet Submitted For Approval</h2>
                                     <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                 </td>
                             </tr>
