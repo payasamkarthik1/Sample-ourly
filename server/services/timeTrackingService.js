@@ -1467,7 +1467,7 @@ function TimeTrackingService(objectCollection) {
     this.onRejectEntry = async function (request) {
         let responseData = [],
             error = true;
-        const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request, 7)
+        const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request, 3)
         console.log('====================================')
         console.log(data1)
         console.log('====================================')
