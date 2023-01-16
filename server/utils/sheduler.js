@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 30 10 * * 1', async function () {
+        schedule.scheduleJob('00 05 12 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -54,7 +54,7 @@ function Scheduler(objectCollection) {
                 await sendMails.map(async (mail) => {
                     request.email = mail.email
                     request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                     await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                  //   await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                 })
             } else {
                 console.log("No employees available")
@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 30 12 * * 1', async function () {
+        schedule.scheduleJob('00 08 12 * * 1', async function () {
             var mon = moment();
             sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -154,7 +154,7 @@ function Scheduler(objectCollection) {
 
                 }
                 request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
-                await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+              //  await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
 
             }
 
