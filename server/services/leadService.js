@@ -142,6 +142,9 @@ function LeadService(objectCollection) {
                 .then(async (data) => {
                     responseData = data;
                     error = false
+                    console.log('============data===============');
+                    console.log(data);
+                    console.log('====================================');
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
