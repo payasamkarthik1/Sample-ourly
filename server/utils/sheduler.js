@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 35 15 * * 2', async function () {
+        schedule.scheduleJob('00 39 15 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -111,20 +111,20 @@ function Scheduler(objectCollection) {
                 // let emps =[]
                 request.employee_id = grps[i].employee_id
                 const [err1, emps1] = await leadService.getEmpsUnderHeadsLevel1(request)
-                console.log('==========emps1====================')
+                console.log('==========emps under each grp member====================')
                 console.log(emps1)
                 console.log('====================================')
                 for (let j = 0; j < emps1.length; j++) {
                     request.employee_id = emps1[j].employee_id
                     const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
-                    console.log('==========emps2====================')
+                    console.log('==========emps timesheet approve and submite under each grp member====================')
                     console.log(emps2)
                     console.log('====================================')
                     if (emps2.length != 0) {
                         empUnderGrpWithStatus.push(emps2[0])
                     }
                 }
-                console.log('===========empUnderGrpWithStatus==================')
+                console.log('===========emps timesheet approve and submite under each grp member==================')
                 console.log(empUnderGrpWithStatus)
                 console.log('====================================')
                 if (empUnderGrpWithStatus.length == 0) {
