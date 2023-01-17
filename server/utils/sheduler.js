@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 31 18 * * 2', async function () {
+        schedule.scheduleJob('00 48 18 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -48,14 +48,16 @@ function Scheduler(objectCollection) {
                 } else {
                     sendMails = emps
                 }
-                console.log('===========sendMails=================')
-                console.log(sendMails)
-                console.log('====================================')
-                await sendMails.map(async (mail) => {
-                    request.email = mail.email
-                    request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                    //   await util.nodemailerSenderForTimesheetSubmitRemainder(request)
-                })
+                if (sendMails.length != 0) {
+                    console.log('===========sendMails=================')
+                    console.log(sendMails)
+                    console.log('====================================')
+                    await sendMails.map(async (mail) => {
+                        request.email = mail.email
+                        request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
+                        //   await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                    })
+                }
             } else {
                 console.log("No employees available")
             }
@@ -144,19 +146,19 @@ function Scheduler(objectCollection) {
                     }
 
                 }
-        
+
                 if (request.mail != "") {
                     console.log('============sending mails to heads================')
                     console.log(request.mail)
-                    console.log("emps length--",request.emps)
-                    if(request.emps.length == 1){
+                    console.log("emps length--", request.emps)
+                    if (request.emps.length == 1) {
                         request.text1 = "Team Member:-"
-                    }else{
+                    } else {
                         request.text1 = "Team Members:-"
                     }
                     console.log('====================================')
                     request.text = "Hi, <br><br> Please make sure all your team members submit their timesheets by the end of every week.<br> Below is a list of your team members who did not submit their timesheets last week.."
-                     await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                    await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
             }
