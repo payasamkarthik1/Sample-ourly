@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 07 15 * * 2', async function () {
+        schedule.scheduleJob('00 24 15 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -110,7 +110,7 @@ function Scheduler(objectCollection) {
                 let count = []
                 // let emps =[]
                 request.employee_id = grps[i].employee_id, request.role_id = 0
-                const [err1, emps1] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 1)
+                const [err1, emps1] = await leadService.getEmpsUnderHeadsLevel1(request, 1)
                 console.log('==========emps1====================')
                 console.log(emps1)
                 console.log('====================================')
@@ -144,15 +144,18 @@ function Scheduler(objectCollection) {
                     //         }
                     //     });
                     // }
-                    console.log('==========count===leadsssssssssssssssss================')
-                    console.log(count)
-                    console.log('====================================')
+                    // console.log('==========count===leadsssssssssssssssss================')
+                    // console.log(count)
+                    // console.log('====================================')
                     if (count.length != 0) {
                         request.mail = grps[i].email
                         request.emps = count
                     }
 
                 }
+                console.log('===========leads to send mai===============')
+                console.log(request.mail)
+                console.log('====================================')
                 request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
             //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
 
