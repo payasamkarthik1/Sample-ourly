@@ -17,7 +17,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 44 14 * * 2', async function () {
+        schedule.scheduleJob('00 31 18 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -89,9 +89,9 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 35 17 * * 2', async function () {
+        schedule.scheduleJob('00 30 12 * * 1', async function () {
             var mon = moment();
-            sun = mon.subtract(2, "days");
+            sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
@@ -107,6 +107,7 @@ function Scheduler(objectCollection) {
             //get emps assign under grps
             for (let i = 0; i < grps.length; i++) {
                 request.mail = ""
+                request.text1 = ""
 
                 let empUnderGrpWithStatus = []
                 let count = []
@@ -147,6 +148,7 @@ function Scheduler(objectCollection) {
                 if (request.mail != "") {
                     console.log('============sending mails to heads================')
                     console.log(request.mail)
+                    console.log("emps length--",request.emps)
                     if(request.emps.length == 1){
                         request.text1 = "Team Member:-"
                     }else{
