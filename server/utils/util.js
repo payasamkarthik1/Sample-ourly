@@ -287,7 +287,7 @@ function Util() {
                                                             style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
                                                             <a href="https://www.ourly.pronteff.com/">
                                                             <button
-                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Submit Your Timesheet</button>
                                                                 </a>
                                                         </td>
                                                     </tr>
@@ -669,13 +669,6 @@ function Util() {
 
                                     <h5 style="color:#777;color: #777;margin: 0;"><span
                                             style="font-weight: 100;">Approved by:</span> ${request.approved_by}</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left"
-                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                    <button
-                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
                                 </td>
                             </tr>
                             <tr>

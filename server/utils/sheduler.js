@@ -183,8 +183,6 @@ function Scheduler(objectCollection) {
 
         })
     }
-
-
 }
 
 
