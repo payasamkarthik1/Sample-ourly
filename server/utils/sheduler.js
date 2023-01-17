@@ -34,7 +34,7 @@ function Scheduler(objectCollection) {
             console.log('====================================')
             if (emps.length != 0) {
                 if (emps1.length != 0) {
-                    myArray = emps.filter(ar => !emps1.find(rm => (rm.email === ar.email) ))
+                    myArray = emps.filter(ar => !emps1.find(rm => (rm.email === ar.email)))
                     sendMails = myArray
 
                     // for (let i = 0; i < emps.length; i++) {
@@ -49,12 +49,12 @@ function Scheduler(objectCollection) {
                     sendMails = emps
                 }
                 console.log('===========sendMails=================')
-                 console.log(sendMails)
+                console.log(sendMails)
                 console.log('====================================')
                 await sendMails.map(async (mail) => {
                     request.email = mail.email
                     request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                  //   await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                    //   await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                 })
             } else {
                 console.log("No employees available")
@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 51 14 * * 2', async function () {
+        schedule.scheduleJob('00 53 14 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -131,7 +131,7 @@ function Scheduler(objectCollection) {
                     request.mail = grps[i].email
                     request.emps = emps1
                 } else {
-                    myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email) ))
+                    myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email)))
                     count = myArray
                     // for (let i = 0; i < emps1.length; i++) {
                     //     empUnderGrpWithStatus.filter((item) => {
@@ -154,7 +154,7 @@ function Scheduler(objectCollection) {
 
                 }
                 request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
-            //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
 
             }
 
