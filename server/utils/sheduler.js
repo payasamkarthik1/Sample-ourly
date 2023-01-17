@@ -144,7 +144,6 @@ function Scheduler(objectCollection) {
                         request.mail = grps[i].email
                         request.emps = count
                     }
-
                 }
 
                 if (request.mail != "") {
@@ -189,8 +188,6 @@ function Scheduler(objectCollection) {
         })
     }
 }
-
-
 
 
 module.exports = Scheduler;

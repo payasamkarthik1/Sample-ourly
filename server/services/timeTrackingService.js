@@ -718,6 +718,11 @@ function TimeTrackingService(objectCollection) {
                             });
                         });
 
+                        //sort projects alphabetically in aesc
+                        await data.sort(function(a,b){
+                            return a.project_name.localeCompare(b.project_name);
+                        })
+
                         //renaming object key and calculating total time
                         for (let i = 0; i < data1.length; i++) {
                             data1[i].task_total_time = data1[i].total_hours
