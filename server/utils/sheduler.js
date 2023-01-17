@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 16 16 * * 2', async function () {
+        schedule.scheduleJob('00 26 16 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -137,31 +137,19 @@ function Scheduler(objectCollection) {
                 } else {
                     myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email)))
                     count = myArray
-                    // for (let i = 0; i < emps1.length; i++) {
-                    //     empUnderGrpWithStatus.filter((item) => {
-                    //         console.log('=========item==================')
-                    //         console.log(item.email)
-                    //         console.log(emps1[i].email)
-                    //         console.log('====================================')
-                    //         if (item.email !== emps1[i].email) {
-                    //             count.push(emps1[i])
-                    //         }
-                    //     });
-                    // }
-                    // console.log('==========count===leadsssssssssssssssss================')
-                    // console.log(count)
-                    // console.log('====================================')
                     if (count.length != 0) {
                         request.mail = grps[i].email
                         request.emps = count
                     }
 
                 }
-                console.log('===========leads to send mai===============')
-                console.log(request.mail)
-                console.log('====================================')
-                request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
-                //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                if (request.mail != "") {
+                    console.log('============sending mails to heads================')
+                    console.log(request.mail)
+                    console.log('====================================')
+                    request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your members, ."
+                    //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                }
 
             }
 
