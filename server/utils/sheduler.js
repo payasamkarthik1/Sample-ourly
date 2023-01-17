@@ -89,7 +89,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 00 17 * * 2', async function () {
+        schedule.scheduleJob('00 35 17 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -148,7 +148,7 @@ function Scheduler(objectCollection) {
                     console.log('============sending mails to heads================')
                     console.log(request.mail)
                     console.log('====================================')
-                    request.text = "Hi, <br><br> your team members timesheet have not been approved/submitted please check with your team."
+                    request.text = "Hi, <br><br> Please make sure all your team members submit their timesheets by the end of every week.<br> Below is a list of your team members who did not submit their timesheets last week.."
                      await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 

@@ -267,7 +267,7 @@ function Util() {
                                                     <tr>
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                                            <h2 style="font-weight: 100;">Clockify- Reminder to submit your timesheet</h2>
+                                                            <h2 style="font-weight: 100;">Ourly- Reminder to submit your timesheet</h2>
                                                             <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                                         </td>
                                                     </tr>
@@ -358,7 +358,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.mail}`, // list of receivers
-                    subject: 'Ourly- Reminder all of your team members have not been submit timesheet', // Subject line
+                    subject: 'Ourly- Gentle Reminder - Team member timesheets have not been submitted.', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -389,7 +389,7 @@ function Util() {
                                                     <tr>
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                                            <h2 style="font-weight: 100;">Clockify- Reminder to submit your timesheet</h2>
+                                                            <h2 style="font-weight: 100;">Ourly- Reminder to submit your timesheet</h2>
                                                             <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                                         </td>
                                                     </tr>
@@ -401,15 +401,16 @@ function Util() {
                                                             style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                             <p>
                                                             ${request.text}
-                                                            </p><br>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                     <td align="left"
                                                         style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                         <p>
-                                                        ${request.emps.map((item) => `
-                                                       <p>${item.full_name}</p><br/>
+                                                        <h4>Team Members:-</h4>
+                                                        ${request.emps.map((item,index) => `
+                                                       <span>${index+1}")"&nbsp;${item.full_name}</span><br>
                                                         `)}
                                                         </p><br>
                                                     </td>
