@@ -285,9 +285,9 @@ function Util() {
                                                     <tr>
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                                            <a href="http://192.168.0.251:4181/">
+                                                            <a href="https://www.ourly.pronteff.com/">
                                                             <button
-                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
+                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
                                                                 </a>
                                                         </td>
                                                     </tr>
@@ -414,6 +414,15 @@ function Util() {
                                                         </p><br>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                <td align="left"
+                                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                                    <a href="https://www.ourly.pronteff.com/">
+                                                    <button
+                                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                                        </a>
+                                                </td>
+                                            </tr>
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -537,12 +546,14 @@ function Util() {
                                 </td>
                             </tr>
                             <tr>
-                                <td align="left"
-                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                    <button
-                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
-                                </td>
-                            </tr>
+                                                        <td align="left"
+                                                            style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                                            <a href="https://www.ourly.pronteff.com/">
+                                                            <button
+                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                                                </a>
+                                                        </td>
+                                                    </tr>
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -787,12 +798,14 @@ function Util() {
                                 </td>
                             </tr>
                             <tr>
-                                <td align="left"
-                                    style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                    <button
-                                        style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
-                                </td>
-                            </tr>
+                            <td align="left"
+                                style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                <a href="https://www.ourly.pronteff.com/">
+                                <button
+                                    style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                    </a>
+                            </td>
+                        </tr>
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
