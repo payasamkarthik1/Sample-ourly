@@ -147,6 +147,11 @@ function Scheduler(objectCollection) {
                 if (request.mail != "") {
                     console.log('============sending mails to heads================')
                     console.log(request.mail)
+                    if(request.emps.length == 1){
+                        request.text1 = "Team Member:-"
+                    }else{
+                        request.text1 = "Team Members:-"
+                    }
                     console.log('====================================')
                     request.text = "Hi, <br><br> Please make sure all your team members submit their timesheets by the end of every week.<br> Below is a list of your team members who did not submit their timesheets last week.."
                      await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)

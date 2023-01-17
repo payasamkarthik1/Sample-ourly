@@ -163,7 +163,7 @@ function Util() {
                                                     <tr>
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                                            <a href="http://192.168.0.251:4179/forgotpass">
+                                                            <a href="https://www.ourly.pronteff.com/forgotpass">
                                                             <button
                                                                 style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
                                                                 </a>
@@ -408,9 +408,9 @@ function Util() {
                                                     <td align="left"
                                                         style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                         <p>
-                                                        <h4>Team Members:-</h4>
-                                                        ${request.emps.map((item,index) => `
-                                                       <span>${index+1}")"&nbsp;${item.full_name}</span><br>
+                                                        <h4>${request.text1}</h4>
+                                                        ${request.emps.map((item, index) => `
+                                                       <span>${index + 1})nbsp;${item.full_name}</span><br>
                                                         `)}
                                                         </p><br>
                                                     </td>
