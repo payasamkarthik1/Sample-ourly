@@ -1673,6 +1673,32 @@ function TimeTrackingService(objectCollection) {
 
     }
 
+    this.timetrackingSearchByValue = async function (request) {
+        console.log("------------------------------entered timetrackingSearchByValue------------------------------------------------------");
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.employee_id,
+            request.search_value,
+        );
+
+        const queryString = util.getQueryString('timetracking_search_by_value', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                   console.log('============data=================');
+                   console.log(data);
+                   console.log('====================================');
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    };
+
     // count list 
     // this.getEmpsSubmittedListByLeadId = async function (request) {
     //     let responseData = [],

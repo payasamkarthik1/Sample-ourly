@@ -80,6 +80,19 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
+     //@Post timetracking/search/by/value
+     app.post('/' + 'timetracking/search/by/value', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.timetrackingSearchByValue(req.body, res);
+        if (!err) {
+            console.log("timetracking/search/by/value | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("timetracking/search/by/value| Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
     //------------------timesheet--------------------------
 
     //@Post status/add/insert
