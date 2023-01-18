@@ -1691,6 +1691,8 @@ function TimeTrackingService(objectCollection) {
                    console.log('============data=================');
                    console.log(data);
                    console.log('====================================');
+                   error = false
+                   responseData = data
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
