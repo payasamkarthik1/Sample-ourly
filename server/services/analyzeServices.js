@@ -715,6 +715,9 @@ function AnalyzeServices(objectCollection) {
                 data1 = data9
             }
         }
+        console.log('============data1==================')
+        console.log(data1)
+        console.log('====================================')
 
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
