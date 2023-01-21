@@ -15,6 +15,45 @@ function AnalyzeServices(objectCollection) {
 
 
 
+    // this.getDasboardOverview = async function (request) {
+    //     let responseData = []
+
+    //     let data1 = []
+    //     if (request.role_id == 2) {
+    //         const [err8, data8] = await employeeService.getAllEmployees(request)
+    //         data1 = data8
+    //     } else if (request.role_id == 3) {
+    //         const [err9, data9] = await employeeService.getEmployeeById(request)
+    //         data1 = data9
+    //     } else {
+    //         const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //         console.log('===========getEmployessAssignUnderHeads====================')
+    //         console.log(data10)
+    //         console.log('====================================')
+    //         data1 = data10
+    //     }
+
+    //     //get data between dates
+    //     const [err2, data2] = await this.getDataByDates(request)
+    //     console.log('===========getDataByDates====================')
+    //     console.log(data2)
+    //     console.log('====================================')
+
+    //     //get dashboard data overview
+    //     if (data1.length != 0 && data2.length != 0) {
+    //         //filter data with emps
+    //         const data3 = await this.filterDataByEmps(request, data1, data2)
+    //         console.log('===========filterDataByEmps====================')
+    //         console.log(data3)
+    //         console.log('====================================')
+    //         if (data3.length != 0) {
+    //             //get dashboard data
+    //             const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
+    //             responseData = data
+    //         }
+    //     }
+    //     return [false, responseData]
+    // }
     this.getDasboardOverview = async function (request) {
         let responseData = []
 
@@ -26,8 +65,8 @@ function AnalyzeServices(objectCollection) {
             const [err9, data9] = await employeeService.getEmployeeById(request)
             data1 = data9
         } else {
-            const [err10, data10] = await leadService.getEmployessAssignUnderHeads(request, 1)
-            console.log('===========getEmployessAssignUnderHeads====================')
+            const [err10, data10] = await leadService.getEmpsUnderHeadsLevel1(request)
+            console.log('===========getEmployessAssignUnderHeads -firsst level emps====================')
             console.log(data10)
             console.log('====================================')
             data1 = data10
@@ -389,6 +428,101 @@ function AnalyzeServices(objectCollection) {
 
     }
 
+    // this.getReportSummary = async function (request) {
+    //     console.log("----------------entered getReportSummary---------------");
+    //     let responseData = []
+
+    //     let data1 = []
+    //     let empsGathered = []
+    //     //get employess under head
+    //     if (request.role_id == 2) {
+    //         if (request.employees.length != 0 || request.groups.length != 0) {
+    //             if (request.employees.length != 0) {
+    //                 let emp = request.employees
+    //                 for (let i = 0; i < emp.length; i++) {
+    //                     request.employee_id = emp[i]
+    //                     const [err9, data9] = await employeeService.getEmployeeById(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             if (request.groups.length != 0) {
+    //                 let grp = request.groups
+
+    //                 for (let i = 0; i < grp.length; i++) {
+    //                     request.employee_id = grp[i]
+    //                     const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             //unique employess
+
+    //             const uniqueids = [];
+    //             const uniqueEmps = empsGathered.filter(element => {
+    //                 const isDuplicate = uniqueids.includes(element.employee_id);
+    //                 if (!isDuplicate) {
+    //                     uniqueids.push(element.employee_id);
+    //                     return true;
+    //                 }
+    //                 return false;
+    //             });
+
+    //             data1 = uniqueEmps
+
+    //         } else {
+    //             const [err8, data8] = await employeeService.getAllEmployees(request)
+    //             data1 = data8
+    //         }
+
+    //     } else if (request.role_id == 3) {
+    //         const [err9, data9] = await employeeService.getEmployeeById(request)
+    //         data1 = data9
+    //     } else {
+    //         if (request.employees.length != 0 || request.groups.length != 0) {
+    //             if (request.employees.length != 0) {
+    //                 let emp = request.employees
+    //                 for (let i = 0; i < emp.length; i++) {
+    //                     request.employee_id = emp[i]
+    //                     const [err9, data9] = await employeeService.getEmployeeById(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             if (request.groups.length != 0) {
+    //                 let grp = request.groups
+    //                 for (let i = 0; i < grp.length; i++) {
+    //                     request.employee_id = grp[i]
+    //                     const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             //unique employess
+    //             const uniqueids = [];
+    //             const uniqueEmps = empsGathered.filter(element => {
+    //                 const isDuplicate = uniqueids.includes(element.employee_id);
+    //                 if (!isDuplicate) {
+    //                     uniqueids.push(element.employee_id);
+    //                     return true;
+    //                 }
+    //                 return false;
+    //             });
+    //             data1 = uniqueEmps
+    //         } else {
+    //             const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //             data1 = data9
+    //         }
+    //     }
+
+    //     //get data between date
+    //     const [err2, data2] = await this.getDataByDates(request)
+
+    //     //get dashboard data overview
+    //     if (data1.length != 0 && data2.length != 0) {
+    //         //filter data with emps
+    //         const data3 = await this.filterDataByEmps(request, data1, data2)
+    //         const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
+    //         responseData = data
+    //     }
+    //     return [false, responseData]
+    // }
     this.getReportSummary = async function (request) {
         console.log("----------------entered getReportSummary---------------");
         let responseData = []
@@ -411,7 +545,7 @@ function AnalyzeServices(objectCollection) {
 
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request, 1)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -467,7 +601,7 @@ function AnalyzeServices(objectCollection) {
                 });
                 data1 = uniqueEmps
             } else {
-                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request, 1)
                 data1 = data9
             }
         }

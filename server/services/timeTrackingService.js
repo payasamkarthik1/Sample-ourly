@@ -719,7 +719,7 @@ function TimeTrackingService(objectCollection) {
                         });
 
                         //sort projects alphabetically in aesc
-                        await data.sort(function(a,b){
+                        await data.sort(function (a, b) {
                             return a.project_name.localeCompare(b.project_name);
                         })
 
@@ -1331,7 +1331,7 @@ function TimeTrackingService(objectCollection) {
                     const [err1, data1] = await this.getEmployeeLead(request);
                     const [err2, data2] = await employeeService.getEmployeeById(request)
                     request.email = data1[0].email
-                    request.employee_name=data2[0].full_name
+                    request.employee_name = data2[0].full_name
                     await util.nodemailerSenderToLeadOnTimesheetSubmit(request)
                     responseData = [{ message: "Timesheet has been submited successfully for approval" }];
                     error = false
@@ -1688,11 +1688,11 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                   console.log('============data=================');
-                   console.log(data);
-                   console.log('====================================');
-                   error = false
-                   responseData = data
+                    console.log('============data=================');
+                    console.log(data);
+                    console.log('====================================');
+                    error = false
+                    responseData = data
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
