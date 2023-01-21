@@ -585,7 +585,7 @@ function AnalyzeServices(objectCollection) {
                     let grp = request.groups
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -640,7 +640,7 @@ function AnalyzeServices(objectCollection) {
                     let grp = request.groups
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -680,7 +680,7 @@ function AnalyzeServices(objectCollection) {
                     let grp = request.groups
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -699,7 +699,7 @@ function AnalyzeServices(objectCollection) {
                 data1 = uniqueEmps
 
             } else {
-                const [err9, data9] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
                 data1 = data9
             }
         }
