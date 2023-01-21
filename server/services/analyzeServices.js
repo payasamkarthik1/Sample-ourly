@@ -609,10 +609,22 @@ function AnalyzeServices(objectCollection) {
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
 
+        console.log('=============data1==================');
+        console.log(data1);
+        console.log('====================================');
+
+
+        console.log('=============data2==================');
+        console.log(data1);
+        console.log('====================================');
+
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('===========filterDataByEmps==================')
+            console.log(data3)
+            console.log('====================================')
             const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
             responseData = data
         }

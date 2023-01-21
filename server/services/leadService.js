@@ -129,8 +129,7 @@ function LeadService(objectCollection) {
     this.getEmpsUnderHeadsLevel1 = async function (request) {
         console.log("---------------------entered getEmpsUnderHeadsLevel1-----------------------");
         let responseData = []
-        //flag=1 to get emp assign under head
-        flag = 1
+
         const paramsArr = new Array(
             request.employee_id.toString(),
         );
