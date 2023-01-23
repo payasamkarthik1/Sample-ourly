@@ -6,7 +6,7 @@ const LeadService = require('../services/leadService')
 
 
 function Scheduler(objectCollection) {
-    console.log("enterereretrtetebx x v scgeduler");
+    console.log("1111111111111111111111111111111111111111111");
 
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -83,7 +83,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 48 15* * 1', async function () {
+        schedule.scheduleJob('00 52 15* * 1', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
