@@ -410,11 +410,11 @@ function Util() {
                                                         style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                         <p>
                                                         <h4>${request.text1}</h4>
-                                                    <ol>
+                                                    <ul>
                                                     ${request.emps.map((item, index) => `
-                                                    <li>${item}</li>
+                                                    <li>${item.full_name}</li>
                                                   `)}
-                                                  </ol>
+                                                  </ul>
                                                         </p><br>
                                                     </td>
                                                 </tr>
