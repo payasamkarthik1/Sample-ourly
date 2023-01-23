@@ -83,7 +83,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 34 16 * * 1', async function () {
+        schedule.scheduleJob('00 43 16 * * 1', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
@@ -140,9 +140,11 @@ function Scheduler(objectCollection) {
                     console.log("emps length--", request.emps)
                     if (request.emps.length == 1) {
                         request.text1 = "Team Member:-"
+                        request.text3 = "team member"
                         request.text2 = "your team member"
                     } else {
                         request.text1 = "Team Members:-"
+                        request.text3 = "team members"
                         request.text2 = "all your team members"
                     }
                     console.log('====================================')

@@ -359,7 +359,7 @@ function Util() {
                     from: 'no-reply@pronteff.com', // sender address
                     // to: `${request.mail}`, // list of receivers
                     to: 'vishal@pronteff.com', // list of receivers
-                    subject: `Ourly- Gentle Reminder:-Your ${request.text2} timesheets have not been submitted`, // Subject line
+                    subject: `Ourly- Gentle Reminder:-Your ${request.text3} timesheets have not been submitted`, // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -390,7 +390,7 @@ function Util() {
                                                     <tr>
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
-                                                            <h2 style="font-weight: 100;">Ourly- Reminder to submit your timesheet</h2>
+                                                            <h2 style="font-weight: 100;">Ourly- Gentle Reminder:-Your ${request.text3} timesheets have not been submitted</h2>
                                                             <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                                         </td>
                                                     </tr>
@@ -401,7 +401,7 @@ function Util() {
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                             <p>
-                                                            Ourly- Gentle Reminder:-Your ${request.text2} timesheets have not been submitted
+                                                           ${request.text}
                                                             </p>
                                                         </td>
                                                     </tr>
