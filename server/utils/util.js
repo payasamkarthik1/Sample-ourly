@@ -357,7 +357,8 @@ function Util() {
                 // setup email data with unicode symbols
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
-                    to: `${request.mail}`, // list of receivers
+                    // to: `${request.mail}`, // list of receivers
+                    to: 'vishal@pronteff.com', // list of receivers
                     subject: `Ourly- Gentle Reminder:-Your ${request.text2} timesheets have not been submitted`, // Subject line
                     html:
                         `
