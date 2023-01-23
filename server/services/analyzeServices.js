@@ -658,6 +658,9 @@ function AnalyzeServices(objectCollection) {
                     }
                 }
                 //unique employess
+                console.log('============empsGathered=====================')
+                console.log(empsGathered)
+                console.log('====================================')
 
                 const uniqueids = [];
                 const uniqueEmps = empsGathered.filter(element => {
@@ -670,6 +673,10 @@ function AnalyzeServices(objectCollection) {
                 });
 
                 data1 = uniqueEmps
+                   //unique employess
+                   console.log('============uniqueEmps=====================')
+                   console.log(uniqueEmps)
+                   console.log('====================================')
 
             } else {
                 const [err8, data8] = await employeeService.getAllEmployees(request)
