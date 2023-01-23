@@ -80,103 +80,208 @@ function Scheduler(objectCollection) {
     }
 
     //on every monday at 12:30 send mail to lead if any emp is not submitted to lead
-    this.sendRemainderToLeads = async function () {
-        console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 29 15* * 1', async function () {
-            var mon = moment();
-            sun = mon.subtract(1, "days");
-            sun = mon.format("YYYY-MM-DD");
-            let request = {}
-            request.sunDate = sun
+//     this.sendRemainderToLeads = async function () {
+//         console.log("-------------------------entered sendRemainder1------------------------------");
+//         schedule.scheduleJob('00 29 15* * 1', async function () {
+//             var mon = moment();
+//             sun = mon.subtract(1, "days");
+//             sun = mon.format("YYYY-MM-DD");
+//             let request = {}
+//             request.sunDate = sun
 
-            //get groups
-            request.role_id = 2
-            const [err, emps] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 2)
-            grps = emps[0].groups
-            console.log('==========groups====================')
-            console.log(grps)
-            console.log('====================================')
+//             //get groups
+//             request.role_id = 2
+//             const [err, emps] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 2)
+//             grps = emps[0].groups
+//             console.log('==========groups====================')
+//             console.log(grps)
+//             console.log('====================================')
 
-            //get emps assign under grps
-            for (let i = 0; i < grps.length; i++) {
-                request.mail = ""
-                request.text1 = ""
+//             //get emps assign under grps
+//             for (let i = 0; i < grps.length; i++) {
+//                 request.mail = ""
+//                 request.text1 = ""
 
-                let empUnderGrpWithStatus = []
-                let count = []
-                // let emps =[]
-                request.employee_id = grps[i].employee_id
-                const emps1 = await leadService.getEmpsUnderHeadsLevel1(request)
+//                 let empUnderGrpWithStatus = []
+//                 let count = []
+//                 // let emps =[]
+//                 request.employee_id = grps[i].employee_id
+//                 const emps1 = await leadService.getEmpsUnderHeadsLevel1(request)
     
-            for (let j = 0; j < emps1.length; j++) {
-                    request.employee_id = emps1[j].employee_id
-                    const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
-                    console.log('==========emps timesheet approve and submite under each grp member====================')
-                    console.log(emps2)
-                    console.log('====================================')
-                    if (emps2.length != 0) {
-                        empUnderGrpWithStatus.push(emps2[0])
-                    }
-                }
-                console.log('===========emps timesheet approve and submite under each grp member==================')
-                console.log(empUnderGrpWithStatus)
+//             for (let j = 0; j < emps1.length; j++) {
+//                     request.employee_id = emps1[j].employee_id
+//                     const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
+//                     console.log('==========emps timesheet approve and submite under each grp member====================')
+//                     console.log(emps2)
+//                     console.log('====================================')
+//                     if (emps2.length != 0) {
+//                         empUnderGrpWithStatus.push(emps2[0])
+//                     }
+//                 }
+//                 console.log('===========emps timesheet approve and submite under each grp member==================')
+//                 console.log(empUnderGrpWithStatus)
+//                 console.log('====================================')
+//                 if (empUnderGrpWithStatus.length == 0) {
+//                     request.mail = grps[i].email
+//                     request.emps = emps1
+//                 } else {
+//                     myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email)))
+//                     count = myArray
+//                     if (count.length != 0) {
+//                         request.mail = grps[i].email
+//                         request.emps = count
+//                     }
+//                 }
+
+//                 if (request.mail != "") {
+//                     console.log('============sending mails to heads================')
+//                     console.log(request.mail)
+//                     console.log("emps length--", request.emps)
+//                     if (request.emps.length == 1) {
+//                         request.text1 = "Team Member:-"
+//                         request.text2 = "team member"
+//                     } else {
+//                         request.text1 = "Team Members:-"
+//                         request.text2 = "team members"
+//                     }
+//                     console.log('====================================')
+//                     request.text = `Hi, <br><br> Please make sure all your ${request.text2} submit their timesheets by the end of every week.<br> Below is a list of your  ${request.text2} who did not submit their timesheets last week..`
+//                     await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+//                 }
+
+//             }
+
+//             async function employeesGetEmpsTimesheetStatusByEmpid(request) {
+//                 let responseData = []
+//                 let error = true
+//                 const paramsArr = new Array(
+//                     request.sunDate.toString(),
+//                     request.employee_id
+//                 );
+
+//                 const queryString = util.getQueryString('employees_get_emps_timesheet_status_by_empid', paramsArr);
+//                 if (queryString !== '') {
+//                     await db.executeQuery(0, queryString, request)
+//                         .then(async (data) => {
+//                             responseData = data
+//                             error = false
+//                         })
+//                         .catch((err) => {
+//                             console.log("err-------" + err);
+//                             error = err
+//                         })
+//                     return [error, responseData]
+//                 }
+//             }
+
+//         })
+//     }
+
+
+
+this.sendRemainderToLeads = async function () {
+    console.log("-------------------------entered sendRemainder1------------------------------");
+    schedule.scheduleJob('00 38 15* * 1', async function () {
+        // var mon = moment();
+        // sun = mon.subtract(1, "days");
+        // sun = mon.format("YYYY-MM-DD");
+        let request = {}
+        request.sunDate = "2023-01-29"
+
+        //get groups
+        request.role_id = 2
+        const [err, emps] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 2)
+        grps = emps[0].groups
+        console.log('==========groups====================')
+        console.log(grps)
+        console.log('====================================')
+
+        //get emps assign under grps
+        for (let i = 0; i < grps.length; i++) {
+            request.mail = ""
+            request.text1 = ""
+
+            let empUnderGrpWithStatus = []
+            let count = []
+            // let emps =[]
+            request.employee_id = grps[i].employee_id
+            const emps1 = await leadService.getEmpsUnderHeadsLevel1(request)
+
+        for (let j = 0; j < emps1.length; j++) {
+                request.employee_id = emps1[j].employee_id
+                const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
+                console.log('==========emps timesheet approve and submite under each grp member====================')
+                console.log(emps2)
                 console.log('====================================')
-                if (empUnderGrpWithStatus.length == 0) {
+                if (emps2.length != 0) {
+                    empUnderGrpWithStatus.push(emps2[0])
+                }
+            }
+            console.log('===========emps timesheet approve and submite under each grp member==================')
+            console.log(empUnderGrpWithStatus)
+            console.log('====================================')
+            if (empUnderGrpWithStatus.length == 0) {
+                request.mail = grps[i].email
+                request.emps = emps1
+            } else {
+                myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email)))
+                count = myArray
+                if (count.length != 0) {
                     request.mail = grps[i].email
-                    request.emps = emps1
+                    request.emps = count
+                }
+            }
+
+            if (request.mail != "") {
+                console.log('============sending mails to heads================')
+                console.log(request.mail)
+                console.log("emps length--", request.emps)
+                if (request.emps.length == 1) {
+                    request.text1 = "Team Member:-"
+                    request.text2 = "team member"
                 } else {
-                    myArray = emps1.filter(ar => !empUnderGrpWithStatus.find(rm => (rm.email === ar.email)))
-                    count = myArray
-                    if (count.length != 0) {
-                        request.mail = grps[i].email
-                        request.emps = count
-                    }
+                    request.text1 = "Team Members:-"
+                    request.text2 = "team members"
                 }
-
-                if (request.mail != "") {
-                    console.log('============sending mails to heads================')
-                    console.log(request.mail)
-                    console.log("emps length--", request.emps)
-                    if (request.emps.length == 1) {
-                        request.text1 = "Team Member:-"
-                        request.text2 = "team member"
-                    } else {
-                        request.text1 = "Team Members:-"
-                        request.text2 = "team members"
-                    }
-                    console.log('====================================')
-                    request.text = `Hi, <br><br> Please make sure all your ${request.text2} submit their timesheets by the end of every week.<br> Below is a list of your  ${request.text2} who did not submit their timesheets last week..`
-                    await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
-                }
-
+                console.log('====================================')
+                request.text = `Hi, <br><br> Please make sure all your ${request.text2} submit their timesheets by the end of every week.<br> Below is a list of your  ${request.text2} who did not submit their timesheets last week..`
+                await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
             }
 
-            async function employeesGetEmpsTimesheetStatusByEmpid(request) {
-                let responseData = []
-                let error = true
-                const paramsArr = new Array(
-                    request.sunDate.toString(),
-                    request.employee_id
-                );
+        }
 
-                const queryString = util.getQueryString('employees_get_emps_timesheet_status_by_empid', paramsArr);
-                if (queryString !== '') {
-                    await db.executeQuery(0, queryString, request)
-                        .then(async (data) => {
-                            responseData = data
-                            error = false
-                        })
-                        .catch((err) => {
-                            console.log("err-------" + err);
-                            error = err
-                        })
-                    return [error, responseData]
-                }
+        async function employeesGetEmpsTimesheetStatusByEmpid(request) {
+            let responseData = []
+            let error = true
+            const paramsArr = new Array(
+                request.sunDate.toString(),
+                request.employee_id
+            );
+
+            const queryString = util.getQueryString('employees_get_emps_timesheet_status_by_empid', paramsArr);
+            if (queryString !== '') {
+                await db.executeQuery(0, queryString, request)
+                    .then(async (data) => {
+                        responseData = data
+                        error = false
+                    })
+                    .catch((err) => {
+                        console.log("err-------" + err);
+                        error = err
+                    })
+                return [error, responseData]
             }
+        }
 
-        })
-    }
+    })
 }
+
+
+
+}
+
+
+
 
 
 module.exports = Scheduler;
