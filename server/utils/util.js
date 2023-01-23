@@ -358,7 +358,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.mail}`, // list of receivers
-                    subject: 'Ourly- Gentle Reminder - Team member timesheets have not been submitted.', // Subject line
+                    subject: 'Ourly- Gentle Reminder:-Your team members timesheets have not been submitted', // Subject line
                     html:
                         `
                         <!DOCTYPE html>
@@ -952,7 +952,7 @@ function Util() {
         year2 = dt2.format('YYYY');
         lastMonth = month2.concat(" " + day2 + "," + year2)
 
-        return firstMonth.concat("-" + lastMonth)
+        return firstMonth.concat(" - " + lastMonth)
     }
 
     this.sumOfTime = async function (data) {

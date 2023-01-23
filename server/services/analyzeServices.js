@@ -640,6 +640,7 @@ function AnalyzeServices(objectCollection) {
         //get employess under head
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
+                console.log("enteredddddddd");
                 if (request.employees.length != 0) {
                     let emp = request.employees
                     for (let i = 0; i < emp.length; i++) {
@@ -726,6 +727,9 @@ function AnalyzeServices(objectCollection) {
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('==========data3==================');
+            console.log(data3);
+            console.log('====================================');
             const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
             responseData = data
         }
@@ -909,7 +913,7 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     console.log('====================================');
-                    console.log(data);
+                    // console.log(data);
                     console.log('====================================');
                     error = false
                     responseData = data
