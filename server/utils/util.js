@@ -411,9 +411,9 @@ function Util() {
                                                         <p>
                                                         <h4>${request.text1}</h4>
                                                     <ul>
-                                                    ${request.emps.map((item, index) => `
-                                                    <li>${item.full_name}</li>
-                                                  `)}
+                                                  ${request.emps.map(function(item) {
+                                                    return `<li>${item.full_name}</li>`
+                                                  }).join('')}
                                                   </ul>
                                                         </p><br>
                                                     </td>
