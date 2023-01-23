@@ -606,16 +606,6 @@ function AnalyzeServices(objectCollection) {
 
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
-
-        console.log('=============data1==================');
-        console.log(data1);
-        console.log('====================================');
-
-
-        console.log('=============data2==================');
-        console.log(data1);
-        console.log('====================================');
-
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
@@ -638,7 +628,6 @@ function AnalyzeServices(objectCollection) {
         //get employess under head
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
-                console.log("enteredddddddd");
                 if (request.employees.length != 0) {
                     let emp = request.employees
                     for (let i = 0; i < emp.length; i++) {
@@ -656,10 +645,6 @@ function AnalyzeServices(objectCollection) {
                     }
                 }
                 //unique employess
-                console.log('============empsGathered=====================')
-                console.log(empsGathered)
-                console.log('====================================')
-
                 const uniqueids = [];
                 const uniqueEmps = empsGathered.filter(element => {
                     const isDuplicate = uniqueids.includes(element.employee_id);
@@ -669,13 +654,7 @@ function AnalyzeServices(objectCollection) {
                     }
                     return false;
                 });
-
                 data1 = uniqueEmps
-                //unique employess
-                console.log('============uniqueEmps=====================')
-                console.log(uniqueEmps)
-                console.log('====================================')
-
             } else {
                 const [err8, data8] = await employeeService.getAllEmployees(request)
                 data1 = data8
@@ -721,10 +700,6 @@ function AnalyzeServices(objectCollection) {
                 data1 = data9
             }
         }
-        console.log('============data1==================')
-        console.log(data1)
-        console.log('====================================')
-
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
 
@@ -732,9 +707,6 @@ function AnalyzeServices(objectCollection) {
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
-            console.log('==========data3==================');
-            console.log(data3);
-            console.log('====================================');
             const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
             responseData = data
         }

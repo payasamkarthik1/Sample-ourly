@@ -358,7 +358,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.mail}`, // list of receivers
-                    subject: 'Ourly- Gentle Reminder:-Your team members timesheets have not been submitted', // Subject line
+                    subject: `Ourly- Gentle Reminder:-Your ${request.text2} timesheets have not been submitted`, // Subject line
                     html:
                         `
                         <!DOCTYPE html>
