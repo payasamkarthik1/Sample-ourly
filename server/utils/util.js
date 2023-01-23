@@ -401,7 +401,7 @@ function Util() {
                                                         <td align="left"
                                                             style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                             <p>
-                                                            ${request.text}
+                                                            Ourly- Gentle Reminder:-Your ${request.text2} timesheets have not been submitted
                                                             </p>
                                                         </td>
                                                     </tr>
@@ -410,9 +410,11 @@ function Util() {
                                                         style="font-family:Arial, sans-serif; font-size: 14px;padding: 10px 0;">
                                                         <p>
                                                         <h4>${request.text1}</h4>
-                                                        ${request.emps.map((item, index) => `
-                                                       <span>${index + 1})&nbsp;${item.full_name}</span><br>
-                                                        `)}
+                                                    <ol>
+                                                    ${request.emps.map((item, index) => `
+                                                    <li>${item}</li>
+                                                  `)}
+                                                  </ol>
                                                         </p><br>
                                                     </td>
                                                 </tr>
