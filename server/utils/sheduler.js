@@ -83,7 +83,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 57 16 * * 1', async function () {
+        schedule.scheduleJob('00 00 17 * * 1', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
