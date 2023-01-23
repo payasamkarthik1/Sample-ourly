@@ -410,7 +410,7 @@ function Util() {
                                                         <p>
                                                         <h4>${request.text1}</h4>
                                                         ${request.emps.map((item, index) => `
-                                                       <span>${index + 1})nbsp;${item.full_name}</span><br>
+                                                       <span>${index + 1})&nbsp;${item.full_name}</span><br>
                                                         `)}
                                                         </p><br>
                                                     </td>
