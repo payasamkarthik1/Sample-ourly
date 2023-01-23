@@ -83,7 +83,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 00 17 * * 1', async function () {
+        schedule.scheduleJob('00 13 18 * * 1', async function () {
             // var mon = moment();
             // sun = mon.subtract(1, "days");
             // sun = mon.format("YYYY-MM-DD");
@@ -143,17 +143,23 @@ function Scheduler(objectCollection) {
                         request.text3 = "team member"
                         request.text4 = "timesheet"
                         request.text2 = "your team member"
+                        request.text5 = "his/her"
+                        request.text6 = "is"
+
                     } else {
                         request.text1 = "Team Members:-"
                         request.text3 = "team members"
                         request.text2 = "all your team members"
                         request.text4 = "timesheets"
+                        request.text5 = "their"
+                        request.text6 = "is a list of"
+                        
                     }
                     console.log('====================================')
                     request.text = `Hi,
                      <br><br> 
-                     Please make sure  ${request.text2} submit their ${request.text4} by the end of every week.
-                     <br> Below is a list of  ${request.text2} who did not submit their ${request.text4} last week..`
+                     Please make sure  ${request.text2} submit ${request.text5} ${request.text4} by the end of every week.
+                     <br> Below  ${request.text6}  ${request.text2} who did not submit their ${request.text4} last week..`
                     await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
