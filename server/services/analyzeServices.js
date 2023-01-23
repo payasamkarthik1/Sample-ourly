@@ -65,10 +65,8 @@ function AnalyzeServices(objectCollection) {
             const [err9, data9] = await employeeService.getEmployeeById(request)
             data1 = data9
         } else {
-            const [err10, data10] = await leadService.getEmpsUnderHeadsLevel1(request)
-            console.log('===========getEmployessAssignUnderHeads -firsst level emps====================')
-            console.log(data10)
-            console.log('====================================')
+         const data10= await leadService.getEmpsUnderHeadsLevel1(request)
+      
             data1 = data10
         }
 
@@ -545,7 +543,7 @@ function AnalyzeServices(objectCollection) {
 
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
+                        const  data9 = await leadService.getEmpsUnderHeadsLevel1(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -585,7 +583,7 @@ function AnalyzeServices(objectCollection) {
                     let grp = request.groups
                     for (let i = 0; i < grp.length; i++) {
                         request.employee_id = grp[i]
-                        const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
+                        const  data9 = await leadService.getEmpsUnderHeadsLevel1(request)
                         Array.prototype.push.apply(empsGathered, data9);
                     }
                 }
@@ -601,7 +599,7 @@ function AnalyzeServices(objectCollection) {
                 });
                 data1 = uniqueEmps
             } else {
-                const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request, 1)
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request, 1)
                 data1 = data9
             }
         }
@@ -719,7 +717,7 @@ function AnalyzeServices(objectCollection) {
                 data1 = uniqueEmps
 
             } else {
-                const [err9, data9] = await leadService.getEmpsUnderHeadsLevel1(request)
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
                 data1 = data9
             }
         }
