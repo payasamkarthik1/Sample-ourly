@@ -18,7 +18,7 @@ function Scheduler(objectCollection) {
     const projectService = new ProjectService(objectCollection)
 
 
-    //on every monday at 10:30 to leads,emerging lead,users considering as all individual
+    //on every monday at 10:30 to all emps
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
         schedule.scheduleJob('00 30 10 * * 1', async function () {
@@ -82,7 +82,8 @@ function Scheduler(objectCollection) {
 
         })
     }
-
+    
+    //on every monday at 12:30 to leads
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
         schedule.scheduleJob('00 30 12 * * 1', async function () {

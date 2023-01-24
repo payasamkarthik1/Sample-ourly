@@ -954,7 +954,7 @@ function Util() {
         year2 = dt2.format('YYYY');
         lastMonth = month2.concat(" " + day2 + "," + year2)
 
-        return firstMonth.concat(" - " + lastMonth)
+        return firstMonth.concat("-" + lastMonth)
     }
 
     this.sumOfTime = async function (data) {
