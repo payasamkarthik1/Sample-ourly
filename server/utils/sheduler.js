@@ -3,16 +3,19 @@ const schedule = require('node-schedule')
 const moment = require('moment')
 const EmployeeService = require('../services/employeeService')
 const LeadService = require('../services/leadService')
+const ProjectService = require('../services/projectService')
+
 
 
 function Scheduler(objectCollection) {
-    console.log("1111111111111111111111111111111111111111111");
+    console.log("-------------------------entered Scheduler-------------------------------")
 
     const util = objectCollection.util;
     const db = objectCollection.db;
 
     const employeeService = new EmployeeService(objectCollection)
     const leadService = new LeadService(objectCollection)
+    const projectService = new ProjectService(objectCollection)
 
 
     //on every monday at 10:30 to leads,emerging lead,users considering as all individual
@@ -153,7 +156,7 @@ function Scheduler(objectCollection) {
                         request.text4 = "timesheets"
                         request.text5 = "their"
                         request.text6 = "is a list of"
-                        
+
                     }
                     console.log('====================================')
                     request.text = `Hi,
@@ -188,6 +191,30 @@ function Scheduler(objectCollection) {
                 }
             }
 
+        })
+    }
+
+    this.sendProjectToInactive = async function () {
+        console.log("-------------------------entered sendProjectToInactive------------------------------");
+        schedule.scheduleJob('* * * * * *', async function () {
+            var date = moment();
+            day = date.format("YYYY-MM-DD");
+            let request = {}
+
+            console.log('=============current day================')
+            console.log(day)
+            console.log('====================================')
+            const [err, data] = await projectService.getAllProjectsSelect(request)
+            console.log('==========data====================')
+            console.log(data)
+            console.log('====================================')
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].project_end_date == day) {
+                    request.project_id = data[i].project_id
+                    const [err1, data1] = projectService.removeProjectDelete(request)
+                }
+            }
         })
     }
 
