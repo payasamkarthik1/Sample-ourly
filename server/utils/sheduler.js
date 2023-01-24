@@ -83,7 +83,6 @@ function Scheduler(objectCollection) {
         })
     }
 
-
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
         schedule.scheduleJob('00 30 12 * * 1', async function () {
@@ -193,31 +192,6 @@ function Scheduler(objectCollection) {
 
         })
     }
-
-    this.sendProjectToInactive = async function () {
-        console.log("-------------------------entered sendProjectToInactive------------------------------");
-        schedule.scheduleJob('* * * * * *', async function () {
-            var date = moment();
-            day = date.format("YYYY-MM-DD");
-            let request = {}
-
-            console.log('=============current day================')
-            console.log(day)
-            console.log('====================================')
-            const [err, data] = await projectService.getAllProjectsSelect(request)
-            console.log('==========data====================')
-            console.log(data)
-            console.log('====================================')
-
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].project_end_date == day) {
-                    request.project_id = data[i].project_id
-                    const [err1, data1] = projectService.removeProjectDelete(request)
-                }
-            }
-        })
-    }
-
 }
 
 

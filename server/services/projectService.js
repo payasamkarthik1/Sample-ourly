@@ -231,8 +231,6 @@ function ProjectService(objectCollection) {
                     request.project_code,
                     request.project_color_code,
                     request.tag_id,
-                    request.project_start_date,
-                    request.project_end_date,
                     util.getCurrentUTCTime(),
                 );
                 const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
