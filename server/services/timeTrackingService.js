@@ -829,7 +829,7 @@ function TimeTrackingService(objectCollection) {
                 data1[0].weekHours,
                 first_week_day,
                 last_week_day,
-                firstMonth.concat("-" + lastMonth),
+                firstMonth.concat(" - " + lastMonth),
                 2,
                 1
             );
@@ -862,7 +862,7 @@ function TimeTrackingService(objectCollection) {
                 data1[0].weekHours,
                 first_week_day,
                 last_week_day,
-                firstMonth.concat("-" + lastMonth),
+                firstMonth.concat(" - " + lastMonth),
                 2,
                 2
             );
@@ -903,7 +903,7 @@ function TimeTrackingService(objectCollection) {
             data1[0].weekHours,
             first_week_day,
             last_week_day,
-            firstMonth.concat("-" + lastMonth),
+            firstMonth.concat(" - " + lastMonth),
             0,
             1
         );
@@ -939,7 +939,7 @@ function TimeTrackingService(objectCollection) {
             0,
             first_week_day,
             last_week_day,
-            firstMonth.concat("-" + lastMonth),
+            firstMonth.concat(" - " + lastMonth),
             2,
             3
         );
