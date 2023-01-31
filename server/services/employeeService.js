@@ -86,7 +86,7 @@ function EmployeeServices(objectCollection) {
                         var dat = data.reduce(function (acc, curr) {
                             //finding Index in the array where the NamaCategory matched
                             var findIfNameExist = acc.findIndex(function (item) {
-                                return (item.employee_id === curr.employee_id && item.log_state == curr.log_state == 1);
+                                return (item.employee_id === curr.employee_id && item.log_state == curr.log_state );
                             })
                             if (findIfNameExist === -1) {
 
