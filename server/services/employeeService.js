@@ -141,9 +141,6 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getEmployeeById = async function (request) {
-        console.log('========enterd getEmployeeById======================')
-        console.log( request.employee_id)
-        console.log('====================================')
         console.log("----------------------entered getEmployeeById----------------------");
         let responseData = [],
             error = true;
@@ -156,7 +153,9 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
+                    console.log('============data==================')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
