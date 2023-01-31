@@ -73,7 +73,7 @@ function AnalyzeServices(objectCollection) {
         //get data between dates
         const [err2, data2] = await this.getDataByDates(request)
         console.log('===========getDataByDates====================')
-        console.log(data2)
+        console.log(data2.length)
         console.log('====================================')
 
         //get dashboard data overview
@@ -86,6 +86,9 @@ function AnalyzeServices(objectCollection) {
             if (data3.length != 0) {
                 //get dashboard data
                 const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
+                console.log('===========dashboardDataCalculationOverview================');
+                console.log(data);
+                console.log('====================================');
                 responseData = data
             }
         }
