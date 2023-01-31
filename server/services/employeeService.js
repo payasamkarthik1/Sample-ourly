@@ -86,35 +86,35 @@ function EmployeeServices(objectCollection) {
                         var dat = data.reduce(function (acc, curr) {
                             //finding Index in the array where the NamaCategory matched
                             var findIfNameExist = acc.findIndex(function (item) {
-                                return (item.employee_id === curr.employee_id && item.log_state == 1 && curr.log_state == 1);
+                                return (item.employee_id === curr.employee_id && item.log_state == curr.log_state == 1);
                             })
                             if (findIfNameExist === -1) {
 
-                                // let obj = {
-                                //     'id': curr.id,
-                                //     'employee_id': curr.employee_id,
-                                //     'first_name': curr.first_name,
-                                //     'last_name': curr.last_name,
-                                //     'full_name': curr.full_name,
-                                //     'email': curr.email,
-                                //     'phone_number': curr.phone_number,
-                                //     'blood_group': curr.blood_group,
-                                //     'dob': curr.dob,
-                                //     'gender': curr.gender,
-                                //     'designation_id': curr.designation_id,
-                                //     'designation_name': curr.designation_name,
-                                //     'department_id': curr.department_id,
-                                //     'department_name': curr.department_name,
-                                //     'lead_assigned_employee_id': curr.lead_assigned_employee_id,
-                                //     'lead_assigned_employee_name': curr.lead_assigned_employee_name,
-                                //     'log_state': curr.log_state,
-                                //     "permission_data": [
-                                //         {
-                                //             'role_id': curr.role_id,
-                                //             'role_name': curr.role_name,
-                                //         }]
-                                // }
-                                // acc.push(obj)
+                                let obj = {
+                                    'id': curr.id,
+                                    'employee_id': curr.employee_id,
+                                    'first_name': curr.first_name,
+                                    'last_name': curr.last_name,
+                                    'full_name': curr.full_name,
+                                    'email': curr.email,
+                                    'phone_number': curr.phone_number,
+                                    'blood_group': curr.blood_group,
+                                    'dob': curr.dob,
+                                    'gender': curr.gender,
+                                    'designation_id': curr.designation_id,
+                                    'designation_name': curr.designation_name,
+                                    'department_id': curr.department_id,
+                                    'department_name': curr.department_name,
+                                    'lead_assigned_employee_id': curr.lead_assigned_employee_id,
+                                    'lead_assigned_employee_name': curr.lead_assigned_employee_name,
+                                    'log_state': curr.log_state,
+                                    "permission_data": [
+                                        {
+                                            'role_id': curr.role_id,
+                                            'role_name': curr.role_name,
+                                        }]
+                                }
+                                acc.push(obj)
                             } else {
                                 acc[findIfNameExist].permission_data.push({
                                     'role_id': curr.role_id,
