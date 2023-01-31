@@ -617,7 +617,7 @@ function Util() {
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
                     to: `${request.employee_email}`, // list of receivers
-                    subject: `Timesheet Aprroved
+                    subject: `Timesheet Approved
                   
                   
                   `,// Subject line
