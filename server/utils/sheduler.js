@@ -21,9 +21,9 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to all emps
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 41 12 * * 2', async function () {
+        schedule.scheduleJob('00 00 09 * * 1', async function () {
             var mon = moment();
-            sun = mon.subtract(2, "days");
+            sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
@@ -50,7 +50,7 @@ function Scheduler(objectCollection) {
                     await sendMails.map(async (mail) => {
                         request.email = mail.email
                         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                         await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                        //  await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                     })
                 }
             } else {
@@ -163,7 +163,7 @@ function Scheduler(objectCollection) {
                      <br><br> 
                      Please make sure  ${request.text2} submit ${request.text5} ${request.text4} by the end of every week.
                      <br> Below  ${request.text6}  ${request.text2} who did not submit ${request.text5} ${request.text4} last week..`
-                    await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                    // await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
             }
