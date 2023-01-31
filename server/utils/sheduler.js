@@ -21,7 +21,7 @@ function Scheduler(objectCollection) {
     //on every monday at 10:30 to all emps
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 27 16 * * 2', async function () {
+        schedule.scheduleJob('00 29 16 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
@@ -86,7 +86,7 @@ function Scheduler(objectCollection) {
     //on every monday at 12:30 to leads
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 20 10 * * 2', async function () {
+        schedule.scheduleJob('00 31 16 * * 2', async function () {
             var mon = moment();
             sun = mon.subtract(2, "days");
             sun = mon.format("YYYY-MM-DD");
