@@ -86,7 +86,7 @@ function EmployeeServices(objectCollection) {
                         var dat = data.reduce(function (acc, curr) {
                             //finding Index in the array where the NamaCategory matched
                             var findIfNameExist = acc.findIndex(function (item) {
-                                return ((item.employee_id == curr.employee_id) && (item.log_state == 1 && curr.log_state == 1));
+                                return (item.employee_id === curr.employee_id && item.log_state == 1 && curr.log_state == 1);
                             })
                             if (findIfNameExist === -1) {
 
@@ -116,10 +116,10 @@ function EmployeeServices(objectCollection) {
                                 }
                                 acc.push(obj)
                             } else {
-                                // acc[findIfNameExist].permission_data.push({
-                                //     'role_id': curr.role_id,
-                                //     'role_name': curr.role_name,
-                                // })
+                                acc[findIfNameExist].permission_data.push({
+                                    'role_id': curr.role_id,
+                                    'role_name': curr.role_name,
+                                })
                             }
 
                             return acc;
