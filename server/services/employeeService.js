@@ -116,10 +116,10 @@ function EmployeeServices(objectCollection) {
                                 }
                                 acc.push(obj)
                             } else {
-                                acc[findIfNameExist].permission_data.push({
-                                    'role_id': curr.role_id,
-                                    'role_name': curr.role_name,
-                                })
+                                // acc[findIfNameExist].permission_data.push({
+                                //     'role_id': curr.role_id,
+                                //     'role_name': curr.role_name,
+                                // })
                             }
 
                             return acc;
