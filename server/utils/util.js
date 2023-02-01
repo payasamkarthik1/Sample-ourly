@@ -133,12 +133,7 @@ function Util() {
                             <meta http-equiv="X-UA-Compatible" content="IE=edge">
                             <meta name="viewport" content="width=device-width, initial-scale=1">
                             <title>Ourly</title>
-                            <style>
-                            .btn{
-                                        cursor: pointer;
-                                        margin: 15px 0;
-                                   }
-                         </style>
+                         
                         </head>
                 
                         <body style="padding: 30px;background: #f3f4fb;">
