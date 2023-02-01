@@ -136,7 +136,7 @@ function Scheduler(objectCollection) {
                         request.emps = count
                     }
                 }
-
+                
                 if (request.mail != "") {
                     console.log('============sending mails to heads================')
                     console.log(request.mail)
