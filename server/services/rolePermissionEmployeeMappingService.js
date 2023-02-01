@@ -161,9 +161,10 @@ function RolePermissionEmployeeMapping(objectCollection) {
 
                     }
                     // }
-                    responseData.push({ time: time.map(String) })
-                    responseData.push({ manage: manage.map(String) })
-                    responseData.push({ analyze: analyze.map(String) })
+
+                    responseData.push({ time: time.map(String).sort(function(a, b){return a - b}) })
+                    responseData.push({ manage: manage.map(String).sort(function(a, b){return a - b})})
+                    responseData.push({ analyze: analyze.map(String).sort(function(a, b){return a - b}) })
                     console.log('============data=================');
                     console.log(responseData);
                     console.log('====================================');

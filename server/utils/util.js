@@ -160,15 +160,7 @@ function Util() {
                                                     <tr>
                                                         <td>&nbsp;</td>
                                                     </tr>                                
-                                                    <tr>
-                                                        <td align="left"
-                                                            style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                                            <a href="http://183.82.113.10:4179/forgotpass">
-                                                            <button
-                                                                style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
-                                                                </a>
-                                                        </td>
-                                                    </tr>
+                                                   
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -191,6 +183,15 @@ function Util() {
 
                 };
 
+                //     <tr>
+                //     <td align="left"
+                //         style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                //         <a href="http://183.82.113.10:4179/forgotpass">
+                //         <button
+                //             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
+                //             </a>
+                //     </td>
+                // </tr>
                 // send mail with defined transport object
                 const responseData = transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
@@ -282,15 +283,8 @@ function Util() {
                                                             </p><br>
                                                         </td>
                                                     </tr>
-                                                    // <tr>
-                                                    //     <td align="left"
-                                                    //         style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                                    //         <a href="http://183.82.113.10:4179">
-                                                    //         <button
-                                                    //             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Submit Your Timesheet</button>
-                                                    //             </a>
-                                                    //     </td>
-                                                    // </tr>
+                                                                                                                                         
+                                                    
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -312,6 +306,16 @@ function Util() {
                     // html body
 
                 };
+
+                //     <tr>
+                //     <td align="left"
+                //           style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                //           <a href="http://183.82.113.10:4179">
+                //       <button
+                //               style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Submit Your Timesheet</button>
+                //               </a>
+                //       </td>
+                //   </tr> 
 
                 // send mail with defined transport object
                 const responseData = transporter.sendMail(mailOptions, (err, info) => {
@@ -357,7 +361,7 @@ function Util() {
                 // setup email data with unicode symbols
                 let mailOptions = {
                     from: 'no-reply@pronteff.com', // sender address
-                     to: `${request.mail}`, // list of receivers
+                    to: `${request.mail}`, // list of receivers
                     subject: `Ourly- Gentle Reminder:-Your ${request.text3} ${request.text4} have not been submitted`, // Subject line
                     html:
                         `
@@ -410,22 +414,14 @@ function Util() {
                                                         <p>
                                                         <h4>${request.text1}</h4>
                                                     <ul>
-                                                  ${request.emps.map(function(item) {
-                                                    return `<li>${item.full_name}</li>`
-                                                  }).join('')}
+                                                  ${request.emps.map(function (item) {
+                            return `<li>${item.full_name}</li>`
+                        }).join('')}
                                                   </ul>
                                                         </p><br>
                                                     </td>
                                                 </tr>
-                                            //     <tr>
-                                            //     <td align="left"
-                                            //         style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                                            //         <a href="http://183.82.113.10:4179">
-                                            //         <button
-                                            //             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
-                                            //             </a>
-                                            //     </td>
-                                            // </tr>
+                                           
                                                     <tr>
                                                         <td
                                                             style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -447,6 +443,15 @@ function Util() {
                     // html body
 
                 };
+                //  <tr>
+                //                             <td align="left"
+                //                                 style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                //                                 <a href="http://183.82.113.10:4179">
+                //                                 <button
+                //                                     style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                //                                     </a>
+                //                             </td>
+                //                         </tr>
 
                 // send mail with defined transport object
                 const responseData = transporter.sendMail(mailOptions, (err, info) => {
@@ -547,16 +552,9 @@ function Util() {
                                             <h5 style="color:#777;color: #777;margin: 0;"><span
                                             style="font-weight: 100;">Note:</span>${request.note}</h5>
                                 </td>
-                            </tr>
-                            // <tr>
-                            //                             <td align="left"
-                            //                                 style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                            //                                 <a href="http://183.82.113.10:4179">
-                            //                                 <button
-                            //                                     style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
-                            //                                     </a>
-                            //                             </td>
-                            //                         </tr>
+                            </tr>                                                  
+                          
+                                                     
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -576,6 +574,15 @@ function Util() {
                     // html body
 
                 };
+                //     <tr>
+                //     <td align="left"
+                //         style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                //         <a href="http://183.82.113.10:4179">
+                //         <button
+                //             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                //             </a>
+                //     </td>
+                // </tr>
 
                 // send mail with defined transport object
                 const responseData = transporter.sendMail(mailOptions, (err, info) => {
@@ -793,15 +800,6 @@ function Util() {
                                             style="font-weight: 100;">Submitted by:</span> ${request.employee_name}</h5>
                                 </td>
                             </tr>
-                        //     <tr>
-                        //     <td align="left"
-                        //         style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
-                        //         <a href="http://183.82.113.10:4179">
-                        //         <button
-                        //             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
-                        //             </a>
-                        //     </td>
-                        // </tr>
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -818,7 +816,6 @@ function Util() {
 </body>
 
 </html>`
-
 
                     // html body
 
