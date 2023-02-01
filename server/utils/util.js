@@ -134,14 +134,13 @@ function Util() {
                             <meta name="viewport" content="width=device-width, initial-scale=1">
                             <title>Ourly</title>
                             <style>
-                            button{
-                cursor: pointer;
-                margin: 15px 0;
-                       }
+                            .btn{
+                                        cursor: pointer;
+                                        margin: 15px 0;
+                                   }
                          </style>
                         </head>
-                       
-                        
+                
                         <body style="padding: 30px;background: #f3f4fb;">
                             <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
                                 margin: 0 auto;">
@@ -171,8 +170,8 @@ function Util() {
                      <td align="left"
                          style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
                          <a href="http://183.82.113.10:4179/forgotpass">
-                         <button
-                             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Click to Change Password</button>
+                         <button class="btn"
+                             style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px">Click to Change Password</button>
                              </a>
                      </td>
                  </tr>                       
