@@ -1,6 +1,5 @@
 
 const TimeTrackingService = require('../services/timeTrackingService')
-const ApprovalsService = require('../services/approvalsService')
 
 function ApprovalsController(objectCollection) {
 
