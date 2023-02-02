@@ -7,7 +7,6 @@ function ApprovalsController(objectCollection) {
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const timeTrackingService = new TimeTrackingService(objectCollection)
-    const approvalsService = new ApprovalsService(objectCollection)
 
 
     //@Post approvals/get/list
