@@ -33,9 +33,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const [err, data1] = await roleComponentsMappingService.roleGet()
-                    console.log('============data=============')
-                    console.log(data1)
-                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -118,28 +115,7 @@ function RolePermissionEmployeeMapping(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    // if (request.is_admin == 1) {
-                    //     const [err, data] = await componentsService.componentGetAll()
-                    //     let components_ids = []
-
-                    //     if (data.length != 0) {
-                    //         await data.map((id) => {
-                    //             components_ids.push(id.component_id)
-                    //         })
-                    //         for (let i = 0; i < components_ids.length; i++) {
-                    //             if (components_ids[i] > 0 && components_ids[i] < 3) {
-                    //                 time.push(components_ids[i])
-                    //                 time.pop()
-                    //             } else if (components_ids[i] > 2 && components_ids[i] < 5) {
-                    //                 analyze.push(components_ids[i])
-                    //             }
-                    //             else {
-                    //                 manage.push(components_ids[i])
-                    //             }
-                    //         }
-                    //     }
-                    // } else {
-
+                   
                     if (data.length != 0) {
                         let components_ids = []
                         await data.map((id) => {
@@ -160,14 +136,10 @@ function RolePermissionEmployeeMapping(objectCollection) {
                         }
 
                     }
-                    // }
-
+            
                     responseData.push({ time: time.map(String).sort(function(a, b){return a - b}) })
                     responseData.push({ manage: manage.map(String).sort(function(a, b){return a - b})})
                     responseData.push({ analyze: analyze.map(String).sort(function(a, b){return a - b}) })
-                    console.log('============data=================');
-                    console.log(responseData);
-                    console.log('====================================');
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

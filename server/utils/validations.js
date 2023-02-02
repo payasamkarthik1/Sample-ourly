@@ -373,9 +373,7 @@ function Validations(objectCollection) {
         }
         else if (request.role_name) {
             const [err, data] = await this.roleNameValidChk(request,2)
-            console.log('============roleNameValidChk=================')
-            console.log(data)
-            console.log('====================================')
+
             if (data[0].cnt > 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
@@ -406,9 +404,6 @@ function Validations(objectCollection) {
             responseData = [{ message: 'rolename is required' }]
         } else if (request.role_name) {
             const [err, data] = await this.roleNameValidChk(request, 1)
-            console.log('============roleNameValidChk=================')
-            console.log(data)
-            console.log('====================================')
             if (data[0].cnt > 0) {
                 error = true
                 responseData = [{ message: 'role name already exist' }]
@@ -423,9 +418,10 @@ function Validations(objectCollection) {
     }
 
     this.roleNameValidChk = async function (request, flag) {
+        console.log('---------------------entered roleNameValidChk-------------------------');
+
         let responseData = []
         error = true
-        console.log('---------------------entered roleNameValidChk-------------------------');
         let paramsArr = new Array(
             request.role_id,
             request.role_name,
@@ -436,9 +432,6 @@ function Validations(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('============data=================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data
                     error = false
 

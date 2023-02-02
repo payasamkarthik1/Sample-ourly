@@ -55,7 +55,6 @@ function DepartmentDesignation(objectCollection) {
             }
         })
 
-    //--------designation-----------
 
     //@Post designation/add/design/by/depart/id/insert
     app.post('/' + 'designation/add/design/by/depart/id/insert',
@@ -72,17 +71,17 @@ function DepartmentDesignation(objectCollection) {
             }
         })
 
-    //@Get design/get/by/depart/id/list
+    //@Get designation/get/by/depart/id/list
     app.post('/' + 'designation/get/by/depart/id/list',
 
         async function (req, res) {
 
             const [err, resData] = await departmentDesignationService.getDesignByDepartId(req.body);
             if (!err) {
-                console.log("design/get/by/depart/id/list | Error: ", err);
+                console.log("designation/get/by/depart/id/list | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("design/get/by/depart/id/list | Error: ", err);
+                console.log("designation/get/by/depart/id/list | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })

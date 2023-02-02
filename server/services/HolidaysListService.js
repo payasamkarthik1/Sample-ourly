@@ -60,9 +60,6 @@ function HolidaysListService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('===========data============');
-                    console.log(data1);
-                    console.log('================================');
                     responseData = data1;
                     error = false
                 }).catch((err) => {

@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const ProjectService = require("../services/projectService");
 const TimeTrackingService = require("../services/timeTrackingService");
 const moment = require('moment')
@@ -93,7 +92,6 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
-    //------------------timesheet--------------------------
 
     //@Post status/add/insert
     app.post('/' + 'status/add/insert', async function (req, res) {

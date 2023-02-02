@@ -60,7 +60,6 @@ function ProjectController(objectCollection) {
     })
 
 
-    //----------------project-----------------
 
     //@Post project/add/projects/insert
     app.post('/' + 'project/add/projects/insert', async function (req, res) {
@@ -136,7 +135,6 @@ function ProjectController(objectCollection) {
     })
 
 
-    //-------------tag-----------------
 
     //@Post project/get/all/tags/list
     app.get('/' + 'project/get/all/tags/list', async function (req, res) {

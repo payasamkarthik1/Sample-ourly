@@ -1,6 +1,5 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
 
 function DepartmentDesignationsService(objectCollection) {
 
@@ -9,79 +8,9 @@ function DepartmentDesignationsService(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
-    this.roleCreateInsert = async function (request) {
-        console.log('===========entered roleCreateInsert====================')
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.role_name,
-            util.getCurrentUTCTime()
-
-        );
-
-        const queryString = util.getQueryString('role_create_insert', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    }
-
-    this.getAllRoles = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-        );
-
-        const queryString = util.getQueryString('role_get_all_select', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
-                    error = false
-                }).catch((err) => {
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-    this.deleteRole = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.role_id.toString()
-        );
-
-        const queryString = util.getQueryString('role_remove_delete', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
-                    error = false
-                }).catch((err) => {
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
     this.departmentInsert = async function (request) {
+        console.log("-------------------------entered departmentInsert----------------------------");
+
         const [err, data] = await validations.addDepartmentValidation(request)
         if (err) {
             responseData = data
@@ -118,9 +47,9 @@ function DepartmentDesignationsService(objectCollection) {
         return [error, responseData];
     }
 
-
-
     this.departmentRemoveDelete = async function (request) {
+        console.log("-------------------------entered departmentRemoveDelete----------------------------");
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -157,6 +86,8 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllDepartments = async function (request) {
+        console.log("-------------------------entered getAllDepartments----------------------------");
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -168,9 +99,7 @@ function DepartmentDesignationsService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -184,6 +113,7 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.addDesignByDepartId = async function (request) {
+        console.log("-------------------------entered addDesignByDepartId----------------------------");
 
         let responseData = [],
             error = true;
@@ -221,6 +151,8 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getDesignByDepartId = async function (request) {
+        console.log("-------------------------entered getDesignByDepartId----------------------------");
+
 
         let responseData = [],
             error = true;
@@ -244,6 +176,7 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllDesign = async function (request) {
+        console.log("-------------------------entered getAllDesign----------------------------");
 
         let responseData = [],
             error = true;
@@ -266,14 +199,12 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllRoleDepartDesign = async function (request) {
+        console.log("-------------------------entered getAllRoleDepartDesign----------------------------");
 
         let responseData = []
 
-
-        // const [err1, data1] = await this.getAllRoles()
         const [err2, data2] = await this.getAllDepartments()
         const [err3, data3] = await this.getAllDesign()
-        // responseData.push(data1)
         responseData.push(data2)
         responseData.push(data3)
         error = false
@@ -281,6 +212,7 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.removeDesignationById = async function (request) {
+        console.log("-------------------------entered removeDesignationById----------------------------");
 
         let responseData = [],
             error = true;

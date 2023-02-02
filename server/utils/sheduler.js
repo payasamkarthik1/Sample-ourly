@@ -3,7 +3,6 @@ const schedule = require('node-schedule')
 const moment = require('moment')
 const EmployeeService = require('../services/employeeService')
 const LeadService = require('../services/leadService')
-const ProjectService = require('../services/projectService')
 
 
 
@@ -12,30 +11,23 @@ function Scheduler(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
-
     const employeeService = new EmployeeService(objectCollection)
     const leadService = new LeadService(objectCollection)
-    const projectService = new ProjectService(objectCollection)
 
 
     //on every monday at 09:00 to all emps
     this.sendRemainder = async function () {
         console.log("-------------------------entered sendRemainder------------------------------");
-        schedule.scheduleJob('00 37 11 * * 3', async function () {
+        schedule.scheduleJob('00 00 09 * * 1', async function () {
             var mon = moment();
-            sun = mon.subtract(3, "days");
+            sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
             let sendMails = []
             const [err, emps] = await employeeService.getAllEmployees(request)
-            console.log('============getAllEmployees=================')
-            console.log(emps)
-            console.log('====================================')
             const [err1, emps1] = await employeesGetEmpsTimesheetStatusApproved(request)
-            console.log('============employeesGetEmpsTimesheetStatusApproved=================')
-            console.log(emps1)
-            console.log('====================================')
+
             if (emps.length != 0) {
                 if (emps1.length != 0) {
                     myArray = emps.filter(ar => !emps1.find(rm => (rm.email === ar.email)))
@@ -50,7 +42,7 @@ function Scheduler(objectCollection) {
                     await sendMails.map(async (mail) => {
                         request.email = mail.email
                         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                         await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                       //  await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                     })
                 }
             } else {
@@ -85,10 +77,10 @@ function Scheduler(objectCollection) {
     
     //on every monday at 12:30 to leads
     this.sendRemainderToLeads = async function () {
-        console.log("-------------------------entered sendRemainder1------------------------------");
-        schedule.scheduleJob('00 55 11 * * 3', async function () {
+        console.log("-------------------------entered sendRemainderToLeads------------------------------");
+        schedule.scheduleJob('00 30 12 * * 1', async function () {
             var mon = moment();
-            sun = mon.subtract(3, "days");
+            sun = mon.subtract(1, "days");
             sun = mon.format("YYYY-MM-DD");
             let request = {}
             request.sunDate = sun
@@ -97,10 +89,6 @@ function Scheduler(objectCollection) {
             request.role_id = 2
             const [err, emps] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 2)
             grps = emps[0].groups
-            console.log('==========groups====================')
-            console.log(grps)
-            console.log('====================================')
-
             //get emps assign under grps
             for (let i = 0; i < grps.length; i++) {
                 request.mail = ""
@@ -115,16 +103,10 @@ function Scheduler(objectCollection) {
                 for (let j = 0; j < emps1.length; j++) {
                     request.employee_id = emps1[j].employee_id
                     const [err2, emps2] = await employeesGetEmpsTimesheetStatusByEmpid(request)
-                    console.log('==========emps timesheet approve and submite under each grp member====================')
-                    console.log(emps2)
-                    console.log('====================================')
                     if (emps2.length != 0) {
                         empUnderGrpWithStatus.push(emps2[0])
                     }
                 }
-                console.log('===========emps timesheet approve and submite under each grp member==================')
-                console.log(empUnderGrpWithStatus)
-                console.log('====================================')
                 if (empUnderGrpWithStatus.length == 0) {
                     request.mail = grps[i].email
                     request.emps = emps1
@@ -138,9 +120,6 @@ function Scheduler(objectCollection) {
                 }
                 
                 if (request.mail != "") {
-                    console.log('============sending mails to heads================')
-                    console.log(request.mail)
-                    console.log("emps length--", request.emps)
                     if (request.emps.length == 1) {
                         request.text1 = "Team Member:-"
                         request.text3 = "team member"
@@ -158,12 +137,11 @@ function Scheduler(objectCollection) {
                         request.text6 = "is a list of"
 
                     }
-                    console.log('====================================')
                     request.text = `Hi,
                      <br><br> 
                      Please make sure  ${request.text2} submit ${request.text5} ${request.text4} by the end of every week.
                      <br> Below  ${request.text6}  ${request.text2} who did not submit ${request.text5} ${request.text4} last week..`
-                    await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                 //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
             }

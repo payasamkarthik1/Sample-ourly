@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const UserService = require("../services/userService");
 const Validations = require('../utils/validations')
 const RolePermissionEmployeeMapping = require('../services/rolePermissionEmployeeMappingService')
@@ -63,7 +62,7 @@ function UserController(objectCollection) {
         }
     })
 
-    //@Pos tuser/forget/change/password
+    //@Post user/forget/change/password
     app.post('/' + 'user/forget/change/password', async function (req, res) {
         const [err, resData] = await validations.forgetChangePassword(req.body, res);
         if (!err) {

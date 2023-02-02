@@ -1,6 +1,5 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
 const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
 
 function EmployeeServices(objectCollection) {
@@ -80,9 +79,6 @@ function EmployeeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data.length != 0) {
-                        console.log('=========getAllEmployees=================');
-                        console.log(data);
-                        console.log('====================================');
                         var dat = data.reduce(function (acc, curr) {
                             //finding Index in the array where the NamaCategory matched
                             var findIfNameExist = acc.findIndex(function (item) {
@@ -153,9 +149,6 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('============data==================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -170,6 +163,7 @@ function EmployeeServices(objectCollection) {
         console.log("----------------------entered removeEmployeeDelete----------------------");
         let responseData = [],
             error = true;
+        // flag =1 move employee to inactive set log_state = 3
         flag = 1
         const paramsArr = new Array(
             request.employee_id.toString(),
@@ -196,6 +190,7 @@ function EmployeeServices(objectCollection) {
         console.log("----------------------entered removeEmployeeComplete----------------------");
         let responseData = [],
             error = true;
+        // flag =2 move employee to delete set log_state = 5
         flag = 2
         const paramsArr = new Array(
             request.employee_id,
@@ -223,6 +218,7 @@ function EmployeeServices(objectCollection) {
         console.log("----------------------entered inactiveEmpToActive----------------------");
         let responseData = [],
             error = true;
+        //  flag =3 move employee to active from inactive set log_state = 1
         flag = 3
         const paramsArr = new Array(
             request.employee_id,
@@ -236,7 +232,6 @@ function EmployeeServices(objectCollection) {
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1
-                    error = false
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

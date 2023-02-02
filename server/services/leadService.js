@@ -5,12 +5,13 @@ const EmployeeService = require('./employeeService')
 function LeadService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
-
     const employeeService = new EmployeeService(objectCollection)
 
+    //get emps under admin and employee
     this.getEmployessAssignUnderHeadsAdminAndEmpl = async function (request, flag) {
+
         console.log("---------------------entered getEmployessAssignUnderHeadsAdminAndEmpl-----------------------");
-        var users = [], groups = [], dataRepeat = [], usrs = []
+        var users = [], groups = [], dataRepeat = []
         if (request.role_id == 2) {
             const [err, data] = await employeeService.getAllEmployees()
             if (data.length != 0) {
@@ -57,6 +58,8 @@ function LeadService(objectCollection) {
                 } while (dataRepeat.length != 0)
             }
         }
+        //flag 1 to get only users
+        //flag 2  to get users and groups
         if (flag == 1) {
             return [false, users]
         } else {
@@ -74,6 +77,7 @@ function LeadService(objectCollection) {
         }
     }
 
+    //get emps under  employee not for admin
     this.getEmployessAssignUnderHeads = async function (request, flag) {
         console.log("---------------------entered getEmployessAssignUnderHeads-----------------------");
 
@@ -87,6 +91,8 @@ function LeadService(objectCollection) {
                 dataRepeat = data1
             } while (dataRepeat.length != 0)
         }
+        //flag 1 to get only users
+        //flag 2  to get users and groups
         if (flag == 1) {
             return [false, users]
         } else {
@@ -119,7 +125,6 @@ function LeadService(objectCollection) {
                 if (data[j].email !== "admin@pronteff.com") {
                     users.push(data[j])
                 }
-                // usrs.push(data[j])
 
             }
         }
@@ -141,9 +146,7 @@ function LeadService(objectCollection) {
                 .then(async (data) => {
                     responseData = data;
                     error = false
-                    console.log('============data===============');
-                    console.log(data);
-                    console.log('====================================');
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -154,35 +157,6 @@ function LeadService(objectCollection) {
 
     };
 
-    // this.getAllHeads = async function (request) {
-    //     console.log("---------------------entered getAllHeads-----------------------");
-    //     let responseData = []
-    //     //if flag =2 get all the heads
-    //     flag = 2
-    //     const paramsArr = new Array(
-    //         0,
-    //         flag
-    //     );
-
-    //     const queryString = util.getQueryString('heads_get_emps_under_heads', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 console.log('===========data================');
-    //                 console.log(data);
-    //                 console.log('====================================');
-    //                 responseData = data;
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return responseData
-    //     }
-
-
-    // };
 }
 
 

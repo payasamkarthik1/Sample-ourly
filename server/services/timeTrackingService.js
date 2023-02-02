@@ -1,8 +1,6 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
 const moment = require('moment')
-const ApprovalsService = require('./approvalsService')
 const EmployeeService = require('./employeeService')
 const LeadService = require('./leadService')
 
@@ -14,11 +12,11 @@ function TimeTrackingService(objectCollection) {
     const validations = new Validations(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const leadService = new LeadService(objectCollection)
-    const approvalsService = new ApprovalsService(objectCollection)
 
 
 
     this.timetrackingAddTaskDetailsInsert = async function (request) {
+        console.log("-------------------------------entered timetrackingAddTaskDetailsInsert--------------------------------------------");
         let responseData = [],
             error = true;
         const [err, respData] = await validations.taskCreationInputValidation(request);
@@ -106,6 +104,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timetrackingUpdateTaskDetails = async function (request) {
+        console.log("-------------------------------entered timetrackingUpdateTaskDetails--------------------------------------------");
+
         let responseData = [],
             error = true;
         const [err, respData] = await validations.taskCreationInputValidation(request);
@@ -180,6 +180,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timetrackingRemoveChildTaskDelete = async function (request) {
+        console.log("-------------------------------entered timetrackingRemoveChildTaskDelete--------------------------------------------");
+
         let responseData = [],
             error = true;
 
@@ -209,7 +211,6 @@ function TimeTrackingService(objectCollection) {
                         request.first_week_day = firstWeekDate
                         request.last_week_day = lastWeekDate
                         request.week_name = await util.getWeekName(request)
-                        // request.role_id = 3;
                         const [err1, data2] = await this.getWorkedHoursOfAllTasksWeekly(request)
                         if (data2[0].weekHours == null) {
                             await this.removeUnsubmited(request)
@@ -229,6 +230,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timesheetAddUpdateRemoveProjects = async function (request) {
+        console.log("-------------------------------entered timesheetAddUpdateRemoveProjects--------------------------------------------");
+
         let responseData = []
         error = true
         request.first_Week_Day = await util.getFirstWeekDate(request.task_created_datetime)
@@ -300,6 +303,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timetrackingGetAllTaskDetailsByDate = async function (request) {
+        console.log("-------------------------------entered timetrackingGetAllTaskDetailsByDate--------------------------------------------");
+
 
         let responseData = [],
             error = true;
@@ -326,6 +331,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksPerDay = async function (date, request) {
+        console.log("-------------------------------entered getAllTasksPerDay--------------------------------------------");
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -351,7 +358,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllWeeksByEmpId = async function (request) {
-        console.log('========ENTERED GET ALL WEEKS==============')
+        console.log("-------------------------------entered getAllWeeksByEmpId--------------------------------------------");
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -363,9 +371,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('==========getAllWeeksByEmpId=============')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -379,7 +384,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllTasksInThatWeeks = async function (request, data) {
-        console.log('----------entered getAllTasksInThatWeeks-----------');
+        console.log('------------------------entered getAllTasksInThatWeeks-----------------------------');
         let responseData = [],
             error = true;
 
@@ -443,6 +448,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getAllTasksOfAllWeeksByEmpId = async function (request) {
+        console.log("-------------------------------entered getAllTasksOfAllWeeksByEmpId--------------------------------------------");
+
         let responseData = []
         error = true;
 
@@ -469,7 +476,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.timetrackingGetChildTask = async function (request) {
-
+        console.log('------------------------entered timetrackingGetChildTask-----------------------------');
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -496,6 +503,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.statusAddinsert = async function (request) {
+        console.log('------------------------entered statusAddinsert-----------------------------');
+
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -523,6 +532,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getTimesheetOfAllProjectsOverview = async function (request) {
+        console.log('------------------------entered getTimesheetOfAllProjectsOverview-----------------------------');
+
         let responseData = [],
             error = true;
         //flag =1 for total worked hours calculation for each project for each day
@@ -599,6 +610,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getWorkedHrsOfEachPrjInWeek = async function (request) {
+        console.log('------------------------entered getWorkedHrsOfEachPrjInWeek-----------------------------');
+
         let responseData = [],
             error = true;
         //flag =2 for total hours worked for each project in a week
@@ -628,9 +641,13 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getWorkedHrsOfAllPrjsInDay = async function (request) {
+        console.log('------------------------entered getWorkedHrsOfAllPrjsInDay-----------------------------');
+
 
         let responseData = [],
             error = true;
+
+        //  flag =5 total worked hours of all projects for each day for a week
         const paramsArr = new Array(
             request.first_week_day,
             request.last_week_day,
@@ -656,6 +673,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getWorkedHoursOfAllTasksWeekly = async function (request) {
+        console.log('------------------------entered getWorkedHoursOfAllTasksWeekly-----------------------------');
 
         let responseData = [],
             error = true;
@@ -689,7 +707,9 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getAllProjectsTimesheetWeekly = async function (request) {
-        console.log("---------ENTERED GET ALL PROJECTS TIMESHEET-----------");
+        console.log('------------------------entered getAllProjectsTimesheetWeekly-----------------------------');
+
+
         let responseData = [],
             error = true;
 
@@ -749,6 +769,8 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.getProjectFromTimesheet = async function (request) {
+        console.log('------------------------entered getProjectFromTimesheet-----------------------------');
+
 
         let responseData = [],
             error = true;
@@ -777,6 +799,7 @@ function TimeTrackingService(objectCollection) {
     };
 
     this.removeProjectFromTimesheet = async function (request) {
+        console.log('------------------------entered removeProjectFromTimesheet-----------------------------');
 
         let responseData = [],
             error = true;
@@ -810,6 +833,8 @@ function TimeTrackingService(objectCollection) {
     //----------------------approvals services------------------
 
     this.addUpdateRemoveUnsubmit = async function (request) {
+        console.log('------------------------entered addUpdateRemoveUnsubmit-----------------------------');
+
         let responseData = [],
             error = true;
         const [err2, data2] = await this.getUnsubmited(request)
@@ -821,8 +846,9 @@ function TimeTrackingService(objectCollection) {
             const lastMonth = await util.getMonthName(last_week_day)
             request.first_week_day = first_week_day
             request.last_week_day = last_week_day
-            // request.role_id = 3
             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
+
+            //flag 1 for insert into unsubmited
             const paramsArr = new Array(
                 data[0].employee_id,
                 request.employee_id,
@@ -856,6 +882,8 @@ function TimeTrackingService(objectCollection) {
             request.first_week_day = first_week_day
             request.last_week_day = last_week_day
             const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
+            //flag 2 for update into unsubmited
+
             const paramsArr = new Array(
                 data[0].employee_id,
                 request.employee_id,
@@ -886,6 +914,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.addInApprovalsOnRejectAfterApprove = async function (request) {
+        console.log('------------------------entered addInApprovalsOnRejectAfterApprove-----------------------------');
+
         let responseData = [],
             error = true;
 
@@ -897,6 +927,9 @@ function TimeTrackingService(objectCollection) {
         request.first_week_day = first_week_day
         request.last_week_day = last_week_day
         const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request)
+
+        //flag 1  insert into unsubmited
+
         const paramsArr = new Array(
             data[0].employee_id,
             request.employee_id,
@@ -924,6 +957,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getUnsubmited = async function (request) {
+        console.log('------------------------entered getUnsubmited-----------------------------');
+
         let responseData = [],
             error = true;
 
@@ -932,6 +967,9 @@ function TimeTrackingService(objectCollection) {
         const last_week_day = await util.getLastWeekDate(request.task_created_datetime)
         const firstMonth = util.getMonthName(first_week_day)
         const lastMonth = util.getMonthName(last_week_day)
+
+
+        //flag 3  get unsubmitted
 
         const paramsArr = new Array(
             data[0].employee_id,
@@ -960,10 +998,15 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.removeUnsubmited = async function (request) {
+        console.log('------------------------entered removeUnsubmited-----------------------------');
+
 
         let responseData = [],
             error = true;
         const [err, data] = await this.getEmployeeLead(request)
+
+        //flag 4 remove unsubmitted
+
         const paramsArr = new Array(
             data[0].employee_id,
             request.employee_id,
@@ -993,6 +1036,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getEmployeeLead = async function (request) {
+        console.log('------------------------entered getEmployeeLead-----------------------------');
+
         let responseData = [],
             error = true;
         let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
@@ -1101,14 +1146,10 @@ function TimeTrackingService(objectCollection) {
                 data1 = data9
             }
         }
-
         if (data1.length != 0) {
-            console.log('==========data1========')
-            console.log(data1)
-            console.log('====================================')
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
-                const [err, data2] = await this.getListFromApprovals(request, data1[i], 7)
+                const [err, data2] = await this.getListFromApprovals(request, data1[i])
                 Array.prototype.push.apply(responseData, data2);
             }
         }
@@ -1116,7 +1157,7 @@ function TimeTrackingService(objectCollection) {
 
     }
 
-    this.getListFromApprovals = async function (request, data, flag) {
+    this.getListFromApprovals = async function (request, data) {
         console.log("------------------------entered getListFromApprovals--------------------------------");
         let responseData = [],
             error = true;
@@ -1125,7 +1166,6 @@ function TimeTrackingService(objectCollection) {
             0,
             request.first_week_day,
             request.last_week_day,
-            flag
         )
 
         const queryString = util.getQueryString('approvals_get_list', paramsArr);
@@ -1145,67 +1185,14 @@ function TimeTrackingService(objectCollection) {
         return [error, responseData];
     }
 
-    // this.getOnApproveOnRejectList = async function (request) {
-
-    //     let responseData = [],
-    //         error = true;
-    //     if (request.role_id === 4) {
-    //         const paramsArr = new Array(
-    //             request.employee_id,
-    //             request.role_id,
-    //             0,
-    //             request.first_week_day,
-    //             request.last_week_day,
-    //             5
-    //         );
-    //         const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-
-    //         }
-    //     } else if (request.role_id === 2 || request.role_id === 5) {
-
-    //         const paramsArr = new Array(
-    //             request.employee_id,
-    //             request.role_id,
-    //             0,
-    //             request.first_week_day,
-    //             request.last_week_day,
-    //             6
-    //         );
-    //         const queryString = util.getQueryString('approvals_get_list', paramsArr);
-
-    //         if (queryString !== '') {
-    //             await db.executeQuery(1, queryString, request)
-    //                 .then(async (data) => {
-    //                     responseData = data;
-    //                     error = false
-    //                 }).catch((err) => {
-    //                     console.log("err-------" + err);
-    //                     error = err
-    //                 })
-
-    //         }
-    //     }
-    //     return [error, responseData];
-    // }
-
     this.getSubmittedApproveEntries = async function (request, flag) {
         console.log("---------------------entered getSubmittedApproveEntries-----------------------");
 
         let responseData = [],
             error = true;
-        // to display name in dashboard
-        //if flag =1get submitted for approval weekname and submitted date
-        //if flag =2 get approved by and date
+
+        //if flag =1 get submited_for_approval_datetime of emp 
+        //if flag =2 get  approved_on_datetime of emp 
 
         const paramsArr = new Array(
             request.employee_id,
@@ -1230,8 +1217,11 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onApprovedChangeStatus = async function (request) {
+        console.log("------------------------entered onApprovedChangeStatus--------------------------------");
+
         let responseData = [],
             error = true;
+        //flag=2 on approve change status to approve(archieve) 
         flag = 2
         let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
         request.employee_id = id;
@@ -1260,8 +1250,11 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onSubmitForApproval = async function (request) {
+        console.log("------------------------entered onSubmitForApproval--------------------------------");
+
         let responseData = [],
             error = true;
+        //flag=1 on submit for approval change status to pending 
         flag = 1
         let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
         request.employee_id = id;
@@ -1276,10 +1269,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
                     if (data[0].message == "success") {
                         const [err1, data1] = await this.onSubmitForApprovalEntry(request)
                         responseData = data1;
@@ -1299,8 +1288,11 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onSubmitForApprovalEntry = async function (request) {
+        console.log("------------------------entered onSubmitForApprovalEntry--------------------------------");
+
         let responseData = [],
             error = true;
+        //flag =1  on submit entry
         flag = 1
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
@@ -1346,12 +1338,10 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onApproved = async function (request) {
+        console.log("------------------------entered onApproved--------------------------------");
+
         let responseData = [],
             error = true;
-        // data = request
-        console.log('====================================')
-        console.log(request)
-        console.log('====================================')
         for (let i = 0; i < request.length; i++) {
             await this.onApprovedChangeStatus(request[i])
         }
@@ -1360,11 +1350,13 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onApprovedEntry = async function (request) {
+        console.log("------------------------entered onApprovedEntry--------------------------------");
+
         let responseData = [],
             error = true;
-
         //getting row where to update
         const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request, 3)
+        //flag =2  on approve , reject,withdrawn entry
         flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
@@ -1405,6 +1397,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onApprovedSendMail = async function (request) {
+        console.log("------------------------entered onApprovedSendMail--------------------------------");
+
         let responseData = [],
             error = true;
 
@@ -1426,6 +1420,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onReject = async function (request) {
+        console.log("------------------------entered onReject--------------------------------");
+
         let responseData = [],
             error = true;
         const [err, data] = await validations.addOnRejectValidation(request)
@@ -1433,6 +1429,7 @@ function TimeTrackingService(objectCollection) {
             responseData = data;
             error = err
         } else {
+            //flag=3 on reject change status to unsubmitted  and submit in user
             flag = 3
             const paramsArr = new Array(
                 request.employee_id,
@@ -1447,9 +1444,6 @@ function TimeTrackingService(objectCollection) {
                     .then(async (data) => {
                         if (data[0].message == "success") {
                             const [err1, data1] = await this.onRejectEntry(request)
-                            console.log('=========message=================')
-                            console.log(data1)
-                            console.log('====================================')
                             responseData = data1;
                             error = false
                         } else {
@@ -1470,13 +1464,13 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onRejectEntry = async function (request) {
+        console.log("------------------------entered onRejectEntry--------------------------------");
+
         let responseData = [],
             error = true;
         const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request, 3)
-        console.log('====================================')
-        console.log(data1)
-        console.log('====================================')
         if (data1[0].approved_on_datetime == null) {
+            //flag =2  on approve and reject entry
             flag = 2
             request.task_created_datetime = request.first_week_day
             request.week_name = await util.getWeekName(request)
@@ -1498,6 +1492,7 @@ function TimeTrackingService(objectCollection) {
 
             );
         } else {
+            //flag =2  on approve , reject,withdrawn entry
             // flag = 2
             request.task_created_datetime = request.first_week_day
             request.week_name = await util.getWeekName(request)
@@ -1538,6 +1533,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onRejectSendMail = async function (request) {
+        console.log("------------------------entered onRejectSendMail--------------------------------");
+
         let responseData = [],
             error = true;
 
@@ -1548,9 +1545,6 @@ function TimeTrackingService(objectCollection) {
 
         request.employee_id = request.lead_id
         const [err2, data2] = await employeeService.getEmployeeById(request)
-        console.log('=========fulll name====  adminnnnnnnnn==============')
-        console.log(data2)
-        console.log('====================================')
         request.rejected_by = data2[0].full_name
         await util.nodemailerSenderOnReject(request).then((data) => {
             error = false
@@ -1564,8 +1558,11 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onWithdraw = async function (request) {
+        console.log("------------------------entered onWithdraw--------------------------------");
+
         let responseData = [],
             error = true;
+        // on withdraw change status to pending  and submit in user
         flag = 4
         const paramsArr = new Array(
             request.employee_id,
@@ -1587,7 +1584,6 @@ function TimeTrackingService(objectCollection) {
                         responseData = [{ message: data[0].message }];
                     }
 
-
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -1599,13 +1595,12 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.onWithdrawnEntry = async function (request) {
+        console.log("------------------------entered onWithdrawnEntry--------------------------------");
+
         let responseData = [],
             error = true;
         const [err1, data1] = await this.getApproveRejectSubmitEntriesByEmpId(request, 3)
-
-        console.log('====================================')
-        console.log(data1)
-        console.log('====================================')
+        //flag =2  on approve , reject,withdrawn entry
         flag = 2
         request.task_created_datetime = request.first_week_day
         request.week_name = await util.getWeekName(request)
@@ -1645,6 +1640,8 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApproveRejectSubmitEntriesByEmpId = async function (request, flag) {
+        console.log("------------------------entered getApproveRejectSubmitEntriesByEmpId--------------------------------");
+
         let responseData = [],
             error = true;
         request.task_created_datetime = request.first_week_day
@@ -1688,9 +1685,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('============data=================');
-                    console.log(data);
-                    console.log('====================================');
                     error = false
                     responseData = data
                 }).catch((err) => {
@@ -1700,47 +1694,6 @@ function TimeTrackingService(objectCollection) {
             return [error, responseData];
         }
     };
-
-    // count list 
-    // this.getEmpsSubmittedListByLeadId = async function (request) {
-    //     let responseData = [],
-    //         error = true;
-    //     if (request.role_id == 4) {
-    //         flag = 4
-    //     } else if (request.role_id == 2 || request.role_id == 5) {
-    //         flag = 5
-    //     } else if (request.role_id == 3) {
-    //         flag = 7
-    //     }
-
-    //     const paramsArr = new Array(
-    //         request.employee_id,
-    //         null,
-    //         null,
-    //         flag
-    //     );
-    //     const queryString = util.getQueryString('approvals_get_entries_date', paramsArr);
-
-    //     if (queryString !== '') {
-    //         await db.executeQuery(1, queryString, request)
-    //             .then(async (data) => {
-    //                 data.push({ total_count: data.length });
-    //                 responseData = data
-    //                 error = false
-    //             }).catch((err) => {
-    //                 console.log("err-------" + err);
-    //                 error = err
-    //             })
-    //         return [error, responseData];
-    //     }
-
-    // }
-
-
-
-
-
-
 
 }
 

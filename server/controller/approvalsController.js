@@ -1,5 +1,3 @@
-const { json } = require("body-parser");
-const Validations = require('../utils/validations')
 
 const TimeTrackingService = require('../services/timeTrackingService')
 const ApprovalsService = require('../services/approvalsService')
@@ -92,20 +90,13 @@ function ApprovalsController(objectCollection) {
 
             const [err, resData] = await timeTrackingService.onWithdraw(req.body);
             if (!err) {
-                console.log("approvals/on/reject | Error: ", err);
+                console.log("timesheet/on/withdraw | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("approvals/on/reject | Error: ", err);
+                console.log("timesheet/on/withdraw | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-
-
-
-
-
-
 
 }
 

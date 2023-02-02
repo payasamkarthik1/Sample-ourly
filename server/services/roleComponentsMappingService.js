@@ -7,7 +7,6 @@ function RoleComponentsMappingService(objectCollection) {
     const validations = new Validations(objectCollection)
 
 
-
     this.roleCreation = async function (request) {
         console.log('---------------------entered roleCreation-------------------------');
         const [err, validation] = await validations.roleValidationAdd(request);
@@ -140,9 +139,6 @@ function RoleComponentsMappingService(objectCollection) {
             if (queryString !== '') {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
-                        console.log('==========role_remove_delete==================')
-                        console.log(data)
-                        console.log('====================================')
                         if (flag == 1) {
                             error = false
                         } else if (flag == 2) {
@@ -245,119 +241,6 @@ function RoleComponentsMappingService(objectCollection) {
             return [error, responseData];
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    this.componentRemoveDelete = async function (request) {
-        console.log('---------------------entered componentRemove-------------------------');
-
-        let responseData = [],
-            error = true
-        flag = 4
-        const paramsArr = new Array(
-            request.component_id.toString(),
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('component_add_remove_delete_get', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('====================================');
-                    console.log(data);
-                    console.log('====================================');
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-    this.componentInactiveToActive = async function (request) {
-        console.log('---------------------entered componentRemove-------------------------');
-
-        let responseData = [],
-            error = true
-        flag = 5
-        const paramsArr = new Array(
-            request.component_id.toString(),
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('component_add_remove_delete_get', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('====================================');
-                    console.log(data);
-                    console.log('====================================');
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-    this.componentGetAll = async function (request) {
-        console.log('---------------------entered componentGetAll-------------------------');
-
-        let responseData = [],
-            error = true
-        flag = 6
-        const paramsArr = new Array(
-            0,
-            0,
-            flag
-        );
-
-        const queryString = util.getQueryString('component_add_remove_delete_get', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('==============component_add_remove_delete_get===============');
-                    console.log(data);
-                    console.log('====================================');
-                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
-
-
-
-
-
-
 
 }
 

@@ -22,7 +22,6 @@ const holidayListController = require('../controller/HolidaysListController')
 const holidaysListService = require('../services/HolidaysListService')
 
 const approvalsController = require('../controller/approvalsController')
-const approvalsService = require('../services/approvalsService')
 
 const leadController = require('../controller/leadController')
 const leadService = require('../services/leadService')
@@ -67,7 +66,6 @@ function ControllInterceptor(objCollection) {
     new holidaysListService(objCollection)
 
     new approvalsController(objCollection)
-    new approvalsService(objCollection)
 
     new leadController(objCollection)
     new leadService(objCollection)

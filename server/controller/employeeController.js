@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const ProjectService = require("../services/projectService");
 const EmployeeService = require("../services/employeeService");
 

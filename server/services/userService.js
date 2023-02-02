@@ -1,6 +1,5 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
 const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
 const ComponentsService = require('../services/componentsService')
 const LeadService = require('./leadService')
@@ -15,33 +14,6 @@ function UserService(objectCollection) {
     const componentsService = new ComponentsService(objectCollection)
     const leadService = new LeadService(objectCollection)
 
-    this.userLoginInsertAfterRegistration = async function (data, request) {
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            data[0],
-            data[3], //1
-            data[4],
-            data[7],
-            data[8], //4
-            data[13],
-            await util.generateToken(request),
-            util.getCurrentUTCTime()
-        );
-        const queryString = util.getQueryString('user_login', paramsArr);
-        if (queryString !== '') {
-            await db.executeQuery(0, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    error = err;
-                })
-            return [error, responseData];
-
-        }
-
-    }
 
     this.userLogin = async function (request) {
         console.log("---------------------------entered userLogin-----------------------------------");
@@ -51,7 +23,7 @@ function UserService(objectCollection) {
         const [err, data] = await validations.userLoginValidation(request)
         if (err) {
             error = err,
-            responseData = data
+                responseData = data
         }
         else {
             const [err1, resData1] = await validations.userDetailsList(request)
@@ -59,7 +31,7 @@ function UserService(objectCollection) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
                     const [err3, resData3] = await this.userLoginInsert(request, resData1)
-                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_admin = 1, resData3[0].is_team = 1,request.is_admin = 1, request.role_id = 2) : (resData3[0].is_admin = 0, request.is_admin = 0, request.role_id = 0)
+                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_admin = 1, resData3[0].is_team = 1, request.is_admin = 1, request.role_id = 2) : (resData3[0].is_admin = 0, request.is_admin = 0, request.role_id = 0)
                     request.employee_id = resData3[0].employee_id
                     //get the permissions assign to the employee
                     const [err, permiss] = await rolePermissionEmployeeMapping.rolePermissionEmployeeget(request, 3)
@@ -82,6 +54,8 @@ function UserService(objectCollection) {
     }
 
     this.userLoginInsert = async function (request, resData1) {
+        console.log("---------------------------entered userLoginInsert-----------------------------------");
+
         let responseData = [],
             error = true;
         const jwtToken = await util.generateJwtToken(resData1)
@@ -110,32 +84,9 @@ function UserService(objectCollection) {
 
     }
 
-    this.userLoginUpdateActive = async function (request, resData1) {
-        let responseData = [],
-            error = true;
-
-        const paramsArr = new Array(
-            resData1[0].employee_id,
-            resData1[0].email,
-            util.getCurrentUTCTime()
-        );
-        const queryString = util.getQueryString('user_login_update', paramsArr);
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then((data) => {
-                    responseData = data;
-                    error = false
-
-                }).catch((err) => {
-                    error = err;
-                })
-            return [error, responseData];
-
-        }
-
-    }
-
     this.userProfileUpdate = async function (request, req) {
+        console.log("---------------------------entered userProfileUpdate-----------------------------------");
+
         let responseData = [],
             error = true;
 
@@ -176,44 +127,9 @@ function UserService(objectCollection) {
 
     }
 
-    this.userResetPassword = async function (request, res, req) {
-
-        const [err1, resData1] = await util.verifyJwtToken(request, req);
-        if (err1) {
-            return [err1, resData1]
-        } else {
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                resData1.employee_id,
-                resData1.email,
-                request.first_name,
-                request.last_name,
-                request.user_name,
-                request.phone_name,
-                request.image,
-            );
-            const queryString = util.getQueryString('user_profile_update', paramsArr);
-            if (queryString !== '') {
-                await db.executeQuery(0, queryString, request)
-                    .then((data) => {
-                        responseData = data;
-                        error = false
-
-                    }).catch((err) => {
-                        error = err;
-                    })
-            }
-            return [error, responseData];
-
-        }
-
-    }
-
-    this.changePasswordVaildationCheck = async function (request) {
-    }
-
     this.SendForgetPasswordLink = async function (request) {
+        console.log("---------------------------entered SendForgetPasswordLink-----------------------------------");
+
         let responseData = [],
             error = true;
         try {
