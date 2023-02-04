@@ -709,19 +709,19 @@ function Validations(objectCollection) {
     this.forgetChangePassword = async function (request) {
         let responseData = [],
             error = true
-        if (request.new_password == " " || request.confirm_password == " " || request.new_password == "" || request.confirm_password == "") {
+        if (request.new_password == "" || request.confirm_password == "" || request.email == "") {
             error = true
             responseData = [{ message: "All Fields are required" }]
 
         }
         else if (!(request.new_password.length >= 8)) {
             error = true
-            responseData = [{ message: 'password length must be minimum 8' }]
+            responseData = [{ message: 'Password length must be minimum 8' }]
             return [error, responseData];
         }
         else if (!(request.new_password.length <= 15)) {
             error = true
-            responseData = [{ message: 'password length must be maximum 15' }]
+            responseData = [{ message: 'Password length must be maximum 15' }]
             return [error, responseData];
         }
         else if (request.new_password !== request.confirm_password) {
