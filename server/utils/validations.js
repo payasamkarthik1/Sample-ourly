@@ -372,7 +372,7 @@ function Validations(objectCollection) {
             responseData = [{ message: 'Admin role cannot be updated' }]
         }
         else if (request.role_name) {
-            const [err, data] = await this.roleNameValidChk(request,2)
+            const [err, data] = await this.roleNameValidChk(request, 2)
 
             if (data[0].cnt > 0) {
                 error = true
@@ -709,19 +709,26 @@ function Validations(objectCollection) {
     this.forgetChangePassword = async function (request) {
         let responseData = [],
             error = true
+
+
+
+        str = request.new_password
+        l = str.trimLeft()
+        r = str.trimRight()
+
+
         if (request.new_password == "" || request.confirm_password == "" || request.email == "") {
             error = true
             responseData = [{ message: "All Fields are required" }]
 
-        }
-        else if (!(request.new_password.length >= 8)) {
+        } else if (l != str || r != str) {
             error = true
-            responseData = [{ message: 'Password length must be minimum 8' }]
+            responseData = [{ message: 'Password contains white spaces' }]
             return [error, responseData];
         }
-        else if (!(request.new_password.length <= 15)) {
+        else if (!(request.new_password.length >= 8 && request.new_password.length <= 15)) {
             error = true
-            responseData = [{ message: 'Password length must be maximum 15' }]
+            responseData = [{ message: 'Password length must be between 8 - 15 characters' }]
             return [error, responseData];
         }
         else if (request.new_password !== request.confirm_password) {
