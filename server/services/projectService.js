@@ -7,8 +7,6 @@ function ProjectService(objectCollection) {
     const validations = new Validations(objectCollection)
 
     this.removeClientDelete = async function (request) {
-        console.log("---------------------entered removeClientDelete-----------------------");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -38,7 +36,6 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllClientsSelect = async function (request) {
-        console.log("---------------------entered getAllClientsSelect-----------------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -61,8 +58,6 @@ function ProjectService(objectCollection) {
     }
 
     this.addClientInsert = async function (request) {
-        console.log("---------------------entered addClientInsert-----------------------");
-
         const [err, data] = await validations.addClientValidation(request)
         if (err) {
             error = true
@@ -99,8 +94,6 @@ function ProjectService(objectCollection) {
     }
 
     this.updateClientDetails = async function (request) {
-        console.log("---------------------entered updateClientDetails-----------------------");
-
         let responseData = [],
             error = true;
         const [err, data] = await this.getClientByClientidSelect(request)
@@ -145,8 +138,6 @@ function ProjectService(objectCollection) {
     }
 
     this.getClientByClientidSelect = async function (request) {
-        console.log("---------------entered getClientByClientidSelect---------------------- ");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -175,7 +166,6 @@ function ProjectService(objectCollection) {
     }
 
     this.addProjectsToClientInsert = async function (request) {
-        console.log("---------------entered addProjectsToClientInsert---------------------- ");
         let responseData = [],
             error = true;
         const [err1, respData] = await validations.addProjectToClientValidation(request);
@@ -223,8 +213,6 @@ function ProjectService(objectCollection) {
     }
 
     this.updateProjectDetails = async function (request) {
-        console.log("---------------entered updateProjectDetails---------------------- ");
-
         let responseData = [],
             error = true;
         const [err1, respData] = await validations.updateProjectToClientValidation(request);
@@ -266,8 +254,6 @@ function ProjectService(objectCollection) {
     }
 
     this.removeProjectDelete = async function (request) {
-        console.log("---------------entered removeProjectDelete---------------------- ");
-
         let responseData = [],
             error = true;
 
@@ -297,8 +283,6 @@ function ProjectService(objectCollection) {
     }
 
     this.deleteProjectComplete = async function (request) {
-        console.log("---------------entered deleteProjectComplete---------------------- ");
-
         let responseData = [],
             error = true;
 
@@ -327,8 +311,6 @@ function ProjectService(objectCollection) {
     }
 
     this.inactiveProjToActive = async function (request) {
-        console.log("---------------entered inactiveProjToActive---------------------- ");
-
         let responseData = [],
             error = true;
 
@@ -358,7 +340,6 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllProjectsSelect = async function (request) {
-        console.log("---------------entered getAllProjectsSelect---------------------- ");
 
         let responseData = [],
             error = true;
@@ -382,8 +363,6 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllTagsSelect = async function (request) {
-        console.log("---------------entered getAllTagsSelect---------------------- ");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -430,8 +409,6 @@ function ProjectService(objectCollection) {
     }
 
     this.updateTagDetails = async function (request) {
-        console.log("---------------entered updateTagDetails---------------------- ");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -456,7 +433,6 @@ function ProjectService(objectCollection) {
     }
 
     this.removeTagDelete = async function (request) {
-        console.log("---------------entered removeTagDelete---------------------- ");
 
         const [err, data] = await this.getProjectsByTagidSelect(request)
         if (!err) {
@@ -486,8 +462,6 @@ function ProjectService(objectCollection) {
     }
 
     this.getProjectsByTagidSelect = async function (request) {
-        console.log("---------------entered getProjectsByTagidSelect---------------------- ");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(

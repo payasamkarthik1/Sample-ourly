@@ -1,7 +1,6 @@
 
 const Validations = require('../utils/validations')
 const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
-const ComponentsService = require('../services/componentsService')
 const LeadService = require('./leadService')
 
 
@@ -11,12 +10,9 @@ function UserService(objectCollection) {
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
     const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
-    const componentsService = new ComponentsService(objectCollection)
     const leadService = new LeadService(objectCollection)
 
-
     this.userLogin = async function (request) {
-        console.log("---------------------------entered userLogin-----------------------------------");
         let responseData = [],
             error = true;
 
@@ -54,7 +50,6 @@ function UserService(objectCollection) {
     }
 
     this.userLoginInsert = async function (request, resData1) {
-        console.log("---------------------------entered userLoginInsert-----------------------------------");
 
         let responseData = [],
             error = true;
@@ -75,6 +70,7 @@ function UserService(objectCollection) {
                     responseData = data
                     error = false
                 }).catch((err) => {
+                    console.log("err-------" + err);
                     error = err;
                 })
 
@@ -85,8 +81,6 @@ function UserService(objectCollection) {
     }
 
     this.userProfileUpdate = async function (request, req) {
-        console.log("---------------------------entered userProfileUpdate-----------------------------------");
-
         let responseData = [],
             error = true;
 
@@ -114,7 +108,8 @@ function UserService(objectCollection) {
                                     responseData = [{ message: data[0].message }];
                             }
                         }).catch((err) => {
-                            error = err;
+                            console.log("err-------" + err);
+                            error = err
                         })
                 }
             } else {
@@ -128,7 +123,6 @@ function UserService(objectCollection) {
     }
 
     this.SendForgetPasswordLink = async function (request) {
-        console.log("---------------------------entered SendForgetPasswordLink-----------------------------------");
 
         let responseData = [],
             error = true;
@@ -147,6 +141,7 @@ function UserService(objectCollection) {
                 responseData = resData1
             }
         } catch (err) {
+            console.log("err-------" + err);
             error = err
         }
         return [error, responseData]

@@ -4,8 +4,6 @@ function Components(objectCollection) {
 
 
     this.componentAdd = async function (request) {
-        console.log('---------------------entered componentAdd-------------------------');
-
         let responseData = [],
             error = true
 
@@ -34,8 +32,6 @@ function Components(objectCollection) {
     }
 
     this.componentUpdate = async function (request) {
-        console.log('---------------------entered componentUpdate-------------------------');
-
         let responseData = [],
             error = true
         //flag =2 to update component
@@ -62,8 +58,6 @@ function Components(objectCollection) {
     }
 
     this.componentRemoveInactive = async function (request) {
-        console.log('---------------------entered componentRemove-------------------------');
-
         let responseData = [],
             error = true
         //flag =3 to move into inactive(set log_state = 3)
@@ -91,8 +85,6 @@ function Components(objectCollection) {
     }
 
     this.componentRemoveDelete = async function (request) {
-        console.log('---------------------entered componentRemove-------------------------');
-
         let responseData = [],
             error = true
         //flag =4 to delete (move to log_state = 5)
@@ -120,8 +112,6 @@ function Components(objectCollection) {
     }
 
     this.componentInactiveToActive = async function (request) {
-        console.log('---------------------entered componentRemove-------------------------');
-
         let responseData = [],
             error = true
         //flag =5 move inactive to active
@@ -149,8 +139,6 @@ function Components(objectCollection) {
     }
 
     this.componentGetAll = async function (request) {
-        console.log('---------------------entered componentGetAll-------------------------');
-
         let responseData = [],
             error = true
 

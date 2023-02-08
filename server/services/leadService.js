@@ -1,5 +1,4 @@
 
-
 const EmployeeService = require('./employeeService')
 
 function LeadService(objectCollection) {
@@ -9,8 +8,6 @@ function LeadService(objectCollection) {
 
     //get emps under admin and employee
     this.getEmployessAssignUnderHeadsAdminAndEmpl = async function (request, flag) {
-
-        console.log("---------------------entered getEmployessAssignUnderHeadsAdminAndEmpl-----------------------");
         var users = [], groups = [], dataRepeat = []
         if (request.role_id == 2) {
             const [err, data] = await employeeService.getAllEmployees()
@@ -79,10 +76,7 @@ function LeadService(objectCollection) {
 
     //get emps under  employee not for admin
     this.getEmployessAssignUnderHeads = async function (request, flag) {
-        console.log("---------------------entered getEmployessAssignUnderHeads-----------------------");
-
         var users = [], groups = [], dataRepeat = []
-
         var data = await this.getEmpsUnderHeadsLevel1(request)
         if (data.length != 0) {
             dataRepeat = data
@@ -109,8 +103,6 @@ function LeadService(objectCollection) {
     }
 
     this.seperationUsersAndHeads = async function (data, request, users, groups) {
-        console.log("---------------------entered seperationUsersAndHeads-----------------------");
-
         let empsUnder = []
         for (let j = 0; j < data.length; j++) {
             request.employee_id = data[j].employee_id
@@ -132,7 +124,6 @@ function LeadService(objectCollection) {
     }
 
     this.getEmpsUnderHeadsLevel1 = async function (request) {
-        console.log("---------------------entered getEmpsUnderHeadsLevel1-----------------------");
         let responseData = []
 
         const paramsArr = new Array(

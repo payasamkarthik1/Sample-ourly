@@ -9,8 +9,6 @@ function DepartmentDesignationsService(objectCollection) {
 
 
     this.departmentInsert = async function (request) {
-        console.log("-------------------------entered departmentInsert----------------------------");
-
         const [err, data] = await validations.addDepartmentValidation(request)
         if (err) {
             responseData = data
@@ -48,8 +46,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.departmentRemoveDelete = async function (request) {
-        console.log("-------------------------entered departmentRemoveDelete----------------------------");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -86,8 +82,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllDepartments = async function (request) {
-        console.log("-------------------------entered getAllDepartments----------------------------");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -113,8 +107,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.addDesignByDepartId = async function (request) {
-        console.log("-------------------------entered addDesignByDepartId----------------------------");
-
         let responseData = [],
             error = true;
         const [err, data] = await validations.addDesignationValidation(request)
@@ -151,9 +143,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getDesignByDepartId = async function (request) {
-        console.log("-------------------------entered getDesignByDepartId----------------------------");
-
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -169,6 +158,7 @@ function DepartmentDesignationsService(objectCollection) {
                     responseData = data1;
                     error = false
                 }).catch((err) => {
+                    console.log("err-------" + err);
                     error = err
                 })
             return [error, responseData];
@@ -176,8 +166,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllDesign = async function (request) {
-        console.log("-------------------------entered getAllDesign----------------------------");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -192,6 +180,7 @@ function DepartmentDesignationsService(objectCollection) {
                     responseData = data1;
                     error = false
                 }).catch((err) => {
+                    console.log("err-------" + err);
                     error = err
                 })
             return [error, responseData];
@@ -199,10 +188,7 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.getAllRoleDepartDesign = async function (request) {
-        console.log("-------------------------entered getAllRoleDepartDesign----------------------------");
-
         let responseData = []
-
         const [err2, data2] = await this.getAllDepartments()
         const [err3, data3] = await this.getAllDesign()
         responseData.push(data2)
@@ -212,8 +198,6 @@ function DepartmentDesignationsService(objectCollection) {
     }
 
     this.removeDesignationById = async function (request) {
-        console.log("-------------------------entered removeDesignationById----------------------------");
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -229,6 +213,7 @@ function DepartmentDesignationsService(objectCollection) {
                     responseData = data1;
                     error = false
                 }).catch((err) => {
+                    console.log("err-------" + err);
                     error = err
                 })
             return [error, responseData];

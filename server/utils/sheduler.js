@@ -8,7 +8,6 @@ const LeadService = require('../services/leadService')
 
 function Scheduler(objectCollection) {
     console.log("-------------------------entered Scheduler-------------------------------")
-
     const util = objectCollection.util;
     const db = objectCollection.db;
     const employeeService = new EmployeeService(objectCollection)
@@ -36,13 +35,15 @@ function Scheduler(objectCollection) {
                     sendMails = emps
                 }
                 if (sendMails.length != 0) {
-                    console.log('================================sendMails===========================================')
-                    console.log(sendMails)
+                    console.log('================================remainder mails at momnday 9am===========================================')
+                    await sendMails.map(async (mail) => {
+                        console.log(mail.email)
+                    })
                     console.log('=========================================================')
                     await sendMails.map(async (mail) => {
                         request.email = mail.email
                         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                       //  await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                      //  await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                     })
                 }
             } else {
@@ -74,7 +75,7 @@ function Scheduler(objectCollection) {
 
         })
     }
-    
+
     //on every monday at 12:30 to leads
     this.sendRemainderToLeads = async function () {
         console.log("-------------------------entered sendRemainderToLeads------------------------------");
@@ -96,7 +97,6 @@ function Scheduler(objectCollection) {
 
                 let empUnderGrpWithStatus = []
                 let count = []
-                // let emps =[]
                 request.employee_id = grps[i].employee_id
                 const emps1 = await leadService.getEmpsUnderHeadsLevel1(request)
 
@@ -118,7 +118,7 @@ function Scheduler(objectCollection) {
                         request.emps = count
                     }
                 }
-                
+
                 if (request.mail != "") {
                     if (request.emps.length == 1) {
                         request.text1 = "Team Member:-"
@@ -141,7 +141,7 @@ function Scheduler(objectCollection) {
                      <br><br> 
                      Please make sure  ${request.text2} submit ${request.text5} ${request.text4} by the end of every week.
                      <br> Below  ${request.text6}  ${request.text2} who did not submit ${request.text5} ${request.text4} last week..`
-                 //   await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                  //  await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
             }

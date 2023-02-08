@@ -52,7 +52,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.dashboardDataCalculationOverview = async function (request, data3) {
-        console.log("----------------------------------entered dashboardDataCalculationOverview------------------------------------------");
         let responseData = []
         totalTime = await util.sumOfTime(data3)
         const respData1 = await this.topProject(request, data3)
@@ -71,7 +70,6 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getAllTasksFilterByDescrip = async function (request) {
-        console.log("----------------------------------entered getAllTasksFilterByDescrip------------------------------------------");
         let responseData = [],
             error = true;
         flag = 1
@@ -99,7 +97,6 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.getAllTasksInWeekByEmpId = async function (request) {
-        console.log("----------------------------------entered getAllTasksInWeekByEmpId------------------------------------------");
         let responseData = []
         obj = {}
 
@@ -125,7 +122,6 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.dayWiseTotalTime = async function (request, data) {
-        console.log("------------------------------entered dayWiseTotalTime---------------------------------------");
         let tt = []
         var newArray = data.reduce(function (acc, curr) {
             //finding Index in the array where the NamaCategory matched
@@ -157,7 +153,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.overAllProject = async function (request, data) {
-        console.log("---------------------------entered overAllProject---------------------");
         let responseData = []
 
         var newArray = data.reduce(function (acc, curr) {
@@ -201,7 +196,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.dayWiseProject = async function (request, data) {
-        console.log("-----------------------------entered dayWiseProject----------------------------------");
         let responseData = []
         var newArray = data.reduce(function (acc, curr) {
 
@@ -289,7 +283,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.topProject = async function (request, data) {
-        console.log("-----------------------------entered topProject----------------------------------");
         let responseData = []
         var newArray = data.reduce(function (acc, curr) {
             //finding Index in the array where the NamaCategory matched
@@ -339,7 +332,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.overAllUsers = async function (request, data) {
-        console.log("-----------------------------entered overAllUsers----------------------------------");
         let responseData = []
 
         var newArray = data.reduce(function (acc, curr) {
@@ -375,7 +367,6 @@ function AnalyzeServices(objectCollection) {
         return responseData
 
     }
-
 
     this.getReportSummary = async function (request) {
         console.log("--------------------------entered getReportSummary----------------------------");
@@ -479,7 +470,8 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryGroupByUser = async function (request) {
-        console.log("-------------------------enterd getReportSummaryGroupByUser--------------------");
+        console.log("------------------------------------entered getReportSummaryGroupByUser------------------------------------------");
+
         let responseData = []
 
         let data1 = []
@@ -578,7 +570,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getFilterReportSummary = async function (request, data) {
-        console.log("---------------------enterd getFilterReportSummary--------------------");
 
         let responseData = []
         error = true
@@ -688,7 +679,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryOverviewCalculation = async function (request, data) {
-        console.log("--------------------entered getReportSummaryOverviewCalculation---------------------");
         let responseData = []
 
         const [err, filterData] = await this.getFilterReportSummary(request, data)
@@ -723,7 +713,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getDataByDates = async function (request) {
-        console.log('------------------------entered getDataByDates------------------------');
         let responseData = [],
             error = true;
 
@@ -750,7 +739,6 @@ function AnalyzeServices(objectCollection) {
     };
 
     this.filterDataByEmps = async function (request, data1, data2) {
-        console.log('-------------------entered filterDataByEmps----------------------');
 
         let filterData = []
         for (let i = 0; i < data1.length; i++) {
@@ -765,7 +753,6 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
-        console.log("--------------------------entered getReportSummaryGroupByUserOverviewCalculation-----------------------");
         let responseData = []
         const [err, filterData] = await this.getFilterReportSummary(request, data)
         if (filterData.length != 0) {

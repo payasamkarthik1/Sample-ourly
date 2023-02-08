@@ -1,21 +1,12 @@
 // const mysql = require('mysql');
-// const moment = require('moment')
-// //bcrypt
+
 const bcrypt = require('bcrypt')
-
-// var CryptoJS = require('crypto-js')
 const Validator = require('validator')
-const isEmpty = require('is-empty');
-const { response } = require('express');
-
-// const Valid = require('../services/roleComponentsMappingService')
 
 function Validations(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
-    // const valid = new Valid(objectCollection)
-
 
     this.employeeCreationInputValidations = async function (request) {
 

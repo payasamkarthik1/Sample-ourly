@@ -6,12 +6,10 @@ function RolePermissionEmployeeMapping(objectCollection) {
     const roleComponentsMappingService = new RoleComponentsMappingService(objectCollection)
 
     this.rolePermissionEmployeeAdd = async function (request) {
-        console.log('---------------------entered rolePermissionEmployeeAdd-------------------------');
         await this.rolePermissionsEmployeeDataLoopForAdd(request, 1)
     }
 
     this.rolePermissionEmployeeUpdate = async function (request) {
-        console.log('---------------------entered rolePermissionEmployeeUpdate-------------------------');
         await this.rolePermissionEmployeeDelete(request, 2)
         await this.rolePermissionsEmployeeDataLoopForUpdate(request, 1)
         const [err, data] = await roleComponentsMappingService.roleGet()
@@ -19,7 +17,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
     }
 
     this.rolePermissionEmployeeDelete = async function (request, flag) {
-        console.log('---------------------entered rolePermissionEmployeeDelete-------------------------');
         let responseData = [],
             error = true
         const paramsArr = new Array(
@@ -44,7 +41,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
     }
 
     this.rolePermissionsEmployeeDataLoopForAdd = async function (request, flag) {
-        console.log('---------------------entered rolePermissionsEmployeeDataLoopForAdd-------------------------');
         const addedDate = await util.getCurrentUTCTime()
         const data1 = request.permission_data
         data1.map(async (item) => {
@@ -72,7 +68,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
     }
 
     this.rolePermissionsEmployeeDataLoopForUpdate = async function (request, flag) {
-        console.log('---------------------entered rolePermissionsDataLoop-------------------------');
         const data = request.permission_data
         const addedDate = await util.getCurrentUTCTime()
         data.map(async (item) => {
@@ -101,7 +96,6 @@ function RolePermissionEmployeeMapping(objectCollection) {
     }
 
     this.rolePermissionEmployeeget = async function (request, flag) {
-        console.log('---------------------entered rolePermissionEmployeeget-------------------------');
         let responseData = []
         let time = [], manage = [], analyze = []
         error = true

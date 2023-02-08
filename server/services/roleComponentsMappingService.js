@@ -8,7 +8,6 @@ function RoleComponentsMappingService(objectCollection) {
 
 
     this.roleCreation = async function (request) {
-        console.log('---------------------entered roleCreation-------------------------');
         const [err, validation] = await validations.roleValidationAdd(request);
         if (!err) {
             const data = request.permission_data
@@ -26,7 +25,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleUpdate = async function (request) {
-        console.log('---------------------entered roleUpdate-------------------------');
         const [err, validation] = await validations.roleValidationUpdate(request);
         if (!err) {
             await this.roleDelete(request, 1);
@@ -43,7 +41,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleUpdateInPermissions = async function (request) {
-        console.log('---------------------entered roleUpdateInPermissions-------------------------');
         //for updating rolename in role permission
         flag = 4
         let paramsArr = new Array(
@@ -68,9 +65,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.rolePermissionsDataLoopForAdd = async function (request, item, role_id, addedDate, flag) {
-
-        console.log('---------------------entered rolePermissionsDataLoopForAdd-------------------------');
-
         let responseData = []
         let error = []
 
@@ -97,7 +91,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.rolePermissionsDataLoopForUpdate = async function (request, item, addedDate, flag) {
-        console.log('---------------------entered rolePermissionsDataLoopForUpdate-------------------------');
         let paramsArr = new Array(
             request.role_id,
             request.role_name,
@@ -116,14 +109,12 @@ function RoleComponentsMappingService(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-            // return [error, responseData];
         }
 
 
     }
 
     this.roleDelete = async function (request, flag) {
-        console.log('---------------------entered roleDelete-------------------------');
         if (request.role_name == "Admin Access") {
             return [true, [{ message: "Admin role cannot be deleted" }]]
         } else {
@@ -161,7 +152,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleGet = async function (request) {
-        console.log('---------------------entered roleGet-------------------------');
         let responseData = [],
             error = true
         const paramsArr = new Array(
@@ -203,7 +193,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleGetByEmpId = async function (request) {
-        console.log('---------------------entered roleGet-------------------------');
         let responseData = [],
             error = true
         const paramsArr = new Array(
