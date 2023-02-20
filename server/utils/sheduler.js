@@ -43,7 +43,7 @@ function Scheduler(objectCollection) {
                     await sendMails.map(async (mail) => {
                         request.email = mail.email
                         request.text = "Hi, <br><br> For approval, please submit your last week's timesheet by the end of today.Please ignore the email if the timesheet is submitted."
-                        await util.nodemailerSenderForTimesheetSubmitRemainder(request)
+                        // await util.nodemailerSenderForTimesheetSubmitRemainder(request)
                     })
                 }
             } else {
@@ -141,7 +141,7 @@ function Scheduler(objectCollection) {
                      <br><br> 
                      Please make sure  ${request.text2} submit ${request.text5} ${request.text4} by the end of every week.
                      <br> Below  ${request.text6}  ${request.text2} who did not submit ${request.text5} ${request.text4} last week..`
-                    await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
+                   // await util.nodemailerSenderForTimesheetSubmitRemainderForLeads(request)
                 }
 
             }

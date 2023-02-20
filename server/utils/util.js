@@ -66,7 +66,6 @@ function Util() {
 
     this.generateJwtToken = async function (resData1) {
         const token = jwt.sign({ data: resData1 }, 'clockify')
-        console.log(token);
         return token
     }
 
