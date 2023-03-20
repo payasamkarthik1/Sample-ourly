@@ -806,6 +806,16 @@ function Util() {
                                             style="font-weight: 100;">Submitted by:</span> ${request.employee_name}</h5>
                                 </td>
                             </tr>
+                            
+                                 <tr>
+                                 <td align="left"
+                                     style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
+                                     <a href="http://183.82.113.10:4179/approvals">
+                                 <button
+                                         style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">Review</button>
+                                         </a>
+                                 </td>
+                             </tr>
                             <tr>
                                 <td
                                     style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
@@ -961,7 +971,7 @@ function Util() {
     }
 
     this.sumOfTime = async function (data) {
-    
+
         function timestrToSec(timestr) {
             var parts = timestr.split(":");
             return (parts[0] * 3600) +
