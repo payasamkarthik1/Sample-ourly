@@ -8,9 +8,9 @@ mode = "staging";
 config = {};
 
 if (mode === "staging") {
-    config.user = "mydb",
+    config.user = "root",
         config.host = "localhost",
-        config.password = "Passw0rd!",
+        config.password = "Welcome@1234",
         config.database = "clockify",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
