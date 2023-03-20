@@ -8,6 +8,9 @@ function RoleComponentsMappingService(objectCollection) {
 
 
     this.roleCreation = async function (request) {
+        console.log('====================================')
+        console.log("enterd")
+        console.log('====================================')
         const [err, validation] = await validations.roleValidationAdd(request);
         if (!err) {
             const data = request.permission_data
@@ -179,11 +182,11 @@ function RoleComponentsMappingService(objectCollection) {
                             acc[findIfNameExist].value.push({ component_id: curr.component_id, component_name: curr.component_name })
                         }
 
-                        return acc;
 
                     }, []);
                     responseData = data1;
                     error = false
+                        return acc;
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
