@@ -9,7 +9,7 @@ config = {};
 
 if (mode === "staging") {
     config.user = "mydb",
-        config.host = "192.168.0.251",
+        config.host = "localhost",
         config.password = "Passw0rd!",
         config.database = "clockify",
         config.multipleStatements = true,
