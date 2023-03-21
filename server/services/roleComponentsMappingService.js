@@ -155,6 +155,9 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleGet = async function (request) {
+        console.log('===========enetered rolegat=================')
+        console.log()
+        console.log('====================================')
         let responseData = [],
             error = true
         const paramsArr = new Array(
@@ -163,6 +166,9 @@ function RoleComponentsMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('=============role_get_all_select================')
+                    console.log(data)
+                    console.log('====================================')
                     var data1 = data.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
                         var findIfNameExist = acc.findIndex(function (item) {
@@ -186,11 +192,15 @@ function RoleComponentsMappingService(objectCollection) {
                     }, []);
                     responseData = data1;
                     error = false
-                        return acc;
+                    return acc;
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
                 })
+
+            console.log('============responseData==================')
+            console.log(responseData)
+            console.log('====================================')
             return [error, responseData];
         }
     }
