@@ -169,7 +169,6 @@ function RoleComponentsMappingService(objectCollection) {
                             return item.role_id === curr.role_id;
                         })
                         if (findIfNameExist === -1) {
-
                             let obj = {
                                 'role_name': curr.role_name,
                                 'role_id': curr.role_id,
