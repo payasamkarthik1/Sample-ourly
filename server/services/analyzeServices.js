@@ -374,86 +374,86 @@ function AnalyzeServices(objectCollection) {
         let data1 = []
         let empsGathered = []
 
-        //get employess under head
-        // if (request.role_id == 2) {
-        //     if (request.employees.length != 0 || request.groups.length != 0) {
-        //         if (request.employees.length != 0) {
-        //             let emp = request.employees
-        //             for (let i = 0; i < emp.length; i++) {
-        //                 request.employee_id = emp[i]
-        //                 const [err9, data9] = await employeeService.getEmployeeById(request)
-        //                 Array.prototype.push.apply(empsGathered, data9);
-        //             }
-        //         }
-        //         if (request.groups.length != 0) {
-        //             let grp = request.groups
+       // get employess under head
+        if (request.role_id == 2) {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
 
-        //             for (let i = 0; i < grp.length; i++) {
-        //                 request.employee_id = grp[i]
-        //                 const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
-        //                 Array.prototype.push.apply(empsGathered, data9);
-        //             }
-        //         }
-        //         //unique employess
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
 
-        //         const uniqueids = [];
-        //         const uniqueEmps = empsGathered.filter(element => {
-        //             const isDuplicate = uniqueids.includes(element.employee_id);
-        //             if (!isDuplicate) {
-        //                 uniqueids.push(element.employee_id);
-        //                 return true;
-        //             }
-        //             return false;
-        //         });
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
 
-        //         data1 = uniqueEmps
+                data1 = uniqueEmps
 
-        //     } else {
-        //         const [err8, data8] = await employeeService.getAllEmployees(request)
-        //         data1 = data8
-        //     }
+            } else {
+                const [err8, data8] = await employeeService.getAllEmployees(request)
+                data1 = data8
+            }
 
-        // } else if (request.role_id == 3) {
-        //     const [err9, data9] = await employeeService.getEmployeeById(request)
-        //     data1 = data9
-        // } else {
-        //     if (request.employees.length != 0 || request.groups.length != 0) {
-        //         if (request.employees.length != 0) {
-        //             let emp = request.employees
-        //             for (let i = 0; i < emp.length; i++) {
-        //                 request.employee_id = emp[i]
-        //                 const [err9, data9] = await employeeService.getEmployeeById(request)
-        //                 Array.prototype.push.apply(empsGathered, data9);
-        //             }
-        //         }
-        //         if (request.groups.length != 0) {
-        //             let grp = request.groups
-        //             for (let i = 0; i < grp.length; i++) {
-        //                 request.employee_id = grp[i]
-        //                 const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
-        //                 Array.prototype.push.apply(empsGathered, data9);
-        //             }
-        //         }
-        //         //unique employess
-        //         const uniqueids = [];
-        //         const uniqueEmps = empsGathered.filter(element => {
-        //             const isDuplicate = uniqueids.includes(element.employee_id);
-        //             if (!isDuplicate) {
-        //                 uniqueids.push(element.employee_id);
-        //                 return true;
-        //             }
-        //             return false;
-        //         });
-        //         data1 = uniqueEmps
-        //     } else {
-        //         const data9 = await leadService.getEmpsUnderHeadsLevel1(request, 1)
-        //         data1 = data9
-        //     }
-        // }
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+                data1 = uniqueEmps
+            } else {
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request, 1)
+                data1 = data9
+            }
+        }
 
 
-        // const [err8, emp] = await employeeService.getAllEmployees(request)
-        // data1 = emp
+        const [err8, emp] = await employeeService.getAllEmployees(request)
+        data1 = emp
 
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
