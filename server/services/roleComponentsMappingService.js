@@ -163,7 +163,7 @@ function RoleComponentsMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    var data1 = data.reduce(function (acc, curr) {
+                    var data1 = await data.reduce(function (acc, curr) {
                         //finding Index in the array where the NamaCategory matched
                         var findIfNameExist = acc.findIndex(function (item) {
                             return item.role_id === curr.role_id;
