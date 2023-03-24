@@ -165,18 +165,11 @@ function RoleComponentsMappingService(objectCollection) {
         const queryString = util.getQueryString('role_get_all_select', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('=============role_get_all_select===================')
-                    console.log(data)
-                    console.log('====================================')
-                    var data1 = await data.reduce(function (acc, curr) {
-                        console.log('====================================')
-                        console.log("accccc", acc)
-                        console.log("currrrrrrr", curr)
-                        console.log('====================================')
+                .then(async (dataaa) => {
+                    var data1 = await dataaa.reduce(function (acc, curr) {
+
                         //finding Index in the array where the NamaCategory matched
                         var findIfNameExist = acc.findIndex(function (item) {
-                            console.log("iten", item);
                             return item.role_id === curr.role_id;
                         })
                         if (findIfNameExist === -1) {
@@ -195,7 +188,6 @@ function RoleComponentsMappingService(objectCollection) {
                         return acc;
 
                     }, []);
-
 
                     console.log("final data", data1);
                     responseData = data1;
