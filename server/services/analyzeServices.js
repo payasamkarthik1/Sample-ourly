@@ -367,14 +367,13 @@ function AnalyzeServices(objectCollection) {
         return responseData
 
     }
-
     this.getReportSummary = async function (request) {
         console.log("--------------------------entered getReportSummary----------------------------");
         let responseData = []
         let data1 = []
         let empsGathered = []
 
-       // get employess under head
+        //get employess under head
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
@@ -451,24 +450,19 @@ function AnalyzeServices(objectCollection) {
             }
         }
 
-
-        const [err8, emp] = await employeeService.getAllEmployees(request)
-        data1 = emp
-
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
         console.log('===========getDataByDates==================')
         console.log("data length", data2.length)
         console.log('========================================')
         //get dashboard data overview
-        // if (data1.length != 0 && data2.length != 0) {
-        if (data2.length != 0) {
+        if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
-            // const data3 = await this.filterDataByEmps(request, data1, data2)
+            const data3 = await this.filterDataByEmps(request, data1, data2)
             console.log('===========filterDataByEmps==================')
-            console.log("data length", data2.length)
+            console.log("data length", data3.length)
             console.log('====================================')
-            const [err, data] = await this.getReportSummaryOverviewCalculation(request, data2)
+            const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
             responseData = data
         }
         return [false, responseData]
@@ -573,6 +567,7 @@ function AnalyzeServices(objectCollection) {
         }
         return [false, responseData]
     }
+
 
     this.getFilterReportSummary = async function (request, data) {
 
