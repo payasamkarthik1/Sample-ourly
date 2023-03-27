@@ -358,6 +358,9 @@ function TimeTrackingService(objectCollection) {
                 .then(async (data) => {
                     responseData = data;
                     error = false
+                    console.log('=============timetracking_get_all_weeks_select==================');
+                    console.log(data);
+                    console.log('====================================');
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -436,6 +439,9 @@ function TimeTrackingService(objectCollection) {
         error = true;
 
         const [err, data] = await this.getAllWeeksByEmpId(request)
+        console.log('=============getAllWeeksByEmpId================');
+        console.log(data);
+        console.log('====================================');
         if (!err) {
             if (!data.length == 0) {
                 for (let i = 0; i < data.length; i++) {
