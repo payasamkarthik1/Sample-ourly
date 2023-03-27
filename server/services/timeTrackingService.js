@@ -351,7 +351,7 @@ function TimeTrackingService(objectCollection) {
             request.employee_id.toString()
         );
 
-        const queryString = util.getQueryString('timetracking_get_all_weeks_select', paramsArr);
+        const queryString = await util.getQueryString('timetracking_get_all_weeks_select', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -359,7 +359,7 @@ function TimeTrackingService(objectCollection) {
                     responseData = data;
                     error = false
                     console.log('=============timetracking_get_all_weeks_select==================');
-                    console.log(data);
+                    console.log(responseData);
                     console.log('====================================');
                 }).catch((err) => {
                     console.log("err-------" + err);
