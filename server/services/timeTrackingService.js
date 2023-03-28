@@ -1105,6 +1105,7 @@ function TimeTrackingService(objectCollection) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
                 Array.prototype.push.apply(responseData, data2);
             }
+            error = false
         }
         return [error, responseData];
 
@@ -1125,6 +1126,9 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log('==============approvals_get_list=================')
+                    console.log(data)
+                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
