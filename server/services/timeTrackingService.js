@@ -1104,6 +1104,9 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
+                console.log('================getListFromApprovals  evry emp data==================')
+                console.log(data2)
+                console.log('====================================')
 
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
@@ -1122,12 +1125,13 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
+                        console.log('===========jkhfjkc fbc cfjv jf======================')
+                        console.log(data2[j])
+                        console.log('====================================')
                         Array.prototype.push.apply(responseData, data2[j]);
-
                         error = false
-                        // Array.prototype.push.apply(responseData, data2[j]);                
                     }
-                    // responseData.push(data2)
+
                 } else
                     error = false
             }
