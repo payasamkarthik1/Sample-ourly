@@ -1103,7 +1103,7 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
-                console.log('=============getListFromApprovals====================')
+                console.log('================getListFromApprovals=================')
                 console.log(data2)
                 console.log('====================================')
 
@@ -1115,12 +1115,6 @@ function TimeTrackingService(objectCollection) {
                             request.first_week_day = data2[j].first_week_day
                             request.last_week_day = data2[j].last_week_day
                             const [error, data] = await this.getSubmittedApproveEntries(request, 1)
-                            console.log('=========getSubmittedApproveEntries=======================')
-                            console.log(data)
-                            console.log('====================================')
-                            console.log('=============data222222222222================');
-                            console.log(data2);
-                            console.log('====================================');
                             data2[j].submitted_datetime = data[0].submited_for_approval_datetime
                         } else if (data2[j].status_id == 3) {
                             console.log("entered    3");
@@ -1139,6 +1133,9 @@ function TimeTrackingService(objectCollection) {
                 } else
                     error = false
             }
+            console.log('=============responseData====================')
+            console.log(responseData)
+            console.log('====================================')
             return [error, responseData];
 
         }
