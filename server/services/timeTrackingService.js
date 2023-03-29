@@ -1128,7 +1128,8 @@ function TimeTrackingService(objectCollection) {
                         console.log('===========jkhfjkc fbc cfjv jf======================')
                         console.log(data2[j])
                         console.log('====================================')
-                        Array.prototype.push.apply(responseData, data2[j]);
+                        responseData.push(data2[j])
+                        // Array.prototype.push.apply(responseData, data2[j]);
                         error = false
                     }
 
