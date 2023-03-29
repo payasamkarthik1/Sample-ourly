@@ -1126,6 +1126,10 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
+                        console.log('====================================')
+                        console.log(data2)
+                        console.log(data2[j])
+                        console.log('====================================')
                         Array.prototype.push.apply(responseData, data2[j]);
                         console.log('============push   responseData==================')
                         console.log()
