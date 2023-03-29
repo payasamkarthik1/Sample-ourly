@@ -1111,9 +1111,9 @@ function TimeTrackingService(objectCollection) {
                     for (let j = 0; j < data2.length; j++) {
                         if (data2[j].status_id == 1) {
                             console.log("entered    1");
-                            request.employee_id = data2.team_member_employee_id
-                            request.first_week_day = data2.first_week_day
-                            request.last_week_day = data2.last_week_day
+                            request.employee_id = data2[j].team_member_employee_id
+                            request.first_week_day = data2[j].first_week_day
+                            request.last_week_day = data2[j].last_week_day
                             const data = await this.getSubmittedApproveEntries(request, 1)
                             console.log('=========getSubmittedApproveEntries=======================')
                             console.log(data)
@@ -1122,9 +1122,9 @@ function TimeTrackingService(objectCollection) {
                         } else if (data2[j].status_id == 3) {
                             console.log("entered    3");
 
-                            request.employee_id = data2.team_member_employee_id
-                            request.first_week_day = data2.first_week_day
-                            request.last_week_day = data2.last_week_day
+                            request.employee_id = data2[j].team_member_employee_id
+                            request.first_week_day = data2[j].first_week_day
+                            request.last_week_day = data2[j].last_week_day
                             const data = await this.getSubmittedApproveEntries(request, 2)
                             data2.push({ approved_datetime: data[0].approved_on_datetime })
                             data2.push({ approved_by: data[0].approved_by })
