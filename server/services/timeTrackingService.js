@@ -1016,9 +1016,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApprovalsList = async function (request) {
-        console.log('===========getApprovalsList FUNCTIONNNNNN====================')
-        console.log("-----------------------------------------djnkff vnf vf vjnf vf--------")
-        console.log('====================================')
+
 
         let responseData = []
         error = true;
@@ -1104,22 +1102,20 @@ function TimeTrackingService(objectCollection) {
             }
         }
         if (data1.length != 0) {
-            console.log("enteddddddddd  d d d d d-=-----------------------------");
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
+                const f = request.first_week_day
+                const l = request.last_Week_day
+
+                request.first_week_day = f
+                request.last_Week_day = l
                 console.log('====================================')
                 console.log(request)
-                console.log('====================================')
-                console.log('=========empssss s s s s s s  ss ====================')
-                console.log(data1[i].first_name)
-                console.log('====================================')
+                console.log(f)
+                console.log(l)
 
+                console.log('====================================')
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
-
-                console.log('=====getListFromApprovals=========================')
-                console.log(data2)
-                console.log('====================================')
-
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
                         if (data2[j].status_id == 1) {
