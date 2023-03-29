@@ -1105,15 +1105,14 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const f = request.first_week_day
-                const l = request.last_Week_day
+                const l = request.last_week_day
 
                 request.first_week_day = f
-                request.last_Week_day = l
+                request.last_week_day = l
                 console.log('====================================')
                 console.log(request)
                 console.log(f)
                 console.log(l)
-
                 console.log('====================================')
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
                 if (data2.length != 0) {
