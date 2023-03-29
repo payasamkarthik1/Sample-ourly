@@ -1103,16 +1103,25 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
+                console.log('=============getListFromApprovals====================')
+                console.log(data2)
+                console.log('====================================')
 
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
-                        if (data2.status_id == 1) {
+                        if (data2[j].status_id == 1) {
+                            console.log("entered    1");
                             request.employee_id = data2.team_member_employee_id
                             request.first_week_day = data2.first_week_day
                             request.last_week_day = data2.last_week_day
                             const data = await this.getSubmittedApproveEntries(request, 1)
+                            console.log('=========getSubmittedApproveEntries=======================')
+                            console.log(data)
+                            console.log('====================================')
                             data2.push({ submitted_datetime: data[0].submited_for_approval_datetime })
-                        } else if (data2.status_id == 3) {
+                        } else if (data2[j].status_id == 3) {
+                            console.log("entered    3");
+
                             request.employee_id = data2.team_member_employee_id
                             request.first_week_day = data2.first_week_day
                             request.last_week_day = data2.last_week_day
