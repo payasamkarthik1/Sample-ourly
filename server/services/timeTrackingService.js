@@ -1107,7 +1107,7 @@ function TimeTrackingService(objectCollection) {
                 console.log(request)
                 console.log('====================================')
                 console.log('=========empssss s s s s s s  ss ====================')
-                console.log(data1)
+                console.log(data1.first_name)
                 console.log('====================================')
 
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
