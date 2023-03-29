@@ -1103,11 +1103,10 @@ function TimeTrackingService(objectCollection) {
         if (data1.length != 0) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
-                console.log('=============startttttt================')
-                console.log(data1[i])
-                console.log('====================================')
+
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
-                console.log('================getListFromApprovals  evry emp data==================')
+
+                console.log('=====getListFromApprovals=========================')
                 console.log(data2)
                 console.log('====================================')
 
@@ -1128,9 +1127,7 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
-                        console.log('===========jkhfjkc fbc cfjv jf======================')
-                        console.log(data2[j])
-                        console.log('====================================')
+
                         responseData.push(data2[j])
                         // Array.prototype.push.apply(responseData, data2[j]);
                         error = false
