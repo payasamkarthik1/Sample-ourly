@@ -1103,6 +1103,12 @@ function TimeTrackingService(objectCollection) {
         if (data1.length != 0) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
+                console.log('====================================')
+                console.log(request)
+                console.log('====================================')
+                console.log('=========empssss s s s s s s  ss ====================')
+                console.log(data1)
+                console.log('====================================')
 
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
 
@@ -1143,18 +1149,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getListFromApprovals = async function (request, data) {
-        console.log('====================================')
-        console.log("empid", data.employee_id)
-        console.log("empid", request.first_week_day)
-        console.log("empid", request.last_week_day)
-        console.log("request", request)
 
-
-        console.log('====================================')
-
-        console.log('====================================')
-        console.log(data)
-        console.log('====================================')
         let responseData = [],
             error = true;
         const paramsArr = new Array(
