@@ -1102,13 +1102,14 @@ function TimeTrackingService(objectCollection) {
             }
         }
         if (data1.length != 0) {
+            const f = request.first_week_day
+            const l = request.last_week_day
+
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
-                const f = request.first_week_day
-                const l = request.last_week_day
-
                 request.first_week_day = f
                 request.last_week_day = l
+
                 console.log('====================================')
                 console.log(request)
                 console.log(f)
@@ -1133,7 +1134,9 @@ function TimeTrackingService(objectCollection) {
 
                         }
 
+
                         responseData.push(data2[j])
+
                         // Array.prototype.push.apply(responseData, data2[j]);
                         error = false
                     }
