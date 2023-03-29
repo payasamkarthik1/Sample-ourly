@@ -1114,8 +1114,6 @@ function TimeTrackingService(objectCollection) {
                             const [error, data] = await this.getSubmittedApproveEntries(request, 1)
                             data2[j].submitted_datetime = data[0].submited_for_approval_datetime
                         } else if (data2[j].status_id == 3) {
-                            console.log("entered    3");
-
                             request.employee_id = data2[j].team_member_employee_id
                             request.first_week_day = data2[j].first_week_day
                             request.last_week_day = data2[j].last_week_day
@@ -1124,10 +1122,11 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
-
+                        responseData.push(data2[j])
+                        error = false
                         // Array.prototype.push.apply(responseData, data2[j]);                
                     }
-
+                    responseData.push(data2)
                 } else
                     error = false
             }
