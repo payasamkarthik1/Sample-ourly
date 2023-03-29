@@ -1118,6 +1118,9 @@ function TimeTrackingService(objectCollection) {
                             console.log('=========getSubmittedApproveEntries=======================')
                             console.log(data)
                             console.log('====================================')
+                            console.log('=============data222222222222================');
+                            console.log(data2);
+                            console.log('====================================');
                             data2.push({ submitted_datetime: data[0].submited_for_approval_datetime })
                         } else if (data2[j].status_id == 3) {
                             console.log("entered    3");
