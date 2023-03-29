@@ -1016,6 +1016,9 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApprovalsList = async function (request) {
+        console.log('====================================')
+        console.log("-----------------------------0000000000000000000000000000000000-----------------------------------")
+        console.log('====================================')
         let responseData = []
         error = true;
 
