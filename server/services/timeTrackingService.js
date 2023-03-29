@@ -1110,7 +1110,6 @@ function TimeTrackingService(objectCollection) {
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
                         if (data2[j].status_id == 1) {
-                            console.log("entered    1");
                             request.employee_id = data2[j].team_member_employee_id
                             request.first_week_day = data2[j].first_week_day
                             request.last_week_day = data2[j].last_week_day
@@ -1127,7 +1126,10 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
-                        Array.prototype.push.apply(responseData, data2);
+                        Array.prototype.push.apply(responseData, data2[j]);
+                        console.log('============push   responseData==================')
+                        console.log()
+                        console.log('====================================')
                     }
 
                 } else
