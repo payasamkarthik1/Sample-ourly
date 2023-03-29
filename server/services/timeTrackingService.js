@@ -1147,7 +1147,13 @@ function TimeTrackingService(objectCollection) {
         console.log("empid", data.employee_id)
         console.log("empid", request.first_week_day)
         console.log("empid", request.last_week_day)
+        console.log("request", request)
 
+
+        console.log('====================================')
+
+        console.log('====================================')
+        console.log(data)
         console.log('====================================')
         let responseData = [],
             error = true;
