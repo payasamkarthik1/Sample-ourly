@@ -1143,6 +1143,12 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getListFromApprovals = async function (request, data) {
+        console.log('====================================')
+        console.log("empid", data.employee_id)
+        console.log("empid", request.first_week_day)
+        console.log("empid", request.last_week_day)
+
+        console.log('====================================')
         let responseData = [],
             error = true;
         const paramsArr = new Array(
