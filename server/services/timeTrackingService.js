@@ -1016,9 +1016,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApprovalsList = async function (request) {
-        console.log('====================================')
-        console.log("-----------------------------0000000000000000000000000000000000-----------------------------------")
-        console.log('====================================')
+
         let responseData = []
         error = true;
 
@@ -1106,9 +1104,6 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
-                console.log('================getListFromApprovals=================')
-                console.log(data2)
-                console.log('====================================')
 
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
@@ -1129,23 +1124,14 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
-                        console.log('====================================')
-                        console.log(data2)
-                        console.log(data2[j])
-                        console.log('====================================')
-                        responseData.push(data2[j])
-                        // Array.prototype.push.apply(responseData, data2[j]);
-                        console.log('============push   responseData==================')
-                        console.log()
-                        console.log('====================================')
+
+                        // Array.prototype.push.apply(responseData, data2[j]);                
                     }
 
                 } else
                     error = false
             }
-            console.log('=============responseData====================')
-            console.log(responseData)
-            console.log('====================================')
+
             return [error, responseData];
 
         }
