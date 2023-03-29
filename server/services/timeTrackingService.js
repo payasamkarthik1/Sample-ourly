@@ -1122,11 +1122,12 @@ function TimeTrackingService(objectCollection) {
                             data2[j].approved_by = data[0].approved_by
 
                         }
-                        responseData.push(data2[j])
+                        Array.prototype.push.apply(responseData, data2[j]);
+
                         error = false
                         // Array.prototype.push.apply(responseData, data2[j]);                
                     }
-                    responseData.push(data2)
+                    // responseData.push(data2)
                 } else
                     error = false
             }
