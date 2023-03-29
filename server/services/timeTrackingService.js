@@ -1103,12 +1103,33 @@ function TimeTrackingService(objectCollection) {
             //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
-                Array.prototype.push.apply(responseData, data2);
-            }
-            error = false
-        }
-        return [error, responseData];
 
+                if (data2.length != 0) {
+                    for (let j = 0; j < data2.length; j++) {
+                        if (data2.status_id == 1) {
+                            request.employee_id = data2.team_member_employee_id
+                            request.first_week_day = data2.first_week_day
+                            request.last_week_day = data2.last_week_day
+                            const data = await this.getSubmittedApproveEntries(request, 1)
+                            data2.push({ submitted_datetime: data[0].submited_for_approval_datetime })
+                        } else if (data2.status_id == 3) {
+                            request.employee_id = data2.team_member_employee_id
+                            request.first_week_day = data2.first_week_day
+                            request.last_week_day = data2.last_week_day
+                            const data = await this.getSubmittedApproveEntries(request, 2)
+                            data2.push({ approved_datetime: data[0].approved_on_datetime })
+                            data2.push({ approved_by: data[0].approved_by })
+
+                        }
+                        Array.prototype.push.apply(responseData, data2);
+                    }
+
+                } else
+                    error = false
+            }
+            return [error, responseData];
+
+        }
     }
 
     this.getListFromApprovals = async function (request, data) {
