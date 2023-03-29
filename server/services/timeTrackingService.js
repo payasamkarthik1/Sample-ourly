@@ -1109,12 +1109,6 @@ function TimeTrackingService(objectCollection) {
             for (let i = 0; i < data1.length; i++) {
                 request.first_week_day = f
                 request.last_week_day = l
-
-                console.log('====================================')
-                console.log(request)
-                console.log(f)
-                console.log(l)
-                console.log('====================================')
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
@@ -1140,13 +1134,10 @@ function TimeTrackingService(objectCollection) {
                         // Array.prototype.push.apply(responseData, data2[j]);
                         error = false
                     }
-
                 } else
                     error = false
             }
-
             return [error, responseData];
-
         }
     }
 
