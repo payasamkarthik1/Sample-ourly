@@ -1129,8 +1129,8 @@ function TimeTrackingService(objectCollection) {
                             request.first_week_day = data2[j].first_week_day
                             request.last_week_day = data2[j].last_week_day
                             const [error, data] = await this.getSubmittedApproveEntries(request, 2)
-                            data2.push({ approved_datetime: data[0].approved_on_datetime })
-                            data2.push({ approved_by: data[0].approved_by })
+                            data2[j].push({ approved_datetime: data[0].approved_on_datetime })
+                            data2[j].push({ approved_by: data[0].approved_by })
 
                         }
                         Array.prototype.push.apply(responseData, data2);
