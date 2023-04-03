@@ -155,9 +155,6 @@ function RoleComponentsMappingService(objectCollection) {
     }
 
     this.roleGet = async function (request) {
-        console.log('====================================')
-        console.log("entered role get")
-        console.log('====================================')
         let responseData = [],
             error = true
         const paramsArr = new Array(
@@ -199,9 +196,6 @@ function RoleComponentsMappingService(objectCollection) {
             return [error, responseData];
         }
     }
-
-
-
 
 
     this.roleGetByEmpId = async function (request) {

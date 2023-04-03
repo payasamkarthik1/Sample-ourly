@@ -1016,8 +1016,6 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getApprovalsList = async function (request) {
-
-
         let responseData = []
         error = true;
 
@@ -1104,34 +1102,46 @@ function TimeTrackingService(objectCollection) {
         if (data1.length != 0) {
             const f = request.first_week_day
             const l = request.last_week_day
-
-            //get approve list 
             for (let i = 0; i < data1.length; i++) {
                 request.first_week_day = f
                 request.last_week_day = l
                 const [err, data2] = await this.getListFromApprovals(request, data1[i])
                 if (data2.length != 0) {
                     for (let j = 0; j < data2.length; j++) {
+                        request.employee_id = data2[j].team_member_employee_id
+                        request.first_week_day = data2[j].first_week_day
+                        request.last_week_day = data2[j].last_week_day
+                        const [error11, data11] = await this.getSubmittedApproveEntries(request, 1)
+                        const [error22, data22] = await this.getSubmittedApproveEntries(request, 2)
+
+
                         if (data2[j].status_id == 1) {
-                            request.employee_id = data2[j].team_member_employee_id
-                            request.first_week_day = data2[j].first_week_day
-                            request.last_week_day = data2[j].last_week_day
-                            const [error, data] = await this.getSubmittedApproveEntries(request, 1)
-                            data2[j].submitted_datetime = data[0].submited_for_approval_datetime
+                            // request.employee_id = data2[j].team_member_employee_id
+                            // request.first_week_day = data2[j].first_week_day
+                            // request.last_week_day = data2[j].last_week_day
+                            // const [error, data] = await this.getSubmittedApproveEntries(request, 1)
+                            data2[j].submitted_datetime = data11[0].submited_for_approval_datetime
+                            data2[j].approved_datetime =null
+                            data2[j].approved_by = null
                         } else if (data2[j].status_id == 3) {
-                            request.employee_id = data2[j].team_member_employee_id
-                            request.first_week_day = data2[j].first_week_day
-                            request.last_week_day = data2[j].last_week_day
-                            const [error, data] = await this.getSubmittedApproveEntries(request, 2)
-                            data2[j].approved_datetime = data[0].approved_on_datetime
-                            data2[j].approved_by = data[0].approved_by
+                            // request.employee_id = data2[j].team_member_employee_id
+                            // request.first_week_day = data2[j].first_week_day
+                            // request.last_week_day = data2[j].last_week_day
+                            // const [error, data] = await this.getSubmittedApproveEntries(request, 2)
+                            data2[j].approved_datetime = data22[0].approved_on_datetime
+                            data2[j].approved_by = data22[0].approved_by
+                            data2[j].submitted_datetime = data11[0].submited_for_approval_datetime
 
+                        } else if (data2[j].status_id == 2) {
+                            // request.employee_id = data2[j].team_member_employee_id
+                            // request.first_week_day = data2[j].first_week_day
+                            // request.last_week_day = data2[j].last_week_day
+                            // const [error, data] = await this.getSubmittedApproveEntries(request, 2)
+                            data2[j].submitted_datetime = null
+                            data2[j].approved_datetime =null
+                            data2[j].approved_by = null
                         }
-
-
                         responseData.push(data2[j])
-
-                        // Array.prototype.push.apply(responseData, data2[j]);
                         error = false
                     }
                 } else
@@ -1157,9 +1167,6 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('==============approvals_get_list=================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data;
                     error = false
                 }).catch((err) => {
