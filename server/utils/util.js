@@ -811,8 +811,13 @@ function Util() {
                                   <td align="left"
                                       style="font-family:Arial, sans-serif; font-size: 16px;padding: 12px 0;">
                                       <a href="http://183.82.113.10:4179/approvals">
-                                  <button style="background: #d46706; color: #ffffff; border: 0; padding: 10px 50px; cursor: pointer;">Review</button>
-                                          </a>
+                                  <button style="background: #d46706; color: #ffffff; border: 0; padding: 10px 50px; cursor: pointer;">
+                                  <a href="http://183.82.113.10:4179/approvals"  style="color: #ffffff;" >
+                                  Review
+                                  </a>
+                                  
+                                  </button>
+                                        
                                   </td>
                               </tr>
                             <tr>
