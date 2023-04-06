@@ -228,6 +228,7 @@ function ProjectService(objectCollection) {
                 request.project_code,
                 request.project_color_code,
                 request.tag_id,
+                request.project_lead_employee_id,
             );
 
 
