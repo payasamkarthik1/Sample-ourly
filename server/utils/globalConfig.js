@@ -3,8 +3,8 @@
 
 
 // mode = "local";
-mode = "staging";
-// mode = "prod";
+// mode = "staging";
+mode = "prod";
 config = {};
 
 if (mode === "staging") {
@@ -17,8 +17,8 @@ if (mode === "staging") {
 } else if (mode === "prod") {
     config.user = "root",
         config.host = "localhost",
-        config.password = "Welcome@1234",
-        config.database = "clockify_prod",
+        config.password = "admin123",
+        config.database = "prod_ourly",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 }
