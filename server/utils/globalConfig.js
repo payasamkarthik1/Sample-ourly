@@ -3,8 +3,8 @@
 
 
 // mode = "local";
-mode = "staging";
-// mode = "prod";
+//mode = "staging";
+mode = "prod";
 config = {};
 
 if (mode === "staging") {
