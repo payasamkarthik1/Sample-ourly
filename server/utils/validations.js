@@ -1,19 +1,12 @@
 // const mysql = require('mysql');
-// const moment = require('moment')
-// //bcrypt
+
 const bcrypt = require('bcrypt')
-
-// var CryptoJS = require('crypto-js')
 const Validator = require('validator')
-const isEmpty = require('is-empty');
-const { response } = require('express');
-
 
 function Validations(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
-
 
     this.employeeCreationInputValidations = async function (request) {
 
@@ -59,9 +52,9 @@ function Validations(objectCollection) {
             responseData = [{ message: 'dob  is required' }]
             return [error, responseData];
         }
-        else if (Validator.isEmpty(request.role_id.toString())) {
+        else if (request.permission_data.length == 0) {
             error = true
-            responseData = [{ message: 'role  is required' }]
+            responseData = [{ message: 'permission is required' }]
             return [error, responseData];
         }
         else if (Validator.isEmpty(request.department_id.toString())) {
@@ -142,11 +135,7 @@ function Validations(objectCollection) {
             responseData = [{ message: 'dob  is required' }]
             return [error, responseData];
         }
-        else if (Validator.isEmpty(request.role_id.toString())) {
-            error = true
-            responseData = [{ message: 'role  is required' }]
-            return [error, responseData];
-        }
+
         else if (Validator.isEmpty(request.department_id.toString())) {
             error = true
             responseData = [{ message: 'department  is required' }]
@@ -155,6 +144,11 @@ function Validations(objectCollection) {
         else if (Validator.isEmpty(request.designation_id.toString())) {
             error = true
             responseData = [{ message: 'designation  is required' }]
+            return [error, responseData];
+        }
+        else if (request.permission_data.length == 0) {
+            error = true
+            responseData = [{ message: 'permission is required' }]
             return [error, responseData];
         }
         else if (Validator.isEmpty(request.lead_assigned_employee_id.toString())) {
@@ -246,7 +240,6 @@ function Validations(objectCollection) {
     }
 
     this.userLoginValidation = async function (request) {
-
         let responseData = []
 
         str = request.email
@@ -271,10 +264,7 @@ function Validations(objectCollection) {
         else {
             error = false
             return [error, responseData];
-
         }
-
-
     }
 
     this.addDesignationValidation = async function (request) {
@@ -351,7 +341,97 @@ function Validations(objectCollection) {
 
 
     }
-    
+
+    this.roleValidationUpdate = async function (request) {
+
+        let responseData = []
+
+        str = request.role_name
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'role name contains white spaces' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.role_name)) {
+            error = true
+            responseData = [{ message: 'rolename is required' }]
+        } else if (request.role_name == "Admin Access") {
+            error = true
+            responseData = [{ message: 'Admin role cannot be updated' }]
+        }
+        else if (request.role_name) {
+            const [err, data] = await this.roleNameValidChk(request, 2)
+
+            if (data[0].cnt > 0) {
+                error = true
+                responseData = [{ message: 'role name already exist' }]
+            } else {
+                error = false
+            }
+        }
+        return [error, responseData];
+
+
+
+    }
+
+    this.roleValidationAdd = async function (request) {
+
+        let responseData = []
+
+        str = request.role_name
+        l = str.trimLeft()
+        r = str.trimRight()
+
+        if (l != str || r != str) {
+            error = true
+            responseData = [{ message: 'role name contains white spaces' }]
+            return [error, responseData];
+        } else if (Validator.isEmpty(request.role_name)) {
+            error = true
+            responseData = [{ message: 'rolename is required' }]
+        } else if (request.role_name) {
+            const [err, data] = await this.roleNameValidChk(request, 1)
+            if (data[0].cnt > 0) {
+                error = true
+                responseData = [{ message: 'role name already exist' }]
+            } else {
+                error = false
+            }
+        }
+        return [error, responseData];
+
+
+
+    }
+
+    this.roleNameValidChk = async function (request, flag) {
+        let responseData = []
+        error = true
+        let paramsArr = new Array(
+            request.role_id,
+            request.role_name,
+            flag
+        )
+        const queryString = util.getQueryString('role_name_check_validation', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data
+                    error = false
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+
+    }
+
     this.updateProjectToClientValidation = async function (request) {
 
         let responseData = []
@@ -467,7 +547,7 @@ function Validations(objectCollection) {
         const paramsArr = new Array(
             request.email,
         );
-        const queryString = util.getQueryString('user_get_all_employees_list', paramsArr);
+        const queryString = util.getQueryString('user_get_usr_by_email', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -615,19 +695,26 @@ function Validations(objectCollection) {
     this.forgetChangePassword = async function (request) {
         let responseData = [],
             error = true
-        if (request.new_password == " " || request.confirm_password == " " || request.new_password == "" || request.confirm_password == "") {
+
+
+
+        str = request.new_password
+        l = str.trimLeft()
+        r = str.trimRight()
+
+
+        if (request.new_password == "" || request.confirm_password == "" || request.email == "") {
             error = true
             responseData = [{ message: "All Fields are required" }]
 
-        }
-        else if (!(request.new_password.length >= 8)) {
+        } else if (l != str || r != str) {
             error = true
-            responseData = [{ message: 'password length must be minimum 8' }]
+            responseData = [{ message: 'Password contains white spaces' }]
             return [error, responseData];
         }
-        else if (!(request.new_password.length <= 15)) {
+        else if (!(request.new_password.length >= 8 && request.new_password.length <= 15)) {
             error = true
-            responseData = [{ message: 'password length must be maximum 15' }]
+            responseData = [{ message: 'Password length must be between 8 - 15 characters' }]
             return [error, responseData];
         }
         else if (request.new_password !== request.confirm_password) {

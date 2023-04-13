@@ -5,9 +5,6 @@ const EmployeeService = require('../services/employeeService')
 const LeadService = require('./leadService')
 
 
-const moment = require('moment');
-const { request } = require('express');
-
 function AnalyzeServices(objectCollection) {
 
     const util = objectCollection.util;
@@ -17,565 +14,57 @@ function AnalyzeServices(objectCollection) {
     const leadService = new LeadService(objectCollection)
 
 
-    //----------------------dashboards----------------
     this.getDasboardOverview = async function (request) {
-        let responseData = [],
-            error = true;
-
-        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-        if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getadminSuperLeadMyTeamDasboardOverview(request)
-            error = err1
-            responseData = data1
-            //role_id = 4 for lead , get lead (my team) dashboard
-        } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getleadMyTeamDasboardOverview(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 6 for emerging lead , get  (my team) dashboard
-        else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamDasboardOverview(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeDasboardOverview(request)
-            error = err1
-            responseData = data1
-        }
-        return [error, responseData]
-
-    };
-
-    this.getleadMyTeamDasboardOverview = async function (request) {
-
+        console.log("------------------------------------entered getDasboardOverview------------------------------------------");
         let responseData = []
-        let empsData = [],
-            error = true;
+        let data1 = []
+        if (request.role_id == 2) {
+            const [err8, data8] = await employeeService.getAllEmployees(request)
+            data1 = data8
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            const data10 = await leadService.getEmpsUnderHeadsLevel1(request)
 
-        request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
+            data1 = data10
+        }
 
-        if (data1.length != 0) {
-            for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
+        //get data between given dates
+        const [err2, data2] = await this.getDataByDates(request)
+        console.log('=================getDataByDates====================')
+        console.log("data length", data2.length)
+        console.log('====================================================')
 
-            let data = []
-            data = empsData
-            if (data.length != 0) {
-                // total time
-                idGenerate = await util.getRandomNumericId()
-                id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
-
-                //insert data into table for calce
-                for (i = 0; i < data.length; i++) {
-                    flag = 1
-                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                }
-
-                //get data daywise in dashboard
-                flag = 2
-                const [err2, data2] = await this.dashboardDataCalculation(request, id, flag)
-                dayWiseData = data2
-
-                var newArray = dayWiseData.reduce(function (acc, curr) {
-                    //finding Index in the array where the NamaCategory matched
-                    var findIfNameExist = acc.findIndex(function (item) {
-                        return item.project_name === curr.project_name;
-                    })
-                    if (findIfNameExist === -1) {
-
-                        let obj = {
-                            'project_name': curr.project_name,
-                            "value": [curr]
-                        }
-                        acc.push(obj)
-                    } else {
-                        acc[findIfNameExist].value.push(curr)
-                    }
-
-                    return acc;
-
-                }, []);
-
-
-                //get total projects total hours 
-                flag = 3
-                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                overallProjects = data3
-
-                //over all total_time daywise
-                flag = 6
-                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                overallTotalTime = data5
-
-                //get top project
-                flag = 4
-                const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                topProject = data4[0]
-
-                // delete data
-                flag = 5
-                await this.dashboardDataCalculation(request, id, 5)
-
-
-                responseData.push({ total_time: totalTime, top_project: topProject })
-                responseData.push(newArray)
-                responseData.push(overallTotalTime)
-                responseData.push(overallProjects)
-
+        if (data1.length != 0 && data2.length != 0) {
+            //filter data with emps
+            const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('=================filterDataByEmps====================')
+            console.log("data length", data3.length)
+            console.log('====================================================')
+            if (data3.length != 0) {
+                //get dashboard data overview
+                const [err, data] = await this.dashboardDataCalculationOverview(request, data3)
+                responseData = data
             }
         }
-        error = false
-        return [error, responseData];
-
-
-    };
-    this.getleadMyTeamData = async function (request, data) {
-        let responseData = [],
-            error = true;
-        // if flag =2 get my team dashboard overview for lead
-        flag = 4
-        const paramsArr = new Array(
-            data.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-    this.getadminSuperLeadMyTeamDasboardOverview = async function (request) {
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data.length != 0) {
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-                        //get data daywise in dashboard
-                        flag = 2
-                        const [err2, data2] = await this.dashboardDataCalculation(request, id, flag)
-                        dayWiseData = data2
-
-                        var newArray = dayWiseData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_name === curr.project_name;
-                            })
-                            if (findIfNameExist === -1) {
-
-                                let obj = {
-                                    'project_name': curr.project_name,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        //get total projects total hours 
-                        flag = 3
-                        const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                        overallProjects = data3
-
-                        //over all total_time daywise
-                        flag = 6
-                        const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                        overallTotalTime = data5
-
-                        //get top project
-                        flag = 4
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        topProject = data4[0]
-
-                        // delete data
-                        await this.dashboardDataCalculation(request, id, 5)
-
-                        responseData.push({ total_time: totalTime, top_project: topProject })
-                        responseData.push(newArray)
-                        responseData.push(overallTotalTime)
-                        responseData.push(overallProjects)
-
-                    }
-                    error = false
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    };
-
-    this.getEmergingLeadMyTeamDasboardOverview = async function (request) {
-        let responseData = [],
-            error = true;
-        // if flag =3 get my team dashboard overview for emerging lead
-        flag = 3
-        const paramsArr = new Array(
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data.length != 0) {
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-                        //get data daywise in dashboard
-                        flag = 2
-                        const [err2, data2] = await this.dashboardDataCalculation(request, id, flag)
-                        dayWiseData = data2
-                        var newArray = dayWiseData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_name === curr.project_name;
-                            })
-                            if (findIfNameExist === -1) {
-
-                                let obj = {
-                                    'project_name': curr.project_name,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        //get total projects total hours 
-                        flag = 3
-                        const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                        overallProjects = data3
-
-                        //over all total_time daywise
-                        flag = 6
-                        const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                        overallTotalTime = data5
-
-                        //get top project
-                        flag = 4
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        topProject = data4[0]
-
-                        // delete data
-                        await this.dashboardDataCalculation(request, id, 5)
-
-                        responseData.push({ total_time: totalTime, top_project: topProject })
-                        responseData.push(newArray)
-                        responseData.push(overallTotalTime)
-                        responseData.push(overallProjects)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-    this.getEmployeeDasboardOverview = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        let responseData = [],
-            error = true;
-        flag = 4
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data.length != 0) {
-
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for data calculatiom
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-                        //get data daywise in dashboard between start and end date
-                        flag = 2
-                        const [err2, data2] = await this.dashboardDataCalculation(request, id, flag)
-                        dayWiseData = data2
-
-
-                        var newArray = dayWiseData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_name === curr.project_name;
-                            })
-                            if (findIfNameExist === -1) {
-
-                                let obj = {
-                                    'project_name': curr.project_name,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        //get each projects total hours 
-                        flag = 3
-                        const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                        overallProjects = data3
-
-                        //over all total_time daywise
-                        flag = 6
-                        const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                        overallTotalTime = data5
-
-                        //get top project
-                        flag = 4
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        topProject = data4[0]
-
-                        // delete data
-
-                        await this.dashboardDataCalculation(request, id, 5)
-
-                        responseData.push({ total_time: totalTime, top_project: topProject })
-                        responseData.push(newArray)
-                        responseData.push(overallTotalTime)
-                        responseData.push(overallProjects)
-
-                    }
-
-
-                    error = false
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-    this.dashboardDataCalculation = async function (data, id, flag) {
-        let responseData = [],
-            error = true;
-
-        if (flag == 1) {
-            paramsArr = new Array(
-                id,
-                data.employee_id,
-                data.project_id,
-                data.task_total_time,
-                data.task_created_datetime,
-                data.task_start_time,
-                data.task_end_time,
-                flag
-
-            );
-
-        } else if (flag == 2) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-        else if (flag == 3) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-        else if (flag == 4) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-        else if (flag == 5) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-        else if (flag == 6) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-        else if (flag == 7) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        } else if (flag == 8) {
-            paramsArr = new Array(
-                id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag
-
-            );
-
-        }
-
-        const queryString = util.getQueryString('dashboard_data_calculation', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    error = false
-                    responseData = data
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
+        return [false, responseData]
+    }
+
+    this.dashboardDataCalculationOverview = async function (request, data3) {
+        let responseData = []
+        totalTime = await util.sumOfTime(data3)
+        const respData1 = await this.topProject(request, data3)
+        const respData2 = await this.dayWiseProject(request, data3)
+        const respData3 = await this.dayWiseTotalTime(request, data3)
+        const respData4 = await this.overAllProject(request, data3)
+
+        responseData.push({ total_time: totalTime, top_project: respData1 })
+        responseData.push(respData2)
+        responseData.push(respData3)
+        responseData.push(respData4)
+
+        return [false, responseData];
 
 
     };
@@ -587,8 +76,7 @@ function AnalyzeServices(objectCollection) {
         const paramsArr = new Array(
             request.start_date,
             request.end_date,
-            request.employee_id,
-            flag
+            request.employee_id
         );
 
         const queryString = util.getQueryString('dashboard_get_top_tasks_filter_select', paramsArr);
@@ -596,9 +84,6 @@ function AnalyzeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('=======getAllTasksFilterByDescrip======');
-                    console.log(data);
-                    console.log('====================================');
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -624,30 +109,470 @@ function AnalyzeServices(objectCollection) {
 
         if (data1.length != 0 || data2.length != 0) {
             if (data[0].isApp.status === "PENDING") {
-                data[0].isApp.submited_by = data1[0].submited_by.concat("(", data1[0].submited_for_approval_datetime, ")")
+                data[0].isApp.submited_by = data1[0].submitted_by.concat("(", data1[0].submited_for_approval_datetime, ")")
             } else if (data[0].isApp.status === "APPROVED") {
                 data[0].isApp.submited_by = data1[0].submitted_by.concat("(", data1[0].submited_for_approval_datetime, ")")
                 data[0].isApp.approved_by = data2[0].approved_by.concat("(", data2[0].approved_on_datetime, ")")
             }
 
         }
-
-
         responseData.push(data)
         return [err, responseData];
 
     };
 
-    //-------------------------reports---------------------
+    this.dayWiseTotalTime = async function (request, data) {
+        let tt = []
+        var newArray = data.reduce(function (acc, curr) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.task_created_datetime === curr.task_created_datetime;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'task_created_datetime': curr.task_created_datetime,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            f = await util.sumOfTime(toaltime)
+            tt.push({ task_created_datetime: newArray[i].task_created_datetime, total_time: f })
+        }
+        return tt
+
+    }
+
+    this.overAllProject = async function (request, data) {
+        let responseData = []
+
+        var newArray = data.reduce(function (acc, curr) {
+
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_id === curr.project_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_id': curr.project_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
+                project_id: newArray[i].project_id,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: tym
+            })
+        }
+        return responseData
+
+    }
+
+    this.dayWiseProject = async function (request, data) {
+        let responseData = []
+        var newArray = data.reduce(function (acc, curr) {
+
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_name === curr.project_name && item.task_created_datetime === curr.task_created_datetime
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_name': curr.project_name,
+                    'task_created_datetime': curr.task_created_datetime,
+                    "value": [{
+                        project_id: curr.project_id,
+                        project_name: curr.project_name,
+                        project_code: curr.project_code,
+                        project_color_code: curr.project_color_code,
+                        client_id: curr.client_id,
+                        client_name: curr.client_name,
+                        tag_id: curr.tag_id,
+                        tag_name: curr.tag_name,
+                        task_created_datetime: curr.task_created_datetime,
+                        task_total_time: curr.task_total_time
+                    }]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push({
+                    project_id: curr.project_id,
+                    project_name: curr.project_name,
+                    project_code: curr.project_code,
+                    project_color_code: curr.project_color_code,
+                    client_id: curr.client_id,
+                    client_name: curr.client_name,
+                    tag_id: curr.tag_id,
+                    tag_name: curr.tag_name,
+                    task_created_datetime: curr.task_created_datetime,
+                    task_total_time: curr.task_total_time
+                })
+            }
+
+            return acc;
+
+        }, []);
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
+                project_id: newArray[i].project_id,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: tym,
+                task_created_datetime: newArray[i].task_created_datetime,
+
+            })
+        }
+
+        var newArray1 = responseData.reduce(function (acc1, curr1) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist1 = acc1.findIndex(function (item1) {
+                return item1.project_name === curr1.project_name;
+            })
+            if (findIfNameExist1 === -1) {
+
+                let obj = {
+                    'project_name': curr1.project_name,
+                    "value": [curr1]
+                }
+                acc1.push(obj)
+            } else {
+                acc1[findIfNameExist1].value.push(curr1)
+            }
+
+            return acc1;
+
+        }, []);
+        responseData = newArray1
+        return responseData
+
+    }
+
+    this.topProject = async function (request, data) {
+        let responseData = []
+        var newArray = data.reduce(function (acc, curr) {
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.project_id === curr.project_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'project_id': curr.project_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
+                project_id: newArray[i].project_id,
+                project_name: newArray[i].value[0].project_name,
+                project_color_code: newArray[i].value[0].project_color_code,
+                project_code: newArray[i].value[0].project_code,
+                client_id: newArray[i].value[0].client_id,
+                client_name: newArray[i].value[0].client_name,
+                tag_id: newArray[i].value[0].tag_id,
+                tag_name: newArray[i].value[0].tag_name,
+                total_time: tym
+            })
+        }
+
+        responseData.map((item) => {
+            var timeParts = item.total_time.split(":");
+            item.total_milliseconds = (timeParts[0] * (60000 * 60)) + (timeParts[1] * 60000)
+        })
+
+        responseData.sort((a, b) => b.total_milliseconds - a.total_milliseconds)
+        return responseData[0]
+
+
+    }
+
+    this.overAllUsers = async function (request, data) {
+        let responseData = []
+
+        var newArray = data.reduce(function (acc, curr) {
+
+            //finding Index in the array where the NamaCategory matched
+            var findIfNameExist = acc.findIndex(function (item) {
+                return item.employee_id === curr.employee_id;
+            })
+            if (findIfNameExist === -1) {
+
+                let obj = {
+                    'employee_id': curr.employee_id,
+                    "value": [curr]
+                }
+                acc.push(obj)
+            } else {
+                acc[findIfNameExist].value.push(curr)
+            }
+
+            return acc;
+
+        }, []);
+
+        for (let i = 0; i < newArray.length; i++) {
+            toaltime = newArray[i].value
+            tym = await util.sumOfTime(toaltime)
+            responseData.push({
+                full_name: newArray[i].value[0].employee_full_name,
+                employee_id: newArray[i].employee_id,
+                total_time: tym
+            })
+        }
+        return responseData
+
+    }
+    this.getReportSummary = async function (request) {
+        console.log("--------------------------entered getReportSummary----------------------------");
+        let responseData = []
+        let data1 = []
+        let empsGathered = []
+
+        //get employess under head
+        if (request.role_id == 2) {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                data1 = uniqueEmps
+
+            } else {
+                const [err8, data8] = await employeeService.getAllEmployees(request)
+                data1 = data8
+            }
+
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+                data1 = uniqueEmps
+            } else {
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request, 1)
+                data1 = data9
+            }
+        }
+
+        //get data between date
+        const [err2, data2] = await this.getDataByDates(request)
+        console.log('===========getDataByDates==================')
+        console.log("data length", data2.length)
+        console.log('========================================')
+        //get dashboard data overview
+        if (data1.length != 0 && data2.length != 0) {
+            //filter data with emps
+            const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('===========filterDataByEmps==================')
+            console.log("data length", data3.length)
+            console.log('====================================')
+            const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
+            responseData = data
+        }
+        return [false, responseData]
+    }
+
+    this.getReportSummaryGroupByUser = async function (request) {
+        console.log("------------------------------------entered getReportSummaryGroupByUser------------------------------------------");
+
+        let responseData = []
+
+        let data1 = []
+        let empsGathered = []
+        //get employess under head
+        if (request.role_id == 2) {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+                data1 = uniqueEmps
+            } else {
+                const [err8, data8] = await employeeService.getAllEmployees(request)
+                data1 = data8
+            }
+
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                data1 = uniqueEmps
+
+            } else {
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                data1 = data9
+            }
+        }
+        //get data between date
+        const [err2, data2] = await this.getDataByDates(request)
+        console.log('===========getDataByDates==================')
+        console.log("data length", data2.length)
+        console.log('========================================')
+
+        //get dashboard data overview
+        if (data1.length != 0 && data2.length != 0) {
+            //filter data with emps
+            const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('===========filterDataByEmps==================')
+            console.log("data length", data3.length)
+            console.log('========================================')
+            const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
+            responseData = data
+        }
+        return [false, responseData]
+    }
+
 
     this.getFilterReportSummary = async function (request, data) {
+
         let responseData = []
         error = true
-
-        console.log('======DATA CAME FOR FILTER==============')
-        console.log(data)
-        console.log('====================================')
-
         filterClients1 = []
         filterProjects1 = []
         filterTags1 = []
@@ -658,12 +583,7 @@ function AnalyzeServices(objectCollection) {
         status_id = request.status_ids
 
         if (client_id.length == 0 && project_id.length == 0 && tag_id.length == 0 && status_id.length == 0) {
-            console.log('===========ENTERED ALL FILTERES NOT SELECTED DAFAULT==============')
-            console.log('==========DATA==============')
-            console.log(data)
-            console.log('====================================')
         } else if (client_id.length != 0 && project_id.length != 0 && tag_id.length != 0 && status_id.length != 0) {
-            console.log('=========ENTERED ALL FILTERES SELECTED=============')
             if (client_id != []) {
                 for (let i = 0; i < client_id.length; i++) {
                     data.filter(function (data) {
@@ -701,17 +621,12 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
-                console.log('=====jfnkf=============')
-                console.log(filterStatus)
-                console.log('====================================')
+
             }
             data = filterStatus1;
-            console.log('=========FILTERED DATA==============')
-            console.log(data)
-            console.log('====================================')
+
 
         } else {
-            console.log('===========ENTERED ANY ONE FILTER SELECTED=============')
             if (client_id.length == 0) {
                 filterClients1 = data
 
@@ -756,1828 +671,125 @@ function AnalyzeServices(objectCollection) {
                     })
                 }
             }
-
             data = filterStatus1
-            console.log('=====FILTER DATA==============')
-            console.log(data)
-            console.log('====================================')
-
         }
-
         responseData = data
         error = false
         return [error, responseData]
     }
 
-    this.getReportSummary1 = async function (request) {
-        let responseData = [],
-            error = true;
+    this.getReportSummaryOverviewCalculation = async function (request, data) {
+        let responseData = []
 
-        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-        if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummary1(request)
-            error = err1
-            responseData = data1
-            //role_id = 4 for lead , get lead (my team) dashboard
-        } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getLeadMyTeamReportSummary1(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 6 for emerging lead , get  (my team) dashboard
-        else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamReportSummary1(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeMyTeamReportSummary1(request)
-            error = err1
-            responseData = data1
-        }
-        return [error, responseData]
-
-    };
-    this.getReportSummary = async function (request) {
-        let responseData = [],
-            error = true;
-
-        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-        if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportSummary(request)
-            error = err1
-            responseData = data1
-            //role_id = 4 for lead , get lead (my team) dashboard
-        } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getLeadMyTeamReportSummary(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 6 for emerging lead , get  (my team) dashboard
-        else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamReportSummary(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeMyTeamReportSummary(request)
-            error = err1
-            responseData = data1
-        }
-        return [error, responseData]
-
-    };
-    this.getReportDetailed = async function (request) {
-        let responseData = [],
-            error = true;
-
-        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-        if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportDetailed(request)
-            error = err1
-            responseData = data1
-            //role_id = 4 for lead , get lead (my team) dashboard
-        } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getLeadMyTeamReportDetailed(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 6 for emerging lead , get  (my team) dashboard
-        else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamReportDetailed(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeMyTeamReportDetailed(request)
-            error = err1
-            responseData = data1
-        }
-        return [error, responseData]
-
-    };
-    this.getReportWeekly = async function (request) {
-        let responseData = [],
-            error = true;
-
-        //role_id = 2 and 5 for admin and super lead , get admin/superadmin (all employess) dashboard
-        if (request.role_id === 2 || request.role_id === 5) {
-            const [err1, data1] = await this.getAdminSuperLeadMyTeamReportWeekly(request)
-            error = err1
-            responseData = data1
-            //role_id = 4 for lead , get lead (my team) dashboard
-        } else if (request.role_id === 4) {
-            const [err1, data1] = await this.getLeadMyTeamReportWeekly(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 6 for emerging lead , get  (my team) dashboard
-        else if (request.role_id === 6) {
-            const [err1, data1] = await this.getEmergingLeadMyTeamReportWeekly(request)
-            error = err1
-            responseData = data1
-        }
-        //role_id = 3 for user(employee) , get individual employee dashboard
-        else if (request.role_id === 3) {
-            const [err1, data1] = await this.getEmployeeMyTeamReportWeekly(request)
-            error = err1
-            responseData = data1
-        }
-        return [error, responseData]
-
-    };
-
-
-    this.getEmployeeMyTeamReportSummary = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        let responseData = [],
-            error = true;
-        flag = 4
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dataa) => {
-                    if (dataa.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dataa)
-                        if (data.length != 0) {
-
-                            // total time
-                            idGenerate = await util.getRandomNumericId()
-                            id = idGenerate
-                            totalTime = await util.calculateWorkedHours(data)
-
-                            //insert data into table for calce
-
-                            for (i = 0; i < data.length; i++) {
-                                flag = 1
-                                const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                            }
-                            //get total projects total hours 
-                            flag = 3
-                            const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                            overallProjects = data3
-
-                            //adding uniques keys 
-                            overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
-                            //loop for adding descriptions 
-                            for (let i = 0; i < overallProjects1.length; i++) {
-                                let value = []
-                                data.filter(function (dat) {
-                                    if (dat.project_id == overallProjects1[i].project_id) {
-                                        obj = {}
-                                        obj.task_description = dat.task_description
-                                        value.push(obj)
-                                    }
-
-                                })
-                                overallProjects1[i].description = value
-                            }
-
-
-                            //loop for adding descriptions 
-                            for (let i = 0; i < overallProjects1.length; i++) {
-                                let value = []
-                                data.filter(function (dat) {
-                                    if (dat.project_id == overallProjects1[i].project_id) {
-                                        obj = {}
-                                        obj.task_description = dat.task_description
-                                        obj.task_total_time = dat.task_total_time
-                                        value.push(obj)
-                                    }
-
-                                })
-                                overallProjects1[i].description = value
-                            }
-
-                            //over all total_time daywise
-                            flag = 6
-                            const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                            overallTotalTime = data5
-
-                            // delete data
-                            flag = 5
-                            await this.dashboardDataCalculation(request, id, flag)
-
-                            responseData.push({ total_time: totalTime })
-                            responseData.push(overallTotalTime)
-                            responseData.push(overallProjects1)
-
-                        }
-                    }
-                    error = false
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getEmployeeMyTeamReportDetailed = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 4
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('====================================');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(detailedData)
-
+        const [err, filterData] = await this.getFilterReportSummary(request, data)
+        if (filterData.length != 0) {
+            totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.dayWiseTotalTime(request, filterData)
+            const data2 = await this.overAllProject(request, filterData)
+            //  adding uniques keys 
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
+            //loop for adding descriptions 
+            for (let i = 0; i < data3.length; i++) {
+                let value = []
+                filterData.filter(function (dat) {
+                    if (dat.project_id == data3[i].project_id) {
+                        obj = {}
+                        obj.task_description = dat.task_description
+                        obj.task_total_time = dat.task_total_time
+                        obj.employee_name = dat.employee_full_name
+                        value.push(obj)
                     }
 
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
                 })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getEmployeeMyTeamReportWeekly = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 4
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('=========detailllelled============');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        var newArray = detailedData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_id === curr.project_id;
-                            })
-                            if (findIfNameExist === -1) {
-
-
-                                let obj = {
-                                    'project_id': curr.project_id,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        console.log('=========-------------new array===========')
-                        console.log(newArray)
-                        console.log('====================================')
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(newArray)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-
-    this.getEmergingLeadMyTeamReportSummary = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        emps = []
-        filteredEmps = []
-        let responseData = [],
-            error = true;
-        flag = 3
-        const paramsArr = new Array(
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        if (request.employees.length != 0) {
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-
-
-                            //filter data by selected employees
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-
-                        } else {
-                            request.lead_assigned_employee_id = request.employee_id
-                            const [err, data1] = await leadService.getEmpsUnderEmergingLead(request)
-                            for (let i = 0; i < data1.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == data1[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-                        }
-
-                        if (filteredEmps.length != 0) {
-                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
-                            if (data.length != 0) {
-                                // total time
-                                idGenerate = await util.getRandomNumericId()
-                                id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
-
-                                //insert data into table for calce
-
-                                for (i = 0; i < data.length; i++) {
-                                    flag = 1
-                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                                }
-                                //get total projects total hours 
-                                flag = 3
-                                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                                overallProjects = data3
-
-                                //adding uniques keys 
-                                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
-                                //loop for adding descriptions 
-                                for (let i = 0; i < overallProjects1.length; i++) {
-                                    let value = []
-                                    data.filter(function (dat) {
-                                        if (dat.project_id == overallProjects1[i].project_id) {
-                                            obj = {}
-                                            obj.task_description = dat.task_description
-                                            obj.task_total_time = dat.task_total_time
-                                            value.push(obj)
-                                        }
-
-                                    })
-                                    overallProjects1[i].description = value
-                                }
-
-
-                                //over all total_time daywise
-                                flag = 6
-                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                                overallTotalTime = data5
-
-                                // delete data
-                                flag = 5
-                                await this.dashboardDataCalculation(request, id, flag)
-
-                                responseData.push({ total_time: totalTime })
-                                responseData.push(overallTotalTime)
-                                responseData.push(overallProjects1)
-
-                            }
-                        }
-                    }
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getEmergingLeadMyTeamReportSummary1 = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        emps = []
-        filteredEmps = []
-        let responseData = [],
-            error = true;
-        flag = 3
-        const paramsArr = new Array(
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        if (request.employees.length != 0) {
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-
-
-                            //filter data by selected employees
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-
-                        } else {
-                            request.lead_assigned_employee_id = request.employee_id
-                            const [err, data1] = await leadService.getEmpsUnderEmergingLead(request)
-                            for (let i = 0; i < data1.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == data1[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-                        }
-
-                        if (filteredEmps.length != 0) {
-                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
-                            if (data.length != 0) {
-                                // total time
-                                idGenerate = await util.getRandomNumericId()
-                                id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
-
-                                //insert data into table for calce
-
-                                for (i = 0; i < data.length; i++) {
-                                    flag = 1
-                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                                }
-                             //get overall total user hours 
-                             flag = 8
-                             const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                             overallUsers = data3
-                             console.log('=============overallUsers==============')
-                             console.log(overallUsers)
-                             console.log('====================================')
-
-                             //loop for adding descriptions 
-                             for (let i = 0; i < overallUsers.length; i++) {
-                                 let value = []
-                                 data.filter(function (dat) {
-                                     if (dat.employee_id == overallUsers[i].employee_id) {
-                                         obj = {}
-                                         obj.task_description = dat.task_description
-                                         obj.task_total_time = dat.task_total_time
-                                         value.push(obj)
-                                     }
-
-                                 })
-                                 overallUsers[i].description = value
-                             }
-
-                                //over all total_time daywise
-                                flag = 6
-                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                                overallTotalTime = data5
-
-                                // delete data
-                                flag = 5
-                                await this.dashboardDataCalculation(request, id, flag)
-
-                                responseData.push({ total_time: totalTime })
-                                responseData.push(overallTotalTime)
-                                responseData.push(overallUsers)
-
-                            }
-                        }
-                    }
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getEmergingLeadMyTeamReportDetailed = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 3
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('====================================');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(detailedData)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getEmergingLeadMyTeamReportWeekly = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 3
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('=========detailllelled============');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        var newArray = detailedData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_id === curr.project_id;
-                            })
-                            if (findIfNameExist === -1) {
-
-
-                                let obj = {
-                                    'project_id': curr.project_id,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        console.log('=========-------------new array===========')
-                        console.log(newArray)
-                        console.log('====================================')
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(newArray)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-
-    this.getLeadMyTeamReportSummary = async function (request) {
-        responseData = [],
-            error = true;
-
-        total_time = {}
-        dayWiseData = []
-        emergEmps = []
-        empsData = []
-        let emps = []
-
-
-        if (request.employees.length != 0 && request.groups.length != 0) {
-            request.role_id = 6
-            let emergLeads = []
-            emergLeads = request.groups
-            for (let j = 0; j < emergLeads.length; j++) {
-                request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                Array.prototype.push.apply(emps, data);
-
+                data3[i].description = value
             }
-            //----single users
-            users = request.employees
-            for (let i = 0; i < users.length; i++) {
-                request.employee_id = users[i]
-                const [err, usr] = await employeeService.getEmployeeById(request)
-                Array.prototype.push.apply(emps, usr);
-            }
-            //removeing duplicates employees 
 
-            const uniqueids = [];
-            uniqueEmps = emps.filter(element => {
-                const isDuplicate = uniqueids.includes(element.employee_id);
-                if (!isDuplicate) {
-                    uniqueids.push(element.employee_id);
-                    return true;
+            responseData.push({ total_time: totalTime })
+            responseData.push(data1)
+            responseData.push(data3)
+
+        }
+        return [false, responseData]
+    }
+
+    this.getDataByDates = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.start_date,
+            request.end_date
+        );
+
+        const queryString = util.getQueryString('data_get_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    error = false
+                    responseData = data
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
+    this.filterDataByEmps = async function (request, data1, data2) {
+
+        let filterData = []
+        for (let i = 0; i < data1.length; i++) {
+            data2.filter(function (dat) {
+                if (dat.employee_id == data1[i].employee_id) {
+                    filterData.push(dat)
                 }
-                return false;
             })
-            for (let i = 0; i < uniqueEmps.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, uniqueEmps[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
-
-
-        } else if (request.employees.length != 0 && request.groups.length == 0) {
-
-            //----single users
-            users = request.employees
-            for (let i = 0; i < users.length; i++) {
-                request.employee_id = users[i]
-                const [err, usr] = await employeeService.getEmployeeById(request)
-                Array.prototype.push.apply(emps, usr);
-            }
-
-            for (let i = 0; i < emps.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, emps[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
-        } else if (request.employees.length == 0 && request.groups.length != 0) {
-            request.role_id = 6
-            emergLeads = request.groups
-            for (let j = 0; j < emergLeads.length; j++) {
-                request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                for (let i = 0; i < data.length; i++) {
-                    const [err2, data2] = await this.getleadMyTeamData(request, data[i])
-                    Array.prototype.push.apply(empsData, data2);
-                }
-            }
-
-        } else {
-            request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-            for (let i = 0; i < data.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
         }
 
-        if (empsData.length != 0) {
-            const [err1, data] = await this.getFilterReportSummary(request, empsData)
-            if (data.length != 0) {
-                console.log('========getFilterReportSummary===========')
-                console.log(data)
-                console.log('====================================')
-                // total time
-                idGenerate = await util.getRandomNumericId()
-                id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
-                //insert data into table for calce
-                for (i = 0; i < data.length; i++) {
-                    flag = 1
-                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                }
-                //get total projects total hours 
-                flag = 3
-                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                overallProjects = data3
+        return filterData
+    }
 
-                //adding uniques keys 
-                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
-                //loop for adding descriptions 
-                for (let i = 0; i < overallProjects1.length; i++) {
-                    let value = []
-                    data.filter(function (dat) {
-                        if (dat.project_id == overallProjects1[i].project_id) {
-                            obj = {}
-                            obj.task_description = dat.task_description
-                            obj.task_total_time = dat.task_total_time
-                            value.push(obj)
-                        }
+    this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+        let responseData = []
+        const [err, filterData] = await this.getFilterReportSummary(request, data)
+        if (filterData.length != 0) {
 
-                    })
-                    overallProjects1[i].description = value
-                }
+            totalTime = await util.sumOfTime(filterData)
+            const data1 = await this.dayWiseTotalTime(request, filterData);
+            const data2 = await this.overAllUsers(request, filterData)
 
+            //adding uniques keys 
+            data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
 
-                //over all total_time daywise
-                flag = 6
-                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                overallTotalTime = data5
-                delete data
-                flag = 5
-                await this.dashboardDataCalculation(request, id, flag)
-
-                responseData.push({ total_time: totalTime })
-                responseData.push(overallTotalTime)
-                responseData.push(overallProjects1)
-            }
-        }
-
-        error = false
-        return [error, responseData]
-
-    };
-    this.getLeadMyTeamReportSummary1 = async function (request) {
-        responseData = [],
-            error = true;
-
-        total_time = {}
-        dayWiseData = []
-        emergEmps = []
-        empsData = []
-        let emps = []
-
-
-        if (request.employees.length != 0 && request.groups.length != 0) {
-            request.role_id = 6
-            let emergLeads = []
-            emergLeads = request.groups
-            for (let j = 0; j < emergLeads.length; j++) {
-                request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                Array.prototype.push.apply(emps, data);
-
-            }
-            //----single users
-            users = request.employees
-            for (let i = 0; i < users.length; i++) {
-                request.employee_id = users[i]
-                const [err, usr] = await employeeService.getEmployeeById(request)
-                Array.prototype.push.apply(emps, usr);
-            }
-            //removeing duplicates employees 
-
-            const uniqueids = [];
-            uniqueEmps = emps.filter(element => {
-                const isDuplicate = uniqueids.includes(element.employee_id);
-                if (!isDuplicate) {
-                    uniqueids.push(element.employee_id);
-                    return true;
-                }
-                return false;
-            })
-            for (let i = 0; i < uniqueEmps.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, uniqueEmps[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
-
-
-        } else if (request.employees.length != 0 && request.groups.length == 0) {
-
-            //----single users
-            users = request.employees
-            for (let i = 0; i < users.length; i++) {
-                request.employee_id = users[i]
-                const [err, usr] = await employeeService.getEmployeeById(request)
-                Array.prototype.push.apply(emps, usr);
-            }
-
-            for (let i = 0; i < emps.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, emps[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
-        } else if (request.employees.length == 0 && request.groups.length != 0) {
-            request.role_id = 6
-            emergLeads = request.groups
-            for (let j = 0; j < emergLeads.length; j++) {
-                request.employee_id = emergLeads[j]
-                const [err, data] = await leadService.getEmpsUnderEmergingLead(request)
-                for (let i = 0; i < data.length; i++) {
-                    const [err2, data2] = await this.getleadMyTeamData(request, data[i])
-                    Array.prototype.push.apply(empsData, data2);
-                }
-            }
-
-        } else {
-            request.lead_assigned_employee_id = request.employee_id
-            const [err, data] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-            for (let i = 0; i < data.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data[i])
-                Array.prototype.push.apply(empsData, data2);
-            }
-
-        }
-
-        if (empsData.length != 0) {
-            const [err1, data] = await this.getFilterReportSummary(request, empsData)
-            if (data.length != 0) {
-                console.log('========getFilterReportSummary===========')
-                console.log(data)
-                console.log('====================================')
-                // total time
-                idGenerate = await util.getRandomNumericId()
-                id = idGenerate
-                totalTime = await util.calculateWorkedHours(data)
-                //insert data into table for calce
-                for (i = 0; i < data.length; i++) {
-                    flag = 1
-                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                }
-               //get overall total user hours 
-               flag = 8
-               const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-               overallUsers = data3
-               console.log('=============overallUsers==============')
-               console.log(overallUsers)
-               console.log('====================================')
-
-               //loop for adding descriptions 
-               for (let i = 0; i < overallUsers.length; i++) {
-                   let value = []
-                   data.filter(function (dat) {
-                       if (dat.employee_id == overallUsers[i].employee_id) {
-                           obj = {}
-                           obj.task_description = dat.task_description
-                           obj.task_total_time = dat.task_total_time
-                           value.push(obj)
-                       }
-
-                   })
-                   overallUsers[i].description = value
-               }
-
-
-                //over all total_time daywise
-                flag = 6
-                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                overallTotalTime = data5
-                delete data
-                flag = 5
-                await this.dashboardDataCalculation(request, id, flag)
-
-                responseData.push({ total_time: totalTime })
-                responseData.push(overallTotalTime)
-                responseData.push(overallUsers)
-            }
-        }
-
-        error = false
-        return [error, responseData]
-
-    };
-    this.getLeadMyTeamReportDetailed = async function (request) {
-        total_time = {}
-        detailedData = []
-        let empsData = []
-        let responseData = [],
-            error = true;
-        request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-        console.log('=======get emp=================')
-        console.log(data1)
-        console.log('====================================')
-
-
-        if (data1.length != 0) {
-            for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
-                Array.prototype.push.apply(empsData, data2);
-
-                let data = []
-                data = empsData
-                if (data.length != 0) {
-                    const [err1, data] = await this.getFilterReportSummary(request, data)
-
-                    // total time
-                    idGenerate = await util.getRandomNumericId()
-                    id = idGenerate
-                    totalTime = await util.calculateWorkedHours(data)
-
-                    //insert data into table for calce
-
-                    for (i = 0; i < data.length; i++) {
-                        flag = 1
-                        const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
+            //loop for adding descriptions 
+            for (let i = 0; i < data3.length; i++) {
+                let value = []
+                data.filter(function (dat) {
+                    if (dat.employee_id == data3[i].employee_id) {
+                        obj = {}
+                        obj.task_description = dat.task_description
+                        obj.task_total_time = dat.task_total_time
+                        obj.project_name = dat.project_name
+                        obj.project_code = dat.project_code
+                        obj.project_color_code = dat.project_color_code
+                        value.push(obj)
                     }
 
-
-                    //get detailed data
-                    flag = 7
-                    const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                    console.log('====================================');
-                    console.log(data4);
-                    console.log('====================================');
-                    detailedData = data4
-
-
-                    // delete data
-                    flag = 5
-                    await this.dashboardDataCalculation(request, id, flag)
-                    responseData.push({ total_time: totalTime })
-                    responseData.push(detailedData)
-
-                }
-            }
-
-
-            error = false
-            // responseData = data
-            return [error, responseData];
-
-
-            return [error, responseData];
-        }
-
-
-    };
-    this.getLeadMyTeamReportWeekly = async function (request) {
-        total_time = {}
-        detailedData = []
-        let empsData = []
-        let responseData = [],
-            error = true;
-        request.lead_assigned_employee_id = request.employee_id
-        const [err1, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-        console.log('=======get emp=================')
-        console.log(data1)
-        console.log('====================================')
-
-        if (data1.length != 0) {
-            for (let i = 0; i < data1.length; i++) {
-                const [err2, data2] = await this.getleadMyTeamData(request, data1[i])
-                Array.prototype.push.apply(empsData, data2);
-
-                let data = []
-                data = empsData
-                if (data.length != 0) {
-                    const [err1, data] = await this.getFilterReportSummary(request, data)
-
-                    // total time
-                    idGenerate = await util.getRandomNumericId()
-                    id = idGenerate
-                    totalTime = await util.calculateWorkedHours(data)
-
-                    //insert data into table for calce
-
-                    for (i = 0; i < data.length; i++) {
-                        flag = 1
-                        await this.dashboardDataCalculation(data[i], id, flag)
-                    }
-
-
-                    //get detailed data
-                    flag = 7
-                    const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                    console.log('=========detailllelled============');
-                    console.log(data4);
-                    console.log('====================================');
-                    detailedData = data4
-
-
-                    var newArray = detailedData.reduce(function (acc, curr) {
-                        //finding Index in the array where the NamaCategory matched
-                        var findIfNameExist = acc.findIndex(function (item) {
-                            return item.project_id === curr.project_id;
-                        })
-                        if (findIfNameExist === -1) {
-
-
-                            let obj = {
-                                'project_id': curr.project_id,
-                                "value": [curr]
-                            }
-                            acc.push(obj)
-                        } else {
-                            acc[findIfNameExist].value.push(curr)
-                        }
-
-                        return acc;
-
-                    }, []);
-
-                    console.log('=========-------------new array===========')
-                    console.log(newArray)
-                    console.log('====================================')
-
-
-                    // delete data
-                    flag = 5
-                    await this.dashboardDataCalculation(request, id, flag)
-                    responseData.push({ total_time: totalTime })
-                    responseData.push(newArray)
-
-                }
-            }
-            error = false
-            // responseData = data
-            return [error, responseData];
-        }
-
-
-    };
-
-
-    this.getAdminSuperLeadMyTeamReportSummary = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        emps = []
-        filteredEmps = []
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        //filtering employees based on selection
-                        if (request.employees.length != 0 && request.groups.length != 0) {
-                            groups = request.groups
-                            //gathering all selected lead,emerging lead employees in gorups
-                            for (let j = 0; j < groups.length; j++) {
-                                request.employee_id = groups[j]
-                                const [err, data] = await employeeService.getEmployeeById(request)
-                                // on group selecton if emp is lead or emerging lead geting emps under them 
-                                if (data[0].role_id == 4) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 4
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-
-                                } else if (data[0].role_id == 6) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 6
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-                                }
-                            }
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-                            //removeing duplicates employees 
-                            if (emps.length != 0) {
-                                const uniqueids = [];
-                                const uniqueEmps = emps.filter(element => {
-                                    const isDuplicate = uniqueids.includes(element.employee_id);
-                                    if (!isDuplicate) {
-                                        uniqueids.push(element.employee_id);
-                                        return true;
-                                    }
-                                    return false;
-                                });
-
-                                //filter data by selected employees
-                                for (let i = 0; i < uniqueEmps.length; i++) {
-                                    dat.filter(function (data) {
-                                        if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filteredEmps.push(data)
-                                            // Array.prototype.push.apply(finalData, data1);
-                                        }
-                                    })
-                                }
-
-                            }
-
-                        } else if (request.employees.length == 0 && request.groups.length != 0) {
-                            groups = request.groups
-                            //gathering all selected lead,emerging lead employees in gorups
-                            for (let j = 0; j < groups.length; j++) {
-                                request.employee_id = groups[j]
-                                const [err, data] = await employeeService.getEmployeeById(request)
-                                console.log('====================================')
-                                console.log(data)
-                                console.log('====================================')
-                                // on group selecton if emp is lead or emerging lead geting emps under them 
-                                if (data[0].role_id == 4) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 4
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-
-                                } else if (data[0].role_id == 6) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 6
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-                                }
-                            }
-                            //removeing duplicates employees 
-                            if (emps.length != 0) {
-                                const uniqueids = [];
-                                const uniqueEmps = emps.filter(element => {
-                                    const isDuplicate = uniqueids.includes(element.employee_id);
-                                    if (!isDuplicate) {
-                                        uniqueids.push(element.employee_id);
-                                        return true;
-                                    }
-                                    return false;
-                                });
-
-                                //filter data by selected employees
-                                for (let i = 0; i < uniqueEmps.length; i++) {
-                                    dat.filter(function (data) {
-                                        if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filteredEmps.push(data)
-                                            // Array.prototype.push.apply(finalData, data1);
-                                        }
-                                    })
-                                }
-                            }
-
-                        } else if (request.employees.length != 0 && request.groups.length == 0) {
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-
-                            //filter data by selected employees
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-
-                        } else {
-                            const [err, emps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-                        }
-
-                        if (filteredEmps.length != 0) {
-                            //filtered data based on emps
-                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
-                            if (data.length != 0) {
-                                // total time
-                                idGenerate = await util.getRandomNumericId()
-                                id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
-
-                                //insert data into table for calce
-                                for (i = 0; i < data.length; i++) {
-                                    flag = 1
-                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                                }
-                                //get overall total projects total hours 
-                                flag = 3
-                                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                                overallProjects = data3
-
-                                //adding uniques keys 
-                                overallProjects1 = await util.addUniqueKeyIndexesToArrayOfObject(overallProjects)
-                                //loop for adding descriptions 
-                                for (let i = 0; i < overallProjects1.length; i++) {
-                                    let value = []
-                                    data.filter(function (dat) {
-                                        if (dat.project_id == overallProjects1[i].project_id) {
-                                            obj = {}
-                                            obj.task_description = dat.task_description
-                                            obj.task_total_time = dat.task_total_time
-                                            value.push(obj)
-                                        }
-
-                                    })
-                                    overallProjects1[i].description = value
-                                }
-
-
-                                //over all total_time daywise
-                                flag = 6
-                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                                overallTotalTime = data5
-
-                                // delete data
-                                flag = 5
-                                await this.dashboardDataCalculation(request, id, flag)
-                                responseData.push({ total_time: totalTime })
-                                responseData.push(overallTotalTime)
-                                responseData.push(overallProjects1)
-                            }
-                        }
-
-                    }
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
                 })
-            return [error, responseData];
+                data3[i].description = value
+            }
+            responseData.push({ total_time: totalTime })
+            responseData.push(data1)
+            responseData.push(data3)
         }
 
+        return [false, responseData]
+    }
 
-    };
-    this.getAdminSuperLeadMyTeamReportSummary1 = async function (request) {
-        total_time = {}
-        dayWiseData = []
-        emps = []
-        filteredEmps = []
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        //filtering employees based on selection
-                        if (request.employees.length != 0 && request.groups.length != 0) {
-                            groups = request.groups
-                            //gathering all selected lead,emerging lead employees in gorups
-                            for (let j = 0; j < groups.length; j++) {
-                                request.employee_id = groups[j]
-                                const [err, data] = await employeeService.getEmployeeById(request)
-                                // on group selecton if emp is lead or emerging lead geting emps under them 
-                                if (data[0].role_id == 4) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 4
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-
-                                } else if (data[0].role_id == 6) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 6
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-                                }
-                            }
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-                            //removeing duplicates employees 
-                            if (emps.length != 0) {
-                                const uniqueids = [];
-                                const uniqueEmps = emps.filter(element => {
-                                    const isDuplicate = uniqueids.includes(element.employee_id);
-                                    if (!isDuplicate) {
-                                        uniqueids.push(element.employee_id);
-                                        return true;
-                                    }
-                                    return false;
-                                });
-
-                                //filter data by selected employees
-                                for (let i = 0; i < uniqueEmps.length; i++) {
-                                    dat.filter(function (data) {
-                                        if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filteredEmps.push(data)
-                                            // Array.prototype.push.apply(finalData, data1);
-                                        }
-                                    })
-                                }
-
-                            }
-
-                        } else if (request.employees.length == 0 && request.groups.length != 0) {
-                            groups = request.groups
-                            //gathering all selected lead,emerging lead employees in gorups
-                            for (let j = 0; j < groups.length; j++) {
-                                request.employee_id = groups[j]
-                                const [err, data] = await employeeService.getEmployeeById(request)
-                                console.log('====================================')
-                                console.log(data)
-                                console.log('====================================')
-                                // on group selecton if emp is lead or emerging lead geting emps under them 
-                                if (data[0].role_id == 4) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 4
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-
-                                } else if (data[0].role_id == 6) {
-                                    request.lead_assigned_employee_id = data[0].employee_id
-                                    request.role_id = 6
-                                    const [err, data1] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                                    Array.prototype.push.apply(emps, data1);
-                                }
-                            }
-                            //removeing duplicates employees 
-                            if (emps.length != 0) {
-                                const uniqueids = [];
-                                const uniqueEmps = emps.filter(element => {
-                                    const isDuplicate = uniqueids.includes(element.employee_id);
-                                    if (!isDuplicate) {
-                                        uniqueids.push(element.employee_id);
-                                        return true;
-                                    }
-                                    return false;
-                                });
-
-                                //filter data by selected employees
-                                for (let i = 0; i < uniqueEmps.length; i++) {
-                                    dat.filter(function (data) {
-                                        if (data.employee_id == uniqueEmps[i].employee_id) {
-                                            filteredEmps.push(data)
-                                            // Array.prototype.push.apply(finalData, data1);
-                                        }
-                                    })
-                                }
-                            }
-
-                        } else if (request.employees.length != 0 && request.groups.length == 0) {
-                            //----single users
-                            users = request.employees
-                            for (let i = 0; i < users.length; i++) {
-                                request.employee_id = users[i]
-                                const [err, usr] = await employeeService.getEmployeeById(request)
-                                Array.prototype.push.apply(emps, usr);
-                            }
-
-                            //filter data by selected employees
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-
-                        } else {
-                            const [err, emps] = await leadService.getEmpsAssignUnderLeadsWithoutGroups(request)
-                            for (let i = 0; i < emps.length; i++) {
-                                dat.filter(function (data) {
-                                    if (data.employee_id == emps[i].employee_id) {
-                                        filteredEmps.push(data)
-                                        // Array.prototype.push.apply(finalData, data1);
-                                    }
-                                })
-                            }
-                        }
-
-                        if (filteredEmps.length != 0) {
-                            //filtered data based on emps
-                            const [err1, data] = await this.getFilterReportSummary(request, filteredEmps)
-                            if (data.length != 0) {
-                                // total time
-                                idGenerate = await util.getRandomNumericId()
-                                id = idGenerate
-                                totalTime = await util.calculateWorkedHours(data)
-
-                                //insert data into table for calce
-                                for (i = 0; i < data.length; i++) {
-                                    flag = 1
-                                    const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                                }
-                                //get overall total user hours 
-                                flag = 8
-                                const [err3, data3] = await this.dashboardDataCalculation(request, id, flag)
-                                overallUsers = data3
-                                console.log('=============overallUsers==============')
-                                console.log(overallUsers)
-                                console.log('====================================')
-
-                                //loop for adding descriptions 
-                                for (let i = 0; i < overallUsers.length; i++) {
-                                    let value = []
-                                    data.filter(function (dat) {
-                                        if (dat.employee_id == overallUsers[i].employee_id) {
-                                            obj = {}
-                                            obj.task_description = dat.task_description
-                                            obj.task_total_time = dat.task_total_time
-                                            value.push(obj)
-                                        }
-
-                                    })
-                                    overallUsers[i].description = value
-                                }
-
-
-                                //over all total_time daywise
-                                flag = 6
-                                const [err5, data5] = await this.dashboardDataCalculation(request, id, flag)
-                                overallTotalTime = data5
-
-                                // delete data
-                                flag = 5
-                                await this.dashboardDataCalculation(request, id, flag)
-                                responseData.push({ total_time: totalTime })
-                                responseData.push(overallTotalTime)
-                                responseData.push(overallUsers)
-                            }
-                        }
-
-                    }
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getAdminSuperLeadMyTeamReportDetailed = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            const [err1, data1] = await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('====================================');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(detailedData)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-    this.getAdminSuperLeadMyTeamReportWeekly = async function (request) {
-        total_time = {}
-        detailedData = []
-        let responseData = [],
-            error = true;
-        flag = 1
-        const paramsArr = new Array(
-
-            request.employee_id,
-            request.start_date,
-            request.end_date,
-            flag
-
-        );
-
-        const queryString = util.getQueryString('dashboard_get_data_by_dates', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (dat) => {
-                    if (dat.length != 0) {
-                        const [err1, data] = await this.getFilterReportSummary(request, dat)
-
-                        // total time
-                        idGenerate = await util.getRandomNumericId()
-                        id = idGenerate
-                        totalTime = await util.calculateWorkedHours(data)
-
-                        //insert data into table for calce
-
-                        for (i = 0; i < data.length; i++) {
-                            flag = 1
-                            await this.dashboardDataCalculation(data[i], id, flag)
-                        }
-
-
-                        //get detailed data
-                        flag = 7
-                        const [err4, data4] = await this.dashboardDataCalculation(request, id, flag)
-                        console.log('=========detailllelled============');
-                        console.log(data4);
-                        console.log('====================================');
-                        detailedData = data4
-
-
-                        var newArray = detailedData.reduce(function (acc, curr) {
-                            //finding Index in the array where the NamaCategory matched
-                            var findIfNameExist = acc.findIndex(function (item) {
-                                return item.project_id === curr.project_id;
-                            })
-                            if (findIfNameExist === -1) {
-
-
-                                let obj = {
-                                    'project_id': curr.project_id,
-                                    "value": [curr]
-                                }
-                                acc.push(obj)
-                            } else {
-                                acc[findIfNameExist].value.push(curr)
-                            }
-
-                            return acc;
-
-                        }, []);
-
-                        console.log('=========-------------new array===========')
-                        console.log(newArray)
-                        console.log('====================================')
-
-
-                        // delete data
-                        flag = 5
-                        await this.dashboardDataCalculation(request, id, flag)
-                        responseData.push({ total_time: totalTime })
-                        responseData.push(newArray)
-
-                    }
-
-
-                    error = false
-                    // responseData = data
-                    return [error, responseData];
-
-
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-
-    };
-
-}
+};
 
 
 

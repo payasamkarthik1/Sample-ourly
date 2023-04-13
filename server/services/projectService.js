@@ -1,17 +1,12 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
 
 function ProjectService(objectCollection) {
-
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
 
-
-
     this.removeClientDelete = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -41,11 +36,9 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllClientsSelect = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
 
         const queryString = util.getQueryString('project_get_all_clients_select', paramsArr);
@@ -122,6 +115,7 @@ function ProjectService(objectCollection) {
                         .then(async (data) => {
                             if (data[0].message === "data") {
                                 let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
                                 responseData = data1;
                                 error = false
                             } else {
@@ -143,34 +137,7 @@ function ProjectService(objectCollection) {
         return [error, responseData];
     }
 
-    this.getProjectsByClientidSelect = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.client_id.toString()
-        );
-
-        const queryString = util.getQueryString('project_get_projects_by_clientid_select', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    console.log('=========getProjectsByClientidSelect==============')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-    }
-
     this.getClientByClientidSelect = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -286,11 +253,13 @@ function ProjectService(objectCollection) {
         return [error, responseData];
     }
 
-
     this.removeProjectDelete = async function (request) {
         let responseData = [],
             error = true;
+
+        // flag=1 for moveing project from active to inactive set log_state=3
         flag = 1
+
         const paramsArr = new Array(
             request.project_id.toString(),
             flag
@@ -312,9 +281,12 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.deleteProjectComplete = async function (request) {
         let responseData = [],
             error = true;
+
+        // flag=2 for moveing project from  inactive to delete set log_state=5
         flag = 2
         const paramsArr = new Array(
             request.project_id,
@@ -337,10 +309,14 @@ function ProjectService(objectCollection) {
 
 
     }
+
     this.inactiveProjToActive = async function (request) {
         let responseData = [],
             error = true;
+
+        // flag=3 for moveing project from inactive to active set log_state=1
         flag = 3
+
         const paramsArr = new Array(
             request.project_id,
             flag
@@ -363,13 +339,10 @@ function ProjectService(objectCollection) {
 
     }
 
-
-
     this.getAllProjectsSelect = async function (request) {
 
         let responseData = [],
             error = true;
-
 
         const paramsArr = new Array(
 
@@ -390,11 +363,9 @@ function ProjectService(objectCollection) {
     }
 
     this.getAllTagsSelect = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
-
         );
 
         const queryString = util.getQueryString('project_get_all_tags_select', paramsArr);
@@ -427,9 +398,6 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('====================================')
-                    console.log(data)
-                    console.log('====================================')
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -506,13 +474,9 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data.length == 0) {
-                        console.log('============getProjectsByTagidSelect=================')
-                        console.log(data)
-                        console.log('====================================')
                         responseData = data;
                         error = false
                     } else {
-
                         error = true
                         responseData = [{ message: "Tag cannot be deleted" }]
                     }

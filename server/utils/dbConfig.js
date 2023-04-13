@@ -53,14 +53,13 @@ function Dbinitiate() {
                     if (err) {
                         console.log(err)
                     } else {
-                        console.log(`db credentials has been fetched`);
-                        console.log(`Successfully connected to database running on host ${global.config.host}`);
+                        // console.log(`db credentials has been fetched`);
+                        // console.log(`Successfully connected to database running on host ${global.config.host}`);
                         conn.query(queryString, function (err, rows, fields) {
                             if (!err) {
-                                console.log(`dbcall - ${queryString}`);
+                                //  console.log(`dbcall - ${queryString}`);
                                 conn.release();
                                 resolve(rows[0])
-
                             } else {
                                 console.log("error: err: ", err);
                                 conn.release();

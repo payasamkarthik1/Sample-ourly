@@ -1,8 +1,5 @@
-const { json } = require("body-parser");
-const Validations = require('../utils/validations')
 
 const TimeTrackingService = require('../services/timeTrackingService')
-const ApprovalsService = require('../services/approvalsService')
 
 function ApprovalsController(objectCollection) {
 
@@ -10,7 +7,6 @@ function ApprovalsController(objectCollection) {
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const timeTrackingService = new TimeTrackingService(objectCollection)
-    const approvalsService = new ApprovalsService(objectCollection)
 
 
     //@Post approvals/get/list
@@ -92,33 +88,13 @@ function ApprovalsController(objectCollection) {
 
             const [err, resData] = await timeTrackingService.onWithdraw(req.body);
             if (!err) {
-                console.log("approvals/on/reject | Error: ", err);
+                console.log("timesheet/on/withdraw | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("approvals/on/reject | Error: ", err);
+                console.log("timesheet/on/withdraw | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-    //@Post approvals/get/all/submitted/list/by/lead/id
-    app.post('/' + 'approvals/get/all/submitted/list/by/id',
-        async function (req, res) {
-            const [err, resData] = await timeTrackingService.getEmpsSubmittedListByLeadId(req.body);
-            if (!err) {
-                console.log("approvals/get/all/submitted/list/by/id | Error: ", err);
-                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-            } else {
-                console.log("approvals/get/all/submitted/list/by/id | Error: ", err);
-                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-            }
-        })
-
-
-
-
-
-
-
 
 }
 

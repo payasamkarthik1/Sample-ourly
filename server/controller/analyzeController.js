@@ -1,10 +1,6 @@
 
 const Validations = require('../utils/validations')
 const AnalyzeServices = require('../services/analyzeServices')
-const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
-
-
-
 
 function Analyze(objectCollection) {
 
@@ -12,15 +8,12 @@ function Analyze(objectCollection) {
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
     const analyzeServices = new AnalyzeServices(objectCollection)
-    const rolesDepartDesignService = new RolesDepartmentDesignationService(objectCollection)
     const validations = new Validations(objectCollection)
 
 
     //@Post analyze/get/dashboad/overview
     app.post('/' + 'analyze/get/dashboad/overview',
-
         async function (req, res) {
-
             const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
             if (!err) {
                 console.log("analyze/get/dashboad/overview | Error: ", err);
@@ -61,7 +54,6 @@ function Analyze(objectCollection) {
         })
 
 
-    //--------------------------reports--------------------
 
     //@Post analyze/get/report/summary
     app.post('/' + 'analyze/get/report/summary',
@@ -94,7 +86,6 @@ function Analyze(objectCollection) {
             }
         })
 
-
     //@Post analyze/get/report/weekly
     app.post('/' + 'analyze/get/report/weekly',
 
@@ -110,25 +101,19 @@ function Analyze(objectCollection) {
             }
         })
 
-
-         //@Post analyze/get/report/summary/
+    //@Post analyze/get/report/summary/
     app.post('/' + 'analyze/get/report/summary/group/by/user',
+        async function (req, res) {
 
-    async function (req, res) {
-
-        const [err, resData] = await analyzeServices.getReportSummary1(req.body);
-        if (!err) {
-            console.log("analyze/get/report/weekly | Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("analyze/get/report/weekly | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
-
-
-
-
+            const [err, resData] = await analyzeServices.getReportSummaryGroupByUser(req.body);
+            if (!err) {
+                console.log("analyze/get/report/weekly | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/weekly | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
 
 

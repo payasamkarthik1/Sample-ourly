@@ -1,6 +1,3 @@
-// const adminController = require('../controller/adminController');
-// const adminServices = require('../services/adminService');
-
 const validations = require('../utils/validations')
 
 const projectController = require('../controller/projectController')
@@ -9,9 +6,8 @@ const projectService = require('../services/projectService')
 const employeeController = require('../controller/employeeController')
 const employeeService = require('../services/employeeService')
 
-
-const rolesDepartmentDesignationContoller = require('../controller/rolesDepartmentDesignationContoller')
-const rolesDepartmentDesignationService = require('../services/rolesDepartmentDesignationService')
+const DepartmentDesignationContoller = require('../controller/departmentDesignationContoller')
+const DepartmentDesignationsService = require('../services/departmentDesignationService')
 
 const userController = require('../controller/userController')
 const userService = require('../services/userService')
@@ -25,13 +21,20 @@ const analyzeServices = require('../services/analyzeServices')
 const holidayListController = require('../controller/HolidaysListController')
 const holidaysListService = require('../services/HolidaysListService')
 
-
 const approvalsController = require('../controller/approvalsController')
-const approvalsService = require('../services/approvalsService')
 
 const leadController = require('../controller/leadController')
 const leadService = require('../services/leadService')
 
+const componentsController = require('../controller/componentsController')
+const componentsService = require('../services/componentsService')
+
+const RoleComponentsMappingController = require('../controller/roleComponentsMappingController')
+const RoleComponentsMappingService = require('../services/roleComponentsMappingService')
+
+const RolePermissionEmployeeMapping = require('../services/roleComponentsMappingService')
+
+const Scheduler = require('../utils/sheduler')
 
 
 function ControllInterceptor(objCollection) {
@@ -44,8 +47,8 @@ function ControllInterceptor(objCollection) {
     new employeeController(objCollection)
     new employeeService(objCollection)
 
-    new rolesDepartmentDesignationContoller(objCollection)
-    new rolesDepartmentDesignationService(objCollection)
+    new DepartmentDesignationContoller(objCollection)
+    new DepartmentDesignationsService(objCollection)
 
     new userController(objCollection)
     new userService(objCollection)
@@ -63,10 +66,19 @@ function ControllInterceptor(objCollection) {
     new holidaysListService(objCollection)
 
     new approvalsController(objCollection)
-    new approvalsService(objCollection)
 
     new leadController(objCollection)
     new leadService(objCollection)
+
+    new componentsController(objCollection)
+    new componentsService(objCollection)
+
+    new RoleComponentsMappingController(objCollection)
+    new RoleComponentsMappingService(objCollection)
+
+    new RolePermissionEmployeeMapping(objCollection)
+    
+    new Scheduler(objCollection)
 }
 
 

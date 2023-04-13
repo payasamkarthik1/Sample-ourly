@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const ProjectService = require("../services/projectService");
 const EmployeeService = require("../services/employeeService");
 
@@ -14,8 +13,6 @@ function EmployeeController(objectCollection) {
     const employeeService = new EmployeeService(objectCollection)
     const projectService = new ProjectService(objectCollection)
     const validations = new Validations(objectCollection)
-
-
 
     //@Post employee/create/add
     app.post('/' + 'employee/create/add', async function (req, res) {

@@ -1,18 +1,13 @@
 
 const Validations = require('../utils/validations')
-const jwt = require('jsonwebtoken')
-
-const RolesDepartmentDesignationService = require("../services/rolesDepartmentDesignationService");
-
+const RolePermissionEmployeeMapping = require('./rolePermissionEmployeeMappingService')
 
 function EmployeeServices(objectCollection) {
 
     const util = objectCollection.util;
     const db = objectCollection.db;
     const validations = new Validations(objectCollection)
-    const rolesDepartDesigService = new RolesDepartmentDesignationService(objectCollection)
-
-
+    const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
 
     this.employeeCreationInsert = async function (request) {
         let responseData = [],
@@ -32,7 +27,6 @@ function EmployeeServices(objectCollection) {
                 request.phone_number,
                 request.blood_group,
                 request.dob,
-                request.role_id,
                 request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
@@ -52,6 +46,9 @@ function EmployeeServices(objectCollection) {
                             error = true
                             responseData = [{ message: data[0].message }];
                         } else if (data[0].message === "data") {
+                            //adding role perimissions to user
+                            request.employee_id = data[0].employee_id
+                            await rolePermissionEmployeeMapping.rolePermissionEmployeeAdd(request)
                             let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                             responseData = data1;
                             error = false;
@@ -59,6 +56,7 @@ function EmployeeServices(objectCollection) {
 
                     })
                     .catch((err) => {
+                        console.log("err-------" + err);
                         error = err;
                     })
                 return [error, responseData];
@@ -68,7 +66,6 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getAllEmployees = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -79,9 +76,56 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    responseData = data1;
-                    error = false
+                    if (data.length != 0) {
+                        var dat = data.reduce(function (acc, curr) {
+                            //finding Index in the array where the NamaCategory matched
+                            var findIfNameExist = acc.findIndex(function (item) {
+                                return (item.employee_id === curr.employee_id && item.log_state == 1 && curr.log_state == 1);
+                            })
+                            if (findIfNameExist === -1) {
+
+                                let obj = {
+                                    'id': curr.id,
+                                    'employee_id': curr.employee_id,
+                                    'first_name': curr.first_name,
+                                    'last_name': curr.last_name,
+                                    'full_name': curr.full_name,
+                                    'email': curr.email,
+                                    'phone_number': curr.phone_number,
+                                    'blood_group': curr.blood_group,
+                                    'dob': curr.dob,
+                                    'gender': curr.gender,
+                                    'designation_id': curr.designation_id,
+                                    'designation_name': curr.designation_name,
+                                    'department_id': curr.department_id,
+                                    'department_name': curr.department_name,
+                                    'lead_assigned_employee_id': curr.lead_assigned_employee_id,
+                                    'lead_assigned_employee_name': curr.lead_assigned_employee_name,
+                                    'log_state': curr.log_state,
+                                    "permission_data": [
+                                        {
+                                            'role_id': curr.role_id,
+                                            'role_name': curr.role_name,
+                                        }]
+                                }
+                                acc.push(obj)
+                            } else {
+                                acc[findIfNameExist].permission_data.push({
+                                    'role_id': curr.role_id,
+                                    'role_name': curr.role_name,
+                                })
+                            }
+
+                            return acc;
+
+                        }, []);
+                        //adding unique id for array of objects
+                        let data1 = await util.addUniqueIndexesToArrayOfObject(dat)
+                        responseData = data1;
+                        error = false
+                    } else {
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -91,7 +135,6 @@ function EmployeeServices(objectCollection) {
     }
 
     this.getEmployeeById = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -103,7 +146,6 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-
                     responseData = data;
                     error = false
                 }).catch((err) => {
@@ -115,9 +157,9 @@ function EmployeeServices(objectCollection) {
     }
 
     this.removeEmployeeDelete = async function (request) {
-
         let responseData = [],
             error = true;
+        // flag =1 move employee to inactive set log_state = 3
         flag = 1
         const paramsArr = new Array(
             request.employee_id.toString(),
@@ -141,9 +183,9 @@ function EmployeeServices(objectCollection) {
     }
 
     this.removeEmployeeComplete = async function (request) {
-
         let responseData = [],
             error = true;
+        // flag =2 move employee to delete set log_state = 5
         flag = 2
         const paramsArr = new Array(
             request.employee_id,
@@ -155,6 +197,7 @@ function EmployeeServices(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    await rolePermissionEmployeeMapping.rolePermissionEmployeeDelete(request)
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1
                     error = false
@@ -167,9 +210,9 @@ function EmployeeServices(objectCollection) {
     }
 
     this.inactiveEmpToActive = async function (request) {
-
         let responseData = [],
             error = true;
+        //  flag =3 move employee to active from inactive set log_state = 1
         flag = 3
         const paramsArr = new Array(
             request.employee_id,
@@ -183,7 +226,6 @@ function EmployeeServices(objectCollection) {
                 .then(async (data) => {
                     let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                     responseData = data1
-                    error = false
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -212,7 +254,6 @@ function EmployeeServices(objectCollection) {
                 request.blood_group,
                 request.dob,
                 request.image,
-                request.role_id,
                 request.lead_assigned_employee_id,
                 request.department_id,
                 request.designation_id,
@@ -224,15 +265,14 @@ function EmployeeServices(objectCollection) {
                 await db.executeQuery(1, queryString, request)
                     .then(async (data) => {
                         error = false
+                        await rolePermissionEmployeeMapping.rolePermissionEmployeeUpdate(request)
                         let data1 = await util.addUniqueIndexesToArrayOfObject(data)
                         responseData = data1
                     }).catch((err) => {
                         console.log("err-------" + err);
                         error = err
                     })
-
             }
-
         }
         return [error, responseData];
     }

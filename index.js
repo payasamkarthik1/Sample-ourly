@@ -26,16 +26,22 @@ const db = new Db();
 const ResponseWrapper = require('./server/utils/responseWrapper')
 const responseWrapper = new ResponseWrapper(util)
 
+
 var objCollection = {
   app: app,
   util: util,
   db: db,
-  responseWrapper : responseWrapper
+  responseWrapper: responseWrapper
 };
 
 
 const ControllInterceptor = require('./server/interceptors/controllerInterceptors');
 new ControllInterceptor(objCollection);
+
+const rem = require('./server/utils/sheduler');
+new rem(objCollection).sendRemainder()
+new rem(objCollection).sendRemainderToLeads()
+// new rem(objCollection).sendProjectToInactive()
 
 
 const port = process.env.PORT

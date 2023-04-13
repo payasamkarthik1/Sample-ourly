@@ -4,11 +4,7 @@ function HolidaysListService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
 
-
-
     this.addHolidaysList = async function (request) {
-        let responseData = [],
-            error = true;
         await this.removeHolidayListDelete(request);
         data1 = request.data
         for (let i = 0; i < data1.length; i++) {
@@ -21,12 +17,12 @@ function HolidaysListService(objectCollection) {
     }
 
     this.addHolidaysListInsert = async function (data, request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
             data.Holiday,
             data.Date,
+            data.Day,
         );
 
         const queryString = util.getQueryString('holidays_list_add_insert', paramsArr);
@@ -47,7 +43,6 @@ function HolidaysListService(objectCollection) {
     }
 
     this.getHolidayslistSelect = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -59,9 +54,6 @@ function HolidaysListService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                    console.log('====================================');
-                    console.log(data1);
-                    console.log('=========================oooe=====');
                     responseData = data1;
                     error = false
                 }).catch((err) => {
@@ -75,7 +67,6 @@ function HolidaysListService(objectCollection) {
     }
 
     this.removeHolidayListDelete = async function (request) {
-
         let responseData = [],
             error = true;
         const paramsArr = new Array(
