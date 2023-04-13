@@ -182,6 +182,7 @@ function ProjectService(objectCollection) {
                     request.project_code,
                     request.project_color_code,
                     request.tag_id,
+                    request.project_lead_employee_id,
                     util.getCurrentUTCTime(),
                 );
                 const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
@@ -227,6 +228,7 @@ function ProjectService(objectCollection) {
                 request.project_code,
                 request.project_color_code,
                 request.tag_id,
+                request.project_lead_employee_id,
             );
 
 
