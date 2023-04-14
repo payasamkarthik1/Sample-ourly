@@ -3,6 +3,7 @@ const Validations = require('../utils/validations')
 const moment = require('moment')
 const EmployeeService = require('./employeeService')
 const LeadService = require('./leadService')
+const ProjectBasedApprovalServices = require('./projectbasedapprovalServices')
 
 
 function TimeTrackingService(objectCollection) {
@@ -12,6 +13,7 @@ function TimeTrackingService(objectCollection) {
     const validations = new Validations(objectCollection)
     const employeeService = new EmployeeService(objectCollection)
     const leadService = new LeadService(objectCollection)
+    const projectBasedApprovalServices = new ProjectBasedApprovalServices(objectCollection)
 
     this.timetrackingAddTaskDetailsInsert = async function (request) {
         let responseData = [],
@@ -1242,11 +1244,12 @@ function TimeTrackingService(objectCollection) {
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    if (data[0].message == "success") {
-                        const [err1, data1] = await this.onSubmitForApprovalEntry(request)
-                        responseData = data1;
-                        error = err1
+            .then(async (data) => {
+                if (data[0].message == "success") {
+                    const [err1, data1] = await this.onSubmitForApprovalEntry(request)
+                     await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
+                    responseData = data1;
+                    error = err1
                     } else {
                         error = true
                         responseData = [{ message: data[0].message }];
@@ -1538,6 +1541,7 @@ function TimeTrackingService(objectCollection) {
                 .then(async (data) => {
                     if (data[0].message == "success") {
                         const [err1, data1] = await this.onWithdrawnEntry(request)
+                        await projectBasedApprovalServices.projectWiseTaskDetailsWithdraw(request)
                         responseData = data1;
                         error = false
                     } else {
