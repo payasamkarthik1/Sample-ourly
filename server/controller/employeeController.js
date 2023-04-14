@@ -27,7 +27,7 @@ function EmployeeController(objectCollection) {
     })
 
     //@Get employee/create/add
-    app.get('/' + 'employee/get/all/list',
+    app.get('/' + 'api/' + 'employee/get/all/list',
 
         async function (req, res) {
 
