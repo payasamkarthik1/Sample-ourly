@@ -36,7 +36,7 @@ function Dbinitiate() {
     }
     else if (mode === 'aws') {
         let i = 0
-        var connLocal = mysql.createPool({
+        var connAws = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
             user: global.config.user,
@@ -57,6 +57,9 @@ function Dbinitiate() {
                     break;
                 case 3:
                     conPool = connprod;
+                    break;
+                case 4:
+                    conPool = connAws;
                     break;
             }
 
