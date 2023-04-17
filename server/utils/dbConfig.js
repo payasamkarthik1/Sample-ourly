@@ -33,7 +33,7 @@ function Dbinitiate() {
         });
     }
     else if (mode === 'aws') {
-        let i = 0
+        let i = 4
         var connAws = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
