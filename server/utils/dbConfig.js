@@ -6,8 +6,8 @@ let mysql = require('mysql');
 
 function Dbinitiate() {
     if (mode === 'staging') {
-        let i = 1
-        var connLocal = mysql.createPool({
+        let i = 0
+        var connStag = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
             user: global.config.user,
@@ -15,8 +15,8 @@ function Dbinitiate() {
             database: global.config.database,
         });
     } else if (mode === 'prod') {
-        let i = 3
-        var connLocal = mysql.createPool({
+        let i = 1
+        var connProd = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
             user: global.config.user,
@@ -25,7 +25,7 @@ function Dbinitiate() {
         });
     }
     else if (mode === 'local') {
-        let i = 0
+        let i = 2
         var connLocal = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -35,7 +35,7 @@ function Dbinitiate() {
         });
     }
     else if (mode === 'aws') {
-        let i = 0
+        let i = 3
         var connAws = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -50,15 +50,15 @@ function Dbinitiate() {
             let conPool;
             switch (0) {
                 case 0:
-                    conPool = connLocal;
+                    conPool = connStag;
                     break;
                 case 1:
-                    conPool = connstaging;
+                    conPool = connProd;
+                    break;
+                case 2:
+                    conPool = connLocal;
                     break;
                 case 3:
-                    conPool = connprod;
-                    break;
-                case 4:
                     conPool = connAws;
                     break;
             }
