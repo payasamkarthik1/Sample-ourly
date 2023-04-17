@@ -4,7 +4,7 @@ let mysql = require('mysql');
 
 function Dbinitiate() {
     if (mode === 'staging') {
-        let i = 0
+        i = 0
         var connStag = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -13,7 +13,7 @@ function Dbinitiate() {
             database: global.config.database,
         });
     } else if (mode === 'prod') {
-        let i = 1
+        i = 1
         var connProd = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -23,7 +23,7 @@ function Dbinitiate() {
         });
     }
     else if (mode === 'local') {
-        let i = 2
+        i = 2
         var connLocal = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -33,7 +33,7 @@ function Dbinitiate() {
         });
     }
     else if (mode === 'aws') {
-        let i = 3
+        i = 3
         var connAws = mysql.createPool({
             multipleStatements: global.config.multipleStatements,
             host: global.config.host,
@@ -46,7 +46,8 @@ function Dbinitiate() {
     this.executeQuery = function (flag, queryString, request) {
         return new Promise((resolve, reject) => {
             let conPool;
-            switch (0) {
+            console.log(i);
+            switch (i) {
                 case 0:
                     conPool = connStag;
                     break;
