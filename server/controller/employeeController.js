@@ -15,7 +15,7 @@ function EmployeeController(objectCollection) {
     const validations = new Validations(objectCollection)
 
     //@Post employee/create/add
-    app.post('/' + 'employee/create/add', async function (req, res) {
+    app.post('/' + 'api/' +'employee/create/add', async function (req, res) {
         const [err, resData] = await employeeService.employeeCreationInsert(req.body);
         if (!err) {
             console.log("employee/create/add | Error: ", err);
@@ -27,7 +27,7 @@ function EmployeeController(objectCollection) {
     })
 
     //@Get employee/create/add
-    app.get('/' + 'api/' + 'employee/get/all/list',
+    app.get('/' +'api/' + 'employee/get/all/list',
 
         async function (req, res) {
 
@@ -42,7 +42,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Get employee/get/employee/by/id
-    app.post('/' + 'employee/get/employee/by/id',
+    app.post('/' +'api/' + 'employee/get/employee/by/id',
 
         async function (req, res) {
 
@@ -57,7 +57,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Post employee/remove/employee/delete
-    app.post('/' + 'employee/remove/employee/delete',
+    app.post('/' +'api/' + 'employee/remove/employee/delete',
 
         async function (req, res) {
 
@@ -72,7 +72,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Postemployee/remove/complete
-    app.post('/' + 'employee/remove/complete',
+    app.post('/' +'api/' + 'employee/remove/complete',
 
         async function (req, res) {
 
@@ -87,7 +87,7 @@ function EmployeeController(objectCollection) {
         })
 
     //@Post employee/inactive/to/active
-    app.post('/' + 'employee/inactive/to/active',
+    app.post('/' + 'api/' +'employee/inactive/to/active',
 
         async function (req, res) {
 
@@ -103,7 +103,7 @@ function EmployeeController(objectCollection) {
 
 
     //@Post employee/update/employee/details
-    app.post('/' + 'employee/update/employee/details',
+    app.post('/' +'api/' + 'employee/update/employee/details',
 
         async function (req, res) {
 

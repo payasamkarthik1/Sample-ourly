@@ -13,7 +13,7 @@ function UserController(objectCollection) {
 
 
     //@Post user/login/insert
-    app.post('/' + 'user/login/insert', async function (req, res) {
+    app.post('/' + 'api/' + 'user/login/insert', async function (req, res) {
         const [err, resData] = await userService.userLogin(req.body, res);
         if (!err) {
             console.log("user/login/insert | Error: ", err);
@@ -25,7 +25,7 @@ function UserController(objectCollection) {
     })
 
     //@Post user/profile/update
-    app.post('/' + 'user/profile/update', async function (req, res) {
+    app.post('/' + 'api/' + 'user/profile/update', async function (req, res) {
         const [err, resData] = await userService.userProfileUpdate(req.body, req, res);
         if (!err) {
             console.log("user/profile/update | Error: ", err);
@@ -37,7 +37,7 @@ function UserController(objectCollection) {
     })
 
     //@Post user/change/password
-    app.post('/' + 'user/change/password', async function (req, res) {
+    app.post('/' +'api/' +  'user/change/password', async function (req, res) {
 
         const [err, resData] = await validations.oldPasswordCheck(req.body, req);
         if (!err) {
@@ -50,7 +50,7 @@ function UserController(objectCollection) {
     })
 
     //@Post user/send/forget/password/link
-    app.post('/' + 'user/send/forget/password/link', async function (req, res) {
+    app.post('/' +'api/' +  'user/send/forget/password/link', async function (req, res) {
         const [err, resData] = await userService.SendForgetPasswordLink(req.body, res);
         console.log(resData);
         if (!err) {
@@ -63,7 +63,7 @@ function UserController(objectCollection) {
     })
 
     //@Post user/forget/change/password
-    app.post('/' + 'user/forget/change/password', async function (req, res) {
+    app.post('/' + 'api/' + 'user/forget/change/password', async function (req, res) {
         const [err, resData] = await validations.forgetChangePassword(req.body, res);
         if (!err) {
             console.log("user/forget/change/password | Error: ", err);
@@ -76,7 +76,7 @@ function UserController(objectCollection) {
 
 
     //@Post user/get/permission/ids
-    app.post('/' + 'user/get/permission/ids', async function (req, res) {
+    app.post('/' + 'api/' + 'user/get/permission/ids', async function (req, res) {
         const [err, resData] = await rolePermissionEmployeeMapping.rolePermissionEmployeeget(req.body, 3);
         if (!err) {
             console.log("user/get/permission/ids | Error: ", err);

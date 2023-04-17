@@ -12,7 +12,7 @@ function Analyze(objectCollection) {
 
 
     //@Post analyze/get/dashboad/overview
-    app.post('/' + 'analyze/get/dashboad/overview',
+    app.post('/' + 'api/' + 'analyze/get/dashboad/overview',
         async function (req, res) {
             const [err, resData] = await analyzeServices.getDasboardOverview(req.body);
             if (!err) {
@@ -25,7 +25,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post analyze/get/dashboad/all/tasks/weekly/filter/by/descrip
-    app.post('/' + 'analyze/get/dashboad/all/tasks/weekly/filter/by/descrip',
+    app.post('/' + 'api/' + 'analyze/get/dashboad/all/tasks/weekly/filter/by/descrip',
 
         async function (req, res) {
 
@@ -40,7 +40,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post 'analyze/get/all/tasks/weekly/by/empid/list
-    app.post('/' + 'analyze/get/all/tasks/weekly/by/empid/list',
+    app.post('/' + 'api/' +'analyze/get/all/tasks/weekly/by/empid/list',
 
         async function (req, res) {
             const [err, resData] = await analyzeServices.getAllTasksInWeekByEmpId(req.body);
@@ -56,7 +56,7 @@ function Analyze(objectCollection) {
 
 
     //@Post analyze/get/report/summary
-    app.post('/' + 'analyze/get/report/summary',
+    app.post('/' + 'api/' +'analyze/get/report/summary',
 
         async function (req, res) {
 
@@ -72,7 +72,7 @@ function Analyze(objectCollection) {
 
 
     //@Post analyze/get/report/detailed
-    app.post('/' + 'analyze/get/report/detailed',
+    app.post('/' + 'api/' +'analyze/get/report/detailed',
 
         async function (req, res) {
 
@@ -87,7 +87,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post analyze/get/report/weekly
-    app.post('/' + 'analyze/get/report/weekly',
+    app.post('/' +'api/' + 'analyze/get/report/weekly',
 
         async function (req, res) {
 
@@ -102,7 +102,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post analyze/get/report/summary/
-    app.post('/' + 'analyze/get/report/summary/group/by/user',
+    app.post('/' + 'api/' +'analyze/get/report/summary/group/by/user',
         async function (req, res) {
 
             const [err, resData] = await analyzeServices.getReportSummaryGroupByUser(req.body);

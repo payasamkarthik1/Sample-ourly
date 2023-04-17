@@ -10,7 +10,7 @@ function ApprovalsController(objectCollection) {
 
 
     //@Post approvals/get/list
-    app.post('/' + 'approvals/get/list',
+    app.post('/' + 'api/' +'approvals/get/list',
 
         async function (req, res) {
 
@@ -26,7 +26,7 @@ function ApprovalsController(objectCollection) {
 
 
     //@Post approvals/get/on/approve/on/reject/list
-    app.post('/' + 'approvals/get/on/approve/on/reject/list',
+    app.post('/' +'api/' + 'approvals/get/on/approve/on/reject/list',
         async function (req, res) {
             const [err, resData] = await timeTrackingService.getOnApproveOnRejectList(req.body);
             if (!err) {
@@ -39,7 +39,7 @@ function ApprovalsController(objectCollection) {
         })
 
     //@Post approvals/on/submit/for/approval
-    app.post('/' + 'approvals/on/submit/for/approval',
+    app.post('/' +'api/' + 'approvals/on/submit/for/approval',
 
         async function (req, res) {
 
@@ -54,7 +54,7 @@ function ApprovalsController(objectCollection) {
         })
 
     //@Post approvals/on/approved
-    app.post('/' + 'approvals/on/approved',
+    app.post('/' + 'api/' +'approvals/on/approved',
 
         async function (req, res) {
 
@@ -69,7 +69,7 @@ function ApprovalsController(objectCollection) {
         })
 
     //@Post approvals/on/reject
-    app.post('/' + 'approvals/on/reject',
+    app.post('/' +'api/' + 'approvals/on/reject',
         async function (req, res) {
             const [err, resData] = await timeTrackingService.onReject(req.body);
             if (!err) {
@@ -82,7 +82,7 @@ function ApprovalsController(objectCollection) {
         })
 
     //@Post timesheet/on/withdraw
-    app.post('/' + 'timesheet/on/withdraw',
+    app.post('/' + 'api/' +'timesheet/on/withdraw',
 
         async function (req, res) {
 

@@ -12,7 +12,7 @@ function DepartmentDesignation(objectCollection) {
 
 
     //@Post department/add/department/insert
-    app.post('/' + 'department/add/department/insert',
+    app.post('/' + 'api/' +'department/add/department/insert',
 
         async function (req, res) {
 
@@ -26,7 +26,7 @@ function DepartmentDesignation(objectCollection) {
             }
         })
     //@Post department/remove/department/delete
-    app.post('/' + 'department/remove/department/delete',
+    app.post('/' + 'api/' +'department/remove/department/delete',
 
         async function (req, res) {
 
@@ -41,7 +41,7 @@ function DepartmentDesignation(objectCollection) {
         })
 
     //@Get department/get/all/departments/list
-    app.get('/' + 'department/get/all/departments/list',
+    app.get('/' + 'api/' +'department/get/all/departments/list',
 
         async function (req, res) {
 
@@ -57,7 +57,7 @@ function DepartmentDesignation(objectCollection) {
 
 
     //@Post designation/add/design/by/depart/id/insert
-    app.post('/' + 'designation/add/design/by/depart/id/insert',
+    app.post('/' + 'api/' +'designation/add/design/by/depart/id/insert',
 
         async function (req, res) {
 
@@ -72,7 +72,7 @@ function DepartmentDesignation(objectCollection) {
         })
 
     //@Get designation/get/by/depart/id/list
-    app.post('/' + 'designation/get/by/depart/id/list',
+    app.post('/' + 'api/' +'designation/get/by/depart/id/list',
 
         async function (req, res) {
 
@@ -87,7 +87,7 @@ function DepartmentDesignation(objectCollection) {
         })
 
     //@Get designation/get/all/list
-    app.get('/' + 'designation/get/all/list',
+    app.get('/' + 'api/' +'designation/get/all/list',
 
         async function (req, res) {
 
@@ -102,7 +102,7 @@ function DepartmentDesignation(objectCollection) {
         })
 
     //@post designation/remove/by/design/id/delete
-    app.post('/' + 'designation/remove/by/design/id/delete',
+    app.post('/' + 'api/' +'designation/remove/by/design/id/delete',
 
         async function (req, res) {
 
@@ -118,7 +118,7 @@ function DepartmentDesignation(objectCollection) {
 
 
     // //@Getrole/depart/design/get/all/list
-    app.get('/' + 'role/depart/design/get/all/list',
+    app.get('/' + 'api/' +'role/depart/design/get/all/list',
 
         async function (req, res) {
 

@@ -11,7 +11,7 @@ function LeadController(objectCollection) {
     const employeeService = new EmployeeService(objectCollection)
 
     //@Get lead/get/all/leads/list
-    app.get('/' + 'lead/get/all/leads/list', async function (req, res) {
+    app.get('/' +'api/' + 'lead/get/all/leads/list', async function (req, res) {
         const [err, resData] = await employeeService.getAllEmployees(req.body);
         if (!err) {
             console.log("lead/get/all/leads/list | Error: ", err);
@@ -24,7 +24,7 @@ function LeadController(objectCollection) {
 
 
     //@Post lead/get/emps/assigned/under/leads/list 
-    app.post('/' + 'lead/get/emps/assigned/under/leads/list',
+    app.post('/' +'api/' + 'lead/get/emps/assigned/under/leads/list',
 
         async function (req, res) {
             const [err, resData] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(req.body, 2);
@@ -38,7 +38,7 @@ function LeadController(objectCollection) {
         })
 
     //@Postlead/get/groups
-    app.post('/' + 'lead/get/all/emps/assigned/under/heads',
+    app.post('/' + 'api/' + 'lead/get/all/emps/assigned/under/heads',
 
         async function (req, res) {
 

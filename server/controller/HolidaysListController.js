@@ -9,7 +9,7 @@ function HolidayListController(objectCollection) {
     const holidaysListService = new HolidaysListService(objectCollection)
 
     //@Post holidays/get/all/list
-    app.get('/' + 'holidays/get/all/list', async function (req, res) {
+    app.get('/' +'api/' + 'holidays/get/all/list', async function (req, res) {
         const [err, resData] = await holidaysListService.getHolidayslistSelect(req.body, res);
         if (!err) {
             console.log("holidays/get/all/list | Error: ", err);
@@ -23,7 +23,7 @@ function HolidayListController(objectCollection) {
     )
 
     //@Post holidays/add/upload/list 
-    app.post('/' + 'holidays/add/upload/list', async function (req, res) {
+    app.post('/' + 'api/' +'holidays/add/upload/list', async function (req, res) {
         console.log("enterr");
         const [err, resData] = await holidaysListService.addHolidaysList(req.body, res);
         if (!err) {
@@ -38,7 +38,7 @@ function HolidayListController(objectCollection) {
     )
 
     //@Post holidays/remove/list/delete
-    app.post('/' + 'holidays/remove/list/delete', async function (req, res) {
+    app.post('/' + 'api/' +'holidays/remove/list/delete', async function (req, res) {
         const [err, resData] = await holidaysListService.removeHolidayListDelete(req.body, res);
         if (!err) {
             console.log("holidays/remove/list/delete | Error: ", err);

@@ -10,7 +10,7 @@ function RoleComponentsMapping(objectCollection) {
     const rolePermissionEmployeeMapping = new RolePermissionEmployeeMapping(objectCollection)
 
     //@Post role/add/insert
-    app.post('/' + 'role/add/insert',
+    app.post('/' + 'api/' + 'role/add/insert',
 
         async function (req, res) {
 
@@ -25,7 +25,7 @@ function RoleComponentsMapping(objectCollection) {
         })
 
     //@Post role/delete
-    app.post('/' + 'role/delete',
+    app.post('/' + 'api/' + 'role/delete',
 
         async function (req, res) {
 
@@ -40,7 +40,7 @@ function RoleComponentsMapping(objectCollection) {
         })
 
     //@Post role/update
-    app.post('/' + 'role/update',
+    app.post('/' + 'api/' + 'role/update',
 
         async function (req, res) {
 
@@ -55,7 +55,7 @@ function RoleComponentsMapping(objectCollection) {
         })
 
     //@Post role/get
-    app.get('/' + 'role/get',
+    app.get('/' + 'api/' + 'role/get',
 
         async function (req, res) {
 

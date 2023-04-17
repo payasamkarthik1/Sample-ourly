@@ -9,7 +9,7 @@ function Components(objectCollection) {
 
 
     //@Post component/add/insert
-    app.post('/' + 'component/add/insert',
+    app.post('/' + 'api/' +'component/add/insert',
 
         async function (req, res) {
 
@@ -24,7 +24,7 @@ function Components(objectCollection) {
         })
 
     //@Post component/update
-    app.post('/' + 'component/update',
+    app.post('/' + 'api/' +'component/update',
 
         async function (req, res) {
 
@@ -39,7 +39,7 @@ function Components(objectCollection) {
         })
 
     //@Post component/remove/inactive
-    app.post('/' + 'component/remove/inactive',
+    app.post('/' + 'api/' +'component/remove/inactive',
 
         async function (req, res) {
 
@@ -54,7 +54,7 @@ function Components(objectCollection) {
         })
 
     //@Post component/remove/delete
-    app.post('/' + 'component/remove/delete',
+    app.post('/' + 'api/' +'component/remove/delete',
 
         async function (req, res) {
 
@@ -69,7 +69,7 @@ function Components(objectCollection) {
         })
 
     //@Post component/remove/inactive/to/active
-    app.post('/' + 'component/remove/inactive/to/active',
+    app.post('/' +'api/' + 'component/remove/inactive/to/active',
 
         async function (req, res) {
 
@@ -84,7 +84,7 @@ function Components(objectCollection) {
         })
 
     //@Post component/get/list
-    app.post('/' + 'component/get/list',
+    app.post('/' +'api/' + 'component/get/list',
 
         async function (req, res) {
 
