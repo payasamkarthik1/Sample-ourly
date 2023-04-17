@@ -22,8 +22,7 @@ if (mode === "staging") {
         config.database = "prod_ourly",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
-}
-else if (mode === "local") {
+} else if (mode === "local") {
     config.user = "root",
         config.host = "localhost",
         config.password = "",
