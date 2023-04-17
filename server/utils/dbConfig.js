@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 
 let mysql = require('mysql');
 
@@ -102,4 +100,3 @@ module.exports = Dbinitiate
 
 
 
->>>>>>> 2719e72dcc4fcedc455fa63eb2a7d3c1c882d307
