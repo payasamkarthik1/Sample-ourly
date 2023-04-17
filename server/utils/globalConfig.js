@@ -38,12 +38,5 @@ else if (mode === "local") {
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 }
-else if (mode === "aws") {
-    config.user = "admin",
-        config.host = "ourly.ctthlmqttiri.ap-south-1.rds.amazonaws.com",
-        config.password = "admin123",
-        config.database = "prod_ourly",
-        config.multipleStatements = true,
-        config.sceret_key = "clockify"
-}
+
 
