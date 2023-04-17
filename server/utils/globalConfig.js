@@ -5,7 +5,7 @@
 // mode = "local";
 // mode = "staging";
 // mode = "prod";
- mode = "aws";
+mode = "aws";
 config = {};
 
 if (mode === "staging") {
