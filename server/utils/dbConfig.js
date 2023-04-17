@@ -32,6 +32,16 @@ function Dbinitiate() {
             database: global.config.database,
         });
     }
+    else if (mode === 'aws') {
+        let i = 0
+        var connLocal = mysql.createPool({
+            multipleStatements: global.config.multipleStatements,
+            host: global.config.host,
+            user: global.config.user,
+            password: global.config.password,
+            database: global.config.database,
+        });
+    }
 
     this.executeQuery = function (flag, queryString, request) {
         return new Promise((resolve, reject) => {
