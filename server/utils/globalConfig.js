@@ -3,10 +3,9 @@
 
 
 // mode = "local";
-//  mode = "staging";
+ // mode = "staging";
 // mode = "prod";
-mode = "aws";
-
+ mode = "aws";
 config = {};
 
 if (mode === "staging") {
@@ -29,6 +28,13 @@ else if (mode === "local") {
         config.host = "localhost",
         config.password = "",
         config.database = "clockify_v2",
+        config.multipleStatements = true,
+        config.sceret_key = "clockify"
+}else if (mode === "aws") {
+    config.user = "admin",
+        config.host = "ourly.ctthlmqttiri.ap-south-1.rds.amazonaws.com",
+        config.password = "admin123",
+        config.database = "prod_ourly",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 }
