@@ -2,7 +2,7 @@
 
 
 
-// mode = "local";
+//mode = "local";
  mode = "staging";
 // mode = "prod";
 config = {};
