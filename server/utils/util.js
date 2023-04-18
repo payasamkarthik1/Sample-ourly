@@ -941,6 +941,12 @@ function Util() {
 
     }
 
+    this.getDayName = function (date) {
+        var dt = moment(date, "YYYY-MM-DD HH:mm:ss")
+        day = dt.format('ddd');
+        return day
+    }
+
     this.SumOfMultipleTimeDuration = async function (data) {
         const ms = data.map(d => moment.duration(d.task_total_time).asSeconds() * 1000);
         const sum = ms.reduce((prev, cur) => prev + cur, 0);
