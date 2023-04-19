@@ -77,7 +77,8 @@ function projectbasedapproval(objectCollection) {
                 null,
                 request.project_id, 
                 request.first_week_day, 
-                request.last_week_day, 
+                request.last_week_day,
+                null, 
                 2,
                 3,
                 0
@@ -105,7 +106,8 @@ function projectbasedapproval(objectCollection) {
                 request.lead_employee_id,
                 request.project_id, 
                 request.first_week_day, 
-                request.last_week_day, 
+                request.last_week_day,
+                null, 
                 4,
                 1,
                 1
@@ -123,6 +125,36 @@ function projectbasedapproval(objectCollection) {
              return [error, responseData];
         }
     }
+
+
+    this.projectWiseTaskDetailsReject = async function (request,data) {
+        let responseData = [],
+            error = true;
+            const paramsArr = new Array(
+                request.employee_id,
+                request.lead_employee_id,
+                request.project_id, 
+                request.first_week_day, 
+                request.last_week_day,
+                request.rejected_note, 
+                5,
+                1,
+                2
+            );
+        const queryString = util.getQueryString('project_wise_approval_withdraw', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = "Rejected successfully";
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+             return [error, responseData];
+        }
+    }
+
 
     this.getProjectLeadWiseEntries = async function (request) {
         let responseData = [],
@@ -316,6 +348,26 @@ function projectbasedapproval(objectCollection) {
                         "head": header
                     }])
                     
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+             return [error, responseData];
+        }
+    }
+
+
+    this.getProjectLeads = async function (request,data) {
+        let responseData = [],
+            error = true;
+            const paramsArr = new Array(
+            );
+        const queryString = util.getQueryString('get_project_leads', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

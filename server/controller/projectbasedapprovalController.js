@@ -69,6 +69,30 @@ function ProjectController(objectCollection) {
         }
     })
 
+    //@Post project/wise/task/details/reject
+    app.post('/' + 'project/wise/task/details/reject', async function (req, res) {
+        const [err, resData] = await projectbasedapprovalServices.projectWiseTaskDetailsReject(req.body, res);
+        if (!err) {
+            console.log("project/wise/task/details/reject | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("project/wise/task/details/reject | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+     //@Post get/project/leads
+     app.post('/' + 'get/project/leads', async function (req, res) {
+        const [err, resData] = await projectbasedapprovalServices.getProjectLeads(req.body, res);
+        if (!err) {
+            console.log("get/project/leads | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("get/project/leads | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 
 }
 
