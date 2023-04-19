@@ -82,7 +82,7 @@ function projectbasedapproval(objectCollection) {
                 3,
                 0
             );
-        const queryString = util.getQueryString('project_approval_wise_withdraw', paramsArr);
+        const queryString = util.getQueryString('project_wise_approval_withdraw', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
