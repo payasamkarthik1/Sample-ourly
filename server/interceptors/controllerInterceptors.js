@@ -32,6 +32,10 @@ const componentsService = require('../services/componentsService')
 const RoleComponentsMappingController = require('../controller/roleComponentsMappingController')
 const RoleComponentsMappingService = require('../services/roleComponentsMappingService')
 
+
+const projectbasedapprovalController = require('../controller/projectbasedapprovalController')
+const projectbasedapprovalServices = require('../services/projectbasedapprovalServices')
+
 const RolePermissionEmployeeMapping = require('../services/roleComponentsMappingService')
 
 const Scheduler = require('../utils/sheduler')
@@ -43,6 +47,9 @@ function ControllInterceptor(objCollection) {
 
     new projectController(objCollection)
     new projectService(objCollection)
+
+    new projectbasedapprovalController(objCollection)
+    new projectbasedapprovalServices(objCollection)
 
     new employeeController(objCollection)
     new employeeService(objCollection)
