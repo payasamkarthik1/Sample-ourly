@@ -9,7 +9,7 @@ function ProjectController(objectCollection) {
     const projectbasedapprovalServices = new ProjectbasedapprovalServices(objectCollection)
 
     //@Post get/project/wise/task/details
-    app.post('/' + 'get/project/wise/task/details', async function (req, res) {
+    app.post('/' + 'api/' + 'get/project/wise/task/details', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.getProjectWiseTaskDetails(req.body, res);
         if (!err) {
             console.log("get/project/wise/task/details | Error: ", err);
@@ -22,7 +22,7 @@ function ProjectController(objectCollection) {
 
 
     //@Post get/project/lead/wise/entries
-    app.post('/' + 'get/project/lead/wise/entries', async function (req, res) {
+    app.post('/' + 'api/' + 'get/project/lead/wise/entries', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.getProjectLeadWiseEntries(req.body, res);
         if (!err) {
             console.log("get/project/lead/wise/entries | Error: ", err);
@@ -34,7 +34,7 @@ function ProjectController(objectCollection) {
     })
 
     //@Post get/employee/wise/projects/data
-    app.post('/' + 'get/employee/wise/projects/data', async function (req, res) {
+    app.post('/' + 'api/' + 'get/employee/wise/projects/data', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.getEmployeeWiseProjectsData(req.body, res);
         if (!err) {
             console.log("get/employee/wise/projects/data | Error: ", err);
@@ -46,7 +46,7 @@ function ProjectController(objectCollection) {
     })
 
     //@Post get/all/tasks/weekly/by/project/list
-    app.post('/' + 'get/all/tasks/weekly/by/project/list', async function (req, res) {
+    app.post('/' + 'api/' + 'get/all/tasks/weekly/by/project/list', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.getAllTasksWeeklyByProjectList(req.body, res);
         if (!err) {
             console.log("get/all/tasks/weekly/by/project/list | Error: ", err);
@@ -57,8 +57,8 @@ function ProjectController(objectCollection) {
         }
     })
 
-     //@Post project/wise/task/details/approval
-     app.post('/' + 'project/wise/task/details/approval', async function (req, res) {
+    //@Post project/wise/task/details/approval
+    app.post('/' + 'api/' + 'project/wise/task/details/approval', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.projectWiseTaskDetailsApproval(req.body, res);
         if (!err) {
             console.log("project/wise/task/details/approval | Error: ", err);
@@ -70,7 +70,7 @@ function ProjectController(objectCollection) {
     })
 
     //@Post project/wise/task/details/reject
-    app.post('/' + 'project/wise/task/details/reject', async function (req, res) {
+    app.post('/' + 'api/' + 'project/wise/task/details/reject', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.projectWiseTaskDetailsReject(req.body, res);
         if (!err) {
             console.log("project/wise/task/details/reject | Error: ", err);
@@ -81,8 +81,8 @@ function ProjectController(objectCollection) {
         }
     })
 
-     //@Post get/project/leads
-     app.post('/' + 'get/project/leads', async function (req, res) {
+    //@Post get/project/leads
+    app.post('/' + 'api/' + 'get/project/leads', async function (req, res) {
         const [err, resData] = await projectbasedapprovalServices.getProjectLeads(req.body, res);
         if (!err) {
             console.log("get/project/leads | Error: ", err);
