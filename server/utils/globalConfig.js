@@ -3,7 +3,7 @@
 
 
 //mode = "local";
- mode = "staging";
+mode = "staging";
 // mode = "prod";
 mode = "aws";
 config = {};
