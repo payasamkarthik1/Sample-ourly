@@ -5,7 +5,7 @@
 //mode = "local";
 mode = "staging";
 // mode = "prod";
-mode = "aws";
+//mode = "aws";
 config = {};
 
 if (mode === "staging") {
@@ -26,7 +26,7 @@ if (mode === "staging") {
     config.user = "root",
         config.host = "localhost",
         config.password = "",
-        config.database = "clockify_v2",
+        config.database = "ourly",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 } else if (mode === "aws") {
