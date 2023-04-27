@@ -148,6 +148,75 @@ function LeadService(objectCollection) {
 
     };
 
+    this.getLeadApprovalProjectEntriesData = async function (request, data) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.employee_id,
+            data.project_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.role_id || 0
+        );
+
+        const queryString = util.getQueryString('get_lead_approval_project_entries', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, paramsArr)
+                .then(async (res) => {
+
+                    for (let i of res) {
+                        // i.project_lead_name = data.first_name;
+                        if (i.status_id == 5) {
+                            i.status_id = 2
+                        } else if (i.status_id == 4) {
+                            i.status_id = 3
+                        }
+                    }
+
+                    responseData.push({
+                        "project_id": data.project_id,
+                        "project_name": data.project_name,
+                        "data": res
+                    });
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+
+            return [error, responseData];
+        }
+
+    }
+
+    this.getLeadApprovalProjectEntries = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('get_lead_unassined_projects', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, paramsArr)
+                .then(async (data) => {
+                    for (let i of data) {
+                        let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
+                        responseData.push(response);
+                    }
+                    error = false
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+
+            return [error, responseData];
+        }
+
+    }
+
+
 }
 
 

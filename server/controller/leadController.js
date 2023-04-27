@@ -52,6 +52,18 @@ function LeadController(objectCollection) {
             }
         })
 
+    //get/lead/approval/project/entries
+    app.post('/' + 'api/' + 'get/lead/approval/project/entries', async function (req, res) {
+        const [err, resData] = await leadService.getLeadApprovalProjectEntries(req.body);
+        if (!err) {
+            console.log("get/lead/approval/project/entries | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("get/lead/approval/project/entries | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 }
 
 

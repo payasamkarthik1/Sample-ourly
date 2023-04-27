@@ -173,6 +173,7 @@ function ProjectService(objectCollection) {
             error = err1
             responseData = respData
         } else {
+            //project_assign 1 if project lead is there otherwise 2
             const [err, data] = await this.getClientByClientidSelect(request)
             if (!err) {
                 const paramsArr = new Array(
@@ -182,7 +183,8 @@ function ProjectService(objectCollection) {
                     request.project_code,
                     request.project_color_code,
                     request.tag_id,
-                    request.project_lead_employee_id,
+                    request.project_assign,
+                    request.project_lead_employee_id || 0,
                     util.getCurrentUTCTime(),
                 );
                 const queryString = util.getQueryString('project_add_projects_to_client_insert', paramsArr);
@@ -221,6 +223,7 @@ function ProjectService(objectCollection) {
             error = err1
             responseData = respData
         } else {
+             //project_assign 1 if project lead is there otherwise 2
             const paramsArr = new Array(
                 request.client_id,
                 request.project_id,
@@ -228,7 +231,8 @@ function ProjectService(objectCollection) {
                 request.project_code,
                 request.project_color_code,
                 request.tag_id,
-                request.project_lead_employee_id,
+                request.project_assign,
+                request.project_lead_employee_id || 0,
             );
 
 
