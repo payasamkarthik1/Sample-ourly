@@ -49,7 +49,7 @@ function TimeTrackingService(objectCollection) {
                         .then(async (data1) => {
                             if (data1[0].message === "failure") {
                                 error = true
-                                responseData = [{ message: "Time entries cannot be added once the timesheet is submitted for approval or once the lead has approved them" }];
+                                responseData = [{ message: "Time entries cannot be added once the timesheet is approved by the lead" }];
                             } else if (data1[0].message === "success") {
                                 await this.timesheetAddUpdateRemoveProjects(request)
                                 await this.addUpdateRemoveUnsubmit(request)
@@ -137,7 +137,7 @@ function TimeTrackingService(objectCollection) {
                     .then(async (data1) => {
                         if (data1[0].message === "failure") {
                             error = true
-                            responseData = [{ message: "Time entries cannot be updated once the timesheet is submitted for approval or once the lead has approved them" }];
+                            responseData = [{ message: "Time entries cannot be updated once the timesheet is approved by lead" }];
                         } else if (data1[0].message === "success") {
                             await this.timesheetAddUpdateRemoveProjects(request)
 

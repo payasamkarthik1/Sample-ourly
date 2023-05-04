@@ -165,20 +165,22 @@ function LeadService(objectCollection) {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
 
-                    for (let i of res) {
-                        // i.project_lead_name = data.first_name;
-                        if (i.status_id == 5) {
-                            i.status_id = 2
-                        } else if (i.status_id == 4) {
-                            i.status_id = 3
+                    if (res.length > 0) {
+                        for (let i of res) {
+                            // i.project_lead_name = data.first_name;
+                            if (i.status_id == 5) {
+                                i.status_id = 2
+                            } else if (i.status_id == 4) {
+                                i.status_id = 3
+                            }
                         }
-                    }
 
-                    responseData.push({
-                        "project_id": data.project_id,
-                        "project_name": data.project_name,
-                        "data": res
-                    });
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "data": res
+                        });
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -200,10 +202,14 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (data) => {
+                    if(data.length > 0){
                     for (let i of data) {
                         let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
+                        if(response.length > 0){
                         responseData.push(response);
+                        }
                     }
+                }
                     error = false
 
                 }).catch((err) => {
@@ -211,7 +217,7 @@ function LeadService(objectCollection) {
                     error = err
                 })
 
-            return [error, responseData];
+            return [error, responseData.flat()];
         }
 
     }
