@@ -202,8 +202,13 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (data) => {
-                    if(data.length > 0){
-                    for (let i of data) {
+                    let [err, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
+                    data = [...data,...selfWorkedData]
+                    if (data.length > 0) {
+                        for (let i of data) {
+                            if (!(i.hasOwnProperty("project_lead_employee_id"))) {
+                                i.project_lead_employee_id = request.employee_id
+                            }
                         let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
                         if(response.length > 0){
                         responseData.push(response);
@@ -223,7 +228,32 @@ function LeadService(objectCollection) {
     }
 
 
-}
+    this.getLeadWiseSelfWorkedEntries = async function (request) {
+        let responseData = []
+    
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.role_id 
+        );
+    
+        const queryString = util.getQueryString('get_self_approval_project_entries', paramsArr);
+    
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+    
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+                return [error, responseData];
+        }
+    };
 
+}
 
 module.exports = LeadService;
