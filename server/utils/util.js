@@ -792,7 +792,8 @@ function Util() {
                             <tr>
                                 <td align="left"
                                     style="font-family:Arial, sans-serif; font-size: 16px;border:1px solid #ccc;border-radius:5px;padding: 15px;">
-                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2><br>
+                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2>
+                                    <h2 style="font-weight: 80; margin: 0;">Project Name:${request.project_name}</h2><br>
                                     <h4 style="color:#777;color: #777;margin: 0;padding-top: 25px;">${request.employee_name}</h4>
                                 </td>
                             </tr>
