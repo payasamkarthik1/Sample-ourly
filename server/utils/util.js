@@ -543,7 +543,8 @@ function Util() {
                             <tr>
                                 <td align="left"
                                     style="font-family:Arial, sans-serif; font-size: 16px;border:1px solid #ccc;border-radius:5px;padding: 15px;">
-                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2><br>
+                                    <h2 style="font-weight: 100; margin: 0;">${request.week_name}</h2>
+                                    <h3 style="font-weight: 100; margin: 0;">Project Name:${request.project_name}</h3><br>
                                     <h4 style="color:#777;color: #777;margin: 0;padding-top: 25px;">${request.employee_name}</h4>
                                 </td>
                             </tr>
@@ -556,7 +557,7 @@ function Util() {
                                     <h5 style="color:#777;color: #777;margin: 0;"><span
                                             style="font-weight: 100;">Rejected by:</span> ${request.rejected_by}</h5>
                                             <h5 style="color:#777;color: #777;margin: 0;"><span
-                                            style="font-weight: 100;">Note:</span>${request.note}</h5>
+                                            style="font-weight: 100;">Note:</span>${request.note || request.rejected_note}</h5>
                                 </td>
                             </tr>                                                  
                           

@@ -1,8 +1,9 @@
-
+const EmployeeService = require('./employeeService')
 
 function projectbasedapproval(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
+    const employeeService = new EmployeeService(objectCollection)
 
     this.getProjectWiseTaskDetails = async function (request) {
         let responseData = [],
@@ -145,13 +146,66 @@ function projectbasedapproval(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    responseData = "Rejected successfully";
-                    error = false
+                    const [err1, data1] = await this.onRejectSendMail(request)
+                    responseData = data1;
+                    error = err1
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
                 })
              return [error, responseData];
+        }
+    }
+
+    this.onRejectSendMail = async function (request) {
+        let responseData = [],
+            error = true;
+
+        request.rejected_datetime = await util.getCurrentUTCTime()
+        const [err1, data1] = await employeeService.getEmployeeById(request)
+        request.employee_email = data1[0].email,
+            request.employee_name = data1[0].full_name
+
+        request.employee_id = request.lead_employee_id
+        const [err2, data2] = await employeeService.getEmployeeById(request)
+        request.rejected_by = data2[0].full_name
+
+        const [err3, data3] = await this.getProjectByProjectId(request)
+        request.project_name = data3[0].project_name
+        request.task_created_datetime = request.first_week_day;
+        request.week_name = await util.getWeekName(request),
+
+        await util.nodemailerSenderOnReject(request).then((data) => {
+            error = false
+            responseData = [{ message: "rejected successfully and mail have been sended to employee" }]
+        }).catch((err) => {
+            console.log("err-------" + err);
+            error = err
+        })
+        return [error, responseData];
+
+    }
+
+    this.getProjectByProjectId = async function (request) {
+        let responseData = [],
+            error = true;
+            
+        const paramsArr = new Array(
+            request.project_id.toString(),
+        );
+
+        const queryString = util.getQueryString('get_project_by_project_id', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
         }
     }
 
