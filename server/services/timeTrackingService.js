@@ -105,71 +105,76 @@ function TimeTrackingService(objectCollection) {
     this.timetrackingUpdateTaskDetails = async function (request) {
         let responseData = [],
             error = true;
-        const [err, respData] = await validations.taskCreationInputValidation(request);
-        if (err) {
-            error = err
-            responseData = respData
+        if (request.status_name == "APPROVED") {
+            error = true
+            responseData = [{ message: "Time entries cannot be updated once the timesheet is approved by lead" }];
         } else {
-            const [err1, data2] = await this.timetrackingGetChildTask(request)
-            let responseData = [],
-                error = true;
-            const paramsArr = new Array(
-                request.task_parent_id,
-                request.task_child_id,
-                request.task_description,
-                request.project_id,
-                request.employee_id,
-                request.task_start_time,
-                request.task_end_time,
-                await util.getTimeDiff(request),
-                request.task_created_datetime,
-                await util.getFirstWeekDate(request.task_created_datetime),
-                await util.getLastWeekDate(request.task_created_datetime),
-                await util.getWeekName(request),
-                util.getCurrentUTCTime()
-            );
+            const [err, respData] = await validations.taskCreationInputValidation(request);
+            if (err) {
+                error = err
+                responseData = respData
+            } else {
+                const [err1, data2] = await this.timetrackingGetChildTask(request)
+                let responseData = [],
+                    error = true;
+                const paramsArr = new Array(
+                    request.task_parent_id,
+                    request.task_child_id,
+                    request.task_description,
+                    request.project_id,
+                    request.employee_id,
+                    request.task_start_time,
+                    request.task_end_time,
+                    await util.getTimeDiff(request),
+                    request.task_created_datetime,
+                    await util.getFirstWeekDate(request.task_created_datetime),
+                    await util.getLastWeekDate(request.task_created_datetime),
+                    await util.getWeekName(request),
+                    util.getCurrentUTCTime()
+                );
 
 
-            const queryString = util.getQueryString('timetracking_update_task_details', paramsArr);
+                const queryString = util.getQueryString('timetracking_update_task_details', paramsArr);
 
-            if (queryString !== '') {
-                await db.executeQuery(1, queryString, request)
-                    .then(async (data1) => {
-                        if (data1[0].message === "failure") {
-                            error = true
-                            responseData = [{ message: "Time entries cannot be updated once the timesheet is approved by lead" }];
-                        } else if (data1[0].message === "success") {
-                            await this.timesheetAddUpdateRemoveProjects(request)
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data1) => {
+                            if (data1[0].message === "failure") {
+                                error = true
+                                responseData = [{ message: "Time entries cannot be updated once the timesheet is approved by lead" }];
+                            } else if (data1[0].message === "success") {
+                                await this.timesheetAddUpdateRemoveProjects(request)
 
 
-                            let request1 = {}
-                            request1.project_id = data2[0].project_id
-                            request1.employee_id = data2[0].employee_id
-                            request1.task_created_datetime = data2[0].task_created_datetime
-                            request1.first_week_day = data2[0].first_week_day
-                            request1.last_week_day = data2[0].last_week_day
-                            request1.week_name = await util.getWeekName(request1)
-                            // request1.role_id = 3
+                                let request1 = {}
+                                request1.project_id = data2[0].project_id
+                                request1.employee_id = data2[0].employee_id
+                                request1.task_created_datetime = data2[0].task_created_datetime
+                                request1.first_week_day = data2[0].first_week_day
+                                request1.last_week_day = data2[0].last_week_day
+                                request1.week_name = await util.getWeekName(request1)
+                                // request1.role_id = 3
 
-                            await this.timesheetAddUpdateRemoveProjects(request1)
-                            const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request1)
+                                await this.timesheetAddUpdateRemoveProjects(request1)
+                                const [err1, data1] = await this.getWorkedHoursOfAllTasksWeekly(request1)
 
-                            if (data1[0].weekHours == null) {
-                                await this.removeUnsubmited(request1)
-                                await this.addUpdateRemoveUnsubmit(request)
-                            } else {
-                                await this.addUpdateRemoveUnsubmit(request)
-                                request.task_created_datetime = data2[0].task_created_datetime
-                                await this.addUpdateRemoveUnsubmit(request)
+                                if (data1[0].weekHours == null) {
+                                    await this.removeUnsubmited(request1)
+                                    await this.addUpdateRemoveUnsubmit(request)
+                                } else {
+                                    await this.addUpdateRemoveUnsubmit(request)
+                                    request.task_created_datetime = data2[0].task_created_datetime
+                                    await this.addUpdateRemoveUnsubmit(request)
+                                }
+                                error = false,
+                                    responseData = [{ message: "TimeEntry has beed updated successfully" }];
                             }
-                            error = false,
-                                responseData = [{ message: "TimeEntry has beed updated successfully" }];
-                        }
-                    }).catch((err) => {
-                        console.log("err-------" + err);
-                        error = err
-                    })
-                return [error, responseData];
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData];
+                }
             }
         }
         return [error, responseData];
@@ -1297,7 +1302,7 @@ function TimeTrackingService(objectCollection) {
                 .then(async (data) => {
                     const [err1, data1] = await this.getEmployeeProjectLeadByEmpid(request);
                     const [err2, data2] = await employeeService.getEmployeeById(request)
-                    
+
                     for(let i of data1){
                         request.email = i.email
                         request.project_name = i.project_name
