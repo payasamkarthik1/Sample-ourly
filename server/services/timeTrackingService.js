@@ -747,7 +747,7 @@ function TimeTrackingService(objectCollection) {
 
     this.getAllProjectsTeamTimesheetWeekly = async function (request) {
         let responseData = [],
-            error = true;
+            error = false;
         let weeks = await util.getWeeks(request)
         for (let dates of weeks) {
             const paramsArr = new Array(
