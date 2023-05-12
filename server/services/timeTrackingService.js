@@ -745,6 +745,54 @@ function TimeTrackingService(objectCollection) {
 
     };
 
+    this.getAllProjectsTeamTimesheetWeekly = async function (request) {
+        let responseData = [],
+            error = true;
+        let weeks = await util.getWeeks(request)
+        for (let dates of weeks) {
+            const paramsArr = new Array(
+                request.employee_id,
+                dates[0],
+                dates[1],
+                request.role_id
+            );
+            let [err, response] = await this.getAllProjectsTeamTimesheetWeeklyData(request, paramsArr)
+            let starDate = await util.getMonthName(dates[0]);
+            let endDate = await util.getMonthName(dates[1]);
+
+            responseData.push({
+                "week": `${starDate}-${endDate}`,
+                "first_week_day": dates[0],
+                "last_week_day": dates[1],
+                "data": response
+            })
+        }
+        return [error, responseData];
+    }
+
+
+    this.getAllProjectsTeamTimesheetWeeklyData = async function (request, paramsArr) {
+        let responseData = [],
+            error = true;
+
+        const queryString = util.getQueryString('team_timesheet_get_all_projects_worked_hours_weekly', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    if (data.length > 0) {
+                        responseData = data;
+                        error = false
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    };
+
+
     this.getProjectFromTimesheet = async function (request) {
         let responseData = [],
             error = true;

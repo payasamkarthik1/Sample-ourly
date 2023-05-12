@@ -982,6 +982,29 @@ function Util() {
         return firstMonth.concat("-" + lastMonth)
     }
 
+    this.getWeeks = async function (request) {
+        const dateFormat = 'YYYY-MM-DD';
+        const dateToStart = request.start_date;
+        const dateToEnd = request.end_date;
+
+        let weeks = [];
+        let momsrt = moment.utc(dateToStart, dateFormat);
+        let momend = moment.utc(dateToEnd, dateFormat);
+
+        //edited part
+        var daystoMonday = 0 - (momend.isoWeekday() - 1) + 7;
+        momend.add(daystoMonday, "days");
+
+        while (momend.isAfter(momsrt)) {
+            weeks.push([
+                momsrt.startOf('isoWeek').format(dateFormat),
+                momsrt.endOf('isoWeek').format(dateFormat)
+            ]);
+            momsrt.add(1, 'week');
+        }
+        return weeks
+    }
+
     this.sumOfTime = async function (data) {
 
         function timestrToSec(timestr) {

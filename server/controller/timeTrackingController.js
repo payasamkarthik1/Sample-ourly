@@ -119,6 +119,19 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
+    //@Post timesheet/get/team/projects/overview/each/week
+    app.post('/' + 'api/' + 'timesheet/get/team/projects/overview/each/week', async function (req, res) {
+
+        const [err, resData] = await timeTrackingService.getAllProjectsTeamTimesheetWeekly(req.body, res);
+        if (!err) {
+            console.log("timesheet/get/team/projects/overview/each/week | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("timesheet/get/team/projects/overview/each/week | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 
 }
 
