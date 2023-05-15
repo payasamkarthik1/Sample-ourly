@@ -202,19 +202,23 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (data) => {
-                    let [err, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
-                    data = [...data,...selfWorkedData]
                     if (data.length > 0) {
                         for (let i of data) {
                             if (!(i.hasOwnProperty("project_lead_employee_id"))) {
                                 i.project_lead_employee_id = request.employee_id
                             }
-                        let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
-                        if(response.length > 0){
-                        responseData.push(response);
+                            let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
+
+                            if (response.length > 0) {
+                                responseData.push(response);
+                            }
                         }
                     }
-                }
+
+                    let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
+                    if (selfWorkedData.length > 0) {
+                        responseData.push(selfWorkedData)
+                    }
                     error = false
 
                 }).catch((err) => {
@@ -235,22 +239,33 @@ function LeadService(objectCollection) {
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
-            request.role_id 
+            request.role_id
         );
-    
+
         const queryString = util.getQueryString('get_self_approval_project_entries', paramsArr);
-    
+
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    responseData = data;
+                    for (let i of data) {
+                        if (i.status_id == 5) {
+                            i.status_id = 2
+                        } else if (i.status_id == 4) {
+                            i.status_id = 3
+                        }
+                        responseData.push({
+                            "project_id": i.project_id,
+                            "project_name": i.project_name,
+                            "data": i
+                        });
+                    }
                     error = false
-    
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
                 })
-                return [error, responseData];
+            return [error, responseData];
         }
     };
 
