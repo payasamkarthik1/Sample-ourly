@@ -256,7 +256,7 @@ function LeadService(objectCollection) {
                         responseData.push({
                             "project_id": i.project_id,
                             "project_name": i.project_name,
-                            "data": i
+                            "data": [i]
                         });
                     }
                     error = false
