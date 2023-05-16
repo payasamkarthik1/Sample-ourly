@@ -760,6 +760,10 @@ function TimeTrackingService(objectCollection) {
             let starDate = await util.getMonthName(dates[0]);
             let endDate = await util.getMonthName(dates[1]);
 
+            for (let res of response) {
+                res.first_week_day = dates[0],
+                    res.last_week_day = dates[1]
+            }
             responseData.push({
                 "week": `${starDate}-${endDate}`,
                 "first_week_day": dates[0],
