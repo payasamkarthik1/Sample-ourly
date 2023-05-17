@@ -354,61 +354,64 @@ function projectbasedapproval(objectCollection) {
 
     }
 
-    this.getAllTasksWeeklyByProjectList = async function (request,data) {
+    this.getAllTasksWeeklyByProjectList = async function (request, data) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id, 
-                request.project_id,
-                request.first_week_day, 
-                request.last_week_day
-            );
+        const paramsArr = new Array(
+            request.employee_id,
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day
+        );
+
         const queryString = util.getQueryString('get_all_tasks_weekly_by_project_list', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                   startDate = util.getMonthName(data[0].first_week_day)
-                    endDate = util.getMonthName(data[0].last_week_day)
-                    let dayWiseData = await this.dayWiseTotalTime(request, data);
-                    tym = await util.sumOfTime(dayWiseData)
+                    if (data.length) {
+                        startDate = util.getMonthName(data[0].first_week_day)
+                        endDate = util.getMonthName(data[0].last_week_day)
+                        let dayWiseData = await this.dayWiseTotalTime(request, data);
+                        tym = await util.sumOfTime(dayWiseData)
 
-                    let status="";
-                    if(data[0].status_id = 1){
-                        status="PENDING"
-                    }else if(data[0].status_id = 4){
-                        status="APPROVED"
-                    }else if(data[0].status_id = 5){
-                        status="UNSUBMITTED"
-                    }
+                        let statusID = data[0].status_id;
+                        let status = "";
+                        if (statusID == 1) {
+                            status = "PENDING"
+                        } else if (statusID == 4) {
+                            status = "APPROVED"
+                        } else if (statusID == 5) {
+                            status = "UNSUBMITTED"
+                        }
 
-                    let header = [];
-                    for (let i of dayWiseData) {
-                        header.push({
-                            "header": {
-                                "month": util.getMonthName(i.task_created_datetime),
-                                "day": util.getDayName(i.task_created_datetime),
-                                "hours": i.task_total_time
+                        let header = [];
+                        for (let i of dayWiseData) {
+                            header.push({
+                                "header": {
+                                    "month": util.getMonthName(i.task_created_datetime),
+                                    "day": util.getDayName(i.task_created_datetime),
+                                    "hours": i.task_total_time
+                                },
+                                "child": data.filter((j) => j.task_created_datetime == i.task_created_datetime)
+                            })
+                        }
+                        responseData.push([{
+                            "isApp": {
+                                "startDate": startDate,
+                                "endDate": endDate,
+                                "weekHour": tym,
+                                "status": status,
+                                // "submited_by": "mahesh vvvv test(Tue, Apr 18th)"
                             },
-                            "child": data.filter((j) => j.task_created_datetime == i.task_created_datetime)
-                        })
+                            "head": header
+                        }])
                     }
-                    responseData.push([{
-                        "isApp": {
-                            "startDate": startDate,
-                            "endDate": endDate,
-                            "weekHour": tym,
-                            "status": status,
-                            // "submited_by": "mahesh vvvv test(Tue, Apr 18th)"
-                        },
-                        "head": header
-                    }])
-                    
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
