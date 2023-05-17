@@ -380,7 +380,7 @@ function projectbasedapproval(objectCollection) {
                             status = "PENDING"
                         } else if (statusID == 4) {
                             status = "APPROVED"
-                        } else if (statusID == 5) {
+                        } else if (statusID == 5 || statusID == 2) {
                             status = "UNSUBMITTED"
                         }
 
