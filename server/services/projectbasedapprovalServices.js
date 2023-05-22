@@ -1,9 +1,11 @@
 const EmployeeService = require('./employeeService')
+const TimeTrackingService = require('./timeTrackingService')
 
 function projectbasedapproval(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
     const employeeService = new EmployeeService(objectCollection)
+    const timeTrackingService = new EmployeeService(TimeTrackingService)
 
     this.getProjectWiseTaskDetails = async function (request) {
         let responseData = [],
@@ -395,14 +397,26 @@ function projectbasedapproval(objectCollection) {
                                 "child": data.filter((j) => j.task_created_datetime == i.task_created_datetime)
                             })
                         }
+
+                        let isApp = {
+                            "startDate": startDate,
+                            "endDate": endDate,
+                            "weekHour": tym,
+                            "status": status
+                        }
+
+                        let submitedBy = `${data[0].submitted_by}(${data[0].submited_for_approval_datetime})`;
+                        let approvedBy = `${data[0].approved_by}(${data[0].approved_on_datetime})`;
+
+                        if (data[0].submitted_by != "" && data[0].submitted_by != undefined) {
+                            isApp.submited_by = submitedBy
+                        }
+
+                        if (data[0].approved_by != "" && data[0].approved_by != undefined) {
+                            isApp.approved_by = approvedBy
+                        }
                         responseData.push([{
-                            "isApp": {
-                                "startDate": startDate,
-                                "endDate": endDate,
-                                "weekHour": tym,
-                                "status": status,
-                                // "submited_by": "mahesh vvvv test(Tue, Apr 18th)"
-                            },
+                            "isApp": isApp,
                             "head": header
                         }])
                     }
