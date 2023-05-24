@@ -3,7 +3,7 @@ const schedule = require('node-schedule')
 const moment = require('moment')
 const EmployeeService = require('../services/employeeService')
 const LeadService = require('../services/leadService')
-
+const nodemailer = require('nodemailer')
 
 
 function Scheduler(objectCollection) {
@@ -171,8 +171,211 @@ function Scheduler(objectCollection) {
 
         })
     }
-}
 
+    this.sendRemainderToProjectLeads = async function () {
+        console.log("-------------------------entered sendRemainderToProjetLeads------------------------------");
+        schedule.scheduleJob('0 11 * * 2', async function () {
+            const [err, res, weekName] = await leadService.getProjectsAndLeads()
+
+            for (let item of res) {
+
+                let html = `
+              <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                <thead>
+                <tr>
+                <td style="color: green"><h3>Submitted</h3></td>
+              </tr>
+                </thead>
+                <tbody>
+              `;
+
+                if (item.submittedData.length > 0) {
+                    item.submittedData.forEach(submittedData => {
+                        html += `
+                <tr>
+                <td align="left"
+                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                    <b>${submittedData.project_name}</b>
+                </td>
+            </tr>
+                  <tr>
+                    <td colspan="2">${generateDataHTML(submittedData.data)}</td>
+                  </tr>
+                `;
+                    });
+                } else {
+                    html += `
+                <tr>
+                <td align="left"
+                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                    NO Data
+                </td>
+            </tr>`
+                }
+
+                html += `
+                </tbody>
+              </table>
+              <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                <thead>
+                <tr>
+                <td style="color: red"><h3>UnSubmitted</h3></td>
+              </tr>
+                </thead>
+                <tbody>
+              `;
+
+                if (item.unSubmittedData.length > 0) {
+                    item.unSubmittedData.forEach(unSubmittedData => {
+                        html += `
+                <tr>
+                <td align="left"
+                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                    <b>${unSubmittedData.project_name}</b>
+                </td>
+            </tr>
+                  <tr>
+                    <td colspan="2">${generateDataHTML(unSubmittedData.data)}</td>
+                  </tr>
+                `;
+                    });
+                } else {
+                    html += `
+                <tr>
+                <td align="left"
+                    style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                   NO Data
+                </td>
+            </tr>`
+                }
+
+                html += `
+                </tbody>
+              </table>
+              `;
+
+                function generateDataHTML(data) {
+                    let dataHTML = "<ul>";
+
+                    data.forEach(item => {
+                        dataHTML += `<li>${item.name}</li>`;
+                    });
+
+                    dataHTML += "</ul>";
+                    return dataHTML;
+                }
+
+                // console.log(html);
+
+
+                if (item.unSubmittedData.length > 0 || item.submittedData.length > 0) {
+                    //  return new Promise((resolve, reject) => {
+                    try {
+                        var smtpConfig = {
+                            host: 'smtp.gmail.com',
+                            port: 465,
+                            secure: true, // use SSL
+                            auth: {
+                                user: 'no-reply@pronteff.com',
+                                pass: 'Welcome@1234'
+                            }
+                        };
+                        let transporter = nodemailer.createTransport(smtpConfig);
+
+                        // setup email data with unicode symbols
+                        let mailOptions = {
+                            from: 'no-reply@pronteff.com', // sender address
+                            to: `${item.project_lead_mail}`, // list of receivers
+                            subject: `Timesheet Submitted For Approval
+                                      
+                                      
+                                      `,// Subject line
+                            html: `
+                                        <!DOCTYPE html>
+                                        <html lang="en">
+                                        
+                                        <head>
+                                            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                                            <title>Ourly</title>
+                                        </head>
+                                        
+                                        <body style="padding: 30px;background: #f3f4fb;">
+                                            <table align="center" style="padding:0; width:600px; border-spacing:0; background: #ffffff;
+                                                margin: 0 auto;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td
+                                                            style="font-size: 12px; color: #ffffff; padding: 4px 15px; line-height: 0; position: relative; background: #0c1d40;border-top-right-radius: 5px;border-top-left-radius: 5px;">
+                                        
+                                                            <img src="https://pronteff.com/ourly-logo.png" alt="" style="width: 16%;">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <table align="left" style="padding: 15px 15px 0 15px; width:585px; border-spacing:0; ">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
+                                                                            <h2 style="font-weight: 100;">Employee overview</h2>
+                                                                            <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>&nbsp;</td>
+                                                                    </tr>
+                                                                    <h3>${weekName}</h3>
+                                                                    ${html}
+
+                                                                    <tr>
+                                                                        <td>&nbsp;</td>
+                                                                    </tr>
+                                        
+                                                                    <tr>
+                                                                        <td
+                                                                            style="border-top:1px solid #ccc; font-size:12px; font-family: Arial, sans-serif;text-align: center;">
+                                                                            <p>@Ourly powered by<span style="font-weight: 600;color: #0c1d40;
+                                                                                padding-left: 4px;">Pronteff IT Solutions</span></p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </body>
+                                        
+                                        </html>`
+
+
+                        };
+
+                        // send mail with defined transport object
+                        const responseData = transporter.sendMail(mailOptions, (err, info) => {
+                            if (err) {
+                                error = err
+                                console.log(error);
+                                // reject(err)
+                            } else {
+                                error = false
+                                console.log("send")
+                                // resolve(error)
+                            }
+                        });
+                    } catch (err) {
+                        console.log(err);
+                        error = err
+                    }
+
+                    // })
+                }
+            }
+        })
+    }
+}
 
 
 

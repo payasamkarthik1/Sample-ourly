@@ -1352,15 +1352,15 @@ function TimeTrackingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    const [err1, data1] = await this.getEmployeeProjectLeadByEmpid(request);
-                    const [err2, data2] = await employeeService.getEmployeeById(request)
+                    // const [err1, data1] = await this.getEmployeeProjectLeadByEmpid(request);
+                    // const [err2, data2] = await employeeService.getEmployeeById(request)
 
-                    for(let i of data1){
-                        request.email = i.email
-                        request.project_name = i.project_name
-                        request.employee_name = data2[0].full_name
-                        await util.nodemailerSenderToLeadOnTimesheetSubmit(request)
-                    }
+                    // for(let i of data1){
+                    //     request.email = i.email
+                    //     request.project_name = i.project_name
+                    //     request.employee_name = data2[0].full_name
+                    //     await util.nodemailerSenderToLeadOnTimesheetSubmit(request)
+                    // }
                    
                     responseData = [{ message: "Timesheet has been submited successfully for approval" }];
                     error = false

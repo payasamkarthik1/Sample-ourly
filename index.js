@@ -41,6 +41,7 @@ new ControllInterceptor(objCollection);
 const rem = require('./server/utils/sheduler');
 new rem(objCollection).sendRemainder()
 new rem(objCollection).sendRemainderToLeads()
+new rem(objCollection).sendRemainderToProjectLeads()
 // new rem(objCollection).sendProjectToInactive()
 
 

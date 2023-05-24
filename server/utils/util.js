@@ -1038,8 +1038,23 @@ function Util() {
         return total
     }
 
+    // Function to get the previous week (Monday to Sunday) of a given date
+    this.getPreviousWeek = async function () {
+        const currentDate = new Date("2023-05-30");
+        const previousWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
+        // Adjust the start date to the previous Monday
+        const startOfPreviousWeek = new Date(previousWeek.setDate(previousWeek.getDate() - previousWeek.getDay() + 1));
 
+        // Calculate the end date as 6 days after the start date
+        const endOfPreviousWeek = new Date(startOfPreviousWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+        // Return the start and end dates of the previous week
+        return {
+            start: startOfPreviousWeek.toISOString().split('T')[0],
+            end: endOfPreviousWeek.toISOString().split('T')[0]
+        };
+    }
 
 }
 

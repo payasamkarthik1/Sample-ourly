@@ -269,6 +269,128 @@ function LeadService(objectCollection) {
         }
     };
 
+
+    this.getProjectsAndLeads = async function () {
+        let responseData = [],
+            error = true,
+            request = {},
+            submittedData = [],
+            unSubmittedData = [];
+        const paramsArr = new Array(
+        );
+
+        let weeks = await util.getPreviousWeek()
+
+        let weekName = await util.getWeekName({ task_created_datetime: weeks.start })
+
+        const queryString = util.getQueryString('get_projects_and_leads', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(0, queryString, request)
+                .then(async (data) => {
+                    for (let i of data) {
+                        let [err, res] = await getProjectAndStatusWiseData({
+                            "project_id": i.project_id,
+                            "first_week_day": weeks.start,
+                            "last_week_day": weeks.end,
+                        }, 5)
+                        if (res.length > 0) {
+                            unSubmittedData.push({
+                                "project_name": i.project_name,
+                                "project_lead_mail": i.email,
+                                data: res
+                            })
+                        }
+
+                        let [err1, res1] = await getProjectAndStatusWiseData({
+                            "project_id": i.project_id,
+                            "first_week_day": weeks.start,
+                            "last_week_day": weeks.end,
+                        }, 1)
+                        if (res1.length > 0) {
+                            submittedData.push({
+                                "project_name": i.project_name,
+                                "project_lead_mail": i.email,
+                                data: res1
+                            })
+                        }
+                    }
+
+                    responseData.push({
+                        "submittedData": submittedData,
+                        "unSubmittedData": unSubmittedData
+                    })
+                    let transformedResponse = {};
+
+                    responseData.forEach(item => {
+                        item.submittedData.forEach(submittedData => {
+                            if (!transformedResponse.hasOwnProperty(submittedData.project_lead_mail)) {
+                                transformedResponse[submittedData.project_lead_mail] = {
+                                    "project_lead_mail": submittedData.project_lead_mail,
+                                    "submittedData": [],
+                                    "unSubmittedData": []
+                                };
+                            }
+
+                            transformedResponse[submittedData.project_lead_mail].submittedData.push({
+                                "project_name": submittedData.project_name,
+                                "data": submittedData.data
+                            });
+                        });
+
+                        item.unSubmittedData.forEach(unSubmittedData => {
+                            if (!transformedResponse.hasOwnProperty(unSubmittedData.project_lead_mail)) {
+                                transformedResponse[unSubmittedData.project_lead_mail] = {
+                                    "project_lead_mail": unSubmittedData.project_lead_mail,
+                                    "submittedData": [],
+                                    "unSubmittedData": []
+                                };
+                            }
+
+                            transformedResponse[unSubmittedData.project_lead_mail].unSubmittedData.push({
+                                "project_name": unSubmittedData.project_name,
+                                "data": unSubmittedData.data
+                            });
+                        });
+                    });
+
+                    let transformedArray = Object.values(transformedResponse);
+                    responseData = transformedArray;
+                    error = false
+                })
+                .catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData, weekName]
+        }
+    }
+
+    async function getProjectAndStatusWiseData(request, status) {
+        let responseData = []
+        let error = true
+
+        const paramsArr = new Array(
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day,
+            status
+        );
+
+        const queryString = util.getQueryString('get_project_and_status_wise_data', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(0, queryString, request)
+                .then(async (data) => {
+                    responseData = data
+                    error = false
+                })
+                .catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+    }
+
 }
 
 module.exports = LeadService;
