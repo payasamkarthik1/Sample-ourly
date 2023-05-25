@@ -104,7 +104,8 @@ function TimeTrackingService(objectCollection) {
 
     this.timetrackingUpdateTaskDetails = async function (request) {
         let responseData = [],
-            error = true;
+            error = true,
+            pending=0;
         if (request.status_name == "APPROVED") {
             error = true
             responseData = [{ message: "Time entries cannot be updated once the timesheet is approved by lead" }];
@@ -114,6 +115,9 @@ function TimeTrackingService(objectCollection) {
                 error = err
                 responseData = respData
             } else {
+                if(toUpperCase(request.status_name) == "PENDING"){
+                    await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
+                }
                 const [err1, data2] = await this.timetrackingGetChildTask(request)
                 let responseData = [],
                     error = true;
@@ -130,7 +134,8 @@ function TimeTrackingService(objectCollection) {
                     await util.getFirstWeekDate(request.task_created_datetime),
                     await util.getLastWeekDate(request.task_created_datetime),
                     await util.getWeekName(request),
-                    util.getCurrentUTCTime()
+                    util.getCurrentUTCTime(),
+                    pending
                 );
 
 
