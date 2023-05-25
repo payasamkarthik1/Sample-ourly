@@ -115,7 +115,7 @@ function TimeTrackingService(objectCollection) {
                 error = err
                 responseData = respData
             } else {
-                if(toUpperCase(request.status_name) == "PENDING"){
+                if(request.status_name.toUpperCase() == "PENDING"){
                     await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
                 }
                 const [err1, data2] = await this.timetrackingGetChildTask(request)
@@ -134,8 +134,7 @@ function TimeTrackingService(objectCollection) {
                     await util.getFirstWeekDate(request.task_created_datetime),
                     await util.getLastWeekDate(request.task_created_datetime),
                     await util.getWeekName(request),
-                    util.getCurrentUTCTime(),
-                    pending
+                    util.getCurrentUTCTime()
                 );
 
 
