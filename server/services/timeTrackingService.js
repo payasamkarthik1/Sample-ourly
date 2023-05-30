@@ -25,6 +25,7 @@ function TimeTrackingService(objectCollection) {
         }
         else {
             const [err, data] = await this.timetrackingGetAllTaskDetailsByDate(request)
+            console.log(data,"ddddddd")
             if (data.length == 0) {
                 let responseData = [],
                     error = true;
@@ -63,6 +64,7 @@ function TimeTrackingService(objectCollection) {
                     return [error, responseData];
                 }
             } else {
+                console.log("in else")
                 const paramsArr = new Array(
                     data[0].task_parent_id,
                     request.task_description,
@@ -79,6 +81,7 @@ function TimeTrackingService(objectCollection) {
                     util.getCurrentUTCTime()
                 );
                 const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
+                console.log(queryString,"iiii")
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data2) => {
@@ -115,7 +118,7 @@ function TimeTrackingService(objectCollection) {
                 error = err
                 responseData = respData
             } else {
-                if(toUpperCase(request.status_name) == "PENDING"){
+                if(request.status_name.toUpperCase() == "PENDING"){
                     await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
                 }
                 const [err1, data2] = await this.timetrackingGetChildTask(request)
@@ -134,8 +137,7 @@ function TimeTrackingService(objectCollection) {
                     await util.getFirstWeekDate(request.task_created_datetime),
                     await util.getLastWeekDate(request.task_created_datetime),
                     await util.getWeekName(request),
-                    util.getCurrentUTCTime(),
-                    pending
+                    util.getCurrentUTCTime()
                 );
 
 
@@ -245,6 +247,7 @@ function TimeTrackingService(objectCollection) {
         const [err, prjData] = await this.getProjectFromTimesheet(request)
         if (prjData.length == 0) {
             const [err, data] = await this.getTimesheetOfAllProjectsOverview(request)
+            console.log(data)
             const paramsArr = new Array(
                 request.employee_id,
                 request.project_id,
@@ -542,10 +545,11 @@ function TimeTrackingService(objectCollection) {
         );
 
         const queryString = util.getQueryString('timetracking_timeline_worked_hours_calculation', paramsArr);
-
+console.log(queryString)
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    console.log(data,"data")
                     var newArray = data.reduce(function (acc, curr) {
                         var findIfNameExist = acc.findIndex(function (item) {
                             return item.project_id === curr.project_id;
@@ -592,6 +596,7 @@ function TimeTrackingService(objectCollection) {
                         });
                     }
                     responseData = newArray;
+                    console.log(newArray,"nnnnnnn")
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);

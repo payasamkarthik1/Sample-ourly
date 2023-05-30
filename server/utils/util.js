@@ -1040,7 +1040,7 @@ function Util() {
 
     // Function to get the previous week (Monday to Sunday) of a given date
     this.getPreviousWeek = async function () {
-        const currentDate = new Date("2023-05-30");
+        const currentDate = new Date();
         const previousWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
         // Adjust the start date to the previous Monday
