@@ -25,7 +25,6 @@ function TimeTrackingService(objectCollection) {
         }
         else {
             const [err, data] = await this.timetrackingGetAllTaskDetailsByDate(request)
-            console.log(data,"ddddddd")
             if (data.length == 0) {
                 let responseData = [],
                     error = true;
@@ -64,7 +63,6 @@ function TimeTrackingService(objectCollection) {
                     return [error, responseData];
                 }
             } else {
-                console.log("in else")
                 const paramsArr = new Array(
                     data[0].task_parent_id,
                     request.task_description,
@@ -81,7 +79,6 @@ function TimeTrackingService(objectCollection) {
                     util.getCurrentUTCTime()
                 );
                 const queryString = util.getQueryString('timetracking_add_task_detail_insert', paramsArr);
-                console.log(queryString,"iiii")
                 if (queryString !== '') {
                     await db.executeQuery(1, queryString, request)
                         .then(async (data2) => {

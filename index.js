@@ -3,6 +3,10 @@ const bodyParser = require('body-parser')
 require('dotenv').config()
 require('./server/utils/globalConfig');
 const cors = require('cors')
+const fs = require('fs')
+const https = require('https');
+const pemFilePath1 = './ourly.pem';
+const pemFilePath2 = './ourlykey.pem';
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 var corsOptions = {
@@ -44,6 +48,13 @@ new rem(objCollection).sendRemainderToLeads()
 new rem(objCollection).sendRemainderToProjectLeads()
 // new rem(objCollection).sendProjectToInactive()
 
+const pemFileContent1 = fs.readFileSync(pemFilePath1, 'utf8');
+const pemFileContent2 = fs.readFileSync(pemFilePath2, 'utf8');
+const options = {
+  cert: pemFileContent1,
+  key: pemFileContent2
+};
+const server = https.createServer(options, app);
 
 const port = process.env.PORT
 app.listen(port, () => console.log(`Server up and running on port ${port} !!!!..`));
