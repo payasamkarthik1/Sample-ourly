@@ -19,7 +19,7 @@ if (mode === "staging") {
     config.user = "root",
         config.host = "localhost",
         config.password = "Welcome@1234",
-        config.database = "clockify_prod",
+        config.database = "clockify_prod1",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 } else if (mode === "local") {
