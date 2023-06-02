@@ -27,14 +27,14 @@ function UserService(objectCollection) {
                 const [err2, resData2] = await validations.userLoginPasswordCheck(request, resData1)
                 if (!err2) {
                     const [err3, resData3] = await this.userLoginInsert(request, resData1)
-                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_admin = 1, resData3[0].is_team = 1, request.is_admin = 1, request.role_id = 2) : (resData3[0].is_admin = 0, request.is_admin = 0, request.role_id = 0)
+                    resData3[0].email == "info@pronteff.com" ? (resData3[0].is_admin = 1, resData3[0].is_team = 1, request.is_admin = 1, request.role_id = 2) : (resData3[0].is_admin = 0, request.is_admin = 0, request.role_id = 0)
                     request.employee_id = resData3[0].employee_id
                     //get the permissions assign to the employee
                     const [err, permiss] = await rolePermissionEmployeeMapping.rolePermissionEmployeeget(request, 3)
                     //employee having emps assign under him if assign  is_team =1 else is_team=0
                     const [err1, data1] = await leadService.getEmployessAssignUnderHeads(request, 1)
                     data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
-                    resData3[0].email == "admin@pronteff.com" ? (resData3[0].is_team = 1) : data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
+                    resData3[0].email == "info@pronteff.com" ? (resData3[0].is_team = 1) : data1.length != 0 ? resData3[0].is_team = 1 : resData3[0].is_team = 0
 
                     resData3[0].permission_ids = permiss
                     return [err3, resData3]
