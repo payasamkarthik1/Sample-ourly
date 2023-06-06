@@ -174,7 +174,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToProjectLeads = async function () {
         console.log("-------------------------entered sendRemainderToProjetLeads------------------------------");
-        schedule.scheduleJob('0 11 * * 2', async function () {
+        schedule.scheduleJob('0 15 * * 2', async function () {
             const [err, res, weekName] = await leadService.getProjectsAndLeads()
 
             for (let item of res) {
