@@ -174,7 +174,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToProjectLeads = async function () {
         console.log("-------------------------entered sendRemainderToProjetLeads------------------------------");
-        schedule.scheduleJob('15 16 * * 2', async function () {
+        schedule.scheduleJob('0 11 * * 2', async function () {
             console.log("entered into mail")
             const [err, res, weekName] = await leadService.getProjectsAndLeads()
 
@@ -287,10 +287,7 @@ function Scheduler(objectCollection) {
                         let mailOptions = {
                             from: 'no-reply@pronteff.com', // sender address
                             to: `${item.project_lead_mail}`, // list of receivers
-                            subject: `Timesheet Submitted For Approval
-                                      
-                                      
-                                      `,// Subject line
+                            subject: `Ourly- Reminder:-External Projects_Your Project  members timesheets`,// Subject line
                             html: `
                                         <!DOCTYPE html>
                                         <html lang="en">
@@ -321,6 +318,7 @@ function Scheduler(objectCollection) {
                                                                         <td align="left"
                                                                             style="font-family:Arial, sans-serif; font-size: 16px;border-bottom:1px solid #ccc;">
                                                                             <h2 style="font-weight: 100;">Employee overview</h2>
+                                                                            <p>Please verify the below list of all Project team members who submitted and did not submit their timesheets last week.</p>
                                                                             <h5 style="color:#1871b9;">Pronteff IT Solutions</h5>
                                                                         </td>
                                                                     </tr>
