@@ -391,6 +391,167 @@ function LeadService(objectCollection) {
         }
     }
 
+    async function getSelfLeadWorkedProjects(request, status) {
+        let responseData = []
+        let error = true
+
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            status
+        );
+
+        const queryString = util.getQueryString('get_self_lead_worked_projects', paramsArr);
+        console.log(queryString)
+        if (queryString !== '') {
+            await db.executeQuery(0, queryString, request)
+                .then(async (data) => {
+                    responseData = data
+                    error = false
+                })
+                .catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+    }
+
+    async function getNoLeadProjects(request, status) {
+        let responseData = []
+        let error = true
+
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            status
+        );
+
+        const queryString = util.getQueryString('get_no_lead_projects', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(0, queryString, request)
+                .then(async (data) => {
+                    responseData = data
+                    error = false
+                })
+                .catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData]
+        }
+    }
+
+    this.getLeadProjectsAndSelfApprovalDataForEmailSending = async function () {
+        let responseData = [],
+            error = false
+        const paramsArr = new Array(
+        );
+
+        let weeks = await util.getPreviousWeek()
+
+        let weekName = await util.getWeekName({ task_created_datetime: weeks.start })
+
+        let [err, res] = await getNoLeadProjects({
+            "first_week_day": weeks.start,
+            "last_week_day": weeks.end,
+        }, 5)
+
+        let [err1, res1] = await getNoLeadProjects({
+            "first_week_day": weeks.start,
+            "last_week_day": weeks.end,
+        }, 1)
+
+        let [err2, res2] = await getSelfLeadWorkedProjects({
+            "first_week_day": weeks.start,
+            "last_week_day": weeks.end,
+        }, 5)
+
+        let [err3, res3] = await getSelfLeadWorkedProjects({
+            "first_week_day": weeks.start,
+            "last_week_day": weeks.end,
+        }, 1)
+
+
+        let projectLeadData = {};
+
+        // Helper function to find or create a project object for a specific project lead
+        function getProjectObject(email, projectName) {
+            if (!projectLeadData[email]) {
+                projectLeadData[email] = {};
+            }
+
+            if (!projectLeadData[email][projectName]) {
+                projectLeadData[email][projectName] = {
+                    "project_name": projectName,
+                    "data": []
+                };
+            }
+
+            return projectLeadData[email][projectName];
+        }
+
+        // Process res array
+        res.forEach(item => {
+            let projectObj = getProjectObject(item.lead_assigned_email, item.project_name);
+
+            projectObj.data.push({
+                "name": item.full_name,
+                "status_id": item.status_id
+            });
+        });
+
+        // Process res1 array
+        res1.forEach(item => {
+            let projectObj = getProjectObject(item.lead_assigned_email, item.project_name);
+
+            projectObj.data.push({
+                "name": item.full_name,
+                "status_id": item.status_id
+            });
+        });
+
+        // Process res2 array
+        res2.forEach(item => {
+            let projectObj = getProjectObject(item.lead_assigned_email, item.project_name);
+
+            projectObj.data.push({
+                "name": item.full_name,
+                "status_id": item.status_id
+            });
+        });
+
+        // Process res3 array
+        res3.forEach(item => {
+            let projectObj = getProjectObject(item.lead_assigned_email, item.project_name);
+
+            projectObj.data.push({
+                "name": item.full_name,
+                "status_id": item.status_id
+            });
+        });
+
+        // Convert projectLeadData object to the desired data structure
+        let data = [];
+        for (let email in projectLeadData) {
+            let projects = projectLeadData[email];
+            let projectArray = Object.keys(projects).map(projectName => projects[projectName]);
+
+            data.push({
+                "project_lead_mail": email,
+                "submittedData": projectArray.filter(project => project.data.some(entry => entry.status_id === 1)),
+                "unSubmittedData": projectArray.filter(project => project.data.every(entry => entry.status_id !== 1))
+            });
+        }
+        console.log(data);
+
+        responseData = data
+
+
+        return [error, responseData, weekName]
+
+    }
+
 }
 
 module.exports = LeadService;
