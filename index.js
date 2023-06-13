@@ -46,7 +46,7 @@ const rem = require('./server/utils/sheduler');
 new rem(objCollection).sendRemainder()
 new rem(objCollection).sendRemainderToLeads()
 new rem(objCollection).sendRemainderToProjectLeads()
-// new rem(objCollection).sendProjectToInactive()
+new rem(objCollection).sendSubmittedAndUnsubmittedListToLeads()
 
 const pemFileContent1 = fs.readFileSync(pemFilePath1, 'utf8');
 const pemFileContent2 = fs.readFileSync(pemFilePath2, 'utf8');

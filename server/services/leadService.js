@@ -165,7 +165,7 @@ function LeadService(objectCollection) {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
 
-                    if (res.length > 0) {
+                   // if (res.length > 0) {
                         for (let i of res) {
                             // i.project_lead_name = data.first_name;
                             if (i.status_id == 5) {
@@ -180,7 +180,7 @@ function LeadService(objectCollection) {
                             "project_name": data.project_name,
                             "data": res
                         });
-                    }
+                   // }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -202,6 +202,7 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (data) => {
+                    console.log(data,"data")
                     if (data.length > 0) {
                         for (let i of data) {
                             if (!(i.hasOwnProperty("project_lead_employee_id"))) {
