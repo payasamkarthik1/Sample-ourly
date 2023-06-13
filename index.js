@@ -57,4 +57,4 @@ const options = {
 const server = https.createServer(options, app);
 
 const port = process.env.PORT
-server.listen(port, () => console.log(`Server up and running on port ${port} !!!!..`));
+app.listen(port, () => console.log(`Server up and running on port ${port} !!!!..`));
