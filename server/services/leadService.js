@@ -293,6 +293,7 @@ function LeadService(objectCollection) {
                             "project_id": i.project_id,
                             "first_week_day": weeks.start,
                             "last_week_day": weeks.end,
+                            "email": i.email
                         }, 5)
                         if (res.length > 0) {
                             unSubmittedData.push({
@@ -306,6 +307,7 @@ function LeadService(objectCollection) {
                             "project_id": i.project_id,
                             "first_week_day": weeks.start,
                             "last_week_day": weeks.end,
+                            "email": i.email
                         }, 1)
                         if (res1.length > 0) {
                             submittedData.push({
@@ -374,6 +376,7 @@ function LeadService(objectCollection) {
             request.project_id,
             request.first_week_day,
             request.last_week_day,
+            request.email,
             status
         );
 
