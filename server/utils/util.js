@@ -982,6 +982,25 @@ function Util() {
         return firstMonth.concat("-" + lastMonth)
     }
 
+    this.getWeekName_V1 = async function (date) {
+        date1 = await this.getFirstWeekDate(date)
+        date2 = await this.getLastWeekDate(date)
+
+        var dt1 = moment(date1, "YYYY-MM-DD HH:mm:ss")
+        day1 = dt1.format('Do');
+        month1 = dt1.format('MMM');
+        year1 = dt1.format('YYYY');
+        firstMonth = month1.concat(" " + day1 + "," + year1)
+
+        var dt2 = moment(date2, "YYYY-MM-DD HH:mm:ss")
+        day2 = dt2.format('Do');
+        month2 = dt2.format('MMM');
+        year2 = dt2.format('YYYY');
+        lastMonth = month2.concat(" " + day2 + "," + year2)
+
+        return firstMonth.concat("-" + lastMonth)
+    }
+
     this.getWeeks = async function (request) {
         const dateFormat = 'YYYY-MM-DD';
         const dateToStart = request.start_date;

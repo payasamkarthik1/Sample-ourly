@@ -132,6 +132,17 @@ function TimeTrackingController(objectCollection) {
         }
     })
 
+     //@Post copy/last/week/data/and/insert
+     app.post('/' + 'api/' + 'copy/last/week/data/and/insert', async function (req, res) {
+        const [err, resData] = await timeTrackingService.copyLastWeekDataAndInsert(req.body, res);
+        if (!err) {
+            console.log("copy/last/week/data/and/insert | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("copy/last/week/data/and/insert ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
 
 }
 

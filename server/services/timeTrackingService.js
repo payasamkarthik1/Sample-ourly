@@ -1750,6 +1750,62 @@ console.log(queryString)
         }
     };
 
+    this.copyLastWeekDataAndInsert = async function (request) {
+        let responseData = [],
+            error = true,
+            first_week_day,
+            last_week_day,
+            week_name,
+            preset_first_week_day,
+            preset_last_week_day,
+            preset_week_name,
+            date,
+            previousWeek,
+            previousDate;
+
+        date = new Date();
+
+        previousWeek = await util.getPreviousWeek(date);
+        previousDate = previousWeek.start;
+
+        first_week_day = await util.getFirstWeekDate(previousDate)
+        last_week_day = await util.getLastWeekDate(previousDate)
+        week_name = await util.getWeekName_V1(previousDate)
+
+        preset_first_week_day = await util.getFirstWeekDate(date)
+        preset_last_week_day = await util.getLastWeekDate(date)
+        preset_week_name = await util.getWeekName_V1(date)
+
+        const paramsArr = new Array(
+            request.employee_id,
+            first_week_day,
+            last_week_day,
+            week_name,
+            preset_first_week_day,
+            preset_last_week_day,
+            preset_week_name
+        );
+
+        const queryString = util.getQueryString('copy_last_week_data_and_insert', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log(data, "data")
+                    if (data[0].message === "success") {
+                        error = false
+                        responseData = [{ message: "Copied last week data successfully" }];
+                    } else {
+                        error = true,
+                            responseData = [{ message: data[0].message }];
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    };
+
 }
 
 
