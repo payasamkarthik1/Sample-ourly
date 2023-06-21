@@ -37,9 +37,9 @@ if (mode === "staging") {
         config.multipleStatements = true,
         config.sceret_key = "clockify"
 } else if (mode === "dr") {
-    config.user = "myuser",
+    config.user = "root",
         config.host = "localhost",
-        config.password = "password",
+        config.password = "welcome@1234",
         config.database = "ourly_dr",
         config.multipleStatements = true,
         config.sceret_key = "clockify"
