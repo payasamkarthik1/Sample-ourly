@@ -93,6 +93,31 @@ function ProjectController(objectCollection) {
         }
     })
 
+    //@Post get/project/lead/wise/data/tocheck/status
+    app.post('/' + 'api/' + 'get/project/lead/wise/data/tocheck/status', async function (req, res) {
+        const [err, resData] = await projectbasedapprovalServices.getProjectLeadWiseDataToCheckStatuses(req.body, res);
+        if (!err) {
+            console.log("get/project/lead/wise/data | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("get/project/lead/wise/data | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+    //@Post get/un-added/time-tracking/employee/data
+    app.post('/' + 'api/' + 'get/un-added/time-tracking/employee/data', async function (req, res) {
+        const [err, resData] = await projectbasedapprovalServices.getUnSubmittedTimetrackingEmployeeData(req.body, res);
+        if (!err) {
+            console.log("get/un-added/time-tracking/employee/data | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("get/un-added/time-tracking/employee/data | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+
 
 }
 

@@ -1,6 +1,7 @@
+const { request, response } = require('express');
 const EmployeeService = require('./employeeService')
 const TimeTrackingService = require('./timeTrackingService')
-
+const moment = require('moment');
 function projectbasedapproval(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -21,9 +22,9 @@ function projectbasedapproval(objectCollection) {
                 .then(async (data) => {
                     responseData = data;
                     error = false
-                   for(let details of responseData){
-                       this.insertProjectWiseTaskDetailsOnSubmit(request,details)
-                   }
+                    for (let details of responseData) {
+                        this.insertProjectWiseTaskDetailsOnSubmit(request, details)
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -33,30 +34,30 @@ function projectbasedapproval(objectCollection) {
 
     }
 
-    this.insertProjectWiseTaskDetailsOnSubmit = async function (request,data) {
+    this.insertProjectWiseTaskDetailsOnSubmit = async function (request, data) {
         let responseData = [],
             error = true;
-            flag = 1
-            const paramsArr = new Array(
-                request.employee_id, 
-                request.first_week_day, 
-                request.last_week_day, 
-                data.week_name, 
-                data.project_id, 
-                data.total_hours,
-                data.project_lead_employee_id, 
-                data.lead_assigned_employee_id,
-                util.getCurrentUTCTime(), 
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                flag,
-                1,
-                1
-            );
+        flag = 1
+        const paramsArr = new Array(
+            request.employee_id,
+            request.first_week_day,
+            request.last_week_day,
+            data.week_name,
+            data.project_id,
+            data.total_hours,
+            data.project_lead_employee_id,
+            data.lead_assigned_employee_id,
+            util.getCurrentUTCTime(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            flag,
+            1,
+            1
+        );
         const queryString = util.getQueryString('project_wise_approve_reject_submit_withdrawn_entries_insert', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -72,20 +73,20 @@ function projectbasedapproval(objectCollection) {
 
     }
 
-    this.projectWiseTaskDetailsWithdraw = async function (request,data) {
+    this.projectWiseTaskDetailsWithdraw = async function (request, data) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id,
-                null,
-                request.project_id, 
-                request.first_week_day, 
-                request.last_week_day,
-                null, 
-                2,
-                3,
-                0
-            );
+        const paramsArr = new Array(
+            request.employee_id,
+            null,
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day,
+            null,
+            2,
+            3,
+            0
+        );
         const queryString = util.getQueryString('project_wise_approval_withdraw', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -96,25 +97,25 @@ function projectbasedapproval(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
 
-    this.projectWiseTaskDetailsApproval = async function (request,data) {
+    this.projectWiseTaskDetailsApproval = async function (request, data) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id,
-                request.lead_employee_id,
-                request.project_id, 
-                request.first_week_day, 
-                request.last_week_day,
-                null, 
-                4,
-                1,
-                1
-            );
+        const paramsArr = new Array(
+            request.employee_id,
+            request.lead_employee_id,
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day,
+            null,
+            4,
+            1,
+            1
+        );
         const queryString = util.getQueryString('project_wise_approval_withdraw', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -125,25 +126,25 @@ function projectbasedapproval(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
 
-    this.projectWiseTaskDetailsReject = async function (request,data) {
+    this.projectWiseTaskDetailsReject = async function (request, data) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id,
-                request.lead_employee_id,
-                request.project_id, 
-                request.first_week_day, 
-                request.last_week_day,
-                request.rejected_note, 
-                5,
-                1,
-                2
-            );
+        const paramsArr = new Array(
+            request.employee_id,
+            request.lead_employee_id,
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day,
+            request.rejected_note,
+            5,
+            1,
+            2
+        );
         const queryString = util.getQueryString('project_wise_approval_withdraw', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -155,7 +156,7 @@ function projectbasedapproval(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
@@ -177,13 +178,13 @@ function projectbasedapproval(objectCollection) {
         request.task_created_datetime = request.first_week_day;
         request.week_name = await util.getWeekName(request),
 
-        await util.nodemailerSenderOnReject(request).then((data) => {
-            error = false
-            responseData = [{ message: "rejected successfully and mail have been sended to employee" }]
-        }).catch((err) => {
-            console.log("err-------" + err);
-            error = err
-        })
+            await util.nodemailerSenderOnReject(request).then((data) => {
+                error = false
+                responseData = [{ message: "rejected successfully and mail have been sended to employee" }]
+            }).catch((err) => {
+                console.log("err-------" + err);
+                error = err
+            })
         return [error, responseData];
 
     }
@@ -191,7 +192,7 @@ function projectbasedapproval(objectCollection) {
     this.getProjectByProjectId = async function (request) {
         let responseData = [],
             error = true;
-            
+
         const paramsArr = new Array(
             request.project_id.toString(),
         );
@@ -234,8 +235,8 @@ function projectbasedapproval(objectCollection) {
                             i.project_id,
                             request.role_id || 0
                         );
-                       let [err, response] = await this.getProjectLeadWisedata(paramsArr1,i)
-                       responseData.push(response);
+                        let [err, response] = await this.getProjectLeadWisedata(paramsArr1, i)
+                        responseData.push(response);
                     }
                     error = false
 
@@ -248,8 +249,8 @@ function projectbasedapproval(objectCollection) {
 
     }
 
-    
-    this.getProjectLeadWisedata = async function (paramsArr,data) {
+
+    this.getProjectLeadWisedata = async function (paramsArr, data) {
         let responseData = [],
             error = true;
 
@@ -282,25 +283,145 @@ function projectbasedapproval(objectCollection) {
 
     }
 
-
-    this.getEmployeeWiseProjectsData = async function (request,data) {
+    //get/project/lead/wise/data/check/status 
+    this.getProjectLeadWiseDataToCheckStatuses = async function (request) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-                request.employee_id, 
-                request.project_id,
-                request.first_week_day, 
-                request.last_week_day
-            );
+        console.log("==========================get/project/lead/wise/week/data=====================")
+        function getWeekStartAndEndDates(startDate, endDate) {
+            const datesArr = [];
+            let currentWeekStart = moment(startDate).isoWeekday(1);
+            let currentWeekEnd = moment(startDate).isoWeekday(7);
+
+            while (currentWeekEnd.isSameOrBefore(endDate)) {
+                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
+                currentWeekStart = currentWeekStart.add(1, 'week');
+                currentWeekEnd = currentWeekEnd.add(1, 'week');
+            }
+            return datesArr;
+        }
+        const startDate = request.first_week_day;
+        const endDate = request.last_week_day;
+        const output = getWeekStartAndEndDates(startDate, endDate);
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('get_all_projects', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    for (let i of data) {
+
+                        for (let j = 0; j < output.length; j++) {
+
+                            const paramsArr1 = new Array(
+                                request.first_week_day = output[j][0],
+                                request.last_week_day = output[j][1],
+                                i.project_id,
+                            );
+                            let [err, response] = await this.getProjectLeadWiseWeekData(paramsArr1, i);
+                            responseData.push(response);
+                        }
+                    }
+                    error = false
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                });
+            let result = {};
+            let output1;
+            let finalresult = responseData.flat().map(obj => {
+                const { project_id, project_name, project_lead_name, ...rest } = obj;
+                if (!result[project_id]) {
+                    output1 = [{ project_id, project_name, project_lead_name, data: [] }];
+                    output1[0].project_id = (project_id);
+                    output1[0].project_name = project_name;
+                    output1[0].project_lead_name = project_lead_name;
+                }
+                if (rest.data.length != 0) {
+                    output1[0].data.push(rest.data);
+                }
+                return output1[0];
+            });
+            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
+                if (!acc[project_id]) {
+                    acc[project_id] = { project_id, project_name, project_lead_name, data: [] };
+                }
+                acc[project_id].data = acc[project_id].data.concat(data[0]);
+                return acc;
+            }, {}));
+            return [error, responseData2];
+        }
+
+    }
+
+    //get project/lead/wise/week/data
+    this.getProjectLeadWiseWeekData = async function (paramsArr, data) {
+        let responseData = [],
+            error = true;
+        console.log("")
+        const queryString = util.getQueryString('get_project_lead_wise_data', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, paramsArr)
+                .then(async (res) => {
+                    //check the project_have team_lead or not if not project_team_lead='Team_lead' 
+                    if (data.project_lead_employee_id === 0) {
+                        data.project_lead_name = 'Team_lead'
+                    } else {
+                        data.project_lead_name = data.first_name;
+                    }
+                    if (res.length > 0) {
+                        for (let i of res) {
+                            //res.first_name=i.first_name;    
+                            if (i.status_id == 5) {
+                                i.status_id = 2
+                            } else if (i.status_id == 4) {
+                                i.status_id = 3
+                            }
+                        }
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "project_lead_name": data.project_lead_name,
+                            "data": res
+                        });
+                    } else if (res.length == 0) {
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "project_lead_name": data.project_lead_name,
+                            "data": []
+                        });
+                    }
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+
+            return [error, responseData];
+        }
+
+    }
+
+    this.getEmployeeWiseProjectsData = async function (request, data) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id,
+            request.project_id,
+            request.first_week_day,
+            request.last_week_day
+        );
         const queryString = util.getQueryString('get_employee_wise_projects_data', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                   
+
                     let dayWiseData = await this.dayWiseTotalTime(request, data);
 
-                  tym = await util.sumOfTime(dayWiseData)
-                 
+                    tym = await util.sumOfTime(dayWiseData)
+
                     responseData.push({
                         "project_name": dayWiseData[0]?.project_name,
                         "total_name": tym,
@@ -311,7 +432,7 @@ function projectbasedapproval(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
@@ -428,12 +549,11 @@ function projectbasedapproval(objectCollection) {
         }
     }
 
-
-    this.getProjectLeads = async function (request,data) {
+    this.getProjectLeads = async function (request, data) {
         let responseData = [],
             error = true;
-            const paramsArr = new Array(
-            );
+        const paramsArr = new Array(
+        );
         const queryString = util.getQueryString('get_project_leads', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
@@ -444,11 +564,32 @@ function projectbasedapproval(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-             return [error, responseData];
+            return [error, responseData];
         }
     }
 
-   
+    //get/un-submitted/time-tracking/employee/data
+    this.getUnSubmittedTimetrackingEmployeeData = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day
+        );
+        const queryString = await util.getQueryString('employee_get_all_active_employee', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+    }
+
 }
 
 
