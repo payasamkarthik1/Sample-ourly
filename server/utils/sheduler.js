@@ -376,7 +376,7 @@ function Scheduler(objectCollection) {
 
     this.sendSubmittedAndUnsubmittedListToLeads = async function () {
         console.log("-------------------------entered sendSubmittedAndUnsubmittedListToLeads------------------------------");
-        schedule.scheduleJob('45 12 * * 2', async function () {
+        schedule.scheduleJob('39 12 * * 2', async function () {
             const [err, res, weekName] = await leadService.getLeadProjectsAndSelfApprovalDataForEmailSending()
 
             for (let item of res) {

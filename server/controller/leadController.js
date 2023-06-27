@@ -64,6 +64,30 @@ function LeadController(objectCollection) {
         }
     })
 
+     //get/mail/data
+     app.get('/' + 'api/' + 'get/mail/data', async function (req, res) {
+        const [err, resData] = await leadService.getProjectsAndLeads(req.body);
+        if (!err) {
+            console.log("get/mail/data | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("gget/mail/data | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
+    //get/mail/data/leads
+    app.get('/' + 'api/' + 'get/mail/data/leads', async function (req, res) {
+        const [err, resData] = await leadService.getLeadProjectsAndSelfApprovalDataForEmailSending(req.body);
+        if (!err) {
+            console.log("get/mail/data/leads | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("get/mail/data/leads | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 }
 
 
