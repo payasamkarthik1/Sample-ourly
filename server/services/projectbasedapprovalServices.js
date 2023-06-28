@@ -212,14 +212,30 @@ function projectbasedapproval(objectCollection) {
         }
     }
 
-
+    //getProjectLeadWiseEntries
     this.getProjectLeadWiseEntries = async function (request) {
         let responseData = [],
             error = true;
+        console.log("=================getProjectLeadWiseEntries=========================")
+        function getWeekStartAndEndDates(startDate, endDate) {
+            const datesArr = [];
+            let currentWeekStart = moment(startDate).isoWeekday(1);
+            let currentWeekEnd = moment(startDate).isoWeekday(7);
+
+            while (currentWeekEnd.isSameOrBefore(endDate)) {
+                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
+                currentWeekStart = currentWeekStart.add(1, 'week');
+                currentWeekEnd = currentWeekEnd.add(1, 'week');
+            }
+            return datesArr;
+        }
+        const startDate = request.first_week_day;
+        const endDate = request.last_week_day;
+        const output = getWeekStartAndEndDates(startDate, endDate);
         const paramsArr = new Array(
             request.employee_id,
-            request.first_week_day,
-            request.last_week_day,
+            //request.first_week_day,
+            //request.last_week_day,
             request.role_id || 0
         );
 
@@ -228,28 +244,51 @@ function projectbasedapproval(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     for (let i of data) {
-                        const paramsArr1 = new Array(
-                            request.employee_id,
-                            request.first_week_day,
-                            request.last_week_day,
-                            i.project_id,
-                            request.role_id || 0
-                        );
-                        let [err, response] = await this.getProjectLeadWisedata(paramsArr1, i)
-                        responseData.push(response);
+                        for (let j = 0; j < output.length; j++) {
+                            const paramsArr1 = new Array(
+                                request.employee_id,
+                                request.first_week_day = output[j][0],
+                                request.last_week_day = output[j][1],
+                                i.project_id,
+                                request.role_id || 0
+                            );
+                            let [err, response] = await this.getProjectLeadWisedata(paramsArr1, i);
+                            responseData.push(response);
+                        }
                     }
                     error = false
 
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
-                })
-            return [error, responseData.flat()];
+                });
+            let result = {};
+            let output1;
+            let finalresult = responseData.flat().map(obj => {
+                const { project_id, project_name, ...rest } = obj;
+                if (!result[project_id]) {
+                    output1 = [{ project_id, project_name, data: [] }];
+                    output1[0].project_id = (project_id);
+                    output1[0].project_name = project_name;
+                }
+                if (rest.data.length != 0) {
+                    output1[0].data.push(rest.data[0]);
+                }
+                return output1[0];
+            });
+            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, data }) => {
+                if (!acc[project_id]) {
+                    acc[project_id] = { project_id, project_name, data: [] };
+                }
+                acc[project_id].data = acc[project_id].data.concat(data);
+                return acc;
+            }, {}));
+            return [error, responseData2];
         }
 
     }
-
-
+    
+    //getProjectLeadWisedata
     this.getProjectLeadWisedata = async function (paramsArr, data) {
         let responseData = [],
             error = true;
@@ -258,21 +297,28 @@ function projectbasedapproval(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
-                    //if (res.length > 0) {
-                    for (let i of res) {
-                        i.project_lead_name = data.first_name;
-                        if (i.status_id == 5) {
-                            i.status_id = 2
-                        } else if (i.status_id == 4) {
-                            i.status_id = 3
+                    if (res.length > 0) {
+                        for (let i of res) {
+                            i.project_lead_name = data.first_name;
+                            if (i.status_id == 5) {
+                                i.status_id = 2
+                            } else if (i.status_id == 4) {
+                                i.status_id = 3
+                            }
                         }
+
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "data": res
+                        });
+                    } else if (res.length == 0) {
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "data": []
+                        });
                     }
-                    responseData.push({
-                        "project_id": data.project_id,
-                        "project_name": data.project_name,
-                        "data": res
-                    });
-                    // }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -283,6 +329,7 @@ function projectbasedapproval(objectCollection) {
 
     }
 
+    
     //get/project/lead/wise/data/check/status 
     this.getProjectLeadWiseDataToCheckStatuses = async function (request) {
         let responseData = [],

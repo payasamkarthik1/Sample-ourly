@@ -1,6 +1,6 @@
 
 const EmployeeService = require('./employeeService')
-
+const moment = require('moment');
 function LeadService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -148,6 +148,7 @@ function LeadService(objectCollection) {
 
     };
 
+    //getLeadApprovalProjectEntriesData
     this.getLeadApprovalProjectEntriesData = async function (request, data) {
         let responseData = [],
             error = true;
@@ -180,6 +181,12 @@ function LeadService(objectCollection) {
                             "project_name": data.project_name,
                             "data": res
                         });
+                    } else if (res.length == 0) {
+                        responseData.push({
+                            "project_id": data.project_id,
+                            "project_name": data.project_name,
+                            "data": []
+                        });
                     }
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -191,34 +198,57 @@ function LeadService(objectCollection) {
 
     }
 
+    //getLeadApprovalProjectEntries
     this.getLeadApprovalProjectEntries = async function (request) {
         let responseData = [],
             error = true;
-
+        console.log("======================getLeadApprovalProjectEntries======================")
         const paramsArr = new Array(
         );
+
+        function getWeekStartAndEndDates(startDate, endDate) {
+            const datesArr = [];
+            let currentWeekStart = moment(startDate).isoWeekday(1);
+            let currentWeekEnd = moment(startDate).isoWeekday(7);
+
+            while (currentWeekEnd.isSameOrBefore(endDate)) {
+                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
+                currentWeekStart = currentWeekStart.add(1, 'week');
+                currentWeekEnd = currentWeekEnd.add(1, 'week');
+            }
+            return datesArr;
+        }
+        const startDate = request.first_week_day;
+        const endDate = request.last_week_day;
+        const output = getWeekStartAndEndDates(startDate, endDate);
 
         const queryString = util.getQueryString('get_lead_unassined_projects', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (data) => {
-                    console.log(data,"data")
                     if (data.length > 0) {
                         for (let i of data) {
                             if (!(i.hasOwnProperty("project_lead_employee_id"))) {
                                 i.project_lead_employee_id = request.employee_id
                             }
-                            let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i)
 
-                            if (response.length > 0) {
-                                responseData.push(response);
+                            for (let j = 0; j < output.length; j++) {
+                                request.first_week_day = output[j][0];
+                                request.last_week_day = output[j][1];
+                                let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i);
+                                if (response.length > 0)
+                                    responseData.push(response)
                             }
                         }
                     }
+                    for (let i = 0; i < output.length; i++) {
+                        request.first_week_day = output[i][0];
+                        request.last_week_day = output[i][1];
+                        let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
+                        if (selfWorkedData.length > 0) {
 
-                    let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
-                    if (selfWorkedData.length > 0) {
-                        responseData.push(selfWorkedData)
+                            responseData.push(selfWorkedData)
+                        }
                     }
                     error = false
 
@@ -226,16 +256,36 @@ function LeadService(objectCollection) {
                     console.log("err-------" + err);
                     error = err
                 })
-
-            return [error, responseData.flat()];
+            let result = {};
+            let output1;
+            let finalresult = responseData.flat().map(obj => {
+                const { project_id, project_name, ...rest } = obj;
+                if (!result[project_id]) {
+                    output1 = [{ project_id, project_name, data: [] }];
+                    output1[0].project_id = (project_id);
+                    output1[0].project_name = project_name;
+                }
+                if (rest.data.length != 0) {
+                    output1[0].data.push(rest.data[0]);
+                }
+                return output1[0];
+            });
+            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, data }) => {
+                if (!acc[project_id]) {
+                    acc[project_id] = { project_id, project_name, data: [] };
+                }
+                acc[project_id].data = acc[project_id].data.concat(data);
+                return acc;
+            }, {}));
+            return [error, responseData2];
         }
 
     }
 
-
+    //getLeadWiseSelfWorkedEntries
     this.getLeadWiseSelfWorkedEntries = async function (request) {
         let responseData = []
-    
+
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
