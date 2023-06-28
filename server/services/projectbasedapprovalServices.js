@@ -229,9 +229,10 @@ function projectbasedapproval(objectCollection) {
             }
             return datesArr;
         }
-        const startDate = request.first_week_day;
-        const endDate = request.last_week_day;
-        const output = getWeekStartAndEndDates(startDate, endDate);
+        request.start_date = request.first_week_day;
+        request.end_date = request.last_week_day;
+        
+        const output = await util.getWeeks(request);
         const paramsArr = new Array(
             request.employee_id,
             //request.first_week_day,
@@ -297,7 +298,6 @@ function projectbasedapproval(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
-                    if (res.length > 0) {
                         for (let i of res) {
                             i.project_lead_name = data.first_name;
                             if (i.status_id == 5) {
@@ -306,19 +306,11 @@ function projectbasedapproval(objectCollection) {
                                 i.status_id = 3
                             }
                         }
-
                         responseData.push({
                             "project_id": data.project_id,
                             "project_name": data.project_name,
                             "data": res
                         });
-                    } else if (res.length == 0) {
-                        responseData.push({
-                            "project_id": data.project_id,
-                            "project_name": data.project_name,
-                            "data": []
-                        });
-                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
