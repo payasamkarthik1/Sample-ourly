@@ -1075,6 +1075,30 @@ function Util() {
         };
     }
 
+    //Function to get the weeks between the given startDate and endDate
+    this.getWeekStartAndEndDates = async function (start_date,end_date) {
+        const dateFormat = 'YYYY-MM-DD';
+        const dateToStart = start_date;
+        const dateToEnd = end_date;
+
+        let weeks = [];
+        let momsrt = moment.utc(dateToStart, dateFormat);
+        let momend = moment.utc(dateToEnd, dateFormat);
+
+        //edited part
+        var daystoMonday = 0 - (momend.isoWeekday() - 1) + 7;
+        momend.add(daystoMonday, "days");
+
+        while (momend.isAfter(momsrt)) {
+            weeks.push([
+                momsrt.startOf('isoWeek').format(dateFormat),
+                momsrt.endOf('isoWeek').format(dateFormat)
+            ]);
+            momsrt.add(1, 'week');
+        }
+        return weeks
+    }
+
 }
 
 
