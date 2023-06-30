@@ -217,22 +217,9 @@ function projectbasedapproval(objectCollection) {
         let responseData = [],
             error = true;
         console.log("=================getProjectLeadWiseEntries=========================")
-        function getWeekStartAndEndDates(startDate, endDate) {
-            const datesArr = [];
-            let currentWeekStart = moment(startDate).isoWeekday(1);
-            let currentWeekEnd = moment(startDate).isoWeekday(7);
-
-            while (currentWeekEnd.isSameOrBefore(endDate)) {
-                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
-                currentWeekStart = currentWeekStart.add(1, 'week');
-                currentWeekEnd = currentWeekEnd.add(1, 'week');
-            }
-            return datesArr;
-        }
-        request.start_date = request.first_week_day;
-        request.end_date = request.last_week_day;
-        
-        const output = await util.getWeeks(request);
+        const startDate = request.first_week_day;
+        const endDate = request.last_week_day;
+        const dates = await util.getWeekStartAndEndDates(startDate, endDate);
         const paramsArr = new Array(
             request.employee_id,
             //request.first_week_day,
@@ -245,11 +232,11 @@ function projectbasedapproval(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     for (let i of data) {
-                        for (let j = 0; j < output.length; j++) {
+                        for (let j = 0; j < dates.length; j++) {
                             const paramsArr1 = new Array(
                                 request.employee_id,
-                                request.first_week_day = output[j][0],
-                                request.last_week_day = output[j][1],
+                                request.first_week_day = dates[j][0],
+                                request.last_week_day = dates[j][1],
                                 i.project_id,
                                 request.role_id || 0
                             );
@@ -264,27 +251,32 @@ function projectbasedapproval(objectCollection) {
                     error = err
                 });
             let result = {};
-            let output1;
-            let finalresult = responseData.flat().map(obj => {
+            let emptyArry;
+            let groupResponseData = responseData.flat().map(obj => {
                 const { project_id, project_name, ...rest } = obj;
+
                 if (!result[project_id]) {
-                    output1 = [{ project_id, project_name, data: [] }];
-                    output1[0].project_id = (project_id);
-                    output1[0].project_name = project_name;
+                    emptyArry = [{ project_id, project_name, data: [] }];
+                    emptyArry[0].project_id = (project_id);
+                    emptyArry[0].project_name = project_name;
                 }
                 if (rest.data.length != 0) {
-                    output1[0].data.push(rest.data[0]);
+                    emptyArry[0].data.push(rest.data.flat());
                 }
-                return output1[0];
+                return emptyArry[0];
             });
-            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, data }) => {
+            let filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, data }) => {
                 if (!acc[project_id]) {
                     acc[project_id] = { project_id, project_name, data: [] };
                 }
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
-            return [error, responseData2];
+
+            for (let i = 0; i < filterResponseData.length; i++) {
+                filterResponseData[i].data = filterResponseData[i].data.flat();
+            }
+            return [error, filterResponseData];
         }
 
     }
@@ -293,24 +285,23 @@ function projectbasedapproval(objectCollection) {
     this.getProjectLeadWisedata = async function (paramsArr, data) {
         let responseData = [],
             error = true;
-
         const queryString = util.getQueryString('get_project_lead_wise_entries', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
-                        for (let i of res) {
-                            i.project_lead_name = data.first_name;
-                            if (i.status_id == 5) {
-                                i.status_id = 2
-                            } else if (i.status_id == 4) {
-                                i.status_id = 3
-                            }
+                    for (let i of res) {
+                        i.project_lead_name = data.first_name;
+                        if (i.status_id == 5) {
+                            i.status_id = 2
+                        } else if (i.status_id == 4) {
+                            i.status_id = 3
                         }
-                        responseData.push({
-                            "project_id": data.project_id,
-                            "project_name": data.project_name,
-                            "data": res
-                        });
+                    }
+                    responseData.push({
+                        "project_id": data.project_id,
+                        "project_name": data.project_name,
+                        "data": res
+                    });
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -327,21 +318,9 @@ function projectbasedapproval(objectCollection) {
         let responseData = [],
             error = true;
         console.log("==========================get/project/lead/wise/week/data=====================")
-        function getWeekStartAndEndDates(startDate, endDate) {
-            const datesArr = [];
-            let currentWeekStart = moment(startDate).isoWeekday(1);
-            let currentWeekEnd = moment(startDate).isoWeekday(7);
-
-            while (currentWeekEnd.isSameOrBefore(endDate)) {
-                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
-                currentWeekStart = currentWeekStart.add(1, 'week');
-                currentWeekEnd = currentWeekEnd.add(1, 'week');
-            }
-            return datesArr;
-        }
         const startDate = request.first_week_day;
         const endDate = request.last_week_day;
-        const output = getWeekStartAndEndDates(startDate, endDate);
+        const dates = await util.getWeekStartAndEndDates(startDate, endDate);
         const paramsArr = new Array(
         );
 
@@ -351,11 +330,11 @@ function projectbasedapproval(objectCollection) {
                 .then(async (data) => {
                     for (let i of data) {
 
-                        for (let j = 0; j < output.length; j++) {
+                        for (let j = 0; j < dates.length; j++) {
 
                             const paramsArr1 = new Array(
-                                request.first_week_day = output[j][0],
-                                request.last_week_day = output[j][1],
+                                request.first_week_day = dates[j][0],
+                                request.last_week_day = dates[j][1],
                                 i.project_id,
                             );
                             let [err, response] = await this.getProjectLeadWiseWeekData(paramsArr1, i);
@@ -369,28 +348,31 @@ function projectbasedapproval(objectCollection) {
                     error = err
                 });
             let result = {};
-            let output1;
-            let finalresult = responseData.flat().map(obj => {
+            let emptyArry;
+            let groupResponseData = responseData.flat().map(obj => {
                 const { project_id, project_name, project_lead_name, ...rest } = obj;
                 if (!result[project_id]) {
-                    output1 = [{ project_id, project_name, project_lead_name, data: [] }];
-                    output1[0].project_id = (project_id);
-                    output1[0].project_name = project_name;
-                    output1[0].project_lead_name = project_lead_name;
+                    emptyArry = [{ project_id, project_name, project_lead_name, data: [] }];
+                    emptyArry[0].project_id = (project_id);
+                    emptyArry[0].project_name = project_name;
+                    emptyArry[0].project_lead_name = project_lead_name;
                 }
                 if (rest.data.length != 0) {
-                    output1[0].data.push(rest.data);
+                    emptyArry[0].data.push(rest.data);
                 }
-                return output1[0];
+                return emptyArry[0];
             });
-            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
+            const filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
                 if (!acc[project_id]) {
                     acc[project_id] = { project_id, project_name, project_lead_name, data: [] };
                 }
-                acc[project_id].data = acc[project_id].data.concat(data[0]);
+                acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
-            return [error, responseData2];
+            for (let i = 0; i < filterResponseData.length; i++) {
+                filterResponseData[i].data = filterResponseData[i].data.flat();
+            }
+            return [error, filterResponseData];
         }
 
     }
@@ -410,29 +392,20 @@ function projectbasedapproval(objectCollection) {
                     } else {
                         data.project_lead_name = data.first_name;
                     }
-                    if (res.length > 0) {
-                        for (let i of res) {
-                            //res.first_name=i.first_name;    
-                            if (i.status_id == 5) {
-                                i.status_id = 2
-                            } else if (i.status_id == 4) {
-                                i.status_id = 3
-                            }
+                    for (let i of res) {
+                        //res.first_name=i.first_name;    
+                        if (i.status_id == 5) {
+                            i.status_id = 2
+                        } else if (i.status_id == 4) {
+                            i.status_id = 3
                         }
-                        responseData.push({
-                            "project_id": data.project_id,
-                            "project_name": data.project_name,
-                            "project_lead_name": data.project_lead_name,
-                            "data": res
-                        });
-                    } else if (res.length == 0) {
-                        responseData.push({
-                            "project_id": data.project_id,
-                            "project_name": data.project_name,
-                            "project_lead_name": data.project_lead_name,
-                            "data": []
-                        });
                     }
+                    responseData.push({
+                        "project_id": data.project_id,
+                        "project_name": data.project_name,
+                        "project_lead_name": data.project_lead_name,
+                        "data": res
+                    });
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

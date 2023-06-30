@@ -165,7 +165,6 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
                 .then(async (res) => {
-
                     if (res.length > 0) {
                         for (let i of res) {
                             // i.project_lead_name = data.first_name;
@@ -180,12 +179,6 @@ function LeadService(objectCollection) {
                             "project_id": data.project_id,
                             "project_name": data.project_name,
                             "data": res
-                        });
-                    } else if (res.length == 0) {
-                        responseData.push({
-                            "project_id": data.project_id,
-                            "project_name": data.project_name,
-                            "data": []
                         });
                     }
                 }).catch((err) => {
@@ -202,26 +195,12 @@ function LeadService(objectCollection) {
     this.getLeadApprovalProjectEntries = async function (request) {
         let responseData = [],
             error = true;
-        console.log("======================getLeadApprovalProjectEntries======================")
+        console.log("======================(((getLeadApprovalProjectEntries)))======================")
         const paramsArr = new Array(
         );
-
-        function getWeekStartAndEndDates(startDate, endDate) {
-            const datesArr = [];
-            let currentWeekStart = moment(startDate).isoWeekday(1);
-            let currentWeekEnd = moment(startDate).isoWeekday(7);
-
-            while (currentWeekEnd.isSameOrBefore(endDate)) {
-                datesArr.push([currentWeekStart.format('YYYY-MM-DD'), currentWeekEnd.format('YYYY-MM-DD')])
-                currentWeekStart = currentWeekStart.add(1, 'week');
-                currentWeekEnd = currentWeekEnd.add(1, 'week');
-            }
-            return datesArr;
-        }
         const startDate = request.first_week_day;
         const endDate = request.last_week_day;
-        const output = getWeekStartAndEndDates(startDate, endDate);
-
+        const dates = await util.getWeekStartAndEndDates(startDate, endDate);
         const queryString = util.getQueryString('get_lead_unassined_projects', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)
@@ -232,18 +211,18 @@ function LeadService(objectCollection) {
                                 i.project_lead_employee_id = request.employee_id
                             }
 
-                            for (let j = 0; j < output.length; j++) {
-                                request.first_week_day = output[j][0];
-                                request.last_week_day = output[j][1];
+                            for (let j = 0; j < dates.length; j++) {
+                                request.first_week_day = dates[j][0];
+                                request.last_week_day = dates[j][1];
                                 let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i);
                                 if (response.length > 0)
                                     responseData.push(response)
                             }
                         }
                     }
-                    for (let i = 0; i < output.length; i++) {
-                        request.first_week_day = output[i][0];
-                        request.last_week_day = output[i][1];
+                    for (let i = 0; i < dates.length; i++) {
+                        request.first_week_day = dates[i][0];
+                        request.last_week_day = dates[i][1];
                         let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
                         if (selfWorkedData.length > 0) {
 
@@ -257,42 +236,44 @@ function LeadService(objectCollection) {
                     error = err
                 })
             let result = {};
-            let output1;
-            let finalresult = responseData.flat().map(obj => {
+            let emptyArry;
+            let groupResponseData = responseData.flat().map(obj => {
                 const { project_id, project_name, ...rest } = obj;
                 if (!result[project_id]) {
-                    output1 = [{ project_id, project_name, data: [] }];
-                    output1[0].project_id = (project_id);
-                    output1[0].project_name = project_name;
+                    emptyArry = [{ project_id, project_name, data: [] }];
+                    emptyArry[0].project_id = (project_id);
+                    emptyArry[0].project_name = project_name;
                 }
                 if (rest.data.length != 0) {
-                    output1[0].data.push(rest.data[0]);
+                    emptyArry[0].data.push(rest.data);
                 }
-                return output1[0];
+                return emptyArry[0];
             });
-            const responseData2 = Object.values(finalresult.reduce((acc, { project_id, project_name, data }) => {
+            let filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, data }) => {
                 if (!acc[project_id]) {
                     acc[project_id] = { project_id, project_name, data: [] };
                 }
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
-            return [error, responseData2];
+            for (let x = 0; x < filterResponseData.length; x++) {
+                filterResponseData[x].data = filterResponseData[x].data.flat();
+            }
+            return [error, filterResponseData];
         }
 
     }
 
     //getLeadWiseSelfWorkedEntries
     this.getLeadWiseSelfWorkedEntries = async function (request) {
-        let responseData = []
-
+        let responseData = [],
+            error = true;
         const paramsArr = new Array(
             request.employee_id,
             request.first_week_day,
             request.last_week_day,
             request.role_id
         );
-
         const queryString = util.getQueryString('get_self_approval_project_entries', paramsArr);
 
         if (queryString !== '') {
