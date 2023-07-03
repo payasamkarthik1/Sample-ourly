@@ -389,6 +389,7 @@ function LeadService(objectCollection) {
 
                     let transformedArray = Object.values(transformedResponse);
                     responseData = transformedArray;
+                    console.log(responseData,"getProjectsAndLeads")
                     error = false
                 })
                 .catch((err) => {
@@ -578,7 +579,7 @@ function LeadService(objectCollection) {
                 "unSubmittedData": projectArray.filter(project => project.data.every(entry => entry.status_id !== 1))
             });
         }
-        console.log(data);
+        console.log(data,"getLeadProjectsAndSelfApprovalDataForEmailSending");
 
         responseData = data
 
