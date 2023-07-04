@@ -174,7 +174,7 @@ function Scheduler(objectCollection) {
 
     this.sendRemainderToProjectLeads = async function () {
         console.log("-------------------------entered sendRemainderToProjetLeads------------------------------");
-        schedule.scheduleJob('10 18 * * *', async function () {
+        schedule.scheduleJob('40 15 * * *', async function () {
             const [err, res, weekName] = await leadService.getProjectsAndLeads()
 
             for (let item of res) {
@@ -376,7 +376,7 @@ function Scheduler(objectCollection) {
 
     this.sendSubmittedAndUnsubmittedListToLeads = async function () {
         console.log("-------------------------entered sendSubmittedAndUnsubmittedListToLeads------------------------------");
-        schedule.scheduleJob('12 18 * * *', async function () {
+        schedule.scheduleJob('42 15 * * *', async function () {
             const [err, res, weekName] = await leadService.getLeadProjectsAndSelfApprovalDataForEmailSending()
 
             for (let item of res) {
