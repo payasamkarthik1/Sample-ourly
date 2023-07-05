@@ -2,9 +2,9 @@
 require('dotenv').config()
 
 //mode = "local";
-mode = "staging";
+//mode = "staging";
 // mode = "prod";
-//mode = "aws";
+mode = "aws";
 //mode="dr"
 config = {};
 
