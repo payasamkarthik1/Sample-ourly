@@ -33,6 +33,7 @@ if (mode === "staging") {
     config.user = process.env.aws_user;
     config.host = process.env.aws_host;
     config.password = process.env.aws_password;
+    config.port=process.env.AWS_PORT;
     config.database = process.env.aws_database;
     config.multipleStatements = process.env.aws_multipleStatements;
     config.secret_key = process.env.aws_secret_key;

@@ -39,6 +39,7 @@ function Dbinitiate() {
             host: global.config.host,
             user: global.config.user,
             password: global.config.password,
+            port: global.config.port,
             database: global.config.database,
         });
     }else if (mode === 'dr') {
