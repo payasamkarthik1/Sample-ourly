@@ -232,7 +232,7 @@ function projectbasedapproval(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     for (let i of data) {
-                        for (let j = 0; j < dates.length; j++) {
+                        for (let j = dates.length-1; j >=0 ; j--) {
                             const paramsArr1 = new Array(
                                 request.employee_id,
                                 request.first_week_day = dates[j][0],
@@ -272,7 +272,7 @@ function projectbasedapproval(objectCollection) {
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
-
+            filterResponseData=filterResponseData.sort((a, b) => a.project_name.localeCompare(b.project_name))
             for (let i = 0; i < filterResponseData.length; i++) {
                 filterResponseData[i].data = filterResponseData[i].data.flat();
             }
@@ -330,8 +330,7 @@ function projectbasedapproval(objectCollection) {
                 .then(async (data) => {
                     for (let i of data) {
 
-                        for (let j = 0; j < dates.length; j++) {
-
+                        for (let j = dates.length - 1; j >= 0; j--) {
                             const paramsArr1 = new Array(
                                 request.first_week_day = dates[j][0],
                                 request.last_week_day = dates[j][1],
@@ -362,13 +361,16 @@ function projectbasedapproval(objectCollection) {
                 }
                 return emptyArry[0];
             });
-            const filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
+
+            let filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
                 if (!acc[project_id]) {
                     acc[project_id] = { project_id, project_name, project_lead_name, data: [] };
                 }
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
+
+            filterResponseData = filterResponseData.sort((a, b) => a.project_name.localeCompare(b.project_name));
             for (let i = 0; i < filterResponseData.length; i++) {
                 filterResponseData[i].data = filterResponseData[i].data.flat();
             }
@@ -381,7 +383,6 @@ function projectbasedapproval(objectCollection) {
     this.getProjectLeadWiseWeekData = async function (paramsArr, data) {
         let responseData = [],
             error = true;
-        console.log("")
         const queryString = util.getQueryString('get_project_lead_wise_data', paramsArr);
         if (queryString !== '') {
             await db.executeQuery(1, queryString, paramsArr)

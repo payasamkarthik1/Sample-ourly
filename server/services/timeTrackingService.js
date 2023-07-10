@@ -447,7 +447,7 @@ function TimeTrackingService(objectCollection) {
     }
 
     this.getAllTasksOfAllWeeksByEmpId = async function (request) {
-        let responseData = []
+        let responseData = [],
         error = true;
 
         const [err, data] = await this.getAllWeeksByEmpId(request)
@@ -1294,37 +1294,47 @@ console.log(queryString)
     this.onSubmitForApproval = async function (request) {
         let responseData = [],
             error = true;
-        //flag=1 on submit for approval change status to pending 
-        flag = 1
-        let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
-        request.employee_id = id;
-        const paramsArr = new Array(
-            request.employee_id,
-            request.first_week_day,
-            request.last_week_day,
-            flag
-        );
-        const queryString = util.getQueryString('approvals_change_status', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-            .then(async (data) => {
-                if (data[0].message == "success") {
-                    const [err1, data1] = await this.onSubmitForApprovalEntry(request)
-                     await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
-                    responseData = data1;
-                    error = err1
-                    } else {
-                        error = true
-                        responseData = [{ message: data[0].message }];
-                    }
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
+        const [err2, res] = await this.getEmployeeWeeklyTimetrackingTaskDetails(request);
+        if (err2) {
+            error = err2
+            responseData = res
             return [error, responseData];
         }
+        else {
+            if (res.length === 0) {
+                //flag=1 on submit for approval change status to pending 
+                flag = 1
+                let id = request.employee_id ? request.employee_id : request.team_member_employee_id;
+                request.employee_id = id;
+                const paramsArr = new Array(
+                    request.employee_id,
+                    request.first_week_day,
+                    request.last_week_day,
+                    flag
+                );
+                const queryString = util.getQueryString('approvals_change_status', paramsArr);
 
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data) => {
+                            if (data[0].message == "success") {
+                                const [err1, data1] = await this.onSubmitForApprovalEntry(request)
+                                await projectBasedApprovalServices.getProjectWiseTaskDetails(request)
+                                responseData = data1;
+                                error = err1
+                            } else {
+                                error = true
+                                responseData = [{ message: data[0].message }];
+                            }
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData];
+                }
+            }
+
+        }
 
     }
 
@@ -1805,6 +1815,40 @@ console.log(queryString)
             return [error, responseData];
         }
     };
+
+    //get/employee/weekly/timetracking/task/detail
+    this.getEmployeeWeeklyTimetrackingTaskDetails = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.first_week_day,
+            request.last_week_day,
+            request.employee_id
+        )
+
+        const queryString = util.getQueryString('timetracking_get_all_tasks_in_Week_select', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    for (part of data) {
+                        if (part.task_description.trim() === '.' || part.task_description.trim() === ' ') {
+                            error = true;
+                            responseData = ([{ message: 'Kindly Please Add The One Of Your Task Description Is Empty' }]);
+                        } else {
+                            error = false;
+                            responseData = []
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log("error-------", err);
+                    error = err;
+                })
+        }
+        return [error, responseData];
+    }
 
 }
 

@@ -18,8 +18,8 @@ function ProjectService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data[0].message === "data") {
-                        let data1 = await util.addUniqueIndexesToArrayOfObject(data)
-                        responseData = data1;
+                        //let data1 = await util.addUniqueIndexesToArrayOfObject(data)
+                        responseData = data;
                         error = false
                     } else {
                         error = true,

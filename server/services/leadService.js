@@ -211,7 +211,7 @@ function LeadService(objectCollection) {
                                 i.project_lead_employee_id = request.employee_id
                             }
 
-                            for (let j = 0; j < dates.length; j++) {
+                            for (let j = dates.length-1; j >=0; j--) {
                                 request.first_week_day = dates[j][0];
                                 request.last_week_day = dates[j][1];
                                 let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i);
@@ -220,7 +220,7 @@ function LeadService(objectCollection) {
                             }
                         }
                     }
-                    for (let i = 0; i < dates.length; i++) {
+                    for (let i = dates.length-1; i >=0 ; i--) {
                         request.first_week_day = dates[i][0];
                         request.last_week_day = dates[i][1];
                         let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
@@ -256,6 +256,7 @@ function LeadService(objectCollection) {
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
+            filterResponseData = filterResponseData.sort((a,b)=>a.project_name.localeCompare(b.project_name))
             for (let x = 0; x < filterResponseData.length; x++) {
                 filterResponseData[x].data = filterResponseData[x].data.flat();
             }
