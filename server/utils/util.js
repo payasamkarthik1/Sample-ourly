@@ -166,7 +166,7 @@ function Util() {
                        
                          <button   
                              style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">
-                             <a href="http://183.82.113.10:4179/forgotpass" target="_blank" style="color: #ffffff;text-decoration:none">
+                             <a href="http://localhost:3000/forgotpass" target="_blank" style="color: #ffffff;text-decoration:none">
                              Click to Change Password
                              </a>
                     
