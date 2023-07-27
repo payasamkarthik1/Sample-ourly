@@ -89,8 +89,6 @@ function ControllInterceptor(objCollection) {
     
     new Scheduler(objCollection)
 
-    new DataBaseBackup(objCollection)
-
 }
 
 
