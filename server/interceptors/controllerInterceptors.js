@@ -40,6 +40,8 @@ const RolePermissionEmployeeMapping = require('../services/roleComponentsMapping
 
 const Scheduler = require('../utils/sheduler')
 
+const DataBaseBackup = require('../utils/dataBaseBackUp')
+
 
 function ControllInterceptor(objCollection) {
 
@@ -86,6 +88,9 @@ function ControllInterceptor(objCollection) {
     new RolePermissionEmployeeMapping(objCollection)
     
     new Scheduler(objCollection)
+
+    new DataBaseBackup(objCollection)
+
 }
 
 
