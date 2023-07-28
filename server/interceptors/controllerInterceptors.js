@@ -42,6 +42,9 @@ const Scheduler = require('../utils/sheduler')
 
 const DataBaseBackup = require('../utils/dataBaseBackUp')
 
+const skillController = require('../controller/skillController')
+const skillServices = require('../services/skillServices')
+
 
 function ControllInterceptor(objCollection) {
 
@@ -85,8 +88,11 @@ function ControllInterceptor(objCollection) {
     new RoleComponentsMappingController(objCollection)
     new RoleComponentsMappingService(objCollection)
 
+    new skillController(objCollection)
+    new skillServices(objCollection)
+
     new RolePermissionEmployeeMapping(objCollection)
-    
+
     new Scheduler(objCollection)
 
 }
