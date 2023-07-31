@@ -45,6 +45,8 @@ const DataBaseBackup = require('../utils/dataBaseBackUp')
 const skillController = require('../controller/skillController')
 const skillServices = require('../services/skillServices')
 
+const skillEmployeeMappingController = require('../controller/skillEmployeeMappingController')
+const skillEmployeeMappingService = require('../services/skillEmployeeMappingService')
 
 function ControllInterceptor(objCollection) {
 
@@ -90,6 +92,9 @@ function ControllInterceptor(objCollection) {
 
     new skillController(objCollection)
     new skillServices(objCollection)
+
+    new skillEmployeeMappingController(objCollection)
+    new skillEmployeeMappingService(objCollection)
 
     new RolePermissionEmployeeMapping(objCollection)
 
