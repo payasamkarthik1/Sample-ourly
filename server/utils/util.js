@@ -73,7 +73,7 @@ function Util() {
 
         let responseData = []
         error = true
-        const token = req.headers["authorization"]
+        const token = req.headers["Authorization"]
         if (!token) {
             error = true
             responseData = [{ message: "token is required" }]
