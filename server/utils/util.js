@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 var CryptoJS = require('crypto-js')
 const nodemailer = require('nodemailer')
 const randtoken = require("rand-token");
+require('dotenv').config()
 
 
 
@@ -79,7 +80,7 @@ function Util() {
             responseData = [{ message: "token is required" }]
         }
         try {
-            const data = await jwt.verify(token, global.config.sceret_key)
+            const data = await jwt.verify(token, 'clockify')
             if (data) {
                 error = false,
                     responseData = data
