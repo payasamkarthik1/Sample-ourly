@@ -296,6 +296,8 @@ function ProjectService(objectCollection) {
         flag = 2
         const paramsArr = new Array(
             request.project_id,
+            null,
+            null,
             flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
@@ -317,6 +319,9 @@ function ProjectService(objectCollection) {
     }
 
     this.inactiveProjToActive = async function (request) {
+        console.log('====================================')
+        console.log("enteerd")
+        console.log('====================================')
         let responseData = [],
             error = true;
 
@@ -325,6 +330,8 @@ function ProjectService(objectCollection) {
 
         const paramsArr = new Array(
             request.project_id,
+            null,
+            null,
             flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
