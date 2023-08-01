@@ -133,8 +133,6 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
-
-
     this.skillEmpMappGetAllEmpsSkillList = async function (request) {
 
         let responseData = [],

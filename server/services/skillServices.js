@@ -20,11 +20,13 @@ function skillService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('=============insertSkills=====================')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data;
-                    error = false
+                    if (data[0].message === "Already skill exist") {
+                        responseData = [{ message: data[0].message }]
+                        error = true
+                    } else {
+                        responseData = data;
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -70,11 +72,13 @@ function skillService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
-                    console.log('===============updateSkillById====================')
-                    console.log(data)
-                    console.log('====================================')
-                    responseData = data;
-                    error = false
+                    if (data[0].message === "Already skill exist") {
+                        responseData = [{ message: data[0].message }]
+                        error = true
+                    } else {
+                        responseData = data;
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
