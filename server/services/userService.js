@@ -129,11 +129,14 @@ function UserService(objectCollection) {
         try {
             const [err1, resData1] = await validations.userDetailsList(request)
             if (!err1) {
+                const [err2, resData2] = await validations.addForgetPasswordDetails(request);
+                request.unique_id = resData2[0].unique_id;
+                request.time = resData2[0].time;
                 await util.nodemailerSender(request, resData1).then((data) => {
-                    error = false
+                    error = false;
                     responseData = [{ message: "sended success" }]
                 }).catch((err) => {
-                    error = err
+                    error = err;
                 })
 
             } else {

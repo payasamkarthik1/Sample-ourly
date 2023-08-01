@@ -1,7 +1,6 @@
 const { request, response } = require('express');
 const EmployeeService = require('./employeeService')
 const TimeTrackingService = require('./timeTrackingService')
-const moment = require('moment');
 function projectbasedapproval(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
@@ -601,6 +600,99 @@ function projectbasedapproval(objectCollection) {
                 })
             return [error, responseData];
         }
+    }
+
+    //get/project/lead/wise/data/check/status 
+    this.getProjectLeadWiseDataToCheckStatusesUPDATEDCODEFORTIMEREDUCTION = async function (request) {
+        let responseData = [],
+            error = true;
+        console.log("==========================get/project/lead/wise/week/data=====================")
+        const startDate = request.first_week_day;
+        const endDate = request.last_week_day;
+        const dates = await util.getWeekStartAndEndDates(startDate, endDate);
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('get_all_projects', paramsArr);
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    for (let i of data) {
+
+                        for (let j = dates.length - 1; j >= 0; j--) {
+                            const paramsArr1 = new Array(
+                                request.first_week_day = dates[j][0],
+                                request.last_week_day = dates[j][1],
+                                i.project_id,
+                            );
+                            let [err, response] = await this.getProjectLeadWiseWeekData(paramsArr1, i);
+                            responseData.push(response);
+                        }
+                    }
+                    let result = [];
+                    const groupedData = {};
+                    responseData.flat().forEach((item) => {
+
+                        const { project_id, project_name, project_lead_name, ...rest } = item;
+
+                        if (!groupedData[item.project_id]) {
+                            groupedData[item.project_id] = {
+                                project_id: item.project_id,
+                                project_name: item.project_name,
+                                project_lead_name: item.project_lead_name,
+                                data: []
+                            };
+                        }
+                        if (rest.data.length !== 0) {
+                            groupedData[item.project_id].data.push(rest.data);
+                        }
+
+                    });//console.log("responseData====================================",groupedData)
+                    for (const key in groupedData) {
+                        if (Object.prototype.hasOwnProperty.call(groupedData, key)) {
+                            //console.log('groupedData=======================',g)
+                            groupedData[key].data = groupedData[key].data.flat()
+                            result.push(groupedData[key]);
+                        }
+                    }//console.log("result=============================",result);
+                    result = result.sort((a, b) => a.project_name.localeCompare(b.project_name));
+
+                    // for (let i = 0; i < result.length; i++) {
+                    //     result[i].data = result[i].data.flat();
+                    // }
+                    error = false
+                    responseData = result;
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                });
+            // let result = {};
+            // let emptyArry;
+            // let groupResponseData = responseData.flat().map(obj => {
+            //     const { project_id, project_name, project_lead_name, ...rest } = obj;
+            //     if (!result[project_id]) {
+            //         emptyArry = [{ project_id, project_name, project_lead_name, data: [] }];
+            //         emptyArry[0].project_id = (project_id);
+            //         emptyArry[0].project_name = project_name;
+            //         emptyArry[0].project_lead_name = project_lead_name;
+            //     }
+            //     if (rest.data.length != 0) {
+            //         emptyArry[0].data.push(rest.data);
+            //     }
+            //     return emptyArry[0];
+            // });
+            //console.log("responsedata>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",groupResponseData);
+            // let filterResponseData = Object.values(groupResponseData.reduce((acc, { project_id, project_name, project_lead_name, data }) => {
+            //     if (!acc[project_id]) {
+            //         acc[project_id] = { project_id, project_name, project_lead_name, data: [] };
+            //     }
+            //     acc[project_id].data = acc[project_id].data.concat(data);
+            //     return acc;
+            // }, {}));
+
+            return [error, responseData];
+        }
+
     }
 
 }

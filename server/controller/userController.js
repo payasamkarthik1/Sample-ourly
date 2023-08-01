@@ -87,6 +87,17 @@ function UserController(objectCollection) {
         }
     })
 
+    app.post('/' + 'api/' + 'user/check/forget/password/expire/link', async function (req, res) {
+        const [err, resData] = await validations.UserForgetPasswordLinkExpireCheck(req.body, res);
+        if (!err) {
+            console.log("user/check/forget/password/expire/link | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("user/check/forget/password/expire/link | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 }
 
 
