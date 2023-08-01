@@ -1,9 +1,7 @@
 
 
 function skillService(objectCollection) {
-    console.log('================objectCollection====================')
-    console.log(objectCollection)
-    console.log('====================================')
+
     const util = objectCollection.util;
     const db = objectCollection.db;
 
