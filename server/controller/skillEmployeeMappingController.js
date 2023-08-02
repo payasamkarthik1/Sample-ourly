@@ -86,6 +86,22 @@ function skillEmployeeMappingController(objectCollection) {
 
 
 
+    //@Get skill/emp/mapp/get/skills/submitted/to/emp/list
+    app.post('/' + 'api/' + 'skill/emp/mapp/get/skills/submitted/to/emp/list',
+
+        async function (req, res) {
+            const [err, resData] = await skillEmployeeMappingService.skillEmpMappGetSkillSubmittedToEmp(req.body);
+            if (!err) {
+                console.log("skill/emp/mapp/get/skills/submitted/to/emp/list | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("skill/emp/mapp/get/skills/submitted/to/emp/list | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+
+
 
 }
 

@@ -119,6 +119,11 @@ function skillEmployeeMappingService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                    request.employee_id = request.lead_employee_id;
+                    // const [err, resp] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                    // console.log('=================getEmployessAssignUnderHeads==================')
+                    // console.log(resp)
+                    // console.log('====================================')
                     console.log('=============skill_emp_mapp_get_emps_under_lead=====================')
                     console.log(data)
                     console.log('====================================')
@@ -146,6 +151,35 @@ function skillEmployeeMappingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     console.log('=============skill_emp_mapp_get_emps_under_lead=====================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+
+
+    this.skillEmpMappGetSkillSubmittedToEmp = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id.toString()
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_get_skills_sumitted_to_emp', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('=============skill_emp_mapp_get_skills_sumitted_to_emp=====================')
                     console.log(data)
                     console.log('====================================')
                     responseData = data;
