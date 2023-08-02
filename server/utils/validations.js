@@ -672,6 +672,10 @@ function Validations(objectCollection) {
                     error = true
                     responseData = [{ message: "New password and Confirm password should be same" }]
                 }
+                else if(request.old_password === request.new_password&& request.old_password === request.confirm_password){
+                    error = true
+                    responseData = [{message: "Password Already Exists Try Different One"}]
+                }
                 else {
                     error = false
                     const hashNewPassword = await util.convertTextToHash(request.new_password)
@@ -724,10 +728,16 @@ function Validations(objectCollection) {
             error = false
             const [err, data] = await this.userDetailsList(request)
             if (!err) {
-                const hashNewPassword = await util.convertTextToHash(request.new_password)
-                await this.forgetPasswordChange(request, data, hashNewPassword)
-                error = false
-                responseData = [{ message: "Password Changed Successfully" }]
+                const isMatch = await bcrypt.compare(request.new_password, data[0].password)
+                if (isMatch) {
+                    error = true
+                    responseData = [{ message: "password already exists" }]
+                } else {
+                    const hashNewPassword = await util.convertTextToHash(request.new_password)
+                    await this.forgetPasswordChange(request, data, hashNewPassword)
+                    error = false
+                    responseData = [{ message: "Password Changed Successfully" }]
+                }
             } else {
                 error = true
                 responseData = data
@@ -782,6 +792,99 @@ function Validations(objectCollection) {
                 })
             return [error, responseData];
 
+        }
+
+    }
+
+    this.addForgetPasswordDetails = async function (request) {
+        console.log("============addForgetPasswordDetails======================")
+        let responseData = [],
+            error = true;
+        const status = 1;//status 1 means link is active
+        const flag = 1;// flag=1 means insert forget_password details
+        const paramsArr = new Array(
+            util.getRandomUniqueId(),
+            request.email,
+            util.getCurrentUTCTime(),
+            status,
+            flag
+        )
+        const queryString = util.getQueryString('forget_password_add_forget_password_details', paramsArr);
+
+        if (queryString !== '') {
+
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false;
+                }).catch((err) => {
+                    console.log('error-----', err);
+                    error = err;
+                })
+            return [error, responseData]
+        }
+    }
+
+    this.UpdateForgetPasswordDetails = async function (request) {
+        console.log("============UpdateForgetPasswordDetails======================")
+        let responseData = [],
+            error = true;
+        const status = 2;//status 1 means link is active
+        const flag = 2;// flag=1 means insert forget_password details
+        const paramsArr = new Array(
+            request.unique_code,
+            request.time,
+            status,
+            flag
+        )
+        const queryString = util.getQueryString('forget_password_update_forget_password_details', paramsArr);
+
+        if (queryString !== '') {
+
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false;
+                }).catch((err) => {
+                    console.log('error-----', err);
+                    error = err;
+                })
+            return [error, responseData]
+        }
+    }
+
+    this.UserForgetPasswordLinkExpireCheck = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.unique_code.toString(),
+        )
+
+        const queryString = util.getQueryString('forget_password_get_time_by_select_unique_code', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+
+                    const currentTime = util.getCurrentUTCTime();
+                    const linkSentTime = data[0].time;
+                    const timeDiff = await util.getMinutesBetweenTwoDates(linkSentTime, currentTime);
+
+                    if (timeDiff <= 10) {
+                        responseData = [{ message: "session is active" }]
+                        error = false;
+                    } else {
+                        await this.UpdateForgetPasswordDetails(request);
+                        responseData = [{ message: "session was expired" }]
+                        error = true;
+                    }
+
+                }).catch((err) => {
+                    console.log("error-----", err);
+                    error = err;
+                })
+            return [error, responseData]
         }
 
     }

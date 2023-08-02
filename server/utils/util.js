@@ -80,7 +80,7 @@ function Util() {
             responseData = [{ message: "token is required" }]
         }
         try {
-            const data = await jwt.verify(token, 'clockify')
+            const data = await jwt.verify(token,'clockify')
             if (data) {
                 error = false,
                     responseData = data
@@ -105,6 +105,9 @@ function Util() {
         return new Promise((resolve, reject) => {
             try {
 
+                
+        const uniqueId = request.unique_id;
+        const time = request.time;
 
                 var smtpConfig = {
                     host: 'smtp.gmail.com',
@@ -167,7 +170,11 @@ function Util() {
                        
                          <button   
                              style="background: #d46706;color: #ffffff;border: 0;padding: 10px 50px;cursor: pointer;">
+<<<<<<< HEAD
                              <a href="http://183.82.113.10:4179/forgotpass" target="_blank" style="color: #ffffff;text-decoration:none">
+=======
+                             <a href="http://localhost:4179/forgotpass?token=${uniqueId}" target="_blank" style="color: #ffffff;text-decoration:none">
+>>>>>>> f784c69b7d10c4fb8c92ee4bdc55ea1ebb0f53a7
                              Click to Change Password
                              </a>
                     
@@ -1098,6 +1105,21 @@ function Util() {
             momsrt.add(1, 'week');
         }
         return weeks
+    }
+
+    //Function to get the 8 digit random unique_id
+    this.getRandomUniqueId = function (format) {
+        let id = Math.floor(Math.random() * 100000000)
+        return id;
+    }
+
+    //Function to get the minutes between the two dates
+    this.getMinutesBetweenTwoDates = function (first_date, last_date) {
+
+        const fDate = new Date(first_date)
+        const lDate = new Date(last_date)
+        const minutes = Math.floor((lDate.getTime() - fDate.getTime()) / 60000)
+        return minutes;
     }
 
 }

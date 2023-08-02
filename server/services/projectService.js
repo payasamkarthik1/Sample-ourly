@@ -223,7 +223,7 @@ function ProjectService(objectCollection) {
             error = err1
             responseData = respData
         } else {
-             //project_assign 1 if project lead is there otherwise 2
+            //project_assign 1 if project lead is there otherwise 2
             const paramsArr = new Array(
                 request.client_id,
                 request.project_id,
@@ -262,12 +262,12 @@ function ProjectService(objectCollection) {
     this.removeProjectDelete = async function (request) {
         let responseData = [],
             error = true;
-
         // flag=1 for moveing project from active to inactive set log_state=3
         flag = 1
-
         const paramsArr = new Array(
-            request.project_id.toString(),
+            request.project_id,
+            request.employee_id,
+            util.getCurrentUTCTime(),
             flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
@@ -296,6 +296,8 @@ function ProjectService(objectCollection) {
         flag = 2
         const paramsArr = new Array(
             request.project_id,
+            null,
+            null,
             flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
@@ -317,6 +319,9 @@ function ProjectService(objectCollection) {
     }
 
     this.inactiveProjToActive = async function (request) {
+        console.log('====================================')
+        console.log("enteerd")
+        console.log('====================================')
         let responseData = [],
             error = true;
 
@@ -325,6 +330,8 @@ function ProjectService(objectCollection) {
 
         const paramsArr = new Array(
             request.project_id,
+            null,
+            null,
             flag
         );
         const queryString = util.getQueryString('project_remove_project_delete', paramsArr);
