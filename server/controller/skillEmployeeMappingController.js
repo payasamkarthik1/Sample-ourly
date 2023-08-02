@@ -84,8 +84,6 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
-
     //@Get skill/emp/mapp/get/skills/submitted/to/emp/list
     app.post('/' + 'api/' + 'skill/emp/mapp/get/skills/submitted/to/emp/list',
 

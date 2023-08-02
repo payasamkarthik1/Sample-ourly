@@ -22,7 +22,6 @@ function skillEmployeeMappingService(objectCollection) {
             request.from_employee_lead_note,
             request.send_to_employee_note,
             request.status_id,
-            request.status_changed_datetime,
             util.getCurrentUTCTime(),
         );
 
@@ -120,14 +119,30 @@ function skillEmployeeMappingService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     request.employee_id = request.lead_employee_id;
-                    // const [err, resp] = await leadService.getEmployessAssignUnderHeads(request, 1)
-                    // console.log('=================getEmployessAssignUnderHeads==================')
-                    // console.log(resp)
-                    // console.log('====================================')
+                    const [err, resp] = await leadService.getEmployessAssignUnderHeads(request, 1)
+                    console.log('=================getEmployessAssignUnderHeads==================')
+                    console.log(resp)
+                    console.log('====================================')
+
                     console.log('=============skill_emp_mapp_get_emps_under_lead=====================')
                     console.log(data)
                     console.log('====================================')
-                    responseData = data;
+
+                    function mergeArraysByEmployeeId(arr1, arr2) {
+                        arr1.forEach((obj1) => {
+                            const matchingObjects = arr2.filter((obj2) => obj1.employee_id === obj2.employee_id);
+
+                            if (matchingObjects.length > 0) {
+                                // Merge the objects if a match is found and add the "details" object as an array
+                                obj1.skill_details = matchingObjects;
+                            } else {
+                                // Add an empty "details" array if no match is found
+                                obj1.skill_details = [];
+                            }
+                        });
+                    }
+                    await mergeArraysByEmployeeId(resp, data)
+                    responseData = resp;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
