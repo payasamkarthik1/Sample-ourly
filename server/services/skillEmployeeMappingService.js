@@ -51,6 +51,7 @@ function skillEmployeeMappingService(objectCollection) {
         const paramsArr = new Array(
             request.skill_employee_mapping_id,
             request.send_to_employee_note,
+            request.rating,
             util.getCurrentUTCTime(),
             1
         );
@@ -82,6 +83,7 @@ function skillEmployeeMappingService(objectCollection) {
         const paramsArr = new Array(
             request.skill_employee_mapping_id,
             request.send_to_employee_note,
+            null,
             util.getCurrentUTCTime(),
             2
         );
