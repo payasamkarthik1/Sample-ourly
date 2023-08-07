@@ -20,7 +20,7 @@ function skillEmployeeMappingService(objectCollection) {
             request.skill_id,
             request.rating,
             request.from_employee_lead_note,
-            request.send_to_employee_note,
+            request.note,
             request.status_id,
             util.getCurrentUTCTime(),
         );
@@ -50,7 +50,8 @@ function skillEmployeeMappingService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             request.skill_employee_mapping_id,
-            request.send_to_employee_note,
+            request.note,
+            request.approved_rejected_by_emp_id,
             request.rating,
             util.getCurrentUTCTime(),
             1
@@ -82,7 +83,8 @@ function skillEmployeeMappingService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             request.skill_employee_mapping_id,
-            request.send_to_employee_note,
+            request.note,
+            request.approved_rejected_by_emp_id,
             null,
             util.getCurrentUTCTime(),
             2
@@ -132,9 +134,12 @@ function skillEmployeeMappingService(objectCollection) {
 
                     function mergeArraysByEmployeeId(arr1, arr2) {
                         arr1.forEach((obj1) => {
-                            const matchingObjects = arr2.filter((obj2) => obj1.employee_id === obj2.employee_id);
+                            const matchingObjects = arr2.filter((obj2) =>
+
+                                obj1.employee_id == obj2.send_to_employee_id);
 
                             if (matchingObjects.length > 0) {
+                                console.log("sss");
                                 // Merge the objects if a match is found and add the "details" object as an array
                                 obj1.skill_details = matchingObjects;
                             } else {
