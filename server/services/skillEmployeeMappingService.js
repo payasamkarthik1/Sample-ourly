@@ -210,6 +210,34 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
+
+    this.skillEmpMappRemoveMappDelete = async function (request) {
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.skill_employee_mapping_id.toString()
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_delete', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('=============skill_emp_mapp_delete=====================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
 }
 
 

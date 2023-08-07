@@ -100,6 +100,20 @@ function skillEmployeeMappingController(objectCollection) {
 
 
 
+    //@Get skill/emp/mapp/remove/mapping/delete
+    app.post('/' + 'api/' + 'skill/emp/mapp/remove/mapping/delete',
+
+        async function (req, res) {
+            const [err, resData] = await skillEmployeeMappingService.skillEmpMappRemoveMappDelete(req.body);
+            if (!err) {
+                console.log("skill/emp/mapp/remove/mapping/delete | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("skill/emp/mapp/remove/mapping/delete | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
 
 }
 
