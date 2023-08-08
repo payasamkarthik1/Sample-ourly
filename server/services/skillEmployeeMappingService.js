@@ -243,6 +243,83 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
+
+    this.skillEmpMappGetAllSkillsSubmittedToAdmin = async function (request) {
+        console.log("----------------entered skillEmpMappGetAllSkillsSubmittedToAdmin---------------");
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_get_all_skills_sumitted_to_admin', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('=============skill_emp_mapp_get_all_skills_sumitted_to_admin=====================')
+                    console.log(data)
+                    console.log('====================================')
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+
+    this.getAll = async function (request) {
+        console.log("----------------entered skillEmpMappGetAllSkillsSubmittedToAdmin---------------");
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_get_all_emps_skill_list', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log('=============skill_emp_mapp_get_all_emps_skill_list=====================')
+                    console.log(data)
+                    console.log('====================================')
+
+
+
+                    const transformedResponse = {};
+
+                    data.forEach((item) => {
+                        const { employee_id, employee_name, skill_name, rating } = item;
+
+                        if (!transformedResponse[employee_id]) {
+                            transformedResponse[employee_id] = {
+                                employee_id: employee_id,
+                                employee_name: employee_name,
+                            };
+                        }
+                        transformedResponse[employee_id][skill_name] = rating;
+                    });
+
+                    const finalResponse = Object.values(transformedResponse);
+
+                    console.log(finalResponse);
+
+                    console.log(finalResponse);
+                    responseData = finalResponse;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
 }
 
 
