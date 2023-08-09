@@ -1,9 +1,6 @@
-
-
 const SkillEmployeeMappingService = require('../services/skillEmployeeMappingService')
 
 function skillEmployeeMappingController(objectCollection) {
-
     const app = objectCollection.app
     const util = objectCollection.util
     const responseWrapper = objectCollection.responseWrapper
@@ -23,23 +20,21 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
-    //@Post skill/emp/mapp/insert
+    //@Post skill/emp/mapp/update/status/approved
     app.post('/' + 'api/' + 'skill/emp/mapp/update/status/approved',
         async function (req, res) {
 
             const [err, resData] = await skillEmployeeMappingService.skillEmpMappUpdateStatusApproved(req.body);
             if (!err) {
-                console.log("skill/emp/mapp/insert | Error: ", err);
+                console.log("skill/emp/mapp/update/status/approved | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("skill/emp/mapp/insert | Error: ", err);
+                console.log("skill/emp/mapp/update/status/approved | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
 
-
-    //@Post skill/emp/mapp/insert
+    //@Post skill/emp/mapp/update/status/rejected
     app.post('/' + 'api/' + 'skill/emp/mapp/update/status/rejected',
         async function (req, res) {
 
@@ -53,8 +48,7 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
-    //@Post skill/emp/mapp/get/emps/under/lead
+    //@Post skill/emp/mapp/get/emps/under/lead/skill/list
     app.post('/' + 'api/' + 'skill/emp/mapp/get/emps/under/lead/skill/list',
 
         async function (req, res) {
@@ -67,8 +61,6 @@ function skillEmployeeMappingController(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
-
 
     //@Get skill/emp/mapp/get/all/emps/skill/list
     app.get('/' + 'api/' + 'skill/emp/mapp/get/all/emps/skill/list',
@@ -98,8 +90,6 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
-
     //@Get skill/emp/mapp/remove/mapping/delete
     app.post('/' + 'api/' + 'skill/emp/mapp/remove/mapping/delete',
 
@@ -114,7 +104,6 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
     //@Get skill/emp/mapp/get/all/skills/submitted/for/admin
     app.get('/' + 'api/' + 'skill/emp/mapp/get/all/skills/submitted/for/admin',
         async function (req, res) {
@@ -128,23 +117,18 @@ function skillEmployeeMappingController(objectCollection) {
             }
         })
 
-
-
-          //@Get skill/emp/mapp/get/all/skills/submitted/for/admin
+    //@Get skill/emp/mapp/get/all/emps/all/skills
     app.get('/' + 'api/' + 'skill/emp/mapp/get/all/emps/all/skills',
-    async function (req, res) {
-        const [err, resData] = await skillEmployeeMappingService.getAll(req.body);
-        if (!err) {
-            console.log("skill/emp/mapp/get/all/skills/submitted/for/admin | Error: ", err);
-            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-        } else {
-            console.log("skill/emp/mapp/get/all/skills/submitted/for/admin | Error: ", err);
-            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-        }
-    })
+        async function (req, res) {
+            const [err, resData] = await skillEmployeeMappingService.getAllEmpsAllSkills(req.body);
+            if (!err) {
+                console.log("skill/emp/mapp/get/all/skills/submitted/for/admin | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("skill/emp/mapp/get/all/skills/submitted/for/admin | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 }
-
-
-
 
 module.exports = skillEmployeeMappingController;

@@ -1,16 +1,18 @@
 
 
 const LeadService = require('../services/leadService')
+const SkillServices = require('../services/skillServices')
+
 
 function skillEmployeeMappingService(objectCollection) {
     const util = objectCollection.util;
     const db = objectCollection.db;
     const leadService = new LeadService(objectCollection)
+    const skillServices = new SkillServices(objectCollection)
+
 
     this.skillEmpMappInsert = async function (request) {
-        console.log('====================================')
-        console.log("enetrd")
-        console.log('====================================')
+        console.log("--------------enterd skillEmpMappInsert----------------");
         let responseData = [],
             error = true;
         const paramsArr = new Array(
@@ -132,11 +134,11 @@ function skillEmployeeMappingService(objectCollection) {
                     console.log(data)
                     console.log('====================================')
 
-                    function mergeArraysByEmployeeId(arr1, arr2) {
+                    async function mergeArraysByEmployeeId(arr1, arr2) {
                         arr1.forEach((obj1) => {
                             const matchingObjects = arr2.filter((obj2) =>
 
-                                obj1.employee_id == obj2.send_to_employee_id);
+                                obj1.employee_id == obj2.employee_id);
 
                             if (matchingObjects.length > 0) {
                                 console.log("sss");
@@ -272,7 +274,7 @@ function skillEmployeeMappingService(objectCollection) {
     }
 
 
-    this.getAll = async function (request) {
+    this.getAllEmpsAllSkills = async function (request) {
         console.log("----------------entered skillEmpMappGetAllSkillsSubmittedToAdmin---------------");
 
         let responseData = [],
@@ -288,12 +290,13 @@ function skillEmployeeMappingService(objectCollection) {
                     console.log('=============skill_emp_mapp_get_all_emps_skill_list=====================')
                     console.log(data)
                     console.log('====================================')
-
-
-
+                    const [err, data1] = await skillServices.getAllSkills(request);
+                    const skills = await data1.map(row => row.skill_name);
+                    console.log('=================getAllSkills===================')
+                    console.log(skills)
+                    console.log('====================================')
                     const transformedResponse = {};
-
-                    data.forEach((item) => {
+                    await data.forEach((item) => {
                         const { employee_id, employee_name, skill_name, rating } = item;
 
                         if (!transformedResponse[employee_id]) {
@@ -304,13 +307,12 @@ function skillEmployeeMappingService(objectCollection) {
                         }
                         transformedResponse[employee_id][skill_name] = rating;
                     });
-
                     const finalResponse = Object.values(transformedResponse);
-
+                    console.log('===============finalResponse=====================');
                     console.log(finalResponse);
-
-                    console.log(finalResponse);
-                    responseData = finalResponse;
+                    console.log('====================================');
+                    responseData.push({ skillNames: skills })
+                    responseData.push({ skillEmpRatings: finalResponse })
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
