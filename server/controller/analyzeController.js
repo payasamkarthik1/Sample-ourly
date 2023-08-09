@@ -130,6 +130,38 @@ function Analyze(objectCollection) {
             }
         })
 
+  //@Post analyze/get/report/summary/in/active/project
+  app.post('/' + 'api/' + 'analyze/get/report/summary/in/active/project',
+
+  async function (req, res) {
+
+      const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
+      if (!err) {
+          console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+          res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+      } else {
+          console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+          res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+      }
+  })
+
+
+  
+  //@Post analyze/get/report/summary/in/active/project
+  app.post('/' + 'api/' + 'analyze/get/report/summary/active/project',
+
+  async function (req, res) {
+
+      const [err, resData] = await analyzeServices.getActiveProjectReportSummary(req.body);
+      if (!err) {
+          console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+          res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+      } else {
+          console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+          res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+      }
+  })
+
 
 
 }
