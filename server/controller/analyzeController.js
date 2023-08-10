@@ -40,7 +40,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post 'analyze/get/all/tasks/weekly/by/empid/list
-    app.post('/' + 'api/' +'analyze/get/all/tasks/weekly/by/empid/list',
+    app.post('/' + 'api/' + 'analyze/get/all/tasks/weekly/by/empid/list',
 
         async function (req, res) {
             const [err, resData] = await analyzeServices.getAllTasksInWeekByEmpId(req.body);
@@ -54,9 +54,10 @@ function Analyze(objectCollection) {
         })
 
 
+    //--------------reports
 
     //@Post analyze/get/report/summary
-    app.post('/' + 'api/' +'analyze/get/report/summary',
+    app.post('/' + 'api/' + 'analyze/get/report/summary',
 
         async function (req, res) {
 
@@ -70,9 +71,23 @@ function Analyze(objectCollection) {
             }
         })
 
+    //@Post analyze/get/report/summary/in/active/project
+    app.post('/' + 'api/' + 'analyze/get/report/summary/inactive/project',
+
+        async function (req, res) {
+
+            const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
+            if (!err) {
+                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
     //@Post analyze/get/report/detailed
-    app.post('/' + 'api/' +'analyze/get/report/detailed',
+    app.post('/' + 'api/' + 'analyze/get/report/detailed',
 
         async function (req, res) {
 
@@ -87,7 +102,7 @@ function Analyze(objectCollection) {
         })
 
     //@Post analyze/get/report/weekly
-    app.post('/' +'api/' + 'analyze/get/report/weekly',
+    app.post('/' + 'api/' + 'analyze/get/report/weekly',
 
         async function (req, res) {
 
@@ -101,8 +116,8 @@ function Analyze(objectCollection) {
             }
         })
 
-    //@Post analyze/get/report/summary/
-    app.post('/' + 'api/' +'analyze/get/report/summary/group/by/user',
+    //@Post analyze/get/report/summary/group/by/user
+    app.post('/' + 'api/' + 'analyze/get/report/summary/group/by/user',
         async function (req, res) {
 
             const [err, resData] = await analyzeServices.getReportSummaryGroupByUser(req.body);
@@ -115,21 +130,19 @@ function Analyze(objectCollection) {
             }
         })
 
-    //@Post analyze/get/report/summary/in/active/project
-    app.post('/' + 'api/' + 'analyze/get/report/summary/in/active/project',
-
+    //@Post analyze/get/inactive/projects/report/summary/group/by/user
+    app.post('/' + 'api/' + 'analyze/get/inactive/projects/report/summary/group/by/user',
         async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
+            const [err, resData] = await analyzeServices.getReportSummaryGroupByUserInActiveProjects(req.body);
             if (!err) {
-                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                console.log("analyze/get/inactive/projects/report/summary/group/by/user | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                console.log("analyze/get/inactive/projects/report/summary/group/by/user | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
-
 
 
 }
