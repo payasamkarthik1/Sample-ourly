@@ -476,6 +476,10 @@ function AnalyzeServices(objectCollection) {
         let data1 = []
         let empsGathered = []
         //get employess under head
+
+        //role_id =2 for admin
+        //role_id =3 for employee
+        //role_id rather then 2,3 for lead
         if (request.role_id == 2) {
             if (request.employees.length != 0 || request.groups.length != 0) {
                 if (request.employees.length != 0) {
@@ -552,17 +556,19 @@ function AnalyzeServices(objectCollection) {
         //get data between date
         const [err2, data2] = await this.getDataByDates(request)
         console.log('===========getDataByDates==================')
-        console.log("data length", data2.length)
-        console.log('========================================')
+        console.log("data length", data2)
 
         //get dashboard data overview
         if (data1.length != 0 && data2.length != 0) {
             //filter data with emps
             const data3 = await this.filterDataByEmps(request, data1, data2)
             console.log('===========filterDataByEmps==================')
-            console.log("data length", data3.length)
+            console.log("data length", data3)
             console.log('========================================')
             const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
+            console.log('=================getReportSummaryGroupByUserOverviewCalculation===================')
+            console.log(data)
+            console.log('====================================')
             responseData = data
         }
         return [false, responseData]
@@ -570,6 +576,11 @@ function AnalyzeServices(objectCollection) {
 
 
     this.getFilterReportSummary = async function (request, data) {
+        console.log("------------entered getFilterReportSummary----------------");
+        console.log('=============request,data=======================');
+        console.log(request);
+        console.log(data);
+        console.log('====================================');
 
         let responseData = []
         error = true
@@ -592,7 +603,6 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
-
             }
             else if (project_id != []) {
                 for (let i = 0; i < project_id.length; i++) {
@@ -638,6 +648,9 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
+                console.log('==============filterClients1======================')
+                console.log(filterClients1)
+                console.log('====================================')
             } if (project_id.length == 0) {
                 filterProjects1 = filterClients1
             } if (project_id.length != 0) {
@@ -649,6 +662,10 @@ function AnalyzeServices(objectCollection) {
                         }
                     })
                 }
+
+                console.log('==============filterProjects1======================')
+                console.log(filterProjects1)
+                console.log('====================================')
 
             } if (tag_id.length == 0) {
                 filterTags1 = filterProjects1
@@ -671,6 +688,9 @@ function AnalyzeServices(objectCollection) {
                     })
                 }
             }
+            console.log('=============AT LAST=============')
+            console.log(filterStatus1)
+            console.log('====================================')
             data = filterStatus1
         }
         responseData = data
@@ -738,6 +758,33 @@ function AnalyzeServices(objectCollection) {
 
     };
 
+
+    this.getInActiveProjectsDataByDates = async function (request) {
+        let responseData = [],
+            error = true;
+
+        const paramsArr = new Array(
+            request.start_date,
+            request.end_date
+        );
+
+        const queryString = util.getQueryString('data_get_inactive_projects_by_dates', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    error = false
+                    responseData = data  
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    };
+
     this.filterDataByEmps = async function (request, data1, data2) {
 
         let filterData = []
@@ -753,8 +800,16 @@ function AnalyzeServices(objectCollection) {
     }
 
     this.getReportSummaryGroupByUserOverviewCalculation = async function (request, data) {
+        console.log("---------------enetered getReportSummaryGroupByUserOverviewCalculation---------------");
         let responseData = []
+        console.log('==============request,data======================');
+        console.log(request);
+        console.log(data);
+        console.log('====================================');
         const [err, filterData] = await this.getFilterReportSummary(request, data)
+        console.log('=================filterData===================')
+        console.log(filterData)
+        console.log('====================================')
         if (filterData.length != 0) {
 
             totalTime = await util.sumOfTime(filterData)
@@ -764,10 +819,16 @@ function AnalyzeServices(objectCollection) {
             //adding uniques keys 
             data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
 
+            console.log('===============adding description =====================')
+            console.log(data)
+            console.log("-----------------------------------------------------");
+            console.log(data3)
+            console.log('====================================')
+
             //loop for adding descriptions 
             for (let i = 0; i < data3.length; i++) {
                 let value = []
-                data.filter(function (dat) {
+                filterData.filter(function (dat) {
                     if (dat.employee_id == data3[i].employee_id) {
                         obj = {}
                         obj.task_description = dat.task_description
@@ -776,6 +837,8 @@ function AnalyzeServices(objectCollection) {
                         obj.project_code = dat.project_code
                         obj.project_color_code = dat.project_color_code
                         value.push(obj)
+                    }else{
+
                     }
 
                 })
@@ -785,12 +848,117 @@ function AnalyzeServices(objectCollection) {
             responseData.push(data1)
             responseData.push(data3)
         }
-
         return [false, responseData]
     }
 
+    // this.getInActiveProjectReportSummary = async function (request) {
+    //     console.log("--------------------------entered getReportSummary of inactive projects----------------------------");
+    //     let responseData = []
+    //     let data1 = []
+    //     let empsGathered = []
+
+    //     //get employess under head
+    //     if (request.role_id == 2) {
+    //         if (request.employees.length != 0 || request.groups.length != 0) {
+    //             if (request.employees.length != 0) {
+    //                 let emp = request.employees
+    //                 for (let i = 0; i < emp.length; i++) {
+    //                     request.employee_id = emp[i]
+    //                     const [err9, data9] = await employeeService.getEmployeeById(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             if (request.groups.length != 0) {
+    //                 let grp = request.groups
+
+    //                 for (let i = 0; i < grp.length; i++) {
+    //                     request.employee_id = grp[i]
+    //                     const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             //unique employess
+
+    //             const uniqueids = [];
+    //             const uniqueEmps = empsGathered.filter(element => {
+    //                 const isDuplicate = uniqueids.includes(element.employee_id);
+    //                 if (!isDuplicate) {
+    //                     uniqueids.push(element.employee_id);
+    //                     return true;
+    //                 }
+    //                 return false;
+    //             });
+
+    //             data1 = uniqueEmps
+
+    //         } else {
+    //             const [err8, data8] = await employeeService.getAllEmployees(request)
+    //             data1 = data8
+    //         }
+
+    //     } else if (request.role_id == 3) {
+    //         console.log('data in if block role id 3')
+    //         const [err9, data9] = await employeeService.getEmployeeById(request)
+    //         data1 = data9
+    //         console.log("data==============================", data9);
+    //     } else {
+    //         if (request.employees.length != 0 || request.groups.length != 0) {
+    //             if (request.employees.length != 0) {
+    //                 let emp = request.employees
+    //                 console.log("emp", emp);
+    //                 for (let i = 0; i < emp.length; i++) {
+    //                     request.employee_id = emp[i]
+    //                     const [err9, data9] = await employeeService.getEmployeeById(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             if (request.groups.length != 0) {
+    //                 let grp = request.groups
+    //                 for (let i = 0; i < grp.length; i++) {
+    //                     request.employee_id = grp[i]
+    //                     const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+    //                     Array.prototype.push.apply(empsGathered, data9);
+    //                 }
+    //             }
+    //             //unique employess
+    //             const uniqueids = [];
+    //             const uniqueEmps = empsGathered.filter(element => {
+    //                 const isDuplicate = uniqueids.includes(element.employee_id);
+    //                 if (!isDuplicate) {
+    //                     uniqueids.push(element.employee_id);
+    //                     return true;
+    //                 }
+    //                 return false;
+    //             });
+    //             data1 = uniqueEmps
+    //         } else {
+    //             const data9 = await leadService.getEmpsUnderHeadsLevel1(request, 1)
+    //             data1 = data9
+    //         }
+    //     }
+
+    //     //get data between date
+    //     request.flag = 2;//get the inactive project data
+    //     const [err2, data2] = await this.getDataByDates(request)
+    //     console.log('=============================')
+    //     console.log("data length", data2.length)
+    //     console.log('========================================')
+    //     //get dashboard data overview
+    //     if (data1.length != 0 && data2.length != 0) {
+    //         //filter data with emps
+    //         const data3 = await this.filterDataByEmps(request, data1, data2)
+    //         console.log('===========filterDataByEmps==================')
+    //         console.log("data length", data3.length)
+    //         console.log('====================================')
+    //         const [err, data] = await this.getReportSummaryOverviewCalculation(request, data3)
+    //         responseData = data
+    //     }
+    //     return [false, responseData]
+    // }
+
+
     this.getInActiveProjectReportSummary = async function (request) {
-        console.log("--------------------------entered getReportSummary of inactive projects----------------------------");
+        console.log("--------------------------entered getActiveProjectReportSummary---------------------------");
         let responseData = []
         let data1 = []
         let empsGathered = []
@@ -877,7 +1045,7 @@ function AnalyzeServices(objectCollection) {
 
         //get data between date
         request.flag = 2;//get the inactive project data
-        const [err2, data2] = await this.getDataByDates(request)
+        const [err2, data2] = await this.getInActiveProjectsDataByDates(request)
         console.log('=============================')
         console.log("data length", data2.length)
         console.log('========================================')
