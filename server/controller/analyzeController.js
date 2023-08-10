@@ -54,6 +54,7 @@ function Analyze(objectCollection) {
         })
 
 
+    //--------------reports
 
     //@Post analyze/get/report/summary
     app.post('/' + 'api/' + 'analyze/get/report/summary',
@@ -70,6 +71,20 @@ function Analyze(objectCollection) {
             }
         })
 
+    //@Post analyze/get/report/summary/in/active/project
+    app.post('/' + 'api/' + 'analyze/get/report/summary/inactive/project',
+
+        async function (req, res) {
+
+            const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
+            if (!err) {
+                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 
     //@Post analyze/get/report/detailed
     app.post('/' + 'api/' + 'analyze/get/report/detailed',
@@ -101,7 +116,7 @@ function Analyze(objectCollection) {
             }
         })
 
-    //@Post analyze/get/report/summary/
+    //@Post analyze/get/report/summary/group/by/user
     app.post('/' + 'api/' + 'analyze/get/report/summary/group/by/user',
         async function (req, res) {
 
@@ -115,35 +130,21 @@ function Analyze(objectCollection) {
             }
         })
 
-    // //@Post analyze/get/report/summary/in/active/project
-    // app.post('/' + 'api/' + 'analyze/get/report/summary/in/active/project',
-
-    //     async function (req, res) {
-
-    //         const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
-    //         if (!err) {
-    //             console.log("analyze/get/report/summary/in/active/project | Error: ", err);
-    //             res.json(responseWrapper.getResponse({}, resData, 200, req.body));
-    //         } else {
-    //             console.log("analyze/get/report/summary/in/active/project | Error: ", err);
-    //             res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
-    //         }
-    //     })
-
-    //@Post analyze/get/report/summary/in/active/project
-    app.post('/' + 'api/' + 'analyze/get/report/summary/inactive/project',
-
+    //@Post analyze/get/inactive/projects/report/summary/group/by/user
+    app.post('/' + 'api/' + 'analyze/get/inactive/projects/report/summary/group/by/user',
         async function (req, res) {
 
-            const [err, resData] = await analyzeServices.getInActiveProjectReportSummary(req.body);
+            const [err, resData] = await analyzeServices.getReportSummaryGroupByUserInActiveProjects(req.body);
             if (!err) {
-                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                console.log("analyze/get/inactive/projects/report/summary/group/by/user | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));
             } else {
-                console.log("analyze/get/report/summary/in/active/project | Error: ", err);
+                console.log("analyze/get/inactive/projects/report/summary/group/by/user | Error: ", err);
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+
+
 }
 
 

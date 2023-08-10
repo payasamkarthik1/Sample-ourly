@@ -575,6 +575,112 @@ function AnalyzeServices(objectCollection) {
     }
 
 
+    this.getReportSummaryGroupByUserInActiveProjects = async function (request) {
+        console.log("------------------------------------entered getReportSummaryGroupByUser------------------------------------------");
+
+        let responseData = []
+
+        let data1 = []
+        let empsGathered = []
+        //get employess under head
+
+        //role_id =2 for admin
+        //role_id =3 for employee
+        //role_id rather then 2,3 for lead
+        if (request.role_id == 2) {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+                data1 = uniqueEmps
+            } else {
+                const [err8, data8] = await employeeService.getAllEmployees(request)
+                data1 = data8
+            }
+
+        } else if (request.role_id == 3) {
+            const [err9, data9] = await employeeService.getEmployeeById(request)
+            data1 = data9
+        } else {
+            if (request.employees.length != 0 || request.groups.length != 0) {
+                if (request.employees.length != 0) {
+                    let emp = request.employees
+                    for (let i = 0; i < emp.length; i++) {
+                        request.employee_id = emp[i]
+                        const [err9, data9] = await employeeService.getEmployeeById(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                if (request.groups.length != 0) {
+                    let grp = request.groups
+                    for (let i = 0; i < grp.length; i++) {
+                        request.employee_id = grp[i]
+                        const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                        Array.prototype.push.apply(empsGathered, data9);
+                    }
+                }
+                //unique employess
+                const uniqueids = [];
+                const uniqueEmps = empsGathered.filter(element => {
+                    const isDuplicate = uniqueids.includes(element.employee_id);
+                    if (!isDuplicate) {
+                        uniqueids.push(element.employee_id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                data1 = uniqueEmps
+
+            } else {
+                const data9 = await leadService.getEmpsUnderHeadsLevel1(request)
+                data1 = data9
+            }
+        }
+        //get data between date
+        const [err2, data2] = await this.getInActiveProjectsDataByDates(request)
+        console.log('===========getInActiveProjectsDataByDates==================')
+        console.log("data length", data2)
+
+        //get dashboard data overview
+        if (data1.length != 0 && data2.length != 0) {
+            //filter data with emps
+            const data3 = await this.filterDataByEmps(request, data1, data2)
+            console.log('===========filterDataByEmps==================')
+            console.log("data length", data3)
+            console.log('========================================')
+            const [err, data] = await this.getReportSummaryGroupByUserOverviewCalculation(request, data3)
+            console.log('=================getReportSummaryGroupByUserOverviewCalculation===================')
+            console.log(data)
+            console.log('====================================')
+            responseData = data
+        }
+        return [false, responseData]
+    }
+
     this.getFilterReportSummary = async function (request, data) {
         console.log("------------entered getFilterReportSummary----------------");
         console.log('=============request,data=======================');
