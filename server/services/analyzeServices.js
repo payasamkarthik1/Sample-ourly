@@ -768,13 +768,13 @@ function AnalyzeServices(objectCollection) {
             request.end_date
         );
 
-        const queryString = util.getQueryString('data_get_active_projects_by_dates', paramsArr);
+        const queryString = util.getQueryString('data_get_inactive_projects_by_dates', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     error = false
-                    responseData = data
+                    responseData = data  
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
