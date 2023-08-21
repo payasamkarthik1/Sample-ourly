@@ -81,7 +81,7 @@ function Util() {
             responseData = [{ message: "token is required" }]
         }
         try {
-            console.log("tryyyyyy");
+            console.log("tryyyyyy",token);
             const data = await jwt.verify(token,'clockify')
             console.log("dataaaaa",data);
             if (data) {
