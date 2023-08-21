@@ -71,6 +71,7 @@ function Util() {
     }
 
     this.verifyJwtToken = async function (request, req) {
+        console.log("reeeeeeee",req.headers["authorization"]);
 
         let responseData = []
         error = true
