@@ -37,7 +37,6 @@ function skillEmployeeMappingController(objectCollection) {
     //@Post skill/emp/mapp/update/status/rejected
     app.post('/' + 'api/' + 'skill/emp/mapp/update/status/rejected',
         async function (req, res) {
-
             const [err, resData] = await skillEmployeeMappingService.skillEmpMappUpdateStatusRejected(req.body);
             if (!err) {
                 console.log("skill/emp/mapp/insert | Error: ", err);
@@ -52,7 +51,21 @@ function skillEmployeeMappingController(objectCollection) {
     app.post('/' + 'api/' + 'skill/emp/mapp/get/emps/under/lead/skill/list',
 
         async function (req, res) {
-            const [err, resData] = await skillEmployeeMappingService.skillEmpMappGetEmpsUnderLeadSkillList(req.body);
+            const [err, resData] = await skillEmployeeMappingService.skillEmpMappGetEmpsUnderLeadSkillListFinal(req.body);
+            if (!err) {
+                console.log("skill/emp/mapp/get/emps/under/lead | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("skill/emp/mapp/get/emps/under/lead| Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
+
+    //@Post skill/emp/mapp/get/emps/under/lead/skill/list
+    app.post('/' + 'api/' + 'skill/emp/mapp/get/emps/under/admin/skill/list',
+
+        async function (req, res) {
+            const [err, resData] = await skillEmployeeMappingService.skillEmpMappGetEmpsUnderAdminSkillList(req.body);
             if (!err) {
                 console.log("skill/emp/mapp/get/emps/under/lead | Error: ", err);
                 res.json(responseWrapper.getResponse({}, resData, 200, req.body));

@@ -78,7 +78,6 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
-
     this.skillEmpMappUpdateStatusRejected = async function (request) {
 
         let responseData = [],
@@ -101,57 +100,6 @@ function skillEmployeeMappingService(objectCollection) {
                     console.log(data)
                     console.log('====================================')
                     responseData = data;
-                    error = false
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
-            return [error, responseData];
-        }
-
-    }
-
-    this.skillEmpMappGetEmpsUnderLeadSkillList = async function (request) {
-
-        let responseData = [],
-            error = true;
-        const paramsArr = new Array(
-            request.lead_employee_id.toString(),
-        );
-
-        const queryString = util.getQueryString('skill_emp_mapp_get_emps_under_lead_skill_list', paramsArr);
-
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
-                    request.employee_id = request.lead_employee_id;
-                    const [err, resp] = await leadService.getEmployessAssignUnderHeads(request, 1)
-                    console.log('=================getEmployessAssignUnderHeads==================')
-                    console.log(resp)
-                    console.log('====================================')
-
-                    console.log('=============skill_emp_mapp_get_emps_under_lead=====================')
-                    console.log(data)
-                    console.log('====================================')
-
-                    async function mergeArraysByEmployeeId(arr1, arr2) {
-                        arr1.forEach((obj1) => {
-                            const matchingObjects = arr2.filter((obj2) =>
-
-                                obj1.employee_id == obj2.employee_id);
-
-                            if (matchingObjects.length > 0) {
-                                console.log("sss");
-                                // Merge the objects if a match is found and add the "details" object as an array
-                                obj1.skill_details = matchingObjects;
-                            } else {
-                                // Add an empty "details" array if no match is found
-                                obj1.skill_details = [];
-                            }
-                        });
-                    }
-                    await mergeArraysByEmployeeId(resp, data)
-                    responseData = resp;
                     error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
@@ -188,8 +136,6 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
-
-
     this.skillEmpMappGetSkillSubmittedToEmp = async function (request) {
 
         let responseData = [],
@@ -217,6 +163,191 @@ function skillEmployeeMappingService(objectCollection) {
 
     }
 
+    this.skillEmpMappGetEmpsUnderLeadSkillListFinal = async function (request) {
+        let data = {};
+        //get all emps team level
+        request.employee_id = request.lead_employee_id
+        const emps = await leadService.getEmpsUnderHeadsLevel1(request)
+        console.log('===============all level=====================')
+        console.log(emps)
+        console.log('====================================')
+
+        //get team level empe from skill mapp
+        data.employee_id = request.lead_employee_id
+        const [err, data1] = await this.getEmpUnderLead(data);
+        console.log('==================data from skill==================')
+        console.log(data1)
+        console.log('====================================')
+
+
+        async function mergeArraysByEmployeeId(arr1, arr2) {
+            arr1.forEach((obj1) => {
+                const matchingObjects = arr2.filter((obj2) =>
+
+                    obj1.employee_id == obj2.employee_id);
+
+                if (matchingObjects.length > 0) {
+                    // Merge the objects if a match is found and add the "details" object as an array
+                    obj1.skill_details = matchingObjects;
+                } else {
+                    // Add an empty "details" array if no match is found
+                    obj1.skill_details = [];
+                }
+            });
+        }
+        await mergeArraysByEmployeeId(emps, data1)
+
+        return [error, emps];
+
+
+
+
+    }
+
+    this.skillEmpMappGetEmpsUnderAdminSkillList = async function (request) {
+        console.log('====================================')
+        console.log("enee")
+        console.log('====================================')
+        let data = {};
+        //get all emps team level
+        request.employee_id = request.lead_employee_id
+        request.role_id = 2
+        const [err1, data1] = await leadService.getEmployessAssignUnderHeadsAdminAndEmpl(request, 1)
+        console.log('===============getEmployessAssignUnderHeadsAdminAndEmpl=============')
+        console.log(data1)
+        console.log('====================================')
+
+        //get team level empe from skill mapp
+        data.employee_id = request.lead_employee_id
+        const [err2, data2] = await this.getEmpUnderAdmin(data);
+        console.log('==================helper2l==================')
+        console.log(data2)
+        console.log('====================================')
+
+
+        async function mergeArraysByEmployeeId(arr1, arr2) {
+            arr1.forEach((obj1) => {
+                const matchingObjects = arr2.filter((obj2) =>
+
+                    obj1.employee_id == obj2.employee_id);
+
+                if (matchingObjects.length > 0) {
+                    // Merge the objects if a match is found and add the "details" object as an array
+                    obj1.skill_details = matchingObjects;
+                } else {
+                    // Add an empty "details" array if no match is found
+                    obj1.skill_details = [];
+                }
+            });
+        }
+        await mergeArraysByEmployeeId(data1, data2)
+
+        return [error, data1];
+
+    }
+
+    this.getEmpUnderLead = async function (data, request) {
+        console.log('================helper1====================')
+        console.log(data)
+        console.log('====================================')
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            data.employee_id.toString(),
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_get_emps_under_lead_skill_list', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+    this.getEmpUnderAdmin = async function (data, request) {
+        console.log('================helper1====================')
+        console.log(data)
+        console.log('====================================')
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            data.employee_id.toString(),
+        );
+
+        const queryString = util.getQueryString('skill_emp_mapp_get_emps_under_admin_skill_list', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+    // this.skillEmpMappGetEmpsUnderLeadSkillList = async function (request) {
+
+    //     let responseData = [],
+    //         error = true;
+    //     const paramsArr = new Array(
+    //         request.lead_employee_id.toString(),
+    //     );
+
+    //     const queryString = util.getQueryString('skill_emp_mapp_get_emps_under_lead_skill_list', paramsArr);
+
+    //     if (queryString !== '') {
+    //         await db.executeQuery(1, queryString, request)
+    //             .then(async (data) => {
+    //                 request.employee_id = request.lead_employee_id;
+    //                 const [err, resp] = await leadService.getEmployessAssignUnderHeads(request, 1)
+    //                 console.log('=================getEmployessAssignUnderHeads==================')
+    //                 console.log(resp)
+    //                 console.log('====================================')
+
+    //                 console.log('=============skill_emp_mapp_get_emps_under_lead=====================')
+    //                 console.log(data)
+    //                 console.log('====================================')
+
+    //                 async function mergeArraysByEmployeeId(arr1, arr2) {
+    //                     arr1.forEach((obj1) => {
+    //                         const matchingObjects = arr2.filter((obj2) =>
+
+    //                             obj1.employee_id == obj2.employee_id);
+
+    //                         if (matchingObjects.length > 0) {
+    //                             console.log("sss");
+    //                             // Merge the objects if a match is found and add the "details" object as an array
+    //                             obj1.skill_details = matchingObjects;
+    //                         } else {
+    //                             // Add an empty "details" array if no match is found
+    //                             obj1.skill_details = [];
+    //                         }
+    //                     });
+    //                 }
+    //                 await mergeArraysByEmployeeId(resp, data)
+    //                 responseData = resp;
+    //                 error = false
+    //             }).catch((err) => {
+    //                 console.log("err-------" + err);
+    //                 error = err
+    //             })
+    //         return [error, responseData];
+    //     }
+
+    // }
 
     this.skillEmpMappRemoveMappDelete = async function (request) {
 
@@ -244,7 +375,6 @@ function skillEmployeeMappingService(objectCollection) {
         }
 
     }
-
 
     this.skillEmpMappGetAllSkillsSubmittedToAdmin = async function (request) {
         console.log("----------------entered skillEmpMappGetAllSkillsSubmittedToAdmin---------------");
