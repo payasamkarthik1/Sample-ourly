@@ -79,7 +79,7 @@ function skillService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data[0].message === "Already skill exist") {
-                        responseData = [{ message: "Alerady skill was assigned to an employee" }]
+                        responseData = [{ message: " Alerady skill was assigned to an employee " }]
                         error = true
                     } else {
                         responseData = data;
