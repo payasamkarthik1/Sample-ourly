@@ -15,6 +15,8 @@ function skillEmployeeMappingService(objectCollection) {
         console.log("--------------enterd skillEmpMappInsert----------------");
         let responseData = [],
             error = true;
+        const [err1, res] = await this.getSkillAssignedEmployeeId(request);
+        request.send_to_employee_id = res[0].employee_id;
         const paramsArr = new Array(
             request.from_employee_lead_id,
             request.employee_id,
@@ -447,6 +449,78 @@ function skillEmployeeMappingService(objectCollection) {
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+
+    this.getAllDetailsByEmployeeId = async function (request) {
+        console.log("----------------entered skillEmpMappGetAllSkillsSubmittedToAdmin---------------");
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.employee_id.toString(),
+        );
+
+        const queryString = util.getQueryString('skill_employee_mapping_get_all_deatils_by_employee_id', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    console.log(data)
+
+                    let result = [];
+                    const groupedData = {};
+                    data.flat().forEach((item) => {
+
+                        const { skill_id, skill_name, ...rest } = item;
+
+                        if (!groupedData[item.skill_id]) {
+                            groupedData[item.skill_id] = {
+                                skill_id: item.skill_id,
+                                skill_name: item.skill_name,
+                                data: []
+                            };
+                        }
+                        groupedData[item.skill_id].data.push(rest);
+                    });
+                    for (const key in groupedData) {
+                        if (Object.prototype.hasOwnProperty.call(groupedData, key)) {
+                            result.push(groupedData[key]);
+                        }
+                    }
+                    responseData = result;
+                    error = false
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+    }
+    this.getSkillAssignedEmployeeId = async function (request) {
+
+
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            request.skill_id.toString(),
+        )
+        console.log("skill_id", paramsArr);
+        const queryString = util.getQueryString('skill_get_skill_assigned_employeeid_by_skill_id', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false;
+                })
+                .catch((err) => {
+                    console.log("error-------" + err)
+                    error = true;
                 })
             return [error, responseData];
         }

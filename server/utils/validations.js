@@ -829,8 +829,8 @@ function Validations(objectCollection) {
         console.log("============UpdateForgetPasswordDetails======================")
         let responseData = [],
             error = true;
-        const status = 2;//status 1 means link is active
-        const flag = 2;// flag=1 means insert forget_password details
+        const status = 2;//status 2 means link is inactive
+        const flag = 2;// flag=2 means update forget_password details
         const paramsArr = new Array(
             request.unique_code,
             request.time,
