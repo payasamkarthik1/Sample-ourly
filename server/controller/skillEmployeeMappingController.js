@@ -142,6 +142,18 @@ function skillEmployeeMappingController(objectCollection) {
                 res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
             }
         })
+        //@Get skill/emp/mapp/group/by/user 
+        app.post('/' + 'api/' + 'skill/emp/mapp/group/by/user',
+        async function (req, res) {
+            const [err, resData] = await skillEmployeeMappingService.getAllDetailsByEmployeeId(req.body);
+            if (!err) {
+                console.log("skill/emp/mapp/group/by/user | Error: ", err);
+                res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+            } else {
+                console.log("skill/emp/mapp/group/by/user | Error: ", err);
+                res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+            }
+        })
 }
 
 module.exports = skillEmployeeMappingController;

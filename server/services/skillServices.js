@@ -10,6 +10,10 @@ function skillService(objectCollection) {
             error = true;
         const paramsArr = new Array(
             request.skill_name,
+            request.department_id,
+            request.department_name,
+            request.employee_id,
+            request.employee_name,
             util.getCurrentUTCTime(),
         );
 
@@ -64,6 +68,10 @@ function skillService(objectCollection) {
         const paramsArr = new Array(
             request.skill_id,
             request.skill_name,
+            request.department_id,
+            request.department_name,
+            request.employee_id,
+            request.employee_name,
         );
         const queryString = util.getQueryString('skills_update_skill_by_id', paramsArr);
 
@@ -71,7 +79,7 @@ function skillService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     if (data[0].message === "Already skill exist") {
-                        responseData = [{ message: data[0].message }]
+                        responseData = [{ message: "Alerady skill was assigned to an employee" }]
                         error = true
                     } else {
                         responseData = data;
@@ -101,8 +109,13 @@ function skillService(objectCollection) {
                     console.log('===============deleteSkillById====================')
                     console.log(data)
                     console.log('====================================')
-                    responseData = data;
-                    error = false
+                    if (data[0].message === "Already skill exist") {
+                        responseData = [{ message:"Assigned skill can not be deleted" }]
+                        error = true
+                    } else {
+                        responseData = data;
+                        error = false
+                    }
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
