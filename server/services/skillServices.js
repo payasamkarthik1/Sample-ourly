@@ -22,6 +22,7 @@ function skillService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+                   
                     if (data[0].message === "Already skill exist") {
                         responseData = [{ message: data[0].message }]
                         error = true
@@ -50,8 +51,21 @@ function skillService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
+                    for (let i = 0; i <= data1.length - 1; i++) {
+
+                        let [err1, res1] = await this.getRatingByskill_id(data1[i].skill_id);
+
+                        if (res1.length === 0) {
+                            data[i].flag = 0;//flag =0 no rating was added to the skill
+                        }
+                        else {
+                            data[i].flag = 1;//flag =1 rating was added to the skill
+                        }
+                    }
+
                     responseData = data1;
-                    error = false
+                    error = false;
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -71,13 +85,14 @@ function skillService(objectCollection) {
             request.department_id,
             request.department_name,
             request.employee_id,
-            request.employee_name,
+            request.employee_name
         );
         const queryString = util.getQueryString('skills_update_skill_by_id', paramsArr);
 
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+
                     if (data[0].message === "Already skill exist") {
                         responseData = [{ message: " Alerady skill was assigned to an employee " }]
                         error = true
@@ -106,9 +121,8 @@ function skillService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+
                     console.log('===============deleteSkillById====================')
-                    console.log(data)
-                    console.log('====================================')
                     if (data[0].message === "Already skill exist") {
                         responseData = [{ message:"Assigned skill can not be deleted" }]
                         error = true
@@ -125,6 +139,32 @@ function skillService(objectCollection) {
 
 
     }
+
+    this.getRatingByskill_id = async function (skill_id) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            skill_id.toString(),
+        );
+        const queryString = util.getQueryString('skills_get_rating_by_skill_id', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, skill_id)
+                .then(async (data) => {
+
+                    responseData = data;
+                    error = false;
+
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
 
 }
 
