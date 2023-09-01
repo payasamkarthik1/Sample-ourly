@@ -51,21 +51,8 @@ function skillService(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     const data1 = await util.addUniqueIndexesToArrayOfObject(data)
-
-                    for (let i = 0; i <= data1.length - 1; i++) {
-
-                        let [err1, res1] = await this.getRatingByskill_id(data1[i].skill_id);
-
-                        if (res1.length === 0) {
-                            data[i].flag = 0;//flag =0 no rating was added to the skill
-                        }
-                        else {
-                            data[i].flag = 1;//flag =1 rating was added to the skill
-                        }
-                    }
-
                     responseData = data1;
-                    error = false;
+                    error = false
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -164,6 +151,44 @@ function skillService(objectCollection) {
 
 
     }
+
+    this.getAllSkillsByCheckTheRating = async function (request) {
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+        );
+
+        const queryString = util.getQueryString('skills_get_all_list', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, request)
+                .then(async (data) => {
+                    const data1 = await util.addUniqueIndexesToArrayOfObject(data)
+
+                    for (let i = 0; i <= data1.length - 1; i++) {
+
+                        let [err1, res1] = await this.getRatingByskill_id(data1[i].skill_id);
+
+                        if (res1.length === 0) {
+                            data[i].flag = 0;//flag =0 no rating was added to the skill
+                        }
+                        else {
+                            data[i].flag = 1;//flag =1 rating was added to the skill
+                        }
+                    }
+
+                    responseData = data1;
+                    error = false;
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+
 
 
 }
