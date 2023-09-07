@@ -34,7 +34,9 @@ function LeadService(objectCollection) {
                         }
                         return false;
                     });
+                    
                     users = uniqueEmps
+                    users.sort((a, b) => a.first_name.localeCompare(b.first_name))
                 }
                 if (groups.length != 0) {
                     const uniqueids = [];
@@ -63,7 +65,9 @@ function LeadService(objectCollection) {
         }
         //flag 1 to get only users
         //flag 2  to get users and groups
+        users.sort((a, b) => a.first_name.localeCompare(b.first_name))
         if (flag == 1) {
+            users.sort((a, b) => a.first_name.localeCompare(b.first_name));
             return [false, users]
         } else {
             if (groups.length != 0) {
