@@ -1,7 +1,8 @@
 
 
 const LeadService = require('../services/leadService')
-const SkillServices = require('../services/skillServices')
+const SkillServices = require('../services/skillServices');
+const Util = require('../utils/util');
 
 
 function skillEmployeeMappingService(objectCollection) {
@@ -169,11 +170,11 @@ function skillEmployeeMappingService(objectCollection) {
         let data = {};
         //get all emps team level
         request.employee_id = request.lead_employee_id
-        const emps = await leadService.getEmpsUnderHeadsLevel1(request)
+        let emps = await leadService.getEmpsUnderHeadsLevel1(request)
         console.log('===============all level=====================')
         console.log(emps)
         console.log('====================================')
-
+        emps = await util.getDataInAlphabeticalOrderAsPerFullName(emps);
         //get team level empe from skill mapp
         data.employee_id = request.lead_employee_id
         const [err, data1] = await this.getEmpUnderLead(data);
@@ -198,12 +199,8 @@ function skillEmployeeMappingService(objectCollection) {
             });
         }
         await mergeArraysByEmployeeId(emps, data1)
-
+        console.log("=====================emps=============", emps)
         return [error, emps];
-
-
-
-
     }
 
     this.skillEmpMappGetEmpsUnderAdminSkillList = async function (request) {
@@ -439,10 +436,11 @@ function skillEmployeeMappingService(objectCollection) {
                         }
                         transformedResponse[employee_id][skill_name] = rating;
                     });
-                    const finalResponse = Object.values(transformedResponse);
+                    let finalResponse = Object.values(transformedResponse);
                     console.log('===============finalResponse=====================');
                     console.log(finalResponse);
                     console.log('====================================');
+                    finalResponse = await util.getDataInAlphabeticalOrder(finalResponse);//sort the finalResponse in alphabetical order
                     responseData.push({ skillNames: skills })
                     responseData.push({ skillEmpRatings: finalResponse })
                     error = false

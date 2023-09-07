@@ -74,25 +74,42 @@ function skillService(objectCollection) {
             request.employee_id,
             request.employee_name
         );
-        const queryString = util.getQueryString('skills_update_skill_by_id', paramsArr);
 
-        if (queryString !== '') {
-            await db.executeQuery(1, queryString, request)
-                .then(async (data) => {
+        let [err1, res] = await this.getSkillDetailsByskill_id(request.skill_id);
 
-                    if (data[0].message === "Already skill exist") {
-                        responseData = [{ message: " Alerady skill was assigned to an employee " }]
-                        error = true
-                    } else {
-                        responseData = data;
-                        error = false
-                    }
-                }).catch((err) => {
-                    console.log("err-------" + err);
-                    error = err
-                })
+        if (res.length > 0) {
+            if (res[0].skill_name !== request.skill_name || res[0].department_name !== request.department_name || res[0].employee_name !== request.employee_name) {
+                const queryString = util.getQueryString('skills_update_skill_by_id', paramsArr);
+
+                if (queryString !== '') {
+                    await db.executeQuery(1, queryString, request)
+                        .then(async (data) => {
+                            if (data.length === 0) {
+                                responseData = [{ message: " Alerady skill was assigned to an employee " }]
+                                error = true
+                            } else {
+                                responseData = data;
+                                error = false
+                            }
+                        }).catch((err) => {
+                            console.log("err-------" + err);
+                            error = err
+                        })
+                    return [error, responseData];
+                }
+            }
+            else if (res[0].skill_name === request.skill_name && res[0].department_name === request.department_name && res[0].employee_name === request.employee_name) {
+                error = true;
+                responseData = [{ message: "Alerady skill was assigned to an employee" }]
+                return [error, responseData];
+            }
+
+        } else {
+            error = true;
+            responseData = [{ message: "Please change any one of the input field" }]
             return [error, responseData];
         }
+
 
 
     }
@@ -179,6 +196,32 @@ function skillService(objectCollection) {
 
                     responseData = data1;
                     error = false;
+                }).catch((err) => {
+                    console.log("err-------" + err);
+                    error = err
+                })
+            return [error, responseData];
+        }
+
+
+    }
+    
+
+    this.getSkillDetailsByskill_id = async function (skill_id) {
+        console.log('----------------get_all_skill_details_by_skill_id');
+        let responseData = [],
+            error = true;
+        const paramsArr = new Array(
+            skill_id.toString(),
+        );
+        const queryString = util.getQueryString('skills_get_skill_details_by_id', paramsArr);
+
+        if (queryString !== '') {
+            await db.executeQuery(1, queryString, skill_id)
+                .then(async (data) => {
+                    responseData = data;
+                    error = false;
+
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err

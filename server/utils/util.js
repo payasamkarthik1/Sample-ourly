@@ -1160,11 +1160,48 @@ function Util() {
             }
         }
 
-        console.log(formattedOutput);
+        // console.log(formattedOutput);
         return formattedOutput;
-
-
     }
+
+    //Function to sort the array of objects as per the alphabetical order
+    this.getDataInAlphabeticalOrder = function (data) {
+
+        data.sort((a, b) => {
+            const nameA = a.employee_name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+            const nameB = b.employee_name.toUpperCase();
+
+            if (nameA < nameB) {
+                return -1; // a should come before b in the sorted order
+            }
+            if (nameA > nameB) {
+                return 1; // a should come after b in the sorted order
+            }
+
+            return 0; // names are equal
+        });
+        return data;
+    }
+
+    //Function to sort the array of objects as per the alphabetical order
+    this.getDataInAlphabeticalOrderAsPerFullName = function (data) {
+
+        data.sort((a, b) => {
+            const nameA = a.full_name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+            const nameB = b.full_name.toUpperCase();
+
+            if (nameA < nameB) {
+                return -1; // a should come before b in the sorted order
+            }
+            if (nameA > nameB) {
+                return 1; // a should come after b in the sorted order
+            }
+
+            return 0; // names are equal
+        });
+        return data;
+    }
+
 
 }
 
