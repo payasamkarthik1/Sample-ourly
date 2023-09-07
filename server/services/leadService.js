@@ -9,6 +9,11 @@ function LeadService(objectCollection) {
 
     //get emps under admin and employee
     this.getEmployessAssignUnderHeadsAdminAndEmpl = async function (request, flag) {
+
+    console.log('====================================')
+    console.log(request)
+    console.log(flag)
+    console.log('====================================')
         var users = [], groups = [], dataRepeat = []
         if (request.role_id == 2) {
             const [err, data] = await employeeService.getAllEmployees()
@@ -29,7 +34,9 @@ function LeadService(objectCollection) {
                         }
                         return false;
                     });
+                    
                     users = uniqueEmps
+                    users.sort((a, b) => a.first_name.localeCompare(b.first_name))
                 }
                 if (groups.length != 0) {
                     const uniqueids = [];
@@ -58,7 +65,9 @@ function LeadService(objectCollection) {
         }
         //flag 1 to get only users
         //flag 2  to get users and groups
+        users.sort((a, b) => a.first_name.localeCompare(b.first_name))
         if (flag == 1) {
+            users.sort((a, b) => a.first_name.localeCompare(b.first_name));
             return [false, users]
         } else {
             if (groups.length != 0) {
@@ -136,6 +145,7 @@ function LeadService(objectCollection) {
         if (queryString !== '') {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
+
                     responseData = data;
                     error = false
 
@@ -212,7 +222,7 @@ function LeadService(objectCollection) {
                                 i.project_lead_employee_id = request.employee_id
                             }
 
-                            for (let j = dates.length-1; j >=0; j--) {
+                            for (let j = dates.length - 1; j >= 0; j--) {
                                 request.first_week_day = dates[j][0];
                                 request.last_week_day = dates[j][1];
                                 let [err, response] = await this.getLeadApprovalProjectEntriesData(request, i);
@@ -221,7 +231,7 @@ function LeadService(objectCollection) {
                             }
                         }
                     }
-                    for (let i = dates.length-1; i >=0 ; i--) {
+                    for (let i = dates.length - 1; i >= 0; i--) {
                         request.first_week_day = dates[i][0];
                         request.last_week_day = dates[i][1];
                         let [err1, selfWorkedData] = await this.getLeadWiseSelfWorkedEntries(request);
@@ -257,7 +267,7 @@ function LeadService(objectCollection) {
                 acc[project_id].data = acc[project_id].data.concat(data);
                 return acc;
             }, {}));
-            filterResponseData = filterResponseData.sort((a,b)=>a.project_name.localeCompare(b.project_name))
+            filterResponseData = filterResponseData.sort((a, b) => a.project_name.localeCompare(b.project_name))
             for (let x = 0; x < filterResponseData.length; x++) {
                 filterResponseData[x].data = filterResponseData[x].data.flat();
             }
@@ -391,7 +401,7 @@ function LeadService(objectCollection) {
 
                     let transformedArray = Object.values(transformedResponse);
                     responseData = transformedArray;
-                    console.log(responseData,"getProjectsAndLeads")
+                    console.log(responseData, "getProjectsAndLeads")
                     error = false
                 })
                 .catch((err) => {
@@ -581,7 +591,7 @@ function LeadService(objectCollection) {
                 "unSubmittedData": projectArray.filter(project => project.data.every(entry => entry.status_id !== 1))
             });
         }
-        console.log(data,"getLeadProjectsAndSelfApprovalDataForEmailSending");
+        console.log(data, "getLeadProjectsAndSelfApprovalDataForEmailSending");
 
         responseData = data
 

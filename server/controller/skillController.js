@@ -66,6 +66,18 @@ function skillController(objectCollection) {
         })
 
 
+    //@Get skill/get/all/skills/list/by/check/rating
+    app.get('/' + 'api/' + 'skill/get/all/skills/list/by/check/rating', async function (req, res) {
+        const [err, resData] = await skillService.getAllSkillsByCheckTheRating(req.body);
+        if (!err) {
+            console.log(" skill/get/all/skills/list/by/check/rating | Error: ", err);
+            res.json(responseWrapper.getResponse({}, resData, 200, req.body));
+        } else {
+            console.log("s skill/get/all/skills/list/by/check/rating | Error: ", err);
+            res.json(responseWrapper.getResponse(err, resData, -9999, req.body));
+        }
+    })
+
 }
 
 

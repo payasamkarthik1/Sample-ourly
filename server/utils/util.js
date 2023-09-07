@@ -1118,6 +1118,92 @@ function Util() {
         return minutes;
     }
 
+    //Function to get the total hours per month wise in a year
+    this.getTotalHoursMonthWiseInAYear = function (data) {
+        const totalHoursPerMonth = {};
+
+        data.forEach(entry => {
+            const datetimeParts = entry.task_created_datetime.split('-');
+            const year = datetimeParts[0];
+            const month = datetimeParts[1];
+
+            const timeParts = entry.total_time.split(':');
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            const seconds = parseInt(timeParts[2], 10);
+
+            const totalHours = hours + minutes / 60 + seconds / 3600;
+
+            if (!totalHoursPerMonth[year]) {
+                totalHoursPerMonth[year] = {};
+            }
+
+            if (!totalHoursPerMonth[year][month]) {
+                totalHoursPerMonth[year][month] = 0;
+            }
+
+            totalHoursPerMonth[year][month] += totalHours;
+        });
+
+        // Convert the total hours to "hh:mm:ss" format and month name
+        const formattedOutput = [];
+
+        for (const year in totalHoursPerMonth) {
+            for (const month in totalHoursPerMonth[year]) {
+                const totalHours = totalHoursPerMonth[year][month];
+                const hh = Math.floor(totalHours);
+                const mm = Math.floor((totalHours - hh) * 60);
+                const ss = Math.round(((totalHours - hh) * 60 - mm) * 60);
+                const formattedTime = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+                const monthName = new Date(`${year}-${month}-01`).toLocaleString('en-US', { month: 'long' });
+
+                formattedOutput.push({ task_created_datetime: monthName.toUpperCase(), total_time: formattedTime });
+            }
+        }
+
+        // console.log(formattedOutput);
+        return formattedOutput;
+    }
+
+    //Function to sort the array of objects as per the alphabetical order
+    this.getDataInAlphabeticalOrder = function (data) {
+
+        data.sort((a, b) => {
+            const nameA = a.employee_name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+            const nameB = b.employee_name.toUpperCase();
+
+            if (nameA < nameB) {
+                return -1; // a should come before b in the sorted order
+            }
+            if (nameA > nameB) {
+                return 1; // a should come after b in the sorted order
+            }
+
+            return 0; // names are equal
+        });
+        return data;
+    }
+
+    //Function to sort the array of objects as per the alphabetical order
+    this.getDataInAlphabeticalOrderAsPerFullName = function (data) {
+
+        data.sort((a, b) => {
+            const nameA = a.full_name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+            const nameB = b.full_name.toUpperCase();
+
+            if (nameA < nameB) {
+                return -1; // a should come before b in the sorted order
+            }
+            if (nameA > nameB) {
+                return 1; // a should come after b in the sorted order
+            }
+
+            return 0; // names are equal
+        });
+        return data;
+    }
+
+
 }
 
 

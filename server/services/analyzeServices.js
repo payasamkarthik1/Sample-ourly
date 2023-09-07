@@ -812,6 +812,10 @@ function AnalyzeServices(objectCollection) {
             totalTime = await util.sumOfTime(filterData)
             const data1 = await this.dayWiseTotalTime(request, filterData)
             const data2 = await this.overAllProject(request, filterData)
+            if (request.flag === 2) {
+                const MonthWiseData = await util.getTotalHoursMonthWiseInAYear(data1);
+                data1 = MonthWiseData;
+            }
             //  adding uniques keys 
             data3 = await util.addUniqueKeyIndexesToArrayOfObject(data2)
             //loop for adding descriptions 
