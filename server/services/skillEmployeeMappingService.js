@@ -426,12 +426,13 @@ function skillEmployeeMappingService(objectCollection) {
                     console.log('====================================')
                     const transformedResponse = {};
                     await data.forEach((item) => {
-                        const { employee_id, employee_name, skill_name, rating } = item;
+                        const { employee_id, employee_name, skill_name, rating,emp_log_state } = item;
 
                         if (!transformedResponse[employee_id]) {
                             transformedResponse[employee_id] = {
                                 employee_id: employee_id,
                                 employee_name: employee_name,
+                                emp_log_state:emp_log_state
                             };
                         }
                         transformedResponse[employee_id][skill_name] = rating;
