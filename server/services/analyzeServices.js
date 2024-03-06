@@ -806,7 +806,7 @@ function AnalyzeServices(objectCollection) {
 
     this.getReportSummaryOverviewCalculation = async function (request, data) {
         let responseData = []
-
+        let data3 = []
         const [err, filterData] = await this.getFilterReportSummary(request, data)
         if (filterData.length != 0) {
             totalTime = await util.sumOfTime(filterData)
@@ -884,7 +884,7 @@ function AnalyzeServices(objectCollection) {
             await db.executeQuery(1, queryString, request)
                 .then(async (data) => {
                     error = false
-                    responseData = data  
+                    responseData = data
                 }).catch((err) => {
                     console.log("err-------" + err);
                     error = err
@@ -947,7 +947,7 @@ function AnalyzeServices(objectCollection) {
                         obj.project_code = dat.project_code
                         obj.project_color_code = dat.project_color_code
                         value.push(obj)
-                    }else{
+                    } else {
 
                     }
 
