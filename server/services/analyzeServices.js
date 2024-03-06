@@ -810,10 +810,10 @@ function AnalyzeServices(objectCollection) {
         const [err, filterData] = await this.getFilterReportSummary(request, data)
         if (filterData.length != 0) {
             totalTime = await util.sumOfTime(filterData)
-            const data1 = await this.dayWiseTotalTime(request, filterData)
-            const data2 = await this.overAllProject(request, filterData)
+            let data1 = await this.dayWiseTotalTime(request, filterData)
+            let data2 = await this.overAllProject(request, filterData)
             if (request.flag === 2) {
-                const MonthWiseData = await util.getTotalHoursMonthWiseInAYear(data1);
+                let MonthWiseData = await util.getTotalHoursMonthWiseInAYear(data1);
                 data1 = MonthWiseData;
             }
             //  adding uniques keys 
