@@ -277,7 +277,7 @@ function TimeTrackingService(objectCollection) {
             if (data.length == 0) {
                 await this.removeProjectFromTimesheet(request);
             }
-            else {
+            else {  //
                 const paramsArr = new Array(
                     request.employee_id,
                     request.project_id,
